@@ -1,11 +1,50 @@
 #!/bin/bash
 
 #### TODO
-# flagged input
 # channel names -> get array
 # get rid of AFNI
 # get rid of csvtool
 # better trigger
+
+ver=1.0.1
+
+# Check locale
+oldnum=${LC_NUMERIC}
+LC_NUMERIC=en_IN
+
+displayhelp() {
+echo ""
+echo "physiobids version ${ver}"
+echo "Script to convert AcqKnowledge files into .tsv.gz files"
+echo ""
+echo "It outputs a .tsv.gz and a .json file with the same name of input,"
+echo "unless heuristics are used (future Version)"
+echo ""
+echo "If option -ntp and -tr are specified, the program check if the first trigger"
+echo "detected is the first trigger, and correct starting time for it."
+echo ""
+echo "Usage:"
+echo "   physiobids.sh -in infile -chtrig trigger -chsel c,h,a,n -ntp num -tr secs"
+echo ""
+echo "Input:"
+echo "   -in filename:   The name of the acq file, without extension."
+echo "   -chtrig num:    The number corresponding to the trigger channel."
+echo "                      Default: 1"
+echo "   -chsel n,m,o:   If specified, it extracts only the specified channels."
+echo "                      Channels have to be specified one by one with commas."
+echo "   -ntp num:       Number of expected timepoints. Optional."
+echo "   -tr sec:        TR of sequence in seconds.  Optional."
+echo "   -thr num:       Threshold used for trigger detection."
+echo "                      Default: 3"
+echo "   -tbhd \"n m o\":  Columns header (for json file). Optional."
+echo ""
+echo "   -h:             Display this help."
+echo "   -v:             Display version."
+echo ""
+echo ""
+
+exit 1
+} 
 
 # Check if there is input
 
@@ -16,26 +55,30 @@ fi
 
 # Preparing the default values for optional variables
 chtrig=1
-
-colname=$( echo "[\"time\", \"respiratory chest\", \"trigger\", \"cardiac\", \"respiratory CO2\", \"respiratory O2\"]" )
+thr=3
+tbhd=$( echo "time respiratory_chest trigger cradiac respiratory_CO2 respiratory_O2" )
+#colname=$( echo "[\"time\", \"respiratory chest\", \"trigger\", \"cardiac\", \"respiratory CO2\", \"respiratory O2\"]" )
 
 while [[ ! -z "$1" ]]
 do
 	case "$1" in
 		# required variables
 		-in)     in=$2;shift;;
+		# optional var with default
 		-chtrig) chtrig=$2;shift;;
+		-thr)    thr=$2;shift;;
+		-tbhd)   tbhd=$2;shift;;
+		# optional var empty
 		-chsel)  chsel=$2;shift;;
 		-ntp)    ntp=$2;shift;;
 		-tr)     tr=$2;shift;;
 		# other
 		-h)  displayhelp;;
-		-v)  echo "Version 1.0.0";exit 0;;
+		-v)  echo "Version ${ver}";exit 0;;
 		*)   echo "Wrong flag: $1";displayhelp;;
 	esac
 	shift
 done
-
 
 # in=BH4
 # chtrig=1
@@ -49,11 +92,6 @@ echo "File ${in}.acq has:"
 acq_info ${in}.acq | grep -vP "\t"
 
 printf "\n\n-----------------------------------------------------------\n\n"
-
-# # Extract the trigger channel, get rid of header
-# echo "Extracting channel ${chtrig} for trigger"
-# acq2txt --channel-indexes=${chtrig} -o rm.trigger2txt.tsv ${in}.acq
-# csvtool -t TAB -u TAB drop 1 rm.trigger2txt.tsv > rm.trigger.tsv
 
 # Transform the file
 if [ "${chsel}" ]
@@ -75,21 +113,28 @@ csvtool -t TAB col 1 rm.drop.tsv > rm.time.1D
 let chtrig+=2
 csvtool -t TAB col ${chtrig} rm.drop.tsv > rm.trigger.1D
 
-# Derive trigger to check number of tp in file, then threshold
+# Derive trigger to check number of tp in file, then threshold and count number of tp.
 echo "Counting trigger points"
 1d_tool.py -infile rm.trigger.1D -derivative -write rm.trigger_deriv.1D -overwrite
-1deval -a rm.trigger_deriv.1D -b=0.5 -expr 'ispositive(a-b)' > rm.trigger_thr.1D
+1deval -a rm.trigger_deriv.1D -b=${thr} -expr 'ispositive(a-b)' > rm.trigger_thr.1D
+
+ntpf=$( awk '{s+=$1} END {printf "%.0f", s}' rm.trigger_thr.1D )
 
 # Find time of first timepoint above 0.5: the first trigger
 echo "Extracting other info for json file"
-evawk="awk '\$${chtrig}>0.5{print; exit}' rm.drop.tsv"
+evawk="awk '\$${chtrig}>${thr}{print; exit}' rm.drop.tsv"
 tza=( $( eval ${evawk} ) )
 
-
-#if [ "${ntp}" && ${ntr} ]
-# Count number of tp in file, then correct starting time by number of missing tp.
-ntpf=$( awk '{s+=$1} END {printf "%.0f", s}' rm.trigger_thr.1D )
-tz=$( echo " ${tza[0]} - ( ( ${ntp} - ${ntpf} ) * ${tr} ) " | bc )
+if [ "${ntp}" -a "${ntr}" ]
+then
+	# Correct starting time by number of missing tp, if any.
+	echo "Checking if any TPs are missing"
+	tz=$( echo " ${tza[0]} - ( ( ${ntp} - ${ntpf} ) * ${tr} ) " | bc )
+else
+	# Just extract tza
+	echo "Skipping TPs check"
+	tz=${tza[0]}
+fi
 
 # Find Sampling Frequency
 sta=( $( acq_info ${in}.acq | grep "Sample time" ) )
@@ -105,7 +150,7 @@ csvtool -t TAB -u TAB paste rm.newtime.1D rm.drop.tsv > ${in}.tsv
 
 # remove all intermediate steps
 echo "Preparing output and cleaning up the mess"
-rm rm.*
+#rm rm.*
 
 # gzip tsv
 gzip -f ${in}.tsv
@@ -113,11 +158,7 @@ gzip -f ${in}.tsv
 # Print json
 tz=$( echo "${tz} * (-1)" | bc )
 
-# Check locale
-oldnum=${LC_NUMERIC}
-LC_NUMERIC=en_IN
-
-printf "{\n\t\"SamplingFrequency\": %.3f,\n\t\"StartTime\": %.3f,\n\t\"Columns\": %s\n}" "${sf}" "${tz}" "${colname}" > ${in}.json
+printf "{\n\t\"SamplingFrequency\": %.3f,\n\t\"StartTime\": %.3f,\n\t\"Columns\": [\"%s\"]\n}" "${sf}" "${tz}" $(echo ${tbhd} | sed 's: :", ":g' ) > ${in}.json
 
 # Print summary on screen
 printf "\n\n-----------------------------------------------------------\n\n"
