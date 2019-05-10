@@ -6,7 +6,7 @@
 # get rid of csvtool
 # better trigger
 
-ver=1.0.1
+ver=1.0.2
 
 # Check locale
 oldnum=${LC_NUMERIC}
@@ -28,6 +28,7 @@ echo "   physiobids.sh -in infile -chtrig trigger -chsel c,h,a,n -ntp num -tr se
 echo ""
 echo "Input:"
 echo "   -in filename:   The name of the acq file, without extension."
+echo "   -info:          Only output info about file, no transformation."
 echo "   -chtrig num:    The number corresponding to the trigger channel."
 echo "                      Default: 1"
 echo "   -chsel n,m,o:   If specified, it extracts only the specified channels."
@@ -69,6 +70,7 @@ do
 		-thr)    thr=$2;shift;;
 		-tbhd)   tbhd=$2;shift;;
 		# optional var empty
+		-info)   info=1;shift;; 
 		-chsel)  chsel=$2;shift;;
 		-ntp)    ntp=$2;shift;;
 		-tr)     tr=$2;shift;;
@@ -92,6 +94,11 @@ echo "File ${in}.acq has:"
 acq_info ${in}.acq | grep -vP "\t"
 
 printf "\n\n-----------------------------------------------------------\n\n"
+
+if [ "${info}" ]
+then
+	exit
+fi
 
 # Transform the file
 if [ "${chsel}" ]
