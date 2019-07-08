@@ -92,11 +92,13 @@ done
 # ntp=240
 # tr=2
 
+# Check if the extension is right
 if [ ${in: -4} != ".acq" ]
 then
 	in=${in}.acq
 fi
 
+# Check if the file exists
 if [ ! -e ${in} ]
 then
 	printf "File ${in} doesn't exists\n\n"
