@@ -6,7 +6,7 @@
 # get rid of csvtool
 # better trigger
 
-ver=1.0.2
+ver=1.0.3
 
 # Check locale
 oldnum=${LC_NUMERIC}
@@ -90,10 +90,21 @@ done
 # ntp=240
 # tr=2
 
+if [ ${in: -4} != ".acq" ]
+then
+	in=${in}.acq
+fi
+
+if [ ! -e ${in} ]
+then
+	printf "File ${in} doesn't exists\n\n"
+	displayhelp
+fi
+
 # Output channel names and sample time
 echo ""
-echo "File ${in}.acq has:"
-acq_info ${in}.acq | grep -vP "\t"
+echo "File ${in} has:"
+acq_info ${in} | grep -vP "\t"
 
 printf "\n\n-----------------------------------------------------------\n\n"
 
@@ -110,7 +121,7 @@ then
 fi
 
 echo "Extracting info from acq"
-acq2txt ${chsel} -o rm.transform.tsv ${in}.acq
+acq2txt ${chsel} -o rm.transform.tsv ${in}
 
 # Remove first line
 csvtool -t TAB -u TAB drop 1 rm.transform.tsv > rm.drop.tsv
@@ -146,7 +157,7 @@ else
 fi
 
 # Find Sampling Frequency
-sta=( $( acq_info ${in}.acq | grep "Sample time" ) )
+sta=( $( acq_info ${in} | grep "Sample time" ) )
 sf=$( echo "1 / ${sta[2]}" | bc )
 
 # Correct time column by starting time and replace it in file
@@ -171,7 +182,7 @@ printf "{\n\t\"SamplingFrequency\": %.3f,\n\t\"StartTime\": %.3f,\n\t\"Columns\"
 
 # Print summary on screen
 printf "\n\n-----------------------------------------------------------\n\n"
-echo "Filename:            ${in}.acq"
+echo "Filename:            ${in}"
 echo ""
 echo "Timepoints expected: ${ntp}"
 echo "Timepoints found:    ${ntpf}"
