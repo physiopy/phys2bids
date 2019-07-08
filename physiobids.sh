@@ -23,13 +23,10 @@ echo ""
 echo "If option -ntp and -tr are specified, the program check if the first trigger"
 echo "detected is the first trigger, and correct starting time for it."
 echo ""
-<<<<<<< HEAD
-echo "Requires: AFNI, csvtool/ocam, acq2txt"
-=======
 echo "Dependances:"
 echo "   -AFNI"
 echo "   -csvtool (deb) OR ocaml-csv (rpm)"
->>>>>>> c24e4d022e47e7402b42eea8a2f9eaedc66aa082
+echo "   -acq2txt"
 echo ""
 echo "Usage:"
 echo "   physiobids.sh -in infile -chtrig trigger -chsel c,h,a,n -ntp num -tr secs"
@@ -56,7 +53,6 @@ exit 1
 } 
 
 # Check if there is input
-
 if [[ ( $# -eq 0 ) ]]
 	then
 	displayhelp
@@ -65,7 +61,7 @@ fi
 # Preparing the default values for optional variables
 chtrig=1
 thr=3
-tbhd=$( echo "time respiratory_chest trigger cradiac respiratory_CO2 respiratory_O2" )
+tbhd=$( echo "time respiratory_chest trigger cardiac respiratory_CO2 respiratory_O2" )
 #colname=$( echo "[\"time\", \"respiratory chest\", \"trigger\", \"cardiac\", \"respiratory CO2\", \"respiratory O2\"]" )
 
 while [[ ! -z "$1" ]]
