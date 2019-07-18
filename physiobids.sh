@@ -74,7 +74,7 @@ do
 		-thr)    thr=$2;shift;;
 		-tbhd)   tbhd=$2;shift;;
 		# optional var empty
-		-info)   info=1;shift;; 
+		-info)   info=1;;
 		-chsel)  chsel=$2;shift;;
 		-ntp)    ntp=$2;shift;;
 		-tr)     tr=$2;shift;;
@@ -149,7 +149,7 @@ echo "Extracting other info for json file"
 evawk="awk '\$${chtrig}>${thr}{print; exit}' rm.drop.tsv"
 tza=( $( eval ${evawk} ) )
 
-if [ "${ntp}" -a "${ntr}" ]
+if [ "${ntp}" ]
 then
 	# Correct starting time by number of missing tp, if any.
 	echo "Checking if any TPs are missing"
@@ -174,7 +174,7 @@ csvtool -t TAB -u TAB paste rm.newtime.1D rm.drop.tsv > ${in}.tsv
 
 # remove all intermediate steps
 echo "Preparing output and cleaning up the mess"
-#rm rm.*
+rm rm.*
 
 # gzip tsv
 gzip -f ${in}.tsv
