@@ -16,8 +16,8 @@ displayhelp() {
 echo ""
 echo "physiobids version ${ver}"
 echo "Script to convert AcqKnowledge files into .tsv.gz files"
-echo ""
 echo "It outputs a .tsv.gz and a .json file with the same name of input,"
+echo ""
 echo "unless heuristics are used (see usage)"
 echo ""
 echo "If option -ntp and -tr are specified, the program check if the first trigger"
@@ -31,24 +31,26 @@ echo ""
 echo "Usage:"
 echo "   physiobids.sh -in infile -chtrig trigger -chsel c,h,a,n -ntp num -tr secs"
 echo ""
-echo "Input:"
 echo "   -in filename:   The name of the acq file, with or without extension."
+echo "Input:"
 echo "                      Must be an .acq file!"
 echo "   -indir pth/to:  Folder containing input."
-echo "                      Default: ."
 echo "   -odir pth/to:  Folder where output should be placed. If \"-heur\" is used, "
-echo "                      It'll become the site folder."
 echo "                      Default: ."
+echo "                      It'll become the site folder."
 echo "   -heur pth/fl:   File containing heuristic, with or without extension."
+echo "                      Default: ."
 echo "                      Specify path to it if necessary. Optional."
 echo "                      Needs \"-sub\", and it's possible to specify \"-ses\""
 echo "                      Default: heur.sh  (in script folder)"
 echo "   -sub subnum:    To be specified with \"-heur\". Number of subject to process."
-echo "   -ses sesnum:    Can be specified with \"-heur\". Number of session to process."
 echo "   -info:          Only output info about file, no transformation."
+echo "   -ses sesnum:    Can be specified with \"-heur\". Number of session to process."
 echo "   -chtrig num:    The number corresponding to the trigger channel."
+echo "                      Channels start with zero!"
 echo "                      Default: 1"
 echo "   -chsel n,m,o:   If specified, it extracts only the specified channels."
+echo "                      Channels start with zero!"
 echo "                      Channels have to be specified one by one with commas."
 echo "   -ntp num:       Number of expected timepoints. Optional."
 echo "   -tr sec:        TR of sequence in seconds.  Optional."
@@ -116,8 +118,8 @@ done
 # chsel=0,1,2,3,4
 # ntp=240
 # tr=2
-
 # Check if paths have last / and create outdir if non-existent
+
 if [ ${indir: -1} != "/" ]
 then
 	indir=${indir}/
@@ -132,14 +134,14 @@ then
 fi
 
 # Check if the extension is right
-if [ ${in: -4} != ".acq" ]
+if [ ${in:-4} != ".acq" ]
 then
 	in=${in}.acq
 fi
 
 inmsg=${in}
-in=${indir}${in}
 out=${odir}${in::-4}
+in=${indir}${in}
 
 # Check if the file exists
 if [ ! -e ${in} ]
@@ -149,7 +151,7 @@ then
 fi
 
 # Output channel names and sample time
-print "\n\nFile %s has:" "${inmsg}\n"
+printf "\nFile %s has:\n" "${inmsg}"
 acq_info ${in} | grep -vP "\t"
 
 printf "\n\n-----------------------------------------------------------\n\n"
@@ -211,24 +213,24 @@ echo "Correcting time in file"
 1deval -a rm.time.1D -b=${tz} -expr 'a-b' > rm.newtime.1D
 
 csvtool -t TAB -u TAB transpose rm.drop.tsv | csvtool -t TAB -u TAB drop 1 - > rm.drop_t.tsv
-csvtool -t TAB -u TAB transpose rm.drop_t.tsv > rm.drop.tsv
 csvtool -t TAB -u TAB paste rm.newtime.1D rm.drop.tsv > ${out}.tsv
+csvtool -t TAB -u TAB transpose rm.drop_t.tsv > rm.drop.tsv
 
-# remove all intermediate steps
 echo "Preparing output and cleaning up the mess"
+# remove all intermediate steps
 rm rm.*
 
-# gzip tsv
 gzip -f ${out}.tsv
+# gzip tsv
 
 # Print json
 tz=$( echo "${tz} * (-1)" | bc )
-
 printf "{\n\t\"SamplingFrequency\": %.3f,\n\t\"StartTime\": %.3f,\n\t\"Columns\": [\"%s\"]\n}" "${sf}" "${tz}" $(echo "${tbhd}" | sed 's: :", ":g' ) > ${out}.json
 
+
 # Print summary on screen
+echo "Filename:            ${out}"
 printf "\n\n-----------------------------------------------------------\n\n"
-echo "Filename:            ${in}"
 echo ""
 echo "Timepoints expected: ${ntp}"
 echo "Timepoints found:    ${ntpf}"
@@ -247,7 +249,7 @@ then
 fi
 if [ -e ${heur} ] && [ ${sub} ]
 then
-	${heur} ${in::-4} ${odir} ${sub} ${ses}
+	${heur} ${inmsg::-4} ${odir} ${sub} ${ses}
 else
 	echo "Skipping heuristics"
 fi

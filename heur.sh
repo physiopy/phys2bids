@@ -30,7 +30,7 @@ case "$1" in
 	################################
 	### Don't modify below this! ###
 	################################
-	* ) echo "Something's wrong here, can't find $1 !"; exit 1 ;;
+	* ) echo "Something's wrong here, can't find $1 !" ;;
 
 esac
 
@@ -44,12 +44,18 @@ if [ ${run} ]; then name="${name}_run-${run}"; fi
 
 name="${name}_physio"
 
-export ${name}
+echo ${name}
+
+return
 }
+
 
 check_dir() { if [ ! -d $1 ]; then mkdir $1; fi }
 
-#${heur} ${in::-4} ${odir} ${sub} ${ses}
+
+##########
+## Main ##
+##########
 in=$1
 odir=$2
 name=$3
