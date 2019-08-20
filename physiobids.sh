@@ -42,7 +42,7 @@ echo "                      Default: ."
 echo "   -heur pth/fl:   File containing heuristic, with or without extension."
 echo "                      Specify path to it if necessary. Optional."
 echo "                      Needs \"-sub\", and it's possible to specify \"-ses\""
-echo "                      Default: heur.sh  (in same folder)"
+echo "                      Default: heur.sh  (in script folder)"
 echo "   -sub subnum:    To be specified with \"-heur\". Number of subject to process."
 echo "   -ses sesnum:    Can be specified with \"-heur\". Number of session to process."
 echo "   -info:          Only output info about file, no transformation."
@@ -72,13 +72,14 @@ if [[ ( $# -eq 0 ) ]]
 	displayhelp
 fi
 
+scriptdir=$( which physiobids )
 # Preparing the default values for optional variables
 chtrig=1
 thr=3
 tbhd=$( echo "time respiratory_chest trigger cardiac respiratory_CO2 respiratory_O2" )
 indir=.
 odir=.
-heur=heur
+heur=${scriptdir::-10}heur
 #colname=$( echo "[\"time\", \"respiratory chest\", \"trigger\", \"cardiac\", \"respiratory CO2\", \"respiratory O2\"]" )
 
 
