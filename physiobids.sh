@@ -6,7 +6,7 @@
 # get rid of csvtool
 # better trigger
 
-ver=1.0.3
+ver=2.0.0
 
 # Check locale
 oldnum=${LC_NUMERIC}
@@ -32,7 +32,19 @@ echo "Usage:"
 echo "   physiobids.sh -in infile -chtrig trigger -chsel c,h,a,n -ntp num -tr secs"
 echo ""
 echo "Input:"
-echo "   -in filename:   The name of the acq file, without extension."
+echo "   -in filename:   The name of the acq file, with or without extension."
+echo "                      Must be an .acq file!"
+echo "   -indir pth/to:  Folder containing input."
+echo "                      Default: ."
+echo "   -odir pth/to:  Folder where output should be placed. If \"-heur\" is used, "
+echo "                      It'll become the site folder."
+echo "                      Default: ."
+echo "   -heur pth/fl:   File containing heuristic, with or without extension."
+echo "                      Specify path to it if necessary. Optional."
+echo "                      Needs \"-sub\", and it's possible to specify \"-ses\""
+echo "                      Default: heur.sh  (in same folder)"
+echo "   -sub subnum:    To be specified with \"-heur\". Number of subject to process."
+echo "   -ses sesnum:    Can be specified with \"-heur\". Number of session to process."
 echo "   -info:          Only output info about file, no transformation."
 echo "   -chtrig num:    The number corresponding to the trigger channel."
 echo "                      Default: 1"
@@ -43,6 +55,8 @@ echo "   -tr sec:        TR of sequence in seconds.  Optional."
 echo "   -thr num:       Threshold used for trigger detection."
 echo "                      Default: 3"
 echo "   -tbhd \"a b c\":  Columns header (for json file). Optional."
+echo "                      Default: \"time respiratory_chest trigger cardiac ..."
+echo "                              ... respiratory_CO2 respiratory_O2\""
 echo ""
 echo "   -h:             Display this help."
 echo "   -v:             Display version."
@@ -62,7 +76,11 @@ fi
 chtrig=1
 thr=3
 tbhd=$( echo "time respiratory_chest trigger cardiac respiratory_CO2 respiratory_O2" )
+indir=.
+odir=.
+heur=heur
 #colname=$( echo "[\"time\", \"respiratory chest\", \"trigger\", \"cardiac\", \"respiratory CO2\", \"respiratory O2\"]" )
+
 
 while [[ ! -z "$1" ]]
 do
@@ -73,11 +91,17 @@ do
 		-chtrig) chtrig=$2;shift;;
 		-thr)    thr=$2;shift;;
 		-tbhd)   tbhd=$2;shift;;
+		-indir)  indir=$2;shift;;
+		-odir)   odir=$2;shift;;
+		-heur)   heur=$2;shift;;
 		# optional var empty
 		-info)   info=1;;
 		-chsel)  chsel=$2;shift;;
 		-ntp)    ntp=$2;shift;;
 		-tr)     tr=$2;shift;;
+		# bids
+		-sub)    sub=$2;shift;;
+		-ses)    ses=$2;shift;;
 		# other
 		-h)  displayhelp;;
 		-v)  echo "Version ${ver}";exit 0;;
@@ -92,22 +116,39 @@ done
 # ntp=240
 # tr=2
 
+# Check if paths have last / and create outdir if non-existent
+if [ ${indir: -1} != "/" ]
+then
+	indir=${indir}/
+fi
+if [ ${odir: -1} != "/" ]
+then
+	odir=${odir}/
+fi
+if [ ! -d ${odir::-1} ]
+then
+	mkdir ${odir::-1}
+fi
+
 # Check if the extension is right
 if [ ${in: -4} != ".acq" ]
 then
 	in=${in}.acq
 fi
 
+inmsg=${in}
+in=${indir}${in}
+out=${odir}${in::-4}
+
 # Check if the file exists
 if [ ! -e ${in} ]
 then
-	printf "File ${in} doesn't exists\n\n"
+	printf "File %s doesn't exists\n\n" "${in}"
 	displayhelp
 fi
 
 # Output channel names and sample time
-echo ""
-echo "File ${in} has:"
+print "\n\nFile %s has:" "${inmsg}\n"
 acq_info ${in} | grep -vP "\t"
 
 printf "\n\n-----------------------------------------------------------\n\n"
@@ -125,7 +166,7 @@ then
 fi
 
 echo "Extracting info from acq"
-acq2txt ${chsel} -o rm.transform.tsv ${in}
+acq2txt "${chsel}" -o rm.transform.tsv ${in}
 
 # Remove first line
 csvtool -t TAB -u TAB drop 1 rm.transform.tsv > rm.drop.tsv
@@ -147,7 +188,7 @@ ntpf=$( awk '{s+=$1} END {printf "%.0f", s}' rm.trigger_thr.1D )
 # Find time of first timepoint above 0.5: the first trigger
 echo "Extracting other info for json file"
 evawk="awk '\$${chtrig}>${thr}{print; exit}' rm.drop.tsv"
-tza=( $( eval ${evawk} ) )
+tza=( $( eval "${evawk}" ) )
 
 if [ "${ntp}" ]
 then
@@ -170,19 +211,19 @@ echo "Correcting time in file"
 
 csvtool -t TAB -u TAB transpose rm.drop.tsv | csvtool -t TAB -u TAB drop 1 - > rm.drop_t.tsv
 csvtool -t TAB -u TAB transpose rm.drop_t.tsv > rm.drop.tsv
-csvtool -t TAB -u TAB paste rm.newtime.1D rm.drop.tsv > ${in}.tsv
+csvtool -t TAB -u TAB paste rm.newtime.1D rm.drop.tsv > ${out}.tsv
 
 # remove all intermediate steps
 echo "Preparing output and cleaning up the mess"
 rm rm.*
 
 # gzip tsv
-gzip -f ${in}.tsv
+gzip -f ${out}.tsv
 
 # Print json
 tz=$( echo "${tz} * (-1)" | bc )
 
-printf "{\n\t\"SamplingFrequency\": %.3f,\n\t\"StartTime\": %.3f,\n\t\"Columns\": [\"%s\"]\n}" "${sf}" "${tz}" $(echo ${tbhd} | sed 's: :", ":g' ) > ${in}.json
+printf "{\n\t\"SamplingFrequency\": %.3f,\n\t\"StartTime\": %.3f,\n\t\"Columns\": [\"%s\"]\n}" "${sf}" "${tz}" $(echo "${tbhd}" | sed 's: :", ":g' ) > ${out}.json
 
 # Print summary on screen
 printf "\n\n-----------------------------------------------------------\n\n"
@@ -199,3 +240,15 @@ LC_NUMERIC=${oldnum}
 #############################
 ### Here goes "heuristic" ###
 #############################
+if [ ! -e ${heur} ]
+then
+	heur=${heur}.sh
+fi
+if [ -e ${heur} ] && [ ${sub} ]
+then
+	${heur} ${in::-4} ${odir} ${sub} ${ses}
+else
+	echo "Skipping heuristics"
+fi
+
+echo "All done!"
