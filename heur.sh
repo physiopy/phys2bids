@@ -36,10 +36,11 @@ esac
 
 name="${2}_task-${task}"
 
-if [ ${run} ]; then name="${name}_run-${run}"; fi
-if [ ${rec} ]; then name="${name}_rec-${rec}"; fi
+# filename spec: sub-<label>[_ses-<label>]_task-<label>[_acq-<label>][_ce-<label>][_dir-<label>][_rec-<label>][_run-<index>][_recording-<label>]_physio
 if [ ${acq} ]; then name="${name}_acq-${acq}"; fi
 if [ ${dir} ]; then name="${name}_dir-${dir}"; fi
+if [ ${rec} ]; then name="${name}_rec-${rec}"; fi
+if [ ${run} ]; then name="${name}_run-${run}"; fi
 
 name="${name}_physio"
 
@@ -55,6 +56,7 @@ name=$3
 ses=$4
 
 if [ ${name:0:3} != sub ]; then name="sub-${name}"; fi
+# fld spec: sub-<label>/[ses-<label>/]func/
 fld=${name}
 check_dir ${odir}${fld}
 
