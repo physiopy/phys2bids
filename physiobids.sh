@@ -239,6 +239,18 @@ echo "Sampling started at: ${tz} s"
 echo "Tip: Time 0 is the time of first trigger"
 printf "\n\n-----------------------------------------------------------\n\n"
 
+# Print summary in file
+echo "Filename:            ${out}" > ${out}.log
+printf "\n\n-----------------------------------------------------------\n\n" >> ${out}.log
+echo "" >> ${out}.log
+echo "Timepoints expected: ${ntp}" >> ${out}.log
+echo "Timepoints found:    ${ntpf}" >> ${out}.log
+echo "Sampling Frequency:  ${sf} Hz" >> ${out}.log # Check
+echo "Sampling started at: ${tz} s" >> ${out}.log
+echo "Tip: Time 0 is the time of first trigger" >> ${out}.log
+printf "\n\n-----------------------------------------------------------\n\n" >> ${out}.log
+
+
 LC_NUMERIC=${oldnum}
 #############################
 ### Here goes "heuristic" ###
