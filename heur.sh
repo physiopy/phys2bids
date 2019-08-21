@@ -82,4 +82,4 @@ echo "   ${fld}/${name}.*"
 
 if [ -e ${odir}${in}.tsv.gz ]; then mv ${odir}${in}.tsv.gz ${fld}/${name}.tsv.gz; fi
 if [ -e ${odir}${in}.json ]; then mv ${odir}${in}.json ${fld}/${name}.json; fi
-if [ -e ${odir}${in}.out ]; then mv ${odir}${in}.out ${fld}/${name}.out; fi
+if [ -e ${odir}${in}.log ]; then mv ${odir}${in}.log ${fld}/${name}.log; fi

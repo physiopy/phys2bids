@@ -169,28 +169,28 @@ then
 fi
 
 echo "Extracting info from acq"
-acq2txt "${chsel}" -o rm.transform.tsv ${in}
+acq2txt "${chsel}" -o rm.transform${sub}.tsv ${in}
 
 # Remove first line
-csvtool -t TAB -u TAB drop 1 rm.transform.tsv > rm.drop.tsv
+csvtool -t TAB -u TAB drop 1 rm.transform${sub}.tsv > rm.drop${sub}.tsv
 
 # Get time and trigger in separate files (correcting trigger offset)
 echo "Separating time and trigger (channel ${chtrig})"
-csvtool -t TAB col 1 rm.drop.tsv > rm.time.1D
-# csvtool -t TAB col 2 rm.trigger.tsv > rm.trigger.1D
+csvtool -t TAB col 1 rm.drop${sub}.tsv > rm.time${sub}.1D
+# csvtool -t TAB col 2 rm.trigger${sub}.tsv > rm.trigger${sub}.1D
 let chtrig+=2
-csvtool -t TAB col ${chtrig} rm.drop.tsv > rm.trigger.1D
+csvtool -t TAB col ${chtrig} rm.drop${sub}.tsv > rm.trigger${sub}.1D
 
 # Derive trigger to check number of tp in file, then threshold and count number of tp.
 echo "Counting trigger points"
-1d_tool.py -infile rm.trigger.1D -derivative -write rm.trigger_deriv.1D -overwrite
-1deval -a rm.trigger_deriv.1D -b=${thr} -expr 'ispositive(a-b)' > rm.trigger_thr.1D
+1d_tool.py -infile rm.trigger${sub}.1D -derivative -write rm.trigger${sub}_deriv.1D -overwrite
+1deval -a rm.trigger${sub}_deriv.1D -b=${thr} -expr 'ispositive(a-b)' > rm.trigger${sub}_thr.1D
 
-ntpf=$( awk '{s+=$1} END {printf "%.0f", s}' rm.trigger_thr.1D )
+ntpf=$( awk '{s+=$1} END {printf "%.0f", s}' rm.trigger${sub}_thr.1D )
 
 # Find time of first timepoint above 0.5: the first trigger
 echo "Extracting other info for json file"
-evawk="awk '\$${chtrig}>${thr}{print; exit}' rm.drop.tsv"
+evawk="awk '\$${chtrig}>${thr}{print; exit}' rm.drop${sub}.tsv"
 tza=( $( eval "${evawk}" ) )
 
 if [ "${ntp}" ]
@@ -210,11 +210,11 @@ sf=$( echo "1 / ${sta[2]}" | bc )
 
 # Correct time column by starting time and replace it in file
 echo "Correcting time in file"
-1deval -a rm.time.1D -b=${tz} -expr 'a-b' > rm.newtime.1D
+1deval -a rm.time${sub}.1D -b=${tz} -expr 'a-b' > rm.newtime${sub}.1D
 
-csvtool -t TAB -u TAB transpose rm.drop.tsv | csvtool -t TAB -u TAB drop 1 - > rm.drop_t.tsv
-csvtool -t TAB -u TAB paste rm.newtime.1D rm.drop.tsv > ${out}.tsv
-csvtool -t TAB -u TAB transpose rm.drop_t.tsv > rm.drop.tsv
+csvtool -t TAB -u TAB transpose rm.drop${sub}.tsv | csvtool -t TAB -u TAB drop 1 - > rm.drop${sub}_t.tsv
+csvtool -t TAB -u TAB paste rm.newtime${sub}.1D rm.drop${sub}.tsv > ${out}.tsv
+csvtool -t TAB -u TAB transpose rm.drop${sub}_t.tsv > rm.drop${sub}.tsv
 
 echo "Preparing output and cleaning up the mess"
 # remove all intermediate steps
