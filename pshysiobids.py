@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 
 from bioread import read_file
 
+VERSION = '3.0.0'
 
 def _version_():
-    VERSION = '3.0.0'
     print('physiobids v.' + VERSION)
 
 
@@ -25,7 +25,7 @@ def _get_parser():
     # Argument parser follow template provided by RalphyZ, also used by tedana.
     # https://stackoverflow.com/a/43456577
     optional = parser._action_groups.pop()
-    required = parser.add_argument_group('required arguments')
+    required = parser.add_argument_group('Required Argument:')
     required.add_argument('-in', '--input-file',
                           dest='filename',
                           type=str,
@@ -78,7 +78,7 @@ def _get_parser():
                           default=1)
     optional.add_argument('-chsel', '--channel-selection',
                           dest='chsel',
-                          nargs='+',
+                          nargs='*',
                           type=int,
                           help='The number corresponding to the channels to process.',
                           default=None)
@@ -98,15 +98,21 @@ def _get_parser():
                           help='Threshold used for trigger detection.',
                           default=2.5)
     optional.add_argument('-tbhd', '--table-header',
-                          dest='tbhd',
+                          dest='table_header',
                           type=str,
                           help='Columns header (for json file).',
                           default=('time respiratory_chest trigger cardiac ',
                                    'respiratory_CO2 respiratory_O2'))
+    optional.add_argument('-v', '--version', action='version', version=('%(prog)s ' + VERSION))
 
     parser._action_groups.append(optional)
     # Do checks on files go here?
     return parser
+
+
+def writefile(filename, ext, text):
+    with open(filename + ext, 'w') as text_file:
+        print('{}'.format(text), file=text_file)
 
 
 def print_info(filename, data):
@@ -116,7 +122,7 @@ def print_info(filename, data):
 
 
 def print_summary(filename, ntp, ntp_count, samp_freq, start_time, outdir):
-    summary = ('Filename:            ' + filename + '\n',
+    summary = ('Filename:            ' + filename + '.acq\n',
                '\n',
                'Timepoints expected: ' + ntp + '\n',
                'Timepoints found:    ' + ntp_count + '\n',
@@ -124,4 +130,24 @@ def print_summary(filename, ntp, ntp_count, samp_freq, start_time, outdir):
                'Sampling started at: ' + start_time + ' s\n',
                'Tip: Time 0 is the time of first trigger\n')
     print(summary)
+    writefile(filename, '.log', summary)
 
+
+def print_json(filename, samp_freq, start_time, table_header):
+    summary = ('{\n',
+               '\"SamplingFrequency\":' + samp_freq + '\n',
+               '\"StartTime\":' + start_time + '\n',
+               '\"Columns\": [' + table_header + '\"]\n',
+               '}') # check table header
+    writefile(filename, '.log', summary)
+
+
+def _main(argv=None):
+    options = _get_parser().parse_args(argv)
+    
+
+
+
+
+if __name__ == '__main__':
+    _main()
