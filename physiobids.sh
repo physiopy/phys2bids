@@ -213,8 +213,8 @@ echo "Correcting time in file"
 1deval -a rm.${sub}time.1D -b=${tz} -expr 'a-b' > rm.${sub}newtime.1D
 
 csvtool -t TAB -u TAB transpose rm.${sub}drop.tsv | csvtool -t TAB -u TAB drop 1 - > rm.${sub}drop_t.tsv
-csvtool -t TAB -u TAB paste rm.${sub}newtime.1D rm.${sub}drop.tsv > ${out}.tsv
 csvtool -t TAB -u TAB transpose rm.${sub}drop_t.tsv > rm.${sub}drop.tsv
+csvtool -t TAB -u TAB paste rm.${sub}newtime.1D rm.${sub}drop.tsv > ${out}.tsv
 
 echo "Preparing output and cleaning up the mess"
 # remove all intermediate steps

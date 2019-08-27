@@ -1,15 +1,41 @@
 import os
 import argparse
+import sys
 
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 from bioread import read_file
 
 VERSION = '3.0.0'
 
+
 def _version_():
     print('physiobids v.' + VERSION)
+
+
+def check_input_dir(indir):
+    if indir[-1:] == '/':
+        indir = indir[-1:]
+
+    return indir
+
+
+def check_input_ext(file, ext):
+    if file[:-4] != ext:
+        file = file + ext
+
+    return file
+
+
+def check_file_exists(file):
+    """
+    Check if file exists.
+    """
+    if not os.path.isfile(file) and file is not None:
+        print('The file' + file + 'does not exist!')
+        sys.exit()
 
 
 def _get_parser():
@@ -82,16 +108,16 @@ def _get_parser():
                           type=int,
                           help='The number corresponding to the channels to process.',
                           default=None)
-    optional.add_argument('-ntp', '--numtp',
-                          dest='ntp',
+    optional.add_argument('-ntp', '--numtps',
+                          dest='num_tps_expected',
                           type=int,
                           help='Number of expected timepoints.',
-                          default=340)
+                          default=340)  # #!# Has to go to 0
     optional.add_argument('-tr', '--tr',
                           dest='tr',
                           type=float,
                           help='TR of sequence in seconds.',
-                          default=1.5)
+                          default=1.5)  # #!# Has to go to 0
     optional.add_argument('-thr', '--threshold',
                           dest='thr',
                           type=float,
@@ -99,14 +125,20 @@ def _get_parser():
                           default=2.5)
     optional.add_argument('-tbhd', '--table-header',
                           dest='table_header',
+                          nargs='*',
                           type=str,
                           help='Columns header (for json file).',
-                          default=('time respiratory_chest trigger cardiac ',
-                                   'respiratory_CO2 respiratory_O2'))
+                          default=['time', 'respiratory_chest', 'trigger cardiac',
+                                   'respiratory_CO2', 'respiratory_O2'])  # #!# Has to go to empty list
     optional.add_argument('-v', '--version', action='version', version=('%(prog)s ' + VERSION))
 
     parser._action_groups.append(optional)
-    # Do checks on files go here?
+    # Check options to make coherent internally
+    # #!# This can probably be done while parsing?
+    parser.indir = check_input_dir(parser.indir)
+    parser.outdir = check_input_dir(parser.outdir)
+    parser.filename = check_input_ext(parser.filename,'.acq')
+
     return parser
 
 
@@ -122,29 +154,94 @@ def print_info(filename, data):
 
 
 def print_summary(filename, ntp, ntp_count, samp_freq, start_time, outdir):
-    summary = ('Filename:            ' + filename + '.acq\n',
+    summary = ('------------------------------------------------\n',
+               'Filename:            ' + filename + '.acq\n',
                '\n',
                'Timepoints expected: ' + ntp + '\n',
                'Timepoints found:    ' + ntp_count + '\n',
                'Sampling Frequency:  ' + samp_freq + ' Hz\n',
                'Sampling started at: ' + start_time + ' s\n',
-               'Tip: Time 0 is the time of first trigger\n')
+               'Tip: Time 0 is the time of first trigger\n',
+               '------------------------------------------------\n')
     print(summary)
     writefile(filename, '.log', summary)
 
 
 def print_json(filename, samp_freq, start_time, table_header):
     summary = ('{\n',
-               '\"SamplingFrequency\":' + samp_freq + '\n',
-               '\"StartTime\":' + start_time + '\n',
-               '\"Columns\": [' + table_header + '\"]\n',
+               '\t\"SamplingFrequency\": ' + samp_freq + '\n',
+               '\t\"StartTime\": ' + start_time + '\n',
+               '\t\"Columns\": ' + str(table_header) + '\n',
                '}') # check table header
-    writefile(filename, '.log', summary)
+    writefile(filename, '.json', summary)
 
 
 def _main(argv=None):
     options = _get_parser().parse_args(argv)
-    
+    infile = options.indir + '/' + options.filename
+    check_file_exists(infile)
+    data = read_file(infile).channels    
+    print_info(options.filename, data)
+
+    if not options.info:
+        # #!# Get option of no trigger! (which is wrong practice)
+        print('Reading trigger data and time index')
+        trigger = data[options.chtrig].data
+        time = data[options.chtrig].time_index
+
+        print('Counting trigger points')
+        trigger_deriv = np.diff(trigger)
+        tps = trigger_deriv > options.thr
+        num_tps_found = tps.sum()
+        time_offset = time[tps.argmax()]
+
+        if options.num_tps_expected:
+            print('Checking number of tps')
+            if num_tps_found > options.num_tps_expected:
+                tps_extra = num_tps_found - options.num_tps_expected
+                print('Found ' + str(tps_extra) + ' tps more than expected!\n',
+                      'Assuming extra tps are at the end (try again with a ',
+                      'more conservative thr)')
+            elif num_tps_found < options.num_tps_expected:
+                tps_missing = options.num_tps_expected - num_tps_found
+                print('Found ' + str(tps_missing) + ' tps less than expected!')
+                if options.tr:
+                    print('Correcting time offset, assuming missing tps are at the beginning')
+                    # time_offset = time_offset - (tps_missing * options.tr)
+                    time_offset = time[tps.argmax()] - (tps_missing * options.tr)
+                else:
+                    print('Can\'t correct time offset, (try again specifying',
+                          'tr or with a more liberal thr')
+
+            else:
+                print('Found just the right amount of tps!')
+
+        else:
+            print('Not checking the number of tps')
+
+        # time = time - time_offset
+        time = data[options.chtrig].time_index - time_offset
+
+        # #!# The following few lines could be a function on its own for use in python
+        table = pd.DataFrame(index=time)
+
+        if options.chsel:
+            print('Extracting desired channels')
+            for ch in options.chsel:
+                table[data[ch].name] = data[ch].data
+
+        else:
+            # #!# Needs a check on different channel frequency!
+            print('Extracting all channels')
+            for ch in range(0, len(data)):
+                table[data[ch].name] = data[ch].data
+
+        if options.table_header:
+            if 
+
+
+
+
 
 
 
