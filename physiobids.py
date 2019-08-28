@@ -23,7 +23,7 @@ def check_input_dir(indir):
 
 
 def check_input_ext(file, ext):
-    if file[:-4] != ext:
+    if file[-4:] != ext:
         file = file + ext
 
     return file
@@ -128,43 +128,38 @@ def _get_parser():
                           nargs='*',
                           type=str,
                           help='Columns header (for json file).',
-                          default=['time', 'respiratory_chest', 'trigger cardiac',
+                          default=['time', 'respiratory_chest', 'trigger', 'cardiac',
                                    'respiratory_CO2', 'respiratory_O2'])  # #!# Has to go to empty list
     optional.add_argument('-v', '--version', action='version', version=('%(prog)s ' + VERSION))
 
     parser._action_groups.append(optional)
-    # Check options to make coherent internally
-    # #!# This can probably be done while parsing?
-    parser.indir = check_input_dir(parser.indir)
-    parser.outdir = check_input_dir(parser.outdir)
-    parser.filename = check_input_ext(parser.filename,'.acq')
 
     return parser
 
 
 def writefile(filename, ext, text):
     with open(filename + ext, 'w') as text_file:
-        print('{}'.format(text), file=text_file)
+        print('{}'.format(text), text_file)
 
 
 def print_info(filename, data):
-    print('File ' + filename + ' contains:')
-    for ch in data.channels:
-        print(str(data.index(ch)) + ': ' + ch.name)
+    print('File ' + filename + ' contains:\n')
+    for ch in range(0, len(data)):
+         print(str(ch) + ': ' + data[ch].name)
 
 
-def print_summary(filename, ntp, ntp_count, samp_freq, start_time, outdir):
+def print_summary(filename, ntp_expected, ntp_found, samp_freq, start_time, outfile):
     summary = ('------------------------------------------------\n',
                'Filename:            ' + filename + '.acq\n',
                '\n',
-               'Timepoints expected: ' + ntp + '\n',
-               'Timepoints found:    ' + ntp_count + '\n',
+               'Timepoints expected: ' + ntp_expected + '\n',
+               'Timepoints found:    ' + ntp_found + '\n',
                'Sampling Frequency:  ' + samp_freq + ' Hz\n',
                'Sampling started at: ' + start_time + ' s\n',
                'Tip: Time 0 is the time of first trigger\n',
                '------------------------------------------------\n')
     print(summary)
-    writefile(filename, '.log', summary)
+    writefile(outfile, '.log', summary)
 
 
 def print_json(filename, samp_freq, start_time, table_header):
@@ -178,9 +173,17 @@ def print_json(filename, samp_freq, start_time, table_header):
 
 def _main(argv=None):
     options = _get_parser().parse_args(argv)
+    # Check options to make coherent internally
+    # #!# This can probably be done while parsing?
+    options.indir = check_input_dir(options.indir)
+    options.outdir = check_input_dir(options.outdir)
+    options.filename = check_input_ext(options.filename,'.acq')
+
     infile = options.indir + '/' + options.filename
+    outfile = options.outdir + '/' + options.filename[:-4]
+
     check_file_exists(infile)
-    data = read_file(infile).channels    
+    data = read_file(infile).channels
     print_info(options.filename, data)
 
     if not options.info:
@@ -236,14 +239,24 @@ def _main(argv=None):
             for ch in range(0, len(data)):
                 table[data[ch].name] = data[ch].data
 
+        table.index.names = ['time']
+        n_cols = len(table.columns)
+
         if options.table_header:
-            if 
+            if 'time' in options.table_header:
+                ignored_header = 1
+            else:
+                ignored_header = 0
 
+            if n_cols + ignored_header < len(options.table_header):
+                options.table_header = options.table_header[:(n_cols + ignored_header)]
 
+            table.columns = options.table_header[ignored_header:]
 
-
-
-
+        table.to_csv('BH4.tsv.gzip', sep='\t', index=True, header=False, compression='gzip')
+        # Definitely needs check on samp_freq!
+        print_json(outfile, data[0].samples_per_second, time_offset, options.table_header)
+        print_summary(options.filename, options.num_tps_expected, num_tps_found, data[0].samples_per_second, time_offset, outfile)
 
 
 if __name__ == '__main__':
