@@ -161,14 +161,14 @@ def print_info(filename, data):
 
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, start_time, outfile):
-    summary = ('------------------------------------------------\n',
-               'Filename:            ' + filename + '.acq\n',
-               '\n',
-               'Timepoints expected: ' + ntp_expected + '\n',
-               'Timepoints found:    ' + ntp_found + '\n',
-               'Sampling Frequency:  ' + samp_freq + ' Hz\n',
-               'Sampling started at: ' + start_time + ' s\n',
-               'Tip: Time 0 is the time of first trigger\n',
+    summary = ('------------------------------------------------\n'
+               'Filename:            ' + filename + '.acq\n'
+               '\n'
+               'Timepoints expected: ' + str(ntp_expected) + '\n'
+               'Timepoints found:    ' + str(ntp_found) + '\n'
+               'Sampling Frequency:  ' + str(samp_freq) + ' Hz\n'
+               'Sampling started at: ' + str(start_time) + ' s\n'
+               'Tip: Time 0 is the time of first trigger\n'
                '------------------------------------------------\n')
     print(summary)
     writefile(outfile, '.log', summary)
@@ -176,10 +176,10 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, start_time, outf
 
 def print_json(filename, samp_freq, start_time, table_header):
     summary = ('{\n',
-               '\t\"SamplingFrequency\": ' + samp_freq + '\n',
-               '\t\"StartTime\": ' + start_time + '\n',
-               '\t\"Columns\": ' + str(table_header) + '\n',
-               '}') # check table header
+               '\t\"SamplingFrequency\": ' + str(samp_freq) + '\n'
+               '\t\"StartTime\": ' + str(start_time) + '\n'
+               '\t\"Columns\": ' + str(table_header) + '\n'
+               '}')  # check table header
     writefile(filename, '.json', summary)
 
 
@@ -203,11 +203,6 @@ def _main(argv=None):
         print('Reading trigger data and time index')
         trigger = data[options.chtrig].data
         time = data[options.chtrig].time_index
-        plt.figure(figsize=FIGSIZE, dpi=SET_DPI)
-        plt.title('trigger and time')
-        plt.plot(time, trigger, '-', time, time, '-')
-        plt.savefig(outfile + '_trigger_time.png', dpi=SET_DPI)
-        plt.close()
 
         print('Counting trigger points')
         trigger_deriv = np.diff(trigger)
@@ -241,6 +236,12 @@ def _main(argv=None):
 
         # time = time - time_offset
         time = data[options.chtrig].time_index - time_offset
+
+        plt.figure(figsize=FIGSIZE, dpi=SET_DPI)
+        plt.title('trigger and time')
+        plt.plot(time, trigger, '-', time, time, '-')
+        plt.savefig(outfile + '_trigger_time.png', dpi=SET_DPI)
+        plt.close()
 
         # #!# The following few lines could be a function on its own for use in python
         table = pd.DataFrame(index=time)
