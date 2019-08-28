@@ -1,41 +1,22 @@
+#!/usr/bin/env python3
+
 import os
 import argparse
 import sys
 
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
+
+import matplotlib.pyplot as plt
 
 from bioread import read_file
 
 VERSION = '3.0.0'
-
+SET_DPI = 100
+FIGSIZE = (18,10)
 
 def _version_():
     print('physiobids v.' + VERSION)
-
-
-def check_input_dir(indir):
-    if indir[-1:] == '/':
-        indir = indir[-1:]
-
-    return indir
-
-
-def check_input_ext(file, ext):
-    if file[-4:] != ext:
-        file = file + ext
-
-    return file
-
-
-def check_file_exists(file):
-    """
-    Check if file exists.
-    """
-    if not os.path.isfile(file) and file is not None:
-        print('The file' + file + 'does not exist!')
-        sys.exit()
 
 
 def _get_parser():
@@ -128,13 +109,44 @@ def _get_parser():
                           nargs='*',
                           type=str,
                           help='Columns header (for json file).',
-                          default=['time', 'respiratory_chest', 'trigger', 'cardiac',
-                                   'respiratory_CO2', 'respiratory_O2'])  # #!# Has to go to empty list
+                          default=['time', 'respiratory_chest', 'trigger',
+                                   'cardiac', 'respiratory_CO2', 'respiratory_O2'])  # #!# Has to go to empty list
     optional.add_argument('-v', '--version', action='version', version=('%(prog)s ' + VERSION))
 
     parser._action_groups.append(optional)
 
     return parser
+
+
+def check_input_dir(indir):
+    if indir[-1:] == '/':
+        indir = indir[-1:]
+
+    return indir
+
+
+def check_input_ext(file, ext):
+    if file[-4:] != ext:
+        file = file + ext
+
+    return file
+
+
+def check_file_exists(file):
+    """
+    Check if file exists.
+    """
+    if not os.path.isfile(file) and file is not None:
+        print('The file' + file + 'does not exist!')
+        sys.exit()
+
+
+def print_plot(table, channel, filename):
+    plt.figure(figsize=FIGSIZE, dpi=SET_DPI)
+    plt.title(channel)
+    plt.plot(table.index.values, table[channel], '-')
+    plt.savefig(filename + '_' + channel + '_time.png', dpi=SET_DPI)
+    plt.close()
 
 
 def writefile(filename, ext, text):
@@ -145,7 +157,7 @@ def writefile(filename, ext, text):
 def print_info(filename, data):
     print('File ' + filename + ' contains:\n')
     for ch in range(0, len(data)):
-         print(str(ch) + ': ' + data[ch].name)
+        print(str(ch) + ': ' + data[ch].name)
 
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, start_time, outfile):
@@ -191,6 +203,11 @@ def _main(argv=None):
         print('Reading trigger data and time index')
         trigger = data[options.chtrig].data
         time = data[options.chtrig].time_index
+        plt.figure(figsize=FIGSIZE, dpi=SET_DPI)
+        plt.title('trigger and time')
+        plt.plot(time, trigger, '-', time, time, '-')
+        plt.savefig(outfile + '_trigger_time.png', dpi=SET_DPI)
+        plt.close()
 
         print('Counting trigger points')
         trigger_deriv = np.diff(trigger)
@@ -252,11 +269,14 @@ def _main(argv=None):
                 options.table_header = options.table_header[:(n_cols + ignored_header)]
 
             table.columns = options.table_header[ignored_header:]
+            # #!# this should be iterative!
+            print_plot(table, 'respiratory_CO2', outfile)
 
-        table.to_csv('BH4.tsv.gzip', sep='\t', index=True, header=False, compression='gzip')
+        table.to_csv(outfile + '.tsv.gz', sep='\t', index=True, header=False, compression='gzip')
         # Definitely needs check on samp_freq!
         print_json(outfile, data[0].samples_per_second, time_offset, options.table_header)
-        print_summary(options.filename, options.num_tps_expected, num_tps_found, data[0].samples_per_second, time_offset, outfile)
+        print_summary(options.filename, options.num_tps_expected,
+                      num_tps_found, data[0].samples_per_second, time_offset, outfile)
 
 
 if __name__ == '__main__':
