@@ -36,7 +36,7 @@ def _get_parser():
     required.add_argument('-in', '--input-file',
                           dest='filename',
                           type=str,
-                          help=('The name of the acq file, with or without ',
+                          help=('The name of the acq file, with or without '
                                 'extension.   Must be an .acq file!'),
                           required=True)
     optional.add_argument('-info','--info',
@@ -52,35 +52,35 @@ def _get_parser():
     optional.add_argument('-outdir', '--output-dir',
                           dest='outdir',
                           type=str,
-                          help=('Folder where output should be placed. ',
-                                'If \"-heur\" is used, it\'ll become ',
-                                'the site folder. Requires \"-sub\",',
+                          help=('Folder where output should be placed. '
+                                'If \"-heur\" is used, it\'ll become '
+                                'the site folder. Requires \"-sub\",'
                                 ' and it\'s possible to specify \"-ses\""'),
                           default='.')
     optional.add_argument('-heur', '--heuristic',
                           dest='heur',
                           type=str,
-                          help=('File containing heuristic, with or without ',
+                          help=('File containing heuristic, with or without '
                                 'extension. Specify path to it if necessary.'),
                           default='heur.py')
     optional.add_argument('-sub', '--subject',
                           dest='sub',
                           type=str,
-                          help=('To be specified with \"-heur\". Code of ',
-                                'subject to process.',
+                          help=('To be specified with \"-heur\". Code of '
+                                'subject to process.'
                                 'Specify path to it if necessary.'),
                           default=None)
     optional.add_argument('-ses', '--session',
                           dest='ses',
                           type=str,
-                          help=('To be specified with \"-heur\". Code of ',
-                                'session to process.',
+                          help=('To be specified with \"-heur\". Code of '
+                                'session to process.'
                                 'Specify path to it if necessary.'),
                           default=None)
     optional.add_argument('-chtrig', '--channel-trigger',
                           dest='chtrig',
                           type=int,
-                          help=('The number corresponding to the trigger channel.',
+                          help=('The number corresponding to the trigger channel.'
                                 ' Channel numbering starts with 0'),
                           default=1)
     optional.add_argument('-chsel', '--channel-selection',
@@ -184,7 +184,7 @@ def print_json(filename, samp_freq, start_time, table_header):
 
 
 def _main(argv=None):
-    options = _get_parser().parse_args(argv)
+    options = _get_parser().parse_args()
     # Check options to make coherent internally
     # #!# This can probably be done while parsing?
     options.indir = check_input_dir(options.indir)
