@@ -1,6 +1,5 @@
 import sys
-import os
-import fnmatch.filter as match
+import fnmatch
 
 
 def heur(physinfo, name):
@@ -24,11 +23,11 @@ def heur(physinfo, name):
         run = 'runnum'
     elif physinfo == 'BH4':
         task = 'breathhold'
-    elif match(physinfo, 'MOTOR?'):
+    elif fnmatch.fnmatchcase(physinfo, 'MOTOR?'):
         task = 'motor'
-    elif match(physinfo, 'PINEL?'):
+    elif fnmatch.fnmatchcase(physinfo, 'PINEL?'):
         task = 'pinel'
-    elif match(physinfo, 'SIMON?'):
+    elif fnmatch.fnmatchcase(physinfo, 'SIMON?'):
         task = 'simon'
     elif physinfo == 'RS1':
         task = 'rest'
@@ -46,7 +45,7 @@ def heur(physinfo, name):
         # ## Don't modify below this! ## #
         # ############################## #
     else:
-        # #!# Transform sys.exit in debug warnings!
+        # #!# Transform sys.exit in debug warnings or raiseexceptions!
         # #!# Make all of the above a dictionary
         sys.exit()
 
