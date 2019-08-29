@@ -206,7 +206,8 @@ def print_info(filename, data):
         print(str(ch) + ': ' + data[ch].name)
 
 
-def print_summary(filename, ntp_expected, ntp_found, samp_freq, start_time, outfile):
+def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
+    start_time = -time_offset
     summary = (f'------------------------------------------------\n'
                f'Filename:            {filename}\n'
                f'\n'
@@ -220,7 +221,8 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, start_time, outf
     writefile(outfile, '.log', summary)
 
 
-def print_json(filename, samp_freq, start_time, table_header):
+def print_json(filename, samp_freq, time_offset, table_header):
+    start_time = -time_offset
     summary = (f'{{\n'
                f'\t\"SamplingFrequency\": {samp_freq}\n'
                f'\t\"StartTime\": {start_time}\n'
