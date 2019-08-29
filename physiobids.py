@@ -11,9 +11,14 @@ import matplotlib.pyplot as plt
 
 from bioread import read_file
 
+
 VERSION = '3.0.0'
 SET_DPI = 100
 FIGSIZE = (18,10)
+
+
+# #!# Different frequencies == different files!
+
 
 def _version_():
     print('physiobids v.' + VERSION)
@@ -58,7 +63,7 @@ def _get_parser():
                                 ' and it\'s possible to specify \"-ses\""'),
                           default='.')
     optional.add_argument('-heur', '--heuristic',
-                          dest='heur',
+                          dest='heur_file',
                           type=str,
                           help=('File containing heuristic, with or without '
                                 'extension. Specify path to it if necessary.'),
@@ -132,6 +137,14 @@ def check_input_ext(file, ext):
     return file
 
 
+def path_exists_or_make_it(fldr):
+    """
+    Check if folder exists, if not make it
+    """
+    if not os.path.isdir(fldr):
+        os.makedirs(fldr)
+
+
 def check_file_exists(file):
     """
     Check if file exists.
@@ -139,6 +152,19 @@ def check_file_exists(file):
     if not os.path.isfile(file) and file is not None:
         print('The file' + file + 'does not exist!')
         sys.exit()
+
+
+def move_file(oldpath, newpath, ext):
+    """
+    Moves file from oldpath to newpath.
+    If file already exists, remove it first.
+    """
+    check_file_exists(oldpath + ext)
+
+    if os.path.isfile(newpath + ext):
+        os.remove(newpath + ext)
+
+    os.rename(newpath + ext, newpath + ext)
 
 
 def print_plot(table, channel, filename):
@@ -151,7 +177,7 @@ def print_plot(table, channel, filename):
 
 def writefile(filename, ext, text):
     with open(filename + ext, 'w') as text_file:
-        print('{}'.format(text), text_file)
+        print(text, text_file)
 
 
 def print_info(filename, data):
@@ -161,25 +187,25 @@ def print_info(filename, data):
 
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, start_time, outfile):
-    summary = ('------------------------------------------------\n'
-               'Filename:            ' + filename + '.acq\n'
-               '\n'
-               'Timepoints expected: ' + str(ntp_expected) + '\n'
-               'Timepoints found:    ' + str(ntp_found) + '\n'
-               'Sampling Frequency:  ' + str(samp_freq) + ' Hz\n'
-               'Sampling started at: ' + str(start_time) + ' s\n'
-               'Tip: Time 0 is the time of first trigger\n'
-               '------------------------------------------------\n')
+    summary = (f'------------------------------------------------\n'
+               f'Filename:            {filename}.acq\n'
+               f'\n'
+               f'Timepoints expected: {ntp_expected}\n'
+               f'Timepoints found:    {ntp_found}\n'
+               f'Sampling Frequency:  {samp_freq} Hz\n'
+               f'Sampling started at: {start_time} s\n'
+               f'Tip: Time 0 is the time of first trigger\n'
+               f'------------------------------------------------\n')
     print(summary)
     writefile(outfile, '.log', summary)
 
 
 def print_json(filename, samp_freq, start_time, table_header):
-    summary = ('{\n',
-               '\t\"SamplingFrequency\": ' + str(samp_freq) + '\n'
-               '\t\"StartTime\": ' + str(start_time) + '\n'
-               '\t\"Columns\": ' + str(table_header) + '\n'
-               '}')  # check table header
+    summary = (f'{{\n'
+               f'\t\"SamplingFrequency\": {samp_freq}\n'
+               f'\t\"StartTime\": {start_time}\n'
+               f'\t\"Columns\": {table_header}\n'
+               f'}}')  # check table header
     writefile(filename, '.json', summary)
 
 
@@ -237,6 +263,8 @@ def _main(argv=None):
         # time = time - time_offset
         time = data[options.chtrig].time_index - time_offset
 
+        path_exists_or_make_it(options.outdir)
+
         plt.figure(figsize=FIGSIZE, dpi=SET_DPI)
         plt.title('trigger and time')
         plt.plot(time, trigger, '-', time, time, '-')
@@ -274,10 +302,40 @@ def _main(argv=None):
             print_plot(table, 'respiratory_CO2', outfile)
 
         table.to_csv(outfile + '.tsv.gz', sep='\t', index=True, header=False, compression='gzip')
-        # Definitely needs check on samp_freq!
+        # #!# Definitely needs check on samp_freq!
         print_json(outfile, data[0].samples_per_second, time_offset, options.table_header)
         print_summary(options.filename, options.num_tps_expected,
                       num_tps_found, data[0].samples_per_second, time_offset, outfile)
+
+        if options.heur_file and options.sub:
+            # #!# Can this accept strings?
+            check_file_exists(options.heur_file)
+            from importlib import import_module
+            heur = import_module(options.heur_file)
+
+            if options.sub[:4] != 'sub-':
+                name = 'sub-' + options.sub
+            else:
+                name = options.sub
+
+            fldr = options.outdir + name
+
+            if options.ses:
+                if options.ses[:4] != 'ses-':
+                    fldr = fldr + '/ses-' + options.ses
+                    name = name + '_ses-' + options.ses
+                else:
+                    fldr = fldr + '/' + options.ses
+                    name = name + options.ses
+
+            fldr = fldr + '/func'
+            path_exists_or_make_it(fldr)
+            name = heur.heur(options.filename[:-4], name)
+
+            heurpath = fldr + '/' + name
+
+            for ext in ['.tsv.gz', '.json', '.log']:
+                move_file(outfile, heurpath, ext)
 
 
 if __name__ == '__main__':

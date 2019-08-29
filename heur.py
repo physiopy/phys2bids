@@ -3,47 +3,69 @@ import os
 import fnmatch.filter as match
 
 
-def heuristic(filename):
-    ################################
-    ###       Modify here!       ###
-    ###                          ###
-    ###  Possible variables are: ###
-    ###    -task (required)      ###
-    ###    -rec                  ###
-    ###    -acq                  ###
-    ###    -dir                  ###
-    ###                          ###
-    ###                          ###
-    ###    See example below     ###
-    ################################
+def heur(physinfo, name):
+    # ############################## #
+    # ##       Modify here!       ## #
+    # ##                          ## #
+    # ##  Possible variables are: ## #
+    # ##    -task (required)      ## #
+    # ##    -rec                  ## #
+    # ##    -acq                  ## #
+    # ##    -direct               ## #
+    # ##                          ## #
+    # ##                          ## #
+    # ##    See example below     ## #
+    # ############################## #
 
-    if filename == 'origfilename1':
+    if physinfo == 'origfilename1':
         task = 'newname1'
-    elif filename == 'origfilename2':
+    elif physinfo == 'origfilename2':
         task = 'newname2'
         run = 'runnum'
-    elif filename == 'BH4':
+    elif physinfo == 'BH4':
         task = 'breathhold'
-    elif match(filename, 'MOTOR?'):
+    elif match(physinfo, 'MOTOR?'):
         task = 'motor'
-    elif match(filename, 'PINEL?'):
+    elif match(physinfo, 'PINEL?'):
         task = 'pinel'
-    elif match(filename, 'SIMON?'):
+    elif match(physinfo, 'SIMON?'):
         task = 'simon'
-    elif filename == 'RS1':
+    elif physinfo == 'RS1':
         task = 'rest'
         run = '01'
-    elif filename == 'RS2':
+    elif physinfo == 'RS2':
         task = 'rest'
         run = '02'
-    elif filename == 'RS3':
+    elif physinfo == 'RS3':
         task = 'rest'
         run = '03'
-    elif filename == 'RS4':
+    elif physinfo == 'RS4':
         task = 'rest'
         run = '04'
-        ################################
-        ### Don't modify below this! ###
-        ################################
+        # ############################## #
+        # ## Don't modify below this! ## #
+        # ############################## #
     else:
+        # #!# Transform sys.exit in debug warnings!
+        # #!# Make all of the above a dictionary
         sys.exit()
+
+    if not task:
+        sys.exit()
+
+    name = name + '_task-' + task
+
+    # filename spec: sub-<label>[_ses-<label>]_task-<label>[_acq-<label>][_ce-<label>][_dir-<label>][_rec-<label>][_run-<index>][_recording-<label>]_physio
+    if acq:
+        name = name + '_acq-' + acq
+
+    if direct:
+        name = name + '_dir-' + direct
+
+    if rec:
+        name = name + '_rec-' + rec
+
+    if run:
+        name = name + '_run-' + run
+
+    return name
