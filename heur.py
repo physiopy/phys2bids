@@ -2,7 +2,7 @@ import sys
 import fnmatch
 
 
-def heur(physinfo, name):
+def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
     # ############################## #
     # ##       Modify here!       ## #
     # ##                          ## #

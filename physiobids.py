@@ -57,7 +57,7 @@ def _get_parser():
     optional.add_argument('-outdir', '--output-dir',
                           dest='outdir',
                           type=str,
-                          help=('Folder where output should be placed. '
+                          help=('Folder where output should be placed.'
                                 'If \"-heur\" is used, it\'ll become '
                                 'the site folder. Requires \"-sub\",'
                                 ' and it\'s possible to specify \"-ses\""'),
@@ -68,6 +68,11 @@ def _get_parser():
                           help=('File containing heuristic, with or without '
                                 'extension. Specify path to it if necessary.'),
                           default='heur.py')
+    # optional.add_argument('-hdir', '--heur-dir',
+    #                       dest='heurdir',
+    #                       type=str,
+    #                       help='Folder containing heuristic file.',
+    #                       default='.')
     optional.add_argument('-sub', '--subject',
                           dest='sub',
                           type=str,
@@ -131,7 +136,7 @@ def check_input_dir(indir):
 
 
 def check_input_ext(file, ext):
-    if file[-4:] != ext:
+    if file[-len(ext):] != ext:
         file = file + ext
 
     return file
@@ -150,11 +155,11 @@ def check_file_exists(file):
     Check if file exists.
     """
     if not os.path.isfile(file) and file is not None:
-        print('The file' + file + 'does not exist!')
+        print('The file ' + file + ' does not exist!')
         sys.exit()
 
 
-def move_file(oldpath, newpath, ext):
+def move_file(oldpath, newpath, ext=''):
     """
     Moves file from oldpath to newpath.
     If file already exists, remove it first.
@@ -164,7 +169,22 @@ def move_file(oldpath, newpath, ext):
     if os.path.isfile(newpath + ext):
         os.remove(newpath + ext)
 
-    os.rename(newpath + ext, newpath + ext)
+    os.rename(oldpath + ext, newpath + ext)
+
+
+def copy_file(oldpath, newpath, ext=''):
+    """
+    Copy file from oldpath to newpath.
+    If file already exists, remove it first.
+    """
+    from shutil import copy as cp
+
+    check_file_exists(oldpath + ext)
+
+    if os.path.isfile(newpath + ext):
+        os.remove(newpath + ext)
+
+    cp(oldpath + ext, newpath + ext)
 
 
 def print_plot(table, channel, filename):
@@ -177,7 +197,7 @@ def print_plot(table, channel, filename):
 
 def writefile(filename, ext, text):
     with open(filename + ext, 'w') as text_file:
-        print(text, text_file)
+        print(text, file=text_file)
 
 
 def print_info(filename, data):
@@ -188,7 +208,7 @@ def print_info(filename, data):
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, start_time, outfile):
     summary = (f'------------------------------------------------\n'
-               f'Filename:            {filename}.acq\n'
+               f'Filename:            {filename}\n'
                f'\n'
                f'Timepoints expected: {ntp_expected}\n'
                f'Timepoints found:    {ntp_found}\n'
@@ -209,13 +229,53 @@ def print_json(filename, samp_freq, start_time, table_header):
     writefile(filename, '.json', summary)
 
 
+def use_heuristic(heur_file, sub, ses, filename, outdir):
+    check_file_exists(heur_file)
+
+    from importlib import import_module
+
+    if sub[:4] != 'sub-':
+        name = 'sub-' + sub
+    else:
+        name = sub
+
+    fldr = outdir + '/' + name
+
+    if ses:
+        if ses[:4] != 'ses-':
+            fldr = fldr + '/ses-' + ses
+            name = name + '_ses-' + ses
+        else:
+            fldr = fldr + '/' + ses
+            name = name + ses
+
+    fldr = fldr + '/func'
+    path_exists_or_make_it(fldr)
+
+    cwd = os.getcwd()
+    os.chdir(outdir)
+    copy_file(heur_file,'./heur.py')
+
+    heur = import_module('heur')
+
+    name = heur.heur(filename[:-4], name)
+
+    heurpath = fldr + '/' + name
+    # for ext in ['.tsv.gz', '.json', '.log']:
+    #     move_file(outfile, heurpath, ext)
+    os.chdir(cwd)
+
+    return heurpath
+
+
 def _main(argv=None):
-    options = _get_parser().parse_args()
+    options = _get_parser().parse_args(argv)
     # Check options to make coherent internally
     # #!# This can probably be done while parsing?
     options.indir = check_input_dir(options.indir)
     options.outdir = check_input_dir(options.outdir)
     options.filename = check_input_ext(options.filename,'.acq')
+    options.heur_file = check_input_ext(options.heur_file,'.py')
 
     infile = options.indir + '/' + options.filename
     outfile = options.outdir + '/' + options.filename[:-4]
@@ -225,6 +285,13 @@ def _main(argv=None):
     print_info(options.filename, data)
 
     if not options.info:
+        if options.heur_file and options.sub:
+            check_file_exists(options.heur_file)
+            print(f'Preparing BIDS output using {options.heur_file}')
+            outfile = use_heuristic(options.heur_file, options.sub,
+                                    options.ses, options.filename,
+                                    options.outdir)
+
         # #!# Get option of no trigger! (which is wrong practice)
         print('Reading trigger data and time index')
         trigger = data[options.chtrig].data
@@ -265,9 +332,12 @@ def _main(argv=None):
 
         path_exists_or_make_it(options.outdir)
 
-        plt.figure(figsize=FIGSIZE, dpi=SET_DPI)
-        plt.title('trigger and time')
-        plt.plot(time, trigger, '-', time, time, '-')
+        fig = plt.figure(figsize=FIGSIZE, dpi=SET_DPI)
+        subplot = fig.add_subplot(111)
+        subplot.set_title('trigger and time')
+        subplot.set_xlim([-options.tr*4, options.tr*4])
+        subplot.set_ylim([-1, options.thr*3])
+        subplot.plot(time, trigger, '-', time, time, '-')
         plt.savefig(outfile + '_trigger_time.png', dpi=SET_DPI)
         plt.close()
 
@@ -301,41 +371,12 @@ def _main(argv=None):
             # #!# this should be iterative!
             print_plot(table, 'respiratory_CO2', outfile)
 
+        print('Printing file')
         table.to_csv(outfile + '.tsv.gz', sep='\t', index=True, header=False, compression='gzip')
         # #!# Definitely needs check on samp_freq!
         print_json(outfile, data[0].samples_per_second, time_offset, options.table_header)
         print_summary(options.filename, options.num_tps_expected,
                       num_tps_found, data[0].samples_per_second, time_offset, outfile)
-
-        if options.heur_file and options.sub:
-            # #!# Can this accept strings?
-            check_file_exists(options.heur_file)
-            from importlib import import_module
-            heur = import_module(options.heur_file)
-
-            if options.sub[:4] != 'sub-':
-                name = 'sub-' + options.sub
-            else:
-                name = options.sub
-
-            fldr = options.outdir + name
-
-            if options.ses:
-                if options.ses[:4] != 'ses-':
-                    fldr = fldr + '/ses-' + options.ses
-                    name = name + '_ses-' + options.ses
-                else:
-                    fldr = fldr + '/' + options.ses
-                    name = name + options.ses
-
-            fldr = fldr + '/func'
-            path_exists_or_make_it(fldr)
-            name = heur.heur(options.filename[:-4], name)
-
-            heurpath = fldr + '/' + name
-
-            for ext in ['.tsv.gz', '.json', '.log']:
-                move_file(outfile, heurpath, ext)
 
 
 if __name__ == '__main__':
