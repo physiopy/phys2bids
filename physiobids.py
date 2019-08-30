@@ -262,7 +262,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir):
 
     name = heur.heur(filename[:-4], name)
 
-    heurpath = fldr + '/' + name
+    heurpath = fldr + '/' + name + '_physio'
     # for ext in ['.tsv.gz', '.json', '.log']:
     #     move_file(outfile, heurpath, ext)
     os.chdir(cwd)
