@@ -272,7 +272,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir):
 
 def _main(argv=None):
     options = _get_parser().parse_args(argv)
-    # Check options to make coherent internally
+    # Check options to make them internally coherent
     # #!# This can probably be done while parsing?
     options.indir = check_input_dir(options.indir)
     options.outdir = check_input_dir(options.outdir)
@@ -334,11 +334,27 @@ def _main(argv=None):
 
         path_exists_or_make_it(options.outdir)
 
+        def time2ntr(x):
+            return x / options.tr
+
+        def ntr2time(x):
+            return x * options.tr
+
+        thrline = np.ones(time.shape) * options.thr
         fig = plt.figure(figsize=FIGSIZE, dpi=SET_DPI)
-        subplot = fig.add_subplot(111)
+        subplot = fig.add_subplot(211)
         subplot.set_title('trigger and time')
+        subplot.set_ylim([-0.2, options.thr*10])
+        subplot.plot(time, trigger, '-', time, thrline, 'r-.', time, time, '-')
+        subplot = fig.add_subplot(223)
         subplot.set_xlim([-options.tr*4, options.tr*4])
-        subplot.set_ylim([-1, options.thr*3])
+        subplot.set_ylim([-0.2, options.thr*3])
+        subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
+        subplot.plot(time, trigger, '-', time, time, '-')
+        subplot = fig.add_subplot(224)
+        subplot.set_xlim([options.tr*(options.num_tps_expected-4), options.tr*(options.num_tps_expected+4)])
+        subplot.set_ylim([-0.2, options.thr*3])
+        subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
         subplot.plot(time, trigger, '-', time, time, '-')
         plt.savefig(outfile + '_trigger_time.png', dpi=SET_DPI)
         plt.close()
