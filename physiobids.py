@@ -14,7 +14,7 @@ from bioread import read_file
 
 VERSION = '3.0.0'
 SET_DPI = 100
-FIGSIZE = (18,10)
+FIGSIZE = (18, 10)
 
 
 # #!# Different frequencies == different files!
