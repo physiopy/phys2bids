@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from bioread import read_file
 
 
-VERSION = '3.0.0'
+VERSION = '0.3.0'
 SET_DPI = 100
 FIGSIZE = (18, 10)
 
