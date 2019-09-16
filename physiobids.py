@@ -1,5 +1,27 @@
 #!/usr/bin/env python3
 
+"""
+Phys2bids is a python3 library meant to set physiological files in BIDS
+standard.
+It was born for Acqknowledge files (BIOPAC), and at the moment it supports
+``.acq`` files and ``.tsv`` files obtained by labchart
+(ADInstruments) and Respiract.
+
+It requires python 3.6 or above, as well as the modules:
+- `numpy`
+- `pandas`
+- `matplotlib`
+
+In order to process ``.acq`` files, it needs `bioread`, an excellent module
+that can be found at `this link`_
+
+The project is under development.
+
+
+.. _this link:
+   https://github.com/uwmadison-chm/bioread
+"""
+
 import os
 import argparse
 import sys
@@ -34,7 +56,7 @@ def _get_parser():
 
     """
     parser = argparse.ArgumentParser()
-    # Argument parser follow template provided by RalphyZ, also used by tedana.
+    # Argument parser follow template provided by RalphyZ.
     # https://stackoverflow.com/a/43456577
     optional = parser._action_groups.pop()
     required = parser.add_argument_group('Required Argument:')
@@ -44,7 +66,7 @@ def _get_parser():
                           help=('The name of the acq file, with or without '
                                 'extension.   Must be an .acq file!'),
                           required=True)
-    optional.add_argument('-info','--info',
+    optional.add_argument('-info', '--info',
                           dest='info',
                           action='store_true',
                           help='Only output file info, don\'t process.',
