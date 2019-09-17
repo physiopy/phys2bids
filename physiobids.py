@@ -4,7 +4,7 @@
 Phys2bids is a python3 library meant to set physiological files in BIDS
 standard.
 It was born for Acqknowledge files (BIOPAC), and at the moment it supports
-``.acq`` files and ``.tsv`` files obtained by labchart
+``.acq`` files and ``.txt`` files obtained by labchart
 (ADInstruments) and Respiract.
 
 It requires python 3.6 or above, as well as the modules:
@@ -17,6 +17,8 @@ that can be found at `this link`_
 
 The project is under development.
 
+At the very moment, it assumes all the extracted channels from a file
+have the same sampling freq.
 
 .. _this link:
    https://github.com/uwmadison-chm/bioread
@@ -31,12 +33,12 @@ import pandas as pd
 
 import matplotlib.pyplot as plt
 
-from bioread import read_file
-
 
 VERSION = '0.3.0'
 SET_DPI = 100
 FIGSIZE = (18, 10)
+# #!# This is hardcoded until we find a better solution
+HEADERLENGTH = 9
 
 
 # #!# Different frequencies == different files!
@@ -172,7 +174,7 @@ def path_exists_or_make_it(fldr):
         os.makedirs(fldr)
 
 
-def check_file_exists(file):
+def check_file_exists(file, hardexit=True):
     """
     Check if file exists.
     """
@@ -222,10 +224,24 @@ def writefile(filename, ext, text):
         print(text, file=text_file)
 
 
-def print_info(filename, data):
+def print_info_acq(filename, data):
     print('File ' + filename + ' contains:\n')
     for ch in range(0, len(data)):
         print(str(ch) + ': ' + data[ch].name)
+
+
+def print_info_txt(filename):
+    with open(filename) as txtfile:
+        header = [next(txtfile) for x in range(HEADERLENGTH-2)]
+
+    del header[1:4]
+    del header[2]
+
+    print('File ' + filename + ' contains:\n')
+    for line in header:
+        print(line)
+
+    return header
 
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
@@ -246,7 +262,7 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
 def print_json(filename, samp_freq, time_offset, table_header):
     start_time = -time_offset
     summary = (f'{{\n'
-               f'\t\"SamplingFrequency\": {samp_freq}\n'
+               f'\t\"SamplingFrequency\": {samp_freq} Hz\n'
                f'\t\"StartTime\": {start_time}\n'
                f'\t\"Columns\": {table_header}\n'
                f'}}')  # check table header
@@ -296,18 +312,34 @@ def _main(argv=None):
     options = _get_parser().parse_args(argv)
     # Check options to make them internally coherent
     # #!# This can probably be done while parsing?
+    # #!# Make filename check better somehow.
     options.indir = check_input_dir(options.indir)
     options.outdir = check_input_dir(options.outdir)
-    options.filename = check_input_ext(options.filename,'.acq')
-    options.heur_file = check_input_ext(options.heur_file,'.py')
+    options.filename = check_input_ext(options.filename, '.acq')
+    ftype = 'acq'
+    if not os.path.isfile(options.filename):
+        options.filename = check_input_ext(options.filename[:-4], '.txt')
+        ftype = 'txt'
+
+    print('File extension is .' + ftype )
+    options.heur_file = check_input_ext(options.heur_file, '.py')
 
     infile = options.indir + '/' + options.filename
     outfile = options.outdir + '/' + options.filename[:-4]
 
     check_file_exists(infile)
-    data = read_file(infile).channels
-    print_info(options.filename, data)
+    print('File exists')
 
+    # Read infos from file
+    if ftype == 'acq':
+        from bioread import read_file
+
+        data = read_file(infile).channels
+        print_info_acq(options.filename, data)
+    elif ftype == 'txt':
+        header = print_info_txt(options.filename)
+
+    # If file has to be processed, process it
     if not options.info:
         if options.heur_file and options.sub:
             check_file_exists(options.heur_file)
@@ -316,10 +348,16 @@ def _main(argv=None):
                                     options.ses, options.filename,
                                     options.outdir)
 
-        # #!# Get option of no trigger! (which is wrong practice)
+        # #!# Get option of no trigger! (which is wrong practice or Respiract)
         print('Reading trigger data and time index')
-        trigger = data[options.chtrig].data
-        time = data[options.chtrig].time_index
+        if ftype == 'acq':
+            trigger = data[options.chtrig].data
+            time = data[options.chtrig].time_index
+        elif ftype == 'txt':
+            # Read full file and extract right lines.
+            data = np.genfromtxt(options.filename, skip_header=HEADERLENGTH)
+            trigger = data[:, options.chtrig+1]
+            time = data[:, 0]
 
         print('Counting trigger points')
         trigger_deriv = np.diff(trigger)
@@ -351,8 +389,8 @@ def _main(argv=None):
         else:
             print('Not checking the number of tps')
 
-        # time = time - time_offset
-        time = data[options.chtrig].time_index - time_offset
+        time = time - time_offset
+        # time = data[options.chtrig].time_index - time_offset
 
         path_exists_or_make_it(options.outdir)
 
@@ -384,16 +422,35 @@ def _main(argv=None):
         # #!# The following few lines could be a function on its own for use in python
         table = pd.DataFrame(index=time)
 
+        if ftype == 'txt':
+            col_names = header[1].split('\t')
+            col_names[-1] = col_names[-1][:-1]
+
         if options.chsel:
             print('Extracting desired channels')
             for ch in options.chsel:
-                table[data[ch].name] = data[ch].data
+                if ftype == 'acq':
+                    table[data[ch].name] = data[ch].data
+                elif ftype == 'txt':
+                    # preparing channel names from txt file
+                    table[col_names[ch+1]] = data[:, ch+1]
 
         else:
             # #!# Needs a check on different channel frequency!
             print('Extracting all channels')
-            for ch in range(0, len(data)):
-                table[data[ch].name] = data[ch].data
+            if ftype == 'acq':
+                for ch in range(0, len(data)):
+                    table[data[ch].name] = data[ch].data
+            elif ftype == 'txt':
+                for ch in range(0, (data.shape[1]-1)):
+                    table[col_names[ch+1]] = data[:, ch+1]
+
+        print('Extracting minor informations')
+        if ftype == 'acq':
+            samp_freq = data[0].samples_per_second
+        elif ftype == 'txt':
+            freq_list = header[0].split('\t')
+            samp_freq = 1 / float(freq_list[-1][:-2])
 
         table.index.names = ['time']
         n_cols = len(table.columns)
@@ -414,9 +471,9 @@ def _main(argv=None):
         print('Printing file')
         table.to_csv(outfile + '.tsv.gz', sep='\t', index=True, header=False, compression='gzip')
         # #!# Definitely needs check on samp_freq!
-        print_json(outfile, data[0].samples_per_second, time_offset, options.table_header)
+        print_json(outfile, samp_freq, time_offset, options.table_header)
         print_summary(options.filename, options.num_tps_expected,
-                      num_tps_found, data[0].samples_per_second, time_offset, outfile)
+                      num_tps_found, samp_freq, time_offset, outfile)
 
 
 if __name__ == '__main__':
