@@ -317,11 +317,11 @@ def _main(argv=None):
     options.outdir = check_input_dir(options.outdir)
     options.filename = check_input_ext(options.filename, '.acq')
     ftype = 'acq'
-    if not os.path.isfile(options.filename):
+    if not os.path.isfile(os.path.join(options.indir, options.filename)):
         options.filename = check_input_ext(options.filename[:-4], '.txt')
         ftype = 'txt'
 
-    print('File extension is .' + ftype )
+    print('File extension is .' + ftype)
     options.heur_file = check_input_ext(options.heur_file, '.py')
 
     infile = options.indir + '/' + options.filename
@@ -347,6 +347,9 @@ def _main(argv=None):
             outfile = use_heuristic(options.heur_file, options.sub,
                                     options.ses, options.filename,
                                     options.outdir)
+        elif options.heur_file and not options.sub:
+            print(f'While "-heur" was specified, option "-sub" was not.\n'
+                  f'Skipping BIDS formatting.')
 
         # #!# Get option of no trigger! (which is wrong practice or Respiract)
         print('Reading trigger data and time index')
@@ -376,7 +379,8 @@ def _main(argv=None):
                 tps_missing = options.num_tps_expected - num_tps_found
                 print('Found ' + str(tps_missing) + ' tps less than expected!')
                 if options.tr:
-                    print('Correcting time offset, assuming missing tps are at the beginning')
+                    print('Correcting time offset, assuming missing tps'
+                          'are at the beginning')
                     # time_offset = time_offset - (tps_missing * options.tr)
                     time_offset = time[tps.argmax()] - (tps_missing * options.tr)
                 else:
@@ -453,18 +457,30 @@ def _main(argv=None):
             samp_freq = 1 / float(freq_list[-1][:-2])
 
         table.index.names = ['time']
-        n_cols = len(table.columns)
+        table_width = len(table.columns)
 
         if options.table_header:
             if 'time' in options.table_header:
-                ignored_header = 1
+                ignored_headers = 1
             else:
-                ignored_header = 0
+                ignored_headers = 0
 
-            if n_cols + ignored_header < len(options.table_header):
-                options.table_header = options.table_header[:(n_cols + ignored_header)]
+            n_headers = len(options.table_header)
+            if table_width < n_headers - ignored_headers:
+                print(f'Too many table headers specified!\n'
+                      f'{options.table_header}\n'
+                      f'Ignoring the last'
+                      '{n_headers - table_width - ignored_headers}')
+                options.table_header = options.table_header[:(table_width + ignored_headers)]
+            elif table_width > n_headers - ignored_headers:
+                missing_headers = n_headers - table_width - ignored_headers
+                print(f'Not enough table headers specified!\n'
+                      f'{options.table_header}\n'
+                      f'Tailing {missing_headers} headers')
+                for i in range(missing_headers):
+                    options.table_header.append(f'missing n.{i+1}')
 
-            table.columns = options.table_header[ignored_header:]
+            table.columns = options.table_header[ignored_headers:]
             # #!# this should be iterative!
             print_plot(table, 'respiratory_CO2', outfile)
 
