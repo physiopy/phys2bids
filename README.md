@@ -14,8 +14,8 @@ It requires python 3.6 or above, as well as the modules:
 - `pandas >= 0.10`
 - `matplotlib >= 3.1.1`
 
-In order to process ``.acq`` files, it needs `bioread`, an excellent module
-that can be found at [`this link`](https://github.com/uwmadison-chm/bioread).
+In order to process ``.acq`` files, it needs [`bioread`](https://github.com/uwmadison-chm/bioread), an excellent module
+that can be found at [this link](https://github.com/uwmadison-chm/bioread).
 
 The project is currently under development.
 Any suggestion/bug report is welcome! Feel free to open an issue.
