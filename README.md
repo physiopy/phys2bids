@@ -1,6 +1,8 @@
+[![DOI](https://zenodo.org/badge/208861898.svg)](https://zenodo.org/badge/latestdoi/208861898)
+
+
 phys2bids
 =========
-
 Phys2bids is a python3 library meant to set physiological files in BIDS
 standard.
 It was born for Acqknowledge files (BIOPAC), and at the moment it supports
