@@ -47,9 +47,11 @@ def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
     else:
         # #!# Transform sys.exit in debug warnings or raiseexceptions!
         # #!# Make all of the above a dictionary
+        print('File not found in heuristics!\nExiting')
         sys.exit()
 
     if not task:
+        print('No "task" specified for this file!\nExiting')
         sys.exit()
 
     name = name + '_task-' + task
