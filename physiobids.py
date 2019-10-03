@@ -91,7 +91,7 @@ def _get_parser():
                           type=str,
                           help=('File containing heuristic, with or without '
                                 'extension. Specify path to it if necessary.'),
-                          default='heur.py')
+                          default=None)
     # optional.add_argument('-hdir', '--heur-dir',
     #                       dest='heurdir',
     #                       type=str,
