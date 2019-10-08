@@ -25,7 +25,7 @@ def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
         task = 'breathhold'
     elif fnmatch.fnmatchcase(physinfo, 'MOTOR?'):
         task = 'motor'
-    elif fnmatch.fnmatchcase(physinfo, 'PINEL?'):
+    elif fnmatch.fnmatchcase(physinfo, 'LOCALIZER?'):
         task = 'pinel'
     elif fnmatch.fnmatchcase(physinfo, 'SIMON?'):
         task = 'simon'
