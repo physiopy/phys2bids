@@ -321,8 +321,11 @@ def _main(argv=None):
         options.filename = check_input_ext(options.filename[:-4], '.txt')
         ftype = 'txt'
 
+    # #!# Change this to cases of and better message
     print('File extension is .' + ftype)
-    options.heur_file = check_input_ext(options.heur_file, '.py')
+
+    if options.heur_file:
+        options.heur_file = check_input_ext(options.heur_file, '.py')
 
     infile = options.indir + '/' + options.filename
     outfile = options.outdir + '/' + options.filename[:-4]
