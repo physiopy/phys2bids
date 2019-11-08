@@ -262,9 +262,9 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
 def print_json(filename, samp_freq, time_offset, table_header):
     start_time = -time_offset
     summary = (f'{{\n'
-               f'\t\"SamplingFrequency\": {samp_freq} Hz\n'
-               f'\t\"StartTime\": {start_time}\n'
-               f'\t\"Columns\": {table_header}\n'
+               f'\t\"SamplingFrequency\": \"{samp_freq} Hz\",\n'
+               f'\t\"StartTime\": {start_time},\n'
+               f'\t\"Columns\": \"{table_header}\"\n'
                f'}}')  # check table header
     writefile(filename, '.json', summary)
 
@@ -485,7 +485,8 @@ def _main(argv=None):
 
             table.columns = options.table_header[ignored_headers:]
             # #!# this should be iterative!
-            print_plot(table, 'respiratory_CO2', outfile)
+            if 'respiratory_CO2' in table.columns:
+                print_plot(table, 'respiratory_CO2', outfile)
 
         print('Printing file')
         table.to_csv(outfile + '.tsv.gz', sep='\t', index=True, header=False, compression='gzip')
