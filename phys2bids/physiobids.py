@@ -30,7 +30,7 @@ import numpy as np
 import pandas as pd
 
 from . import utils, viz
-from .cli import _get_parser
+from .cli.run import _get_parser
 
 # #!# This is hardcoded until we find a better solution
 HEADERLENGTH = 9

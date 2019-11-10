@@ -3,7 +3,6 @@
 import argparse
 
 from .. import __version__
-from ..physiobids import _main  # noqa
 
 
 def _get_parser():
