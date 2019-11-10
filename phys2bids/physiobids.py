@@ -89,8 +89,6 @@ def print_json(filename, samp_freq, time_offset, table_header):
 def use_heuristic(heur_file, sub, ses, filename, outdir):
     utils.check_file_exists(heur_file)
 
-    from importlib import import_module
-
     if sub[:4] != 'sub-':
         name = 'sub-' + sub
     else:
@@ -111,10 +109,8 @@ def use_heuristic(heur_file, sub, ses, filename, outdir):
 
     cwd = os.getcwd()
     os.chdir(outdir)
-    utils.copy_file(heur_file, './heur.py')
 
-    heur = import_module('heur')
-
+    heur = utils.load_heuristic(heur_file)
     name = heur.heur(filename[:-4], name)
 
     heurpath = fldr + '/' + name + '_physio'

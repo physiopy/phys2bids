@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 
 
 def check_input_dir(indir):
@@ -64,3 +65,30 @@ def copy_file(oldpath, newpath, ext=''):
 def writefile(filename, ext, text):
     with open(filename + ext, 'w') as text_file:
         print(text, file=text_file)
+
+
+def load_heuristic(heuristic):
+    """ Loads `heuristic`, returning a callable Python module
+
+    References
+    ----------
+    Copied from nipy/heudiconv
+    """
+    if os.path.sep in heuristic or os.path.lexists(heuristic):
+        heuristic_file = os.path.realpath(heuristic)
+        path, fname = os.path.split(heuristic_file)
+        try:
+            old_syspath = sys.path[:]
+            sys.path.append(path)
+            mod = __import__(fname.split('.')[0])
+            mod.filename = heuristic_file
+        finally:
+            sys.path = old_syspath
+    else:
+        from importlib import import_module
+        try:
+            mod = import_module(f'phys2bids.heuristics.{heuristic}')
+            mod.filename = mod.__file__.rstrip('co')  # remove c or o from pyc/pyo
+        except Exception as exc:
+            raise ImportError(f'Failed to import heuristic {heuristic}: {exc}')
+    return mod
