@@ -2,7 +2,7 @@
 
 import argparse
 
-from .. import __version__
+from phys2bids import __version__
 
 
 def _get_parser():
