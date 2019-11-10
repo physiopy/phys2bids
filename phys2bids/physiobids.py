@@ -33,7 +33,6 @@ from . import utils, viz
 from .cli import _get_parser
 
 
-VERSION = '0.3.0'
 SET_DPI = 100
 FIGSIZE = (18, 10)
 # #!# This is hardcoded until we find a better solution
@@ -41,11 +40,6 @@ HEADERLENGTH = 9
 
 
 # #!# Different frequencies == different files!
-
-
-def _version_():
-    print('physiobids v.' + VERSION)
-
 
 def print_info_acq(filename, data):
     print('File ' + filename + ' contains:\n')

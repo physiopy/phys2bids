@@ -2,7 +2,8 @@
 
 import argparse
 
-from ..physiobids import VERSION, _main  # noqa
+from .. import __version__
+from ..physiobids import _main  # noqa
 
 
 def _get_parser():
@@ -104,7 +105,8 @@ def _get_parser():
                           default=['time', 'respiratory_chest', 'trigger',
                                    'cardiac', 'respiratory_CO2', 'respiratory_O2'])
 
-    optional.add_argument('-v', '--version', action='version', version=('%(prog)s ' + VERSION))
+    optional.add_argument('-v', '--version', action='version',
+                          version=('%(prog)s ' + __version__))
 
     parser._action_groups.append(optional)
 
