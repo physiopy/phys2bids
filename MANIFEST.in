@@ -1,0 +1,2 @@
+include versioneer.py
+include phys2bids/_version.py
