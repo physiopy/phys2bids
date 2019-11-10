@@ -3,7 +3,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from .physiobids import FIGSIZE, SET_DPI
+SET_DPI = 100
+FIGSIZE = (18, 10)
 
 
 def print_plot(table, channel, filename):
