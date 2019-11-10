@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import json
 import os
 import sys
 
@@ -65,6 +66,13 @@ def copy_file(oldpath, newpath, ext=''):
 def writefile(filename, ext, text):
     with open(filename + ext, 'w') as text_file:
         print(text, file=text_file)
+
+
+def writejson(filename, data, **kwargs):
+    if not filename.endswith('.json'):
+        filename += '.json'
+    with open(filename, 'w') as out:
+        json.dump(data, out, **kwargs)
 
 
 def load_heuristic(heuristic):

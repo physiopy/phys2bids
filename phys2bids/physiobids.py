@@ -74,12 +74,10 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
 
 def print_json(filename, samp_freq, time_offset, table_header):
     start_time = -time_offset
-    summary = (f'{{\n'
-               f'\t\"SamplingFrequency\": {samp_freq} Hz\n'
-               f'\t\"StartTime\": {start_time}\n'
-               f'\t\"Columns\": {table_header}\n'
-               f'}}')  # check table header
-    utils.writefile(filename, '.json', summary)
+    summary = dict(SamplingFrequency=samp_freq,
+                   StartTime=start_time,
+                   Columns=table_header)
+    utils.writejson(filename, summary, indent=4, sort_keys=False)
 
 
 def use_heuristic(heur_file, sub, ses, filename, outdir):
