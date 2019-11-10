@@ -131,13 +131,13 @@ def _main(argv=None):
         ftype = 'txt'
 
     # #!# Change this to cases of and better message
-    print('File extension is .' + ftype)
+    print(f'File extension is .{ftype}')
 
     if options.heur_file:
         options.heur_file = utils.check_input_ext(options.heur_file, '.py')
 
-    infile = options.indir + '/' + options.filename
-    outfile = options.outdir + '/' + options.filename[:-4]
+    infile = os.path.join(options.indir, options.filename)
+    outfile = os.path.join(options.outdir, os.path.basename(options.filename[:-4]))
 
     utils.check_file_exists(infile)
     print('File exists')
