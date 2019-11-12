@@ -1,0 +1,7 @@
+include README.* LICENSE setup* MANIFEST.in requirements.txt
+recursive-include phys2bids/data *
+recursive-include phys2bids/heuristics *
+recursive-include phys2bids/tests/data *
+
+include versioneer.py
+include phys2bids/_version.py
