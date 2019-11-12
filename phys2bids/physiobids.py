@@ -268,7 +268,7 @@ def _main(argv=None):
                     options.table_header.append(f'missing n.{i+1}')
 
             table.columns = options.table_header[ignored_headers:]
-            # #!# this should be iterative!
+            # #!# Here the function viz.plot_channel should be called for the desired channels.
 
         print('Printing file')
         table.to_csv(outfile + '.tsv.gz', sep='\t', index=True, header=False, compression='gzip')
