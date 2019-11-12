@@ -84,12 +84,12 @@ def _get_parser():
                           dest='num_tps_expected',
                           type=int,
                           help='Number of expected timepoints.',
-                          default=340)  # #!# Has to go to 0
+                          default=0)
     optional.add_argument('-tr', '--tr',
                           dest='tr',
                           type=float,
                           help='TR of sequence in seconds.',
-                          default=1.5)  # #!# Has to go to 0
+                          default=1)
     optional.add_argument('-thr', '--threshold',
                           dest='thr',
                           type=float,

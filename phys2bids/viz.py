@@ -7,7 +7,7 @@ SET_DPI = 100
 FIGSIZE = (18, 10)
 
 
-def print_plot(table, channel, filename, figsize=FIGSIZE, dpi=SET_DPI):
+def plot_channel(table, channel, filename, figsize=FIGSIZE, dpi=SET_DPI):
     plt.figure(figsize=figsize, dpi=dpi)
     plt.title(channel)
     plt.plot(table.index.values, table[channel], '-')
