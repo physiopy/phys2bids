@@ -269,7 +269,6 @@ def _main(argv=None):
 
             table.columns = options.table_header[ignored_headers:]
             # #!# this should be iterative!
-            viz.print_plot(table, 'respiratory_CO2', outfile)
 
         print('Printing file')
         table.to_csv(outfile + '.tsv.gz', sep='\t', index=True, header=False, compression='gzip')
