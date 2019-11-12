@@ -22,26 +22,10 @@ def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
     elif physinfo == 'origfilename2':
         task = 'newname2'
         run = 'runnum'
-    elif physinfo == 'BH4':
-        task = 'breathhold'
-    elif fnmatch.fnmatchcase(physinfo, 'MOTOR?'):
-        task = 'motor'
-    elif fnmatch.fnmatchcase(physinfo, 'PINEL?'):
-        task = 'pinel'
-    elif fnmatch.fnmatchcase(physinfo, 'SIMON?'):
-        task = 'simon'
-    elif physinfo == 'RS1':
+    elif physinfo == 'Example':
         task = 'rest'
         run = '01'
-    elif physinfo == 'RS2':
-        task = 'rest'
-        run = '02'
-    elif physinfo == 'RS3':
-        task = 'rest'
-        run = '03'
-    elif physinfo == 'RS4':
-        task = 'rest'
-        run = '04'
+        acq = 'resp'
         # ############################## #
         # ## Don't modify below this! ## #
         # ############################## #

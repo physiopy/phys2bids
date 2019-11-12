@@ -153,8 +153,8 @@ def _get_parser():
 
 
 def check_input_dir(indir):
-    if indir[-1:] == '/':
-        indir = indir[-1:]
+    if indir[-1] == '/':
+        indir = indir[:-1]
 
     return indir
 
