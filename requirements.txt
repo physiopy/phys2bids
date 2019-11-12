@@ -1,0 +1,4 @@
+bioread
+matplotlib
+numpy
+pandas
