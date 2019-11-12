@@ -14,5 +14,4 @@ The ``phys2bids`` command
 .. argparse::
    :ref: phys2bids.cli.run._get_parser
    :prog: phys2bids
-   :nodefault:
    :nodefaultconst:
