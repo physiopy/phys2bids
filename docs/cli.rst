@@ -4,7 +4,7 @@
 Command-line usage
 ------------------
 
-You can uinvoke the primary workflow of ``phys2bids`` from the command line.
+You can invoke the primary workflow of ``phys2bids`` from the command line.
 
 .. _cli_phys2bids:
 
