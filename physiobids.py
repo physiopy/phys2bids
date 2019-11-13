@@ -45,7 +45,7 @@ HEADERLENGTH = 9
 
 
 def _version_():
-    print('physiobids v.' + VERSION)
+    print('phys2bids v.' + VERSION)
 
 
 def _get_parser():
