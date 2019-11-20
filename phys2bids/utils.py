@@ -80,7 +80,7 @@ def load_heuristic(heuristic):
 
     References
     ----------
-    Copied from nipy/heudiconv
+    Copied from [nipy/heudiconv](https://github.com/nipy/heudiconv)
     """
     if os.path.sep in heuristic or os.path.lexists(heuristic):
         heuristic_file = os.path.realpath(heuristic)
