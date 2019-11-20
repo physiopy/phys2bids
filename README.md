@@ -24,21 +24,13 @@ Donwload the package as zip from github and uncompress or if you have ``git`` us
 
 open a terminal in the phy2bids folder and execute the command:
 
-``sudo python3 setup.py install``
+``sudo pip3 install -e .``
 
 type the command:
 
-``phys2bids``
+``phys2bids -v ``
 
-if your output is:
-
-``usage: phys2bids [-h] -in FILENAME [-info] [-indir INDIR] [-outdir OUTDIR]
-                 [-heur HEUR_FILE] [-sub SUB] [-ses SES] [-chtrig CHTRIG]
-                 [-chsel [CHSEL [CHSEL ...]]] [-ntp NUM_TPS_EXPECTED] [-tr TR]
-                 [-thr THR] [-tbhd [TABLE_HEADER [TABLE_HEADER ...]]] [-v]
-phys2bids: error: the following arguments are required: -in/--input-file``
-
-phys2bids is ready to be use.
+if your output is: ``phys2bids 0.4.0+4.gf6b2cd2.dirty`` or similar, phys2bids is ready to be used.
 
 **The project is currently under development**.
 Any suggestion/bug report is welcome! Feel free to open an issue.
