@@ -17,7 +17,7 @@ It requires python 3.6 or above, as well as the modules:
 In order to process ``.acq`` files, it needs [`bioread`](https://github.com/uwmadison-chm/bioread), an excellent module
 that can be found at [this link](https://github.com/uwmadison-chm/bioread).
 
-Linux and mac installation:
+### Linux and mac installation
 Donwload the package as zip from github and uncompress or if you have ``git`` use the command:
 
 `` git clone https://github.com/smoia/phys2bids.git``
