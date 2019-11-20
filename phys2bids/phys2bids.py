@@ -276,3 +276,7 @@ def _main(argv=None):
         print_json(outfile, samp_freq, time_offset, options.table_header)
         print_summary(options.filename, options.num_tps_expected,
                       num_tps_found, samp_freq, time_offset, outfile)
+
+
+if __name__ == '__main__':
+    _main()
