@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 """
 I/O objects for phys2bids.
@@ -71,7 +72,7 @@ def has_data_size(var, data, token):
     return var
 
 
-class phys_io():
+class blueprint_io():
     """
     Parent class for i/o physio objects.
 
@@ -87,10 +88,10 @@ class phys_io():
         self.units = is_valid(units, list, list_type=str)
 
 
-class phys_input(phys_io):
+class blueprint_input(blueprint_io):
     """
     Main input object for phys2bids.
-    Contains the schema to be populated.
+    Contains the blueprint to be populated.
 
     Properties
     ----------
@@ -113,10 +114,10 @@ class phys_input(phys_io):
         self.units = has_data_size(self.units, self.timeseries, '[]')
 
 
-class phys_output(phys_io):
+class blueprint_output(blueprint_io):
     """
     Main output object for phys2bids.
-    Contains the schema to be exported.
+    Contains the blueprint to be exported.
 
     Properties
     ----------
