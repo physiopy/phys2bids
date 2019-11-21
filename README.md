@@ -40,7 +40,8 @@ At the very moment, it assumes all the extracted channels from a file
 have the same sampling freq.
 
 
-
+License
+---
 
 _Copyright 2019, The Phys2BIDS community._
 
