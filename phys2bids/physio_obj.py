@@ -6,6 +6,14 @@ I/O objects for phys2bids
 
 import numpy as np
 
+def is_valid(var, type, list_type):
+    """
+    Checks that the var is of a certain type.
+    If type is list and list_type is specified,
+    checks that the list contains
+    """
+
+
 
 class phys_io():
     """
@@ -30,7 +38,7 @@ class phys_input(phys_io):
 
     Properties
     ----------
-    timeseries : (ch, [tps]) list 
+    timeseries : (ch, [tps]) list
         List of numpy 1d arrays - one for channel.
         Contains all the timeseries recorded.
         Supports different frequencies!
@@ -43,7 +51,7 @@ class phys_input(phys_io):
         super().__init__(ch_name, units)
         self.timeseries = diff_timeseries
         self.freq = diff_freq
-        
+
 
 class phys_output(phys_io):
     """
@@ -53,7 +61,7 @@ class phys_output(phys_io):
     Properties
     ----------
     timeseries : (ch x tps) :obj:`numpy.ndarray`
-        Numpy 2d array of timeseries 
+        Numpy 2d array of timeseries
         Contains all the timeseries recorded.
         Impose same frequency!
     freq : float
