@@ -31,18 +31,13 @@ import pandas as pd
 
 from phys2bids import utils, viz
 from phys2bids.cli.run import _get_parser
+from phys2bids.interfaces import acq
 
 # #!# This is hardcoded until we find a better solution
 HEADERLENGTH = 9
 
 
 # #!# Different frequencies == different files!
-def print_info_acq(filename, data):
-    print('File ' + filename + ' contains:\n')
-    for ch in range(0, len(data)):
-        print(str(ch) + ': ' + data[ch].name)
-
-
 def print_info_txt(filename):
     with open(filename) as txtfile:
         header = [next(txtfile) for x in range(HEADERLENGTH - 2)]
@@ -145,7 +140,7 @@ def _main(argv=None):
         from bioread import read_file
 
         data = read_file(infile).channels
-        print_info_acq(options.filename, data)
+        acq.print_info_acq(options.filename, data)
     elif ftype == 'txt':
         header = print_info_txt(options.filename)
 
@@ -256,8 +251,8 @@ def _main(argv=None):
             if table_width < n_headers - ignored_headers:
                 print(f'Too many table headers specified!\n'
                       f'{options.table_header}\n'
-                      f'Ignoring the last'
-                      '{n_headers - table_width - ignored_headers}')
+                      f'Ignoring the last '
+                      f'{n_headers - table_width - ignored_headers}')
                 options.table_header = options.table_header[:(table_width + ignored_headers)]
             elif table_width > n_headers - ignored_headers:
                 missing_headers = n_headers - table_width - ignored_headers
