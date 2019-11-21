@@ -32,7 +32,7 @@ def check_file_exists(file, hardexit=True):
     Check if file exists.
     """
     if not os.path.isfile(file) and file is not None:
-        raise FileNotFoundError('The file ' + file + ' does not exist!')
+        raise FileNotFoundError(f'The file {file} does not exist!')
 
 
 def move_file(oldpath, newpath, ext=''):
