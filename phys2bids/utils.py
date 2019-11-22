@@ -4,19 +4,49 @@ import json
 import os
 import sys
 
+SUPPORTED_FTYPES = ('acq')  # , 'txt', 'mat', ...
+
 
 def check_input_dir(indir):
+    """
+    Checks that the given indir doesn't have a trailing '/'
+    """
     if indir[-1:] == '/':
         indir = indir[:-1]
 
     return indir
 
 
-def check_input_ext(file, ext):
-    if file[-len(ext):] != ext:
-        file = file + ext
+def check_input_ext(filename, ext):
+    """
+    Checks that the given file has the given extension
+    """
+    if filename[-len(ext):] != ext:
+        filename = filename + ext
 
-    return file
+    return filename
+
+
+def check_input_type(filename, indir):
+    """
+    Check which supported type is the filename.
+    Alternatively, raise an error if file not found or type not supported.
+    """
+    fftype_found = False
+    for ftype in SUPPORTED_FTYPES:
+        filename = check_input_ext(filename, ftype)
+        if os.path.isfile(os.path.join(indir, filename)):
+            fftype_found = True
+            break
+
+    if fftype_found:
+        print(f'File extension is .{ftype}')
+        return filename, ftype
+    else:
+        raise Exception(f'The file {filename} wasn\'t found in {indir}'
+                        f' or {ftype} is not supported yet.\n'
+                        f'phys2bids currently supports:'
+                        f' {", ".join(SUPPORTED_FTYPES)}')
 
 
 def path_exists_or_make_it(fldr):
@@ -27,12 +57,12 @@ def path_exists_or_make_it(fldr):
         os.makedirs(fldr)
 
 
-def check_file_exists(file, hardexit=True):
+def check_file_exists(filename):
     """
     Check if file exists.
     """
-    if not os.path.isfile(file) and file is not None:
-        raise FileNotFoundError(f'The file {file} does not exist!')
+    if not os.path.isfile(filename) and filename is not None:
+        raise FileNotFoundError(f'The file {filename} does not exist!')
 
 
 def print_info(filename, phys_object):
@@ -40,9 +70,10 @@ def print_info(filename, phys_object):
     Print the info of the input files, using blueprint_input object
     """
     print(f'File {filename} contains:\n')
-    
-    for ch in range(2, phys_object.ch_num):
-        print(f'{(ch-2):02d}. {phys_object.ch_name[ch]} sampled at {phys_object.freq[ch]} Hz')
+
+    for ch in range(2, phys_object.ch_amount):
+        print(f'{(ch-2):02d}. {phys_object.ch_name[ch]};'
+              f' sampled at {phys_object.freq[ch]} Hz')
 
 
 def move_file(oldpath, newpath, ext=''):
@@ -106,7 +137,8 @@ def load_heuristic(heuristic):
         from importlib import import_module
         try:
             mod = import_module(f'phys2bids.heuristics.{heuristic}')
-            mod.filename = mod.__file__.rstrip('co')  # remove c or o from pyc/pyo
+            # remove c or o from pyc/pyo
+            mod.filename = mod.__file__.rstrip('co')
         except Exception as exc:
             raise ImportError(f'Failed to import heuristic {heuristic}: {exc}')
     return mod
