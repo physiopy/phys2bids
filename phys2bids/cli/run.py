@@ -89,7 +89,7 @@ def _get_parser():
                           dest='tr',
                           type=float,
                           help='TR of sequence in seconds.',
-                          default=1)
+                          default=0)
     optional.add_argument('-thr', '--threshold',
                           dest='thr',
                           type=float,
