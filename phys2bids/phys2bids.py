@@ -26,7 +26,6 @@ have the same sampling freq.
 
 import os
 
-import numpy as np
 import pandas as pd
 
 from phys2bids import utils, viz
@@ -99,17 +98,10 @@ def _main(argv=None):
     options = _get_parser().parse_args(argv)
     # Check options to make them internally coherent
     # #!# This can probably be done while parsing?
-    # #!# Make filename check better somehow.
     options.indir = utils.check_input_dir(options.indir)
     options.outdir = utils.check_input_dir(options.outdir)
-    options.filename = utils.check_input_ext(options.filename, '.acq')
-    ftype = 'acq'
-    if not os.path.isfile(os.path.join(options.indir, options.filename)):
-        options.filename = utils.check_input_ext(options.filename[:-4], '.txt')
-        ftype = 'txt'
-
-    # #!# Change this to cases of and better message
-    print(f'File extension is .{ftype}')
+    options.filename, ftype = utils.check_input_type(options.filename,
+                                                     options.indir)
 
     if options.heur_file:
         options.heur_file = utils.check_input_ext(options.heur_file, '.py')
@@ -117,16 +109,14 @@ def _main(argv=None):
     infile = os.path.join(options.indir, options.filename)
     outfile = os.path.join(options.outdir, os.path.basename(options.filename[:-4]))
 
-    utils.check_file_exists(infile)
-    print('File exists')
-
     # Read file!
     if ftype == 'acq':
         from phys2bids.interfaces.acq import populate_phys_input
     elif ftype == 'txt':
         raise Exception('txt not yet supported')
     else:
-        raise Exception('File type not yet supported')
+        raise Exception('This shouldn\'t happen, check out the last few'
+                        'lines of code')
 
     phys_input = populate_phys_input(infile, options.chtrig)
     utils.print_info(options.filename, phys_input)
@@ -144,49 +134,17 @@ def _main(argv=None):
                   f'Skipping BIDS formatting.')
 
         # #!# Get option of no trigger! (which is wrong practice or Respiract)
-
-        # #!# MOVE THIS TO OBJECT METHOD! FROM HERE 
-        print('Counting trigger points')
-        trigger_deriv = np.diff(trigger)
-        tps = trigger_deriv > options.thr
-        num_tps_found = tps.sum()
-        time_offset = time[tps.argmax()]
-
-        if options.num_tps_expected:
-            print('Checking number of tps')
-            if num_tps_found > options.num_tps_expected:
-                tps_extra = num_tps_found - options.num_tps_expected
-                print('Found ' + str(tps_extra) + ' tps more than expected!\n',
-                      'Assuming extra tps are at the end (try again with a ',
-                      'more conservative thr)')
-            elif num_tps_found < options.num_tps_expected:
-                tps_missing = options.num_tps_expected - num_tps_found
-                print('Found ' + str(tps_missing) + ' tps less than expected!')
-                if options.tr:
-                    print('Correcting time offset, assuming missing tps'
-                          'are at the beginning')
-                    # time_offset = time_offset - (tps_missing * options.tr)
-                    time_offset = time[tps.argmax()] - (tps_missing * options.tr)
-                else:
-                    print('Can\'t correct time offset, (try again specifying',
-                          'tr or with a more liberal thr')
-
-            else:
-                print('Found just the right amount of tps!')
-
-        else:
-            print('Not checking the number of tps')
-
-        time = time - time_offset
-        # time = data[options.chtrig].time_index - time_offset
-
-        # #!# TO HERE
+        phys_input.check_trigger_amount(options.thr, options.num_tps_expected,
+                                        options.tr)
 
         utils.path_exists_or_make_it(options.outdir)
 
-        viz.plot_trigger(time, trigger, outfile, options)
+        viz.plot_trigger(phys_input.timeseries[0], phys_input.timeseries[1],
+                         outfile, options)
 
-        # #!# The following few lines could be a function on its own for use in python
+        #####
+        ###
+        # #!# This part has to become the "output object" population
         table = pd.DataFrame(index=time)
 
         if ftype == 'txt':
