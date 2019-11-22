@@ -5,10 +5,10 @@
 I/O objects for phys2bids.
 """
 
-from numpy import ndarray, shape
+import numpy as np
 
 
-def is_valid(var, type, list_type=None, return_var=True):
+def is_valid(var, var_type, list_type=None, return_var=True):
     """
     Checks that the var is of a certain type.
     If type is list and list_type is specified,
@@ -17,7 +17,7 @@ def is_valid(var, type, list_type=None, return_var=True):
     -----
     var:
         Variable to be checked.
-    type: type
+    var_type: type
         Type the variable is assumed to be.
     list_type: type
         As type.
@@ -27,10 +27,10 @@ def is_valid(var, type, list_type=None, return_var=True):
     var:
         Variable to be checked (same as input).
     """
-    if not isinstance(var, type):
-        raise AttributeError('Something went wrong while populating physio_io!')
+    if not isinstance(var, var_type):
+        raise AttributeError('Something went wrong while populating blueprint')
 
-    if type is list and list_type is not None:
+    if var_type is list and list_type is not None:
         for element in var:
             is_valid(element, list_type, return_var=False)
 
@@ -38,7 +38,7 @@ def is_valid(var, type, list_type=None, return_var=True):
         return var
 
 
-def has_data_size(var, data, token):
+def has_size(var, data_size, token):
     """
     Checks that the var has the same dimension of the data
     If it's not the case, fill in the var or removes exceding var entry.
@@ -46,8 +46,8 @@ def has_data_size(var, data, token):
     -----
     var:
         Variable to be checked.
-    data: (ch, [tps]) list or :obj:`numpy.ndarray`
-        Actual timeseries data.
+    data_size: int
+        Size of data of interest.
     token:
         What to be used in case of completion.
 
@@ -56,13 +56,6 @@ def has_data_size(var, data, token):
     var:
         Variable to be checked (same as input).
     """
-    if isinstance(data, list):
-        data_size = len(data)
-    elif isinstance(data, ndarray):
-        data_size = data.shape[0]
-    else:
-        raise Exception('Something went wrong assessing data size')
-
     if len(var) > data_size:
         var = var[:data_size]
 
@@ -80,7 +73,8 @@ class blueprint_input():
     Properties
     ----------
     timeseries : (ch, [tps]) list
-        List of numpy 1d arrays - one for channel.
+        List of numpy 1d arrays - one for channel, plus one for time.
+        Time channel has to be the first, trigger the second.
         Contains all the timeseries recorded.
         Supports different frequencies!
     freq : (ch, ) list
@@ -89,13 +83,51 @@ class blueprint_input():
         Support different frequencies!
     """
     def __init__(self, diff_timeseries, diff_freq, ch_name, units):
-        self.timeseries = is_valid(diff_timeseries, list, list_type=ndarray)
-        self.freq = has_data_size(is_valid(diff_freq, list,
+        self.timeseries = is_valid(diff_timeseries, list, list_type=np.ndarray)
+        self.ch_amount = len(self.timeseries)
+        self.freq = has_size(is_valid(diff_freq, list,
                                            list_type=(int, float)),
-                                  self.timeseries, 0)
-        self.ch_name = has_data_size(ch_name, self.timeseries, 'missing')
-        self.units = has_data_size(units, self.timeseries, '[]')
-        self.ch_num = len(self.timeseries)
+                                  self.ch_amount, 0)
+        self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
+        self.units = has_size(units, self.ch_amount, '[]')
+
+    def check_trigger_amount(self, thr=2.5, num_tps_expected=0, tr=0):
+        """
+
+        """
+        print('Counting trigger points')
+        trigger_deriv = np.diff(self.timeseries[1])
+        tps = trigger_deriv > thr
+        num_tps_found = tps.sum()
+        time_offset = self.timeseries[0][tps.argmax()]
+
+        if num_tps_expected:
+            print('Checking number of tps')
+            if num_tps_found > num_tps_expected:
+                tps_extra = num_tps_found - num_tps_expected
+                print(f'Found {tps_extra} tps more than expected!\n'
+                      'Assuming extra tps are at the end (try again with a '
+                      'more conservative thr)')
+
+            elif num_tps_found < num_tps_expected:
+                tps_missing = num_tps_expected - num_tps_found
+                print(f'Found {tps_missing} tps less than expected!')
+                if tr:
+                    print('Correcting time offset, assuming missing tps '
+                          'are at the beginning (try again with '
+                          'a more liberal thr')
+                    time_offset -= (tps_missing * tr)
+                else:
+                    print('Can\'t correct time offset, (try again specifying '
+                          'tr or with a more liberal thr')
+
+            else:
+                print('Found just the right amount of tps!')
+
+        else:
+            print('Cannot check the number of tps')
+
+        self.timeseries[0] -= time_offset
 
 
 class blueprint_output():
@@ -113,8 +145,9 @@ class blueprint_output():
         Shared frequency of the object.
     """
     def __init__(self, timeseries, freq, ch_name, units, start_time):
-        self.timeseries = is_valid(timeseries, ndarray)
-        self.freq = has_data_size(is_valid(freq, (int, float)), [1], 0)
-        self.ch_name = has_data_size(ch_name, self.timeseries, 'missing')
-        self.units = has_data_size(units, self.timeseries, '[]')
+        self.timeseries = is_valid(timeseries, np.ndarray)
+        self.ch_amount = self.timeseries.shape[0]
+        self.freq = has_size(is_valid(freq, (int, float)), 1, 0)
+        self.ch_name = has_size(ch_name, self.ch_amount, 'unkown')
+        self.units = has_size(units, self.ch_amount, '[]')
         self.start_time = start_time
