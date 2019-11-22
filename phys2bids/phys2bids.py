@@ -31,25 +31,10 @@ import pandas as pd
 
 from phys2bids import utils, viz
 from phys2bids.cli.run import _get_parser
-from phys2bids.interfaces import acq
+
 
 # #!# This is hardcoded until we find a better solution
 HEADERLENGTH = 9
-
-
-# #!# Different frequencies == different files!
-def print_info_txt(filename):
-    with open(filename) as txtfile:
-        header = [next(txtfile) for x in range(HEADERLENGTH - 2)]
-
-    del header[1:4]
-    del header[2]
-
-    print('File ' + filename + ' contains:\n')
-    for line in header:
-        print(line)
-
-    return header
 
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
@@ -135,14 +120,16 @@ def _main(argv=None):
     utils.check_file_exists(infile)
     print('File exists')
 
-    # Read infos from file
+    # Read file!
     if ftype == 'acq':
-        from bioread import read_file
-
-        data = read_file(infile).channels
-        acq.print_info_acq(options.filename, data)
+        from phys2bids.interfaces.acq import populate_phys_input
     elif ftype == 'txt':
-        header = print_info_txt(options.filename)
+        raise Exception('txt not yet supported')
+    else:
+        raise Exception('File type not yet supported')
+
+    phys_input = populate_phys_input(infile, options.chtrig)
+    utils.print_info(options.filename, phys_input)
 
     # If file has to be processed, process it
     if not options.info:
@@ -157,16 +144,8 @@ def _main(argv=None):
                   f'Skipping BIDS formatting.')
 
         # #!# Get option of no trigger! (which is wrong practice or Respiract)
-        print('Reading trigger data and time index')
-        if ftype == 'acq':
-            trigger = data[options.chtrig].data
-            time = data[options.chtrig].time_index
-        elif ftype == 'txt':
-            # Read full file and extract right lines.
-            data = np.genfromtxt(options.filename, skip_header=HEADERLENGTH)
-            trigger = data[:, options.chtrig + 1]
-            time = data[:, 0]
 
+        # #!# MOVE THIS TO OBJECT METHOD! FROM HERE 
         print('Counting trigger points')
         trigger_deriv = np.diff(trigger)
         tps = trigger_deriv > options.thr
@@ -200,6 +179,8 @@ def _main(argv=None):
 
         time = time - time_offset
         # time = data[options.chtrig].time_index - time_offset
+
+        # #!# TO HERE
 
         utils.path_exists_or_make_it(options.outdir)
 

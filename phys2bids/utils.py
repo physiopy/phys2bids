@@ -35,6 +35,16 @@ def check_file_exists(file, hardexit=True):
         raise FileNotFoundError(f'The file {file} does not exist!')
 
 
+def print_info(filename, phys_object):
+    """
+    Print the info of the input files, using blueprint_input object
+    """
+    print(f'File {filename} contains:\n')
+    
+    for ch in range(2, phys_object.ch_num):
+        print(f'{(ch-2):02d}. {phys_object.ch_name[ch]} sampled at {phys_object.freq[ch]} Hz')
+
+
 def move_file(oldpath, newpath, ext=''):
     """
     Moves file from oldpath to newpath.
