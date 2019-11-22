@@ -72,23 +72,7 @@ def has_data_size(var, data, token):
     return var
 
 
-class blueprint_io():
-    """
-    Parent class for i/o physio objects.
-
-    Properties
-    ----------
-    ch_name: (ch, ) list
-        List of channel names - one per channel
-    units: (ch, ) list
-        list of channel frequencies - one per channel
-    """
-    def __init__(self, ch_name, units):
-        self.ch_name = is_valid(ch_name, list, list_type=str)
-        self.units = is_valid(units, list, list_type=str)
-
-
-class blueprint_input(blueprint_io):
+class blueprint_input():
     """
     Main input object for phys2bids.
     Contains the blueprint to be populated.
@@ -105,7 +89,6 @@ class blueprint_input(blueprint_io):
         Support different frequencies!
     """
     def __init__(self, diff_timeseries, diff_freq, ch_name, units):
-        super().__init__(ch_name, units)
         self.timeseries = is_valid(diff_timeseries, list, list_type=ndarray)
         self.freq = has_data_size(is_valid(diff_freq, list,
                                            list_type=(int, float)),
@@ -114,7 +97,7 @@ class blueprint_input(blueprint_io):
         self.units = has_data_size(self.units, self.timeseries, '[]')
 
 
-class blueprint_output(blueprint_io):
+class blueprint_output():
     """
     Main output object for phys2bids.
     Contains the blueprint to be exported.
@@ -128,9 +111,9 @@ class blueprint_output(blueprint_io):
     freq : float
         Shared frequency of the object.
     """
-    def __init__(self, timeseries, freq, ch_name, units):
-        super().__init__(ch_name, ch_name, units)
+    def __init__(self, timeseries, freq, ch_name, units, start_time):
         self.timeseries = is_valid(timeseries, ndarray)
         self.freq = has_data_size(is_valid(freq, (int, float)), [1], 0)
         self.ch_name = has_data_size(self.ch_name, self.timeseries, 'missing')
         self.units = has_data_size(self.units, self.timeseries, '[]')
+        self.start_time = start_time
