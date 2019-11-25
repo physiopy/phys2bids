@@ -86,7 +86,10 @@ def use_heuristic(heur_file, sub, ses, filename, outdir):
     heur = utils.load_heuristic(heur_file)
     name = heur.heur(filename[:-4], name)
 
-    heurpath = fldr + '/' + name + '_physio'
+    if record_label:
+        recording = f'_recording-{record_label}'
+
+    heurpath = fldr + '/' + name + recording + '_physio'
     # for ext in ['.tsv.gz', '.json', '.log']:
     #     move_file(outfile, heurpath, ext)
     os.chdir(cwd)
