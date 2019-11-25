@@ -72,28 +72,49 @@ class blueprint_input():
 
     Properties
     ----------
-    timeseries : (ch, [tps]) list
+    diff_timeseries : (ch, [tps]) list
         List of numpy 1d arrays - one for channel, plus one for time.
         Time channel has to be the first, trigger the second.
         Contains all the timeseries recorded.
         Supports different frequencies!
-    freq : (ch, ) list
+    diff_freq : (ch) list of floats
         List of floats - one per channel.
         Contains all the frequencies of the recorded channel.
         Support different frequencies!
+    ch_name : (ch) list of strings
+        List of names of the channels - can be the header of the columns
+        in the output files.
+    units : (ch) list of strings
+        List of the units of the channels.
+
+    Methods
+    -------
+    check_trigger_amount :
+        Method that counts the amounts of triggers and corrects time offset.
+
     """
     def __init__(self, diff_timeseries, diff_freq, ch_name, units):
         self.timeseries = is_valid(diff_timeseries, list, list_type=np.ndarray)
         self.ch_amount = len(self.timeseries)
         self.freq = has_size(is_valid(diff_freq, list,
-                                           list_type=(int, float)),
-                                  self.ch_amount, 0)
+                                      list_type=(int, float)),
+                             self.ch_amount, 0)
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
 
     def check_trigger_amount(self, thr=2.5, num_tps_expected=0, tr=0):
         """
+        Method that counts trigger points and corrects time offset.
 
+        Input
+        -----
+        thr: float
+            threshold to be used to detect trigger points.
+            Default is 2.5
+        num_tps_expected: int
+            number of expected triggers (num of TRs in fMRI)
+        tr: float
+            the Repetition Time of the fMRI data.
         """
         print('Counting trigger points')
         trigger_deriv = np.diff(self.timeseries[1])

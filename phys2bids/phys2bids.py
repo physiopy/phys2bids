@@ -145,6 +145,12 @@ def _main(argv=None):
         #####
         ###
         # #!# This part has to become the "output object" population
+
+        # Check how many different frequencies there are in the input
+        # Create a dictionary that has one entry per frequence
+        # Create an output object per entry
+
+
         table = pd.DataFrame(index=time)
 
         if ftype == 'txt':
