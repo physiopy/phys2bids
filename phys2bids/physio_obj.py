@@ -191,6 +191,7 @@ class blueprint_input():
             print('Cannot check the number of tps')
 
         cls.timeseries[0] -= time_offset
+        cls.num_tps_found = num_tps_found
 
 
 class blueprint_output():
