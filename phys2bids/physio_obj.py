@@ -125,7 +125,24 @@ class blueprint_input():
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
 
-    @classmethod
+    def return_index(cls, idx):
+        """
+        Method that returns all the proper list entry of the
+        properties of the object, given an index.
+        """
+        return (cls.timeseries[idx], cls.ch_amount, cls.freq[idx],
+                cls.ch_name[idx], cls.units[idx])
+
+    def delete_at_index(cls, idx):
+        """
+        Method that returns all the proper list entry of the
+        properties of the object, given an index.
+        """
+        del(cls.timeseries[idx])
+        del(cls.freq[idx])
+        del(cls.ch_name[idx])
+        del(cls.units[idx])
+
     def check_trigger_amount(cls, thr=2.5, num_tps_expected=0, tr=0):
         """
         Method that counts trigger points and corrects time offset in
@@ -207,10 +224,27 @@ class blueprint_output():
     def __init__(self, timeseries, freq, ch_name, units, start_time):
         self.timeseries = is_valid(timeseries, np.ndarray)
         self.ch_amount = self.timeseries.shape[0]
-        self.freq = has_size(is_valid(freq, (int, float)), 1, 0)
+        self.freq = is_valid(freq, (int, float))
         self.ch_name = has_size(ch_name, self.ch_amount, 'unkown')
         self.units = has_size(units, self.ch_amount, '[]')
         self.start_time = start_time
+
+    def return_index(cls, idx):
+        """
+        Method that returns all the proper list entry of the
+        properties of the object, given an index.
+        """
+        return (cls.timeseries[idx], cls.ch_amount, cls.freq,
+                cls.ch_name[idx], cls.units[idx], cls.start_time)
+
+    def delete_at_index(cls, idx):
+        """
+        Method that returns all the proper list entry of the
+        properties of the object, given an index.
+        """
+        del(cls.timeseries[idx])
+        del(cls.ch_name[idx])
+        del(cls.units[idx])
 
     @classmethod
     def init_from_blueprint(cls, blueprint):
