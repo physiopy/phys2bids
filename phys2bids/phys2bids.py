@@ -26,10 +26,12 @@ have the same sampling freq.
 
 import os
 
-import pandas as pd
+from copy import deepcopy
+from numpy import savetxt
 
 from phys2bids import utils, viz
 from phys2bids.cli.run import _get_parser
+from phys2bids.physio_obj import blueprint_output
 
 
 # #!# This is hardcoded until we find a better solution
@@ -59,7 +61,7 @@ def print_json(filename, samp_freq, time_offset, table_header):
     utils.writejson(filename, summary, indent=4, sort_keys=False)
 
 
-def use_heuristic(heur_file, sub, ses, filename, outdir):
+def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     utils.check_file_exists(heur_file)
 
     if sub[:4] != 'sub-':
@@ -121,104 +123,98 @@ def _main(argv=None):
         raise Exception('This shouldn\'t happen, check out the last few'
                         'lines of code')
 
-    phys_input = populate_phys_input(infile, options.chtrig)
-    utils.print_info(options.filename, phys_input)
+    phys_in = populate_phys_input(infile, options.chtrig)
+    utils.print_info(options.filename, phys_in)
 
     # If file has to be processed, process it
     if not options.info:
+        # If possible, prepare bids renaming.
         if options.heur_file and options.sub:
             utils.check_file_exists(options.heur_file)
             print(f'Preparing BIDS output using {options.heur_file}')
             outfile = use_heuristic(options.heur_file, options.sub,
                                     options.ses, options.filename,
-                                    options.outdir)
+                                    options.outdir, )
         elif options.heur_file and not options.sub:
             print(f'While "-heur" was specified, option "-sub" was not.\n'
                   f'Skipping BIDS formatting.')
 
         # #!# Get option of no trigger! (which is wrong practice or Respiract)
-        phys_input.check_trigger_amount(options.thr, options.num_tps_expected,
-                                        options.tr)
+        phys_in.check_trigger_amount(options.thr, options.num_tps_expected,
+                                     options.tr)
 
         utils.path_exists_or_make_it(options.outdir)
 
-        viz.plot_trigger(phys_input.timeseries[0], phys_input.timeseries[1],
+        viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[1],
                          outfile, options)
 
-        #####
-        ###
-        # #!# This part has to become the "output object" population
-
-        # Check how many different frequencies there are in the input
-        # Create a dictionary that has one entry per frequence
-        # Create an output object per entry
-
-
-        table = pd.DataFrame(index=time)
-
-        if ftype == 'txt':
-            col_names = header[1].split('\t')
-            col_names[-1] = col_names[-1][:-1]
-
+        # The next few lines remove the undesired channels from phys_in.
         if options.chsel:
-            print('Extracting desired channels')
-            for ch in options.chsel:
-                if ftype == 'acq':
-                    table[data[ch].name] = data[ch].data
-                elif ftype == 'txt':
-                    # preparing channel names from txt file
-                    table[col_names[ch + 1]] = data[:, ch + 1]
+            for i in [x for x in reversed(range(0, phys_in.ch_amount))
+                      if x not in options.chsel]:
+                phys_in.delete_at_index(i)
 
-        else:
-            # #!# Needs a check on different channel frequency!
-            print('Extracting all channels')
-            if ftype == 'acq':
-                for ch in range(0, len(data)):
-                    table[data[ch].name] = data[ch].data
-            elif ftype == 'txt':
-                for ch in range(0, (data.shape[1] - 1)):
-                    table[col_names[ch + 1]] = data[:, ch + 1]
+        # The next few lines create a dictionary of different blueprint_input
+        # objects, one for each unique frequency in phys_in
+        uniq_freq_list = set(phys_in.freq)
+        phys_out = {}
+        for uniq_freq in uniq_freq_list:
+            phys_out[uniq_freq] = deepcopy(phys_in)
+            for i in [i for i, x in enumerate(reversed(phys_in.freq))
+                      if x != uniq_freq]:
+                phys_out[uniq_freq].delete_at_index(phys_in.ch_amount-i-1)
 
-        print('Extracting minor informations')
-        if ftype == 'acq':
-            samp_freq = data[0].samples_per_second
-        elif ftype == 'txt':
-            freq_list = header[0].split('\t')
-            samp_freq = 1 / float(freq_list[-1][:-2])
+        for uniq_freq in uniq_freq_list:
+            phys_out[uniq_freq] = blueprint_output.init_from_blueprint(phys_out[uniq_freq])
 
-        table.index.names = ['time']
-        table_width = len(table.columns)
+        # ####
+        # ###  This is to change channel names by manual input.
+        # #    It definitely needs to go before!
+        #
+        # if options.table_header:
+        #     if 'time' in options.table_header:
+        #         ignored_headers = 1
+        #     else:
+        #         ignored_headers = 0
 
-        if options.table_header:
-            if 'time' in options.table_header:
-                ignored_headers = 1
-            else:
-                ignored_headers = 0
+        #     n_headers = len(options.table_header)
+        #     if table_width < n_headers - ignored_headers:
+        #         print(f'Too many table headers specified!\n'
+        #               f'{options.table_header}\n'
+        #               f'Ignoring the last '
+        #               f'{n_headers - table_width - ignored_headers}')
+        #         options.table_header = options.table_header[:(table_width +
+        #                                                       ignored_headers)]
+        #     elif table_width > n_headers - ignored_headers:
+        #         missing_headers = n_headers - table_width - ignored_headers
+        #         print(f'Not enough table headers specified!\n'
+        #               f'{options.table_header}\n'
+        #               f'Tailing {missing_headers} headers')
+        #         for i in range(missing_headers):
+        #             options.table_header.append(f'missing n.{i+1}')
 
-            n_headers = len(options.table_header)
-            if table_width < n_headers - ignored_headers:
-                print(f'Too many table headers specified!\n'
-                      f'{options.table_header}\n'
-                      f'Ignoring the last '
-                      f'{n_headers - table_width - ignored_headers}')
-                options.table_header = options.table_header[:(table_width + ignored_headers)]
-            elif table_width > n_headers - ignored_headers:
-                missing_headers = n_headers - table_width - ignored_headers
-                print(f'Not enough table headers specified!\n'
-                      f'{options.table_header}\n'
-                      f'Tailing {missing_headers} headers')
-                for i in range(missing_headers):
-                    options.table_header.append(f'missing n.{i+1}')
+        #     table.columns = options.table_header[ignored_headers:]
+            # #!# Here the function viz.plot_channel should be called
+            # for the desired channels.
 
-            table.columns = options.table_header[ignored_headers:]
-            # #!# Here the function viz.plot_channel should be called for the desired channels.
+        output_amount = len(uniq_freq_list)
+        if output_amount > 1:
+            print(f'Found {output_amount} different frequencies in input!\n'
+                  f'Consequently, preparing {output_amount} of output files')
 
-        print('Printing file')
-        table.to_csv(outfile + '.tsv.gz', sep='\t', index=True, header=False, compression='gzip')
-        # #!# Definitely needs check on samp_freq!
-        print_json(outfile, samp_freq, time_offset, options.table_header)
-        print_summary(options.filename, options.num_tps_expected,
-                      num_tps_found, samp_freq, time_offset, outfile)
+        for uniq_freq in uniq_freq_list:
+            # ###
+            # ## Needs dealing with names
+            print('Printing file')
+            savetxt(outfile + '.tsv.gz', phys_out[uniq_freq].timeseries,
+                    fmt='%.8e', delimiter='\t')
+            print_json(outfile, phys_out[uniq_freq].freq,
+                       phys_out[uniq_freq].start_time,
+                       phys_out[uniq_freq].ch_name)
+            print_summary(options.filename, options.num_tps_expected,
+                          phys_out[uniq_freq].num_tps_found,
+                          phys_in.freq, phys_out[uniq_freq].start_time,
+                          outfile)
 
 
 if __name__ == '__main__':
