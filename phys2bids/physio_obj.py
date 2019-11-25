@@ -69,15 +69,17 @@ class blueprint_input():
     """
     Main input object for phys2bids.
     Contains the blueprint to be populated.
+    !!! Pay attention: there's rules on how to populate this object.
+    See below ("Attention") !!!
 
-    Properties
-    ----------
-    diff_timeseries : (ch, [tps]) list
+    Input (Properties)
+    ------------------
+    timeseries : (ch, [tps]) list
         List of numpy 1d arrays - one for channel, plus one for time.
         Time channel has to be the first, trigger the second.
         Contains all the timeseries recorded.
         Supports different frequencies!
-    diff_freq : (ch) list of floats
+    freq : (ch) list of floats
         List of floats - one per channel.
         Contains all the frequencies of the recorded channel.
         Support different frequencies!
@@ -87,24 +89,47 @@ class blueprint_input():
     units : (ch) list of strings
         List of the units of the channels.
 
+    Properties
+    ---------------------
+    ch_amount: int
+        Number of channels (ch).
+
     Methods
     -------
     check_trigger_amount :
-        Method that counts the amounts of triggers and corrects time offset.
+        Method that counts the amounts of triggers and corrects time offset
+        in "time" ndarray.
 
+    Attention
+    ---------
+    The timeseries (and as a consequence, all the other properties)
+    should start with an entry for time and an entry for trigger.
+    Both should have the same length - hence same sampling. Meaning:
+    - timeseries[0] → ndarray representing time
+    - timeseries[1] → ndarray representing trigger
+    - timeseries[0].shape == timeseries[1].shape
+
+    As a consequence:
+    - freq[0] == freq[1]
+    - ch_name[0] = 'time'
+    - ch_name[1] = 'trigger'
+    - units[0] = 's'
+    - Actual number of channels (ANC) +1 <= ch_amount <= ANC +2
     """
-    def __init__(self, diff_timeseries, diff_freq, ch_name, units):
-        self.timeseries = is_valid(diff_timeseries, list, list_type=np.ndarray)
+    def __init__(self, timeseries, freq, ch_name, units):
+        self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
         self.ch_amount = len(self.timeseries)
-        self.freq = has_size(is_valid(diff_freq, list,
+        self.freq = has_size(is_valid(freq, list,
                                       list_type=(int, float)),
                              self.ch_amount, 0)
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
 
-    def check_trigger_amount(self, thr=2.5, num_tps_expected=0, tr=0):
+    @classmethod
+    def check_trigger_amount(cls, thr=2.5, num_tps_expected=0, tr=0):
         """
-        Method that counts trigger points and corrects time offset.
+        Method that counts trigger points and corrects time offset in
+        the list representing time.
 
         Input
         -----
@@ -117,10 +142,10 @@ class blueprint_input():
             the Repetition Time of the fMRI data.
         """
         print('Counting trigger points')
-        trigger_deriv = np.diff(self.timeseries[1])
+        trigger_deriv = np.diff(cls.timeseries[1])
         tps = trigger_deriv > thr
         num_tps_found = tps.sum()
-        time_offset = self.timeseries[0][tps.argmax()]
+        time_offset = cls.timeseries[0][tps.argmax()]
 
         if num_tps_expected:
             print('Checking number of tps')
@@ -148,7 +173,7 @@ class blueprint_input():
         else:
             print('Cannot check the number of tps')
 
-        self.timeseries[0] -= time_offset
+        cls.timeseries[0] -= time_offset
 
 
 class blueprint_output():
@@ -156,8 +181,8 @@ class blueprint_output():
     Main output object for phys2bids.
     Contains the blueprint to be exported.
 
-    Properties
-    ----------
+    Properties - Input
+    ------------------
     timeseries : (ch x tps) :obj:`numpy.ndarray`
         Numpy 2d array of timeseries
         Contains all the timeseries recorded.
@@ -174,6 +199,10 @@ class blueprint_output():
         Starting time of acquisition (equivalent to first TR,
         or to the opposite sign of the time offset).
 
+    Methods
+    -------
+    init_from_blueprint:
+        method to populate from input blueprint instead of init
     """
     def __init__(self, timeseries, freq, ch_name, units, start_time):
         self.timeseries = is_valid(timeseries, np.ndarray)
@@ -182,3 +211,20 @@ class blueprint_output():
         self.ch_name = has_size(ch_name, self.ch_amount, 'unkown')
         self.units = has_size(units, self.ch_amount, '[]')
         self.start_time = start_time
+
+    @classmethod
+    def init_from_blueprint(cls, blueprint):
+        """
+        Method to populate the output blueprint using blueprint_input.
+
+        Input
+        -----
+        blueprint: :obj: blueprint_input
+            the input blueprint object
+        """
+        timeseries = np.asarray(blueprint.timeseries)
+        freq = blueprint.freq[0]
+        ch_name = blueprint.ch_name
+        units = blueprint.units
+        start_time = timeseries[0, 0]
+        return cls(timeseries, freq, ch_name, units, start_time)
