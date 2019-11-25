@@ -164,6 +164,16 @@ class blueprint_output():
         Impose same frequency!
     freq : float
         Shared frequency of the object.
+            Properties
+    ch_name : (ch) list of strings
+        List of names of the channels - can be the header of the columns
+        in the output files.
+    units : (ch) list of strings
+        List of the units of the channels.
+    start_time : float
+        Starting time of acquisition (equivalent to first TR,
+        or to the opposite sign of the time offset).
+
     """
     def __init__(self, timeseries, freq, ch_name, units, start_time):
         self.timeseries = is_valid(timeseries, np.ndarray)
