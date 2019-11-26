@@ -53,11 +53,11 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
     utils.writefile(outfile, '.log', summary)
 
 
-def print_json(filename, samp_freq, time_offset, table_header):
+def print_json(filename, samp_freq, time_offset, ch_name):
     start_time = -time_offset
     summary = dict(SamplingFrequency=samp_freq,
                    StartTime=start_time,
-                   Columns=table_header)
+                   Columns=ch_name)
     utils.writejson(filename, summary, indent=4, sort_keys=False)
 
 
@@ -110,8 +110,10 @@ def _main(argv=None):
 
     if options.heur_file:
         options.heur_file = utils.check_input_ext(options.heur_file, '.py')
+        utils.check_file_exists(options.heur_file)
 
     infile = os.path.join(options.indir, options.filename)
+    utils.check_file_exists(infile)
     outfile = os.path.join(options.outdir, os.path.basename(options.filename[:-4]))
 
     # Read file!
@@ -120,43 +122,44 @@ def _main(argv=None):
     elif ftype == 'txt':
         raise Exception('txt not yet supported')
     else:
-        raise Exception('This shouldn\'t happen, check out the last few'
+        raise Exception('This shouldn\'t happen, check out the last few '
                         'lines of code')
 
+    print('Reading the file')
     phys_in = populate_phys_input(infile, options.chtrig)
+    print('Reading infos')
     utils.print_info(options.filename, phys_in)
+    # #!# Here the function viz.plot_channel should be called
+    # for the desired channels.
 
     # If file has to be processed, process it
     if not options.info:
-        # If possible, prepare bids renaming.
-        if options.heur_file and options.sub:
-            utils.check_file_exists(options.heur_file)
-            print(f'Preparing BIDS output using {options.heur_file}')
-            outfile = use_heuristic(options.heur_file, options.sub,
-                                    options.ses, options.filename,
-                                    options.outdir, )
-        elif options.heur_file and not options.sub:
-            print(f'While "-heur" was specified, option "-sub" was not.\n'
-                  f'Skipping BIDS formatting.')
 
         # #!# Get option of no trigger! (which is wrong practice or Respiract)
         phys_in.check_trigger_amount(options.thr, options.num_tps_expected,
                                      options.tr)
-
+        print('Checking that the output folder exists')
         utils.path_exists_or_make_it(options.outdir)
-
+        print('Plot trigger')
         viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[1],
                          outfile, options)
 
         # The next few lines remove the undesired channels from phys_in.
         if options.chsel:
+            print('Dropping unselected channels')
             for i in [x for x in reversed(range(0, phys_in.ch_amount))
                       if x not in options.chsel]:
                 phys_in.delete_at_index(i)
 
+        # If requested, change channel names.
+        if options.ch_name:
+            print('Renaming channels with given names')
+            phys_in.rename_channels(options.ch_name)
+
         # The next few lines create a dictionary of different blueprint_input
         # objects, one for each unique frequency in phys_in
         uniq_freq_list = set(phys_in.freq)
+        print(f'Found {len(uniq_freq_list)} unique frequencies.')
         phys_out = {}
         for uniq_freq in uniq_freq_list:
             phys_out[uniq_freq] = deepcopy(phys_in)
@@ -167,54 +170,43 @@ def _main(argv=None):
         for uniq_freq in uniq_freq_list:
             phys_out[uniq_freq] = blueprint_output.init_from_blueprint(phys_out[uniq_freq])
 
-        # ####
-        # ###  This is to change channel names by manual input.
-        # #    It definitely needs to go before!
-        #
-        # if options.table_header:
-        #     if 'time' in options.table_header:
-        #         ignored_headers = 1
-        #     else:
-        #         ignored_headers = 0
-
-        #     n_headers = len(options.table_header)
-        #     if table_width < n_headers - ignored_headers:
-        #         print(f'Too many table headers specified!\n'
-        #               f'{options.table_header}\n'
-        #               f'Ignoring the last '
-        #               f'{n_headers - table_width - ignored_headers}')
-        #         options.table_header = options.table_header[:(table_width +
-        #                                                       ignored_headers)]
-        #     elif table_width > n_headers - ignored_headers:
-        #         missing_headers = n_headers - table_width - ignored_headers
-        #         print(f'Not enough table headers specified!\n'
-        #               f'{options.table_header}\n'
-        #               f'Tailing {missing_headers} headers')
-        #         for i in range(missing_headers):
-        #             options.table_header.append(f'missing n.{i+1}')
-
-        #     table.columns = options.table_header[ignored_headers:]
-            # #!# Here the function viz.plot_channel should be called
-            # for the desired channels.
-
         output_amount = len(uniq_freq_list)
         if output_amount > 1:
             print(f'Found {output_amount} different frequencies in input!\n'
                   f'Consequently, preparing {output_amount} of output files')
 
+        if options.heur_file and options.sub:
+            print(f'Preparing BIDS output using {options.heur_file}')
+        elif options.heur_file and not options.sub:
+            print(f'While "-heur" was specified, option "-sub" was not.\n'
+                  f'Skipping BIDS formatting.')
+
         for uniq_freq in uniq_freq_list:
-            # ###
-            # ## Needs dealing with names
-            print('Printing file')
+            # If possible, prepare bids renaming.
+            if options.heur_file and options.sub:
+                if output_amount > 1:
+                    # Add "recording-freq" to filename if more than one freq
+                    outfile = use_heuristic(options.heur_file, options.sub,
+                                            options.ses, options.filename,
+                                            options.outdir, uniq_freq)
+                else:
+                    outfile = use_heuristic(options.heur_file, options.sub,
+                                            options.ses, options.filename,
+                                            options.outdir)
+
+            elif output_amount > 1:
+                # Append "freq" to filename if more than one freq
+                outfile = f'outfile_{uniq_freq}'
+
+            print('Exporting files for freq {uniq_freq}')
             savetxt(outfile + '.tsv.gz', phys_out[uniq_freq].timeseries,
                     fmt='%.8e', delimiter='\t')
             print_json(outfile, phys_out[uniq_freq].freq,
                        phys_out[uniq_freq].start_time,
                        phys_out[uniq_freq].ch_name)
             print_summary(options.filename, options.num_tps_expected,
-                          phys_out[uniq_freq].num_tps_found,
-                          phys_in.freq, phys_out[uniq_freq].start_time,
-                          outfile)
+                          phys_in.num_tps_found, uniq_freq,
+                          phys_out[uniq_freq].start_time, outfile)
 
 
 if __name__ == '__main__':
