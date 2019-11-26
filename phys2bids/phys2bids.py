@@ -122,8 +122,8 @@ def _main(argv=None):
     elif ftype == 'txt':
         raise Exception('txt not yet supported')
     else:
-        raise Exception('This shouldn\'t happen, check out the last few '
-                        'lines of code')
+        # #!# We should add a logger here.
+        raise Exception('Currently unsupported file type.')
 
     print('Reading the file')
     phys_in = populate_phys_input(infile, options.chtrig)
@@ -147,9 +147,9 @@ def _main(argv=None):
         # The next few lines remove the undesired channels from phys_in.
         if options.chsel:
             print('Dropping unselected channels')
-            for i in [x for x in reversed(range(0, phys_in.ch_amount))
-                      if x not in options.chsel]:
-                phys_in.delete_at_index(i)
+            for i in reversed(range(0, phys_in.ch_amout)):
+                if i not in options.chsel:
+                    phys_in.delete_at_index(i)
 
         # If requested, change channel names.
         if options.ch_name:
@@ -163,9 +163,9 @@ def _main(argv=None):
         phys_out = {}
         for uniq_freq in uniq_freq_list:
             phys_out[uniq_freq] = deepcopy(phys_in)
-            for i in [i for i, x in enumerate(reversed(phys_in.freq))
-                      if x != uniq_freq]:
-                phys_out[uniq_freq].delete_at_index(phys_in.ch_amount-i-1)
+            for i in reversed(phys_in.freq):
+                if i != uniq_freq:
+                    phys_out[uniq_freq].delete_at_index(phys_in.ch_amount-i-1)
 
         for uniq_freq in uniq_freq_list:
             phys_out[uniq_freq] = blueprint_output.init_from_blueprint(phys_out[uniq_freq])
@@ -173,7 +173,7 @@ def _main(argv=None):
         output_amount = len(uniq_freq_list)
         if output_amount > 1:
             print(f'Found {output_amount} different frequencies in input!\n'
-                  f'Consequently, preparing {output_amount} of output files')
+                  f'Preparing {output_amount} output files')
 
         if options.heur_file and options.sub:
             print(f'Preparing BIDS output using {options.heur_file}')

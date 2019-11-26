@@ -20,7 +20,10 @@ def is_valid(var, var_type, list_type=None, return_var=True):
     var_type: type
         Type the variable is assumed to be.
     list_type: type
-        As type.
+        Like var_type, but applies to list elements.
+    return_var: boolean
+        If true, the function returns the input variable.
+        Useful for checking over assignment.
 
     Output
     ------
@@ -28,7 +31,7 @@ def is_valid(var, var_type, list_type=None, return_var=True):
         Variable to be checked (same as input).
     """
     if not isinstance(var, var_type):
-        raise AttributeError('Something went wrong while populating blueprint')
+        raise AttributeError(f'The given variable is not a {var_type}')
 
     if var_type is list and list_type is not None:
         for element in var:
@@ -44,12 +47,14 @@ def has_size(var, data_size, token):
     If it's not the case, fill in the var or removes exceding var entry.
     Input
     -----
-    var:
+    var: any type
         Variable to be checked.
     data_size: int
         Size of data of interest.
-    token:
-        What to be used in case of completion.
+    token: same type as `var`
+        If `var` doesn't have as many elements as the data_size,
+        it will be padded at the end with this `token`.
+        It has to be the same type as var.
 
     Output
     ------
@@ -60,6 +65,7 @@ def has_size(var, data_size, token):
         var = var[:data_size]
 
     if len(var) < data_size:
+        is_valid(token, type(var))
         var = var + [token] * (data_size - len(var))
 
     return var
@@ -90,12 +96,20 @@ class blueprint_input():
         List of the units of the channels.
 
     Properties
-    ---------------------
+    ----------
     ch_amount: int
         Number of channels (ch).
 
+    Optional properties
+    -------------------
+    num_timepoints_found: int
+        Amount of timepoints found in the automatic count,
+        *if* check_trigger_amount() is run
+
     Methods
     -------
+    rename_channels:
+        Changes the list "ch_name" in a controlled way.
     return_index:
         Returns the proper list entry of all the
         properties of the object, given an index.
@@ -137,6 +151,8 @@ class blueprint_input():
 
         Input
         -----
+        cls: :obj: `blueprint_input`
+            The object on which to operate
         new_names: list of str
             New names for channels.
         ch_trigger:
@@ -162,8 +178,16 @@ class blueprint_input():
 
         Input
         -----
+        cls: :obj: `blueprint_input`
+            The object on which to operate
         idx: int
             Index of elements to return
+
+        Output
+        ------
+        out: tuple
+            Tuple containing the proper list entry of all the
+            properties of the object with index `idx`
         """
         return (cls.timeseries[idx], cls.ch_amount, cls.freq[idx],
                 cls.ch_name[idx], cls.units[idx])
@@ -175,6 +199,8 @@ class blueprint_input():
 
         Input
         -----
+        cls: :obj: `blueprint_input`
+            The object on which to operate
         idx: int or range
             Index of elements to delete from all lists
          """
@@ -183,55 +209,61 @@ class blueprint_input():
         del(cls.ch_name[idx])
         del(cls.units[idx])
 
-    def check_trigger_amount(cls, thr=2.5, num_tps_expected=0, tr=0):
+    def check_trigger_amount(cls, thr=2.5, num_timepoints_expected=0, tr=0):
         """
         Counts trigger points and corrects time offset in
         the list representing time.
 
         Input
         -----
+        cls: :obj: `blueprint_input`
+            The object on which to operate
         thr: float
             Threshold to be used to detect trigger points.
             Default is 2.5
-        num_tps_expected: int
+        num_timepoints_expected: int
             Number of expected triggers (num of TRs in fMRI)
         tr: float
             The Repetition Time of the fMRI data.
         """
         print('Counting trigger points')
         trigger_deriv = np.diff(cls.timeseries[1])
-        tps = trigger_deriv > thr
-        num_tps_found = tps.sum()
-        time_offset = cls.timeseries[0][tps.argmax()]
+        timepoints = trigger_deriv > thr
+        num_timepoints_found = timepoints.sum()
+        time_offset = cls.timeseries[0][timepoints.argmax()]
 
-        if num_tps_expected:
-            print('Checking number of tps')
-            if num_tps_found > num_tps_expected:
-                tps_extra = num_tps_found - num_tps_expected
-                print(f'Found {tps_extra} tps more than expected!\n'
-                      'Assuming extra tps are at the end (try again with a '
-                      'more conservative thr)')
+        if num_timepoints_expected:
+            print('Checking number of timepoints')
+            if num_timepoints_found > num_timepoints_expected:
+                timepoints_extra = (num_timepoints_found -
+                                    num_timepoints_expected)
+                print(f'Found {timepoints_extra} timepoints'
+                      'more than expected!\n'
+                      'Assuming extra timepoints are at the end '
+                      '(try again with a more conservative thr)')
 
-            elif num_tps_found < num_tps_expected:
-                tps_missing = num_tps_expected - num_tps_found
-                print(f'Found {tps_missing} tps less than expected!')
+            elif num_timepoints_found < num_timepoints_expected:
+                timepoints_missing = (num_timepoints_expected -
+                                      num_timepoints_found)
+                print(f'Found {timepoints_missing} timepoints'
+                      'less than expected!')
                 if tr:
-                    print('Correcting time offset, assuming missing tps '
-                          'are at the beginning (try again with '
+                    print('Correcting time offset, assuming missing timepoints'
+                          ' are at the beginning (try again with '
                           'a more liberal thr')
-                    time_offset -= (tps_missing * tr)
+                    time_offset -= (timepoints_missing * tr)
                 else:
                     print('Can\'t correct time offset, (try again specifying '
                           'tr or with a more liberal thr')
 
             else:
-                print('Found just the right amount of tps!')
+                print('Found just the right amount of timepoints!')
 
         else:
-            print('Cannot check the number of tps')
+            print('Cannot check the number of timepoints')
 
         cls.timeseries[0] -= time_offset
-        cls.num_tps_found = num_tps_found
+        cls.num_timepoints_found = num_timepoints_found
 
 
 class blueprint_output():
@@ -272,7 +304,7 @@ class blueprint_output():
         self.timeseries = is_valid(timeseries, np.ndarray)
         self.ch_amount = self.timeseries.shape[0]
         self.freq = is_valid(freq, (int, float))
-        self.ch_name = has_size(ch_name, self.ch_amount, 'unkown')
+        self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
         self.start_time = start_time
 
@@ -283,8 +315,16 @@ class blueprint_output():
 
         Input
         -----
+        cls: :obj: `blueprint_output`
+            The object on which to operate
         idx: int
             Index of elements to return
+
+        Output
+        ------
+        out: tuple
+            Tuple containing the proper list entry of all the
+            properties of the object with index `idx`
         """
         return (cls.timeseries[idx], cls.ch_amount, cls.freq,
                 cls.ch_name[idx], cls.units[idx], cls.start_time)
@@ -296,6 +336,8 @@ class blueprint_output():
 
         Input
         -----
+        cls: :obj: `blueprint_output`
+            The object on which to operate
         idx: int or range
             Index of elements to delete from all lists
         """
@@ -310,8 +352,15 @@ class blueprint_output():
 
         Input
         -----
-        blueprint: :obj: blueprint_input
+        cls: :obj: `blueprint_output`
+            The object on which to operate
+        blueprint: :obj: `blueprint_input`
             The input blueprint object
+
+        Output
+        ------
+        cls: :obj: `blueprint_output`
+            Populated `blueprint_output` object.
         """
         timeseries = np.asarray(blueprint.timeseries)
         freq = blueprint.freq[0]
