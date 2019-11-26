@@ -95,14 +95,12 @@ def _get_parser():
                           type=float,
                           help='Threshold used for trigger detection.',
                           default=2.5)
-    optional.add_argument('-tbhd', '--table-header',
-                          dest='table_header',
+    optional.add_argument('-chnames', '--channel-names',
+                          dest='ch_name',
                           nargs='*',
                           type=str,
                           help='Columns header (for json file).',
-                          # #!# Has to go to empty list
-                          default=['time', 'respiratory_chest', 'trigger',
-                                   'cardiac', 'respiratory_CO2', 'respiratory_O2'])
+                          default=[''])
 
     optional.add_argument('-v', '--version', action='version',
                           version=('%(prog)s ' + __version__))
