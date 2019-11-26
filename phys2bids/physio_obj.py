@@ -15,7 +15,7 @@ def is_valid(var, var_type, list_type=None, return_var=True):
     checks that the list contains list_type.
     Input
     -----
-    var:
+    var: any type
         Variable to be checked.
     var_type: type
         Type the variable is assumed to be.
@@ -27,7 +27,7 @@ def is_valid(var, var_type, list_type=None, return_var=True):
 
     Output
     ------
-    var:
+    var: any type
         Variable to be checked (same as input).
     """
     if not isinstance(var, var_type):
@@ -58,7 +58,7 @@ def has_size(var, data_size, token):
 
     Output
     ------
-    var:
+    var: any type
         Variable to be checked (same as input).
     """
     if len(var) > data_size:
@@ -147,7 +147,8 @@ class blueprint_input():
 
     def rename_channels(cls, new_names, ch_trigger=None):
         """
-        Renames the channels.
+        Renames the channels. If 'time' or 'trigger' were specified,
+        it makes sure that they're the first and second entry.
 
         Input
         -----
@@ -157,6 +158,11 @@ class blueprint_input():
             New names for channels.
         ch_trigger:
             Number of the channel containing the trigger.
+
+        Outcome
+        -------
+        cls.ch_name:
+            Changes content to new_name.
         """
         if 'time' in new_names:
             del(new_names[new_names.index['time']])
@@ -203,6 +209,12 @@ class blueprint_input():
             The object on which to operate
         idx: int or range
             Index of elements to delete from all lists
+
+        Outcome
+        -------
+        cls:
+            In all the property that are lists, the element correspondent to
+            `idx` gets deleted
          """
         del(cls.timeseries[idx])
         del(cls.freq[idx])
@@ -225,8 +237,23 @@ class blueprint_input():
             Number of expected triggers (num of TRs in fMRI)
         tr: float
             The Repetition Time of the fMRI data.
+
+        Output
+        ------
+        cls.num_timepoints_found: int
+            Property of the `blueprint_input` class.
+            Contains the number of timepoints found
+            with the automatic estimation.
+
+        Outcome
+        -------
+        cls.timeseries:
+            The property `timeseries` is shifted with the 0 being
+            the time of first trigger.
         """
         print('Counting trigger points')
+        # Use first derivative of the trigger channel to find the TRs,
+        # comparing it to a given threshold.
         trigger_deriv = np.diff(cls.timeseries[1])
         timepoints = trigger_deriv > thr
         num_timepoints_found = timepoints.sum()
@@ -340,6 +367,12 @@ class blueprint_output():
             The object on which to operate
         idx: int or range
             Index of elements to delete from all lists
+
+        Outcome
+        -------
+        cls:
+            In all the property that are lists, the element correspondent to
+            `idx` gets deleted
         """
         del(cls.timeseries[idx])
         del(cls.ch_name[idx])

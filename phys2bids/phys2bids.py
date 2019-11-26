@@ -39,6 +39,31 @@ HEADERLENGTH = 9
 
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
+    """
+    Prints a summary onscreen and in file with informations on the files.
+
+    Input
+    -----
+    filename: str
+        Name of the input of phys2bids.
+    ntp_expected: int
+        Number of expected timepoints, as defined by user.
+    ntp_found: int
+        Number of timepoints found with the automatic process.
+    samp_freq: float
+        Frequency of sampling for the output file.
+    time_offset: float
+        Difference between beginning of file and first TR.
+    outfile: str or path
+        Fullpath to output file.
+
+    Outcome
+    -------
+    summary: str
+        Prints the summary on screen
+    outfile: .log file
+        File containing summary
+    """
     start_time = -time_offset
     summary = (f'------------------------------------------------\n'
                f'Filename:            {filename}\n'
@@ -53,16 +78,61 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
     utils.writefile(outfile, '.log', summary)
 
 
-def print_json(filename, samp_freq, time_offset, ch_name):
+def print_json(outfile, samp_freq, time_offset, ch_name):
+    """
+    Prints the json required by BIDS format.
+
+    Input
+    -----
+    outfile: str or path
+        Fullpath to output file.
+    samp_freq: float
+        Frequency of sampling for the output file.
+    time_offset: float
+        Difference between beginning of file and first TR.
+    ch_name: list of str
+        List of channel names, as specified by BIDS format.
+
+    Outcome
+    -------
+
+    outfile: .json file
+        File containing information for BIDS.
+    """
     start_time = -time_offset
     summary = dict(SamplingFrequency=samp_freq,
                    StartTime=start_time,
                    Columns=ch_name)
-    utils.writejson(filename, summary, indent=4, sort_keys=False)
+    utils.writejson(outfile, summary, indent=4, sort_keys=False)
 
 
 def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     utils.check_file_exists(heur_file)
+    """
+    Import the heuristic file specified by the user and uses its output
+    to rename the file.
+
+    Input
+    -----
+    heur_file: str or path
+        Fullpath to heuristic file.
+    sub: str or int
+        Name of subject.
+    ses: str or int or None
+        Name of session.
+    filename: str
+        Name of the input of phys2bids.
+    outdir: str or path
+        Path to the directory that will become the "site" folder
+        ("root" folder of BIDS database).
+    record_label: str
+        Optional label for the "record" entry of BIDS.
+
+    Output
+    -------
+    heurpath: str or path
+        Returned fullpath to tsv.gz new file (post BIDS formatting).
+    """
 
     if sub[:4] != 'sub-':
         name = 'sub-' + sub
@@ -100,6 +170,15 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
 
 
 def _main(argv=None):
+    """
+    Main workflow of phys2bids.
+    Runs the parser, does some checks on input, then imports
+    the right interface file to read the input. If only info is required,
+    it returns a summary onscreen.
+    Otherwise, it operates on the input to return a .tsv.gz file, possibily
+    in BIDS format.
+
+    """
     options = _get_parser().parse_args(argv)
     # Check options to make them internally coherent
     # #!# This can probably be done while parsing?
@@ -167,6 +246,9 @@ def _main(argv=None):
                 if i != uniq_freq:
                     phys_out[uniq_freq].delete_at_index(phys_in.ch_amount-i-1)
 
+        # Create a blueprint_output object for each unique frequency found.
+        # Populate it with the corresponding blueprint input and replace it
+        # in the dictionary.
         for uniq_freq in uniq_freq_list:
             phys_out[uniq_freq] = blueprint_output.init_from_blueprint(phys_out[uniq_freq])
 

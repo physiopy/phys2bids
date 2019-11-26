@@ -105,11 +105,18 @@ def copy_file(oldpath, newpath, ext=''):
 
 
 def writefile(filename, ext, text):
+    """
+    Produces a textfile of the specified extension `ext`,
+    containing the given content `text`
+    """
     with open(filename + ext, 'w') as text_file:
         print(text, file=text_file)
 
 
 def writejson(filename, data, **kwargs):
+    """
+    Outputs a json file with the given data inside.
+    """
     if not filename.endswith('.json'):
         filename += '.json'
     with open(filename, 'w') as out:
@@ -122,6 +129,7 @@ def load_heuristic(heuristic):
     References
     ----------
     Copied from [nipy/heudiconv](https://github.com/nipy/heudiconv)
+    Copyright [2014-2019] [Heudiconv developers], Apache 2 license.
     """
     if os.path.sep in heuristic or os.path.lexists(heuristic):
         heuristic_file = os.path.realpath(heuristic)
