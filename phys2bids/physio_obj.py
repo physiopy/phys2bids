@@ -96,9 +96,15 @@ class blueprint_input():
 
     Methods
     -------
-    check_trigger_amount :
-        Method that counts the amounts of triggers and corrects time offset
-        in "time" ndarray.
+    return_index:
+        Returns the proper list entry of all the
+        properties of the object, given an index.
+    delete_at_index:
+        Returns all the proper list entry of the
+        properties of the object, given an index.
+    check_trigger_amount:
+        Counts the amounts of triggers and corrects time offset
+        in "time" ndarray. Also adds property ch_amount.
 
     Attention
     ---------
@@ -125,19 +131,53 @@ class blueprint_input():
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
 
+    def rename_channels(cls, new_names, ch_trigger=None):
+        """
+        Renames the channels.
+
+        Input
+        -----
+        new_names: list of str
+            New names for channels.
+        ch_trigger:
+            Number of the channel containing the trigger.
+        """
+        if 'time' in new_names:
+            del(new_names[new_names.index['time']])
+
+        if 'trigger' in new_names:
+            del(new_names[new_names.index['trigger']])
+        elif ch_trigger:
+            del(new_names[ch_trigger])
+
+        new_names = ['time', 'trigger'] + new_names
+
+        cls.ch_name = has_size(is_valid(new_names, list, list_type=str),
+                               cls.ch_amount, 'unknown')
+
     def return_index(cls, idx):
         """
-        Method that returns all the proper list entry of the
+        Returns the proper list entry of all the
         properties of the object, given an index.
+
+        Input
+        -----
+        idx: int
+            Index of elements to return
         """
         return (cls.timeseries[idx], cls.ch_amount, cls.freq[idx],
                 cls.ch_name[idx], cls.units[idx])
 
     def delete_at_index(cls, idx):
         """
-        Method that returns all the proper list entry of the
+        Returns all the proper list entry of the
         properties of the object, given an index.
-        """
+
+        Input
+        -----
+        idx: int or range
+            Index of elements to delete from all lists
+         """
         del(cls.timeseries[idx])
         del(cls.freq[idx])
         del(cls.ch_name[idx])
@@ -145,18 +185,18 @@ class blueprint_input():
 
     def check_trigger_amount(cls, thr=2.5, num_tps_expected=0, tr=0):
         """
-        Method that counts trigger points and corrects time offset in
+        Counts trigger points and corrects time offset in
         the list representing time.
 
         Input
         -----
         thr: float
-            threshold to be used to detect trigger points.
+            Threshold to be used to detect trigger points.
             Default is 2.5
         num_tps_expected: int
-            number of expected triggers (num of TRs in fMRI)
+            Number of expected triggers (num of TRs in fMRI)
         tr: float
-            the Repetition Time of the fMRI data.
+            The Repetition Time of the fMRI data.
         """
         print('Counting trigger points')
         trigger_deriv = np.diff(cls.timeseries[1])
@@ -219,6 +259,12 @@ class blueprint_output():
 
     Methods
     -------
+    return_index:
+        Returns the proper list entry of all the
+        properties of the object, given an index.
+    delete_at_index:
+        Returns all the proper list entry of the
+        properties of the object, given an index.
     init_from_blueprint:
         method to populate from input blueprint instead of init
     """
@@ -232,16 +278,26 @@ class blueprint_output():
 
     def return_index(cls, idx):
         """
-        Method that returns all the proper list entry of the
+        Returns all the proper list entry of the
         properties of the object, given an index.
+
+        Input
+        -----
+        idx: int
+            Index of elements to return
         """
         return (cls.timeseries[idx], cls.ch_amount, cls.freq,
                 cls.ch_name[idx], cls.units[idx], cls.start_time)
 
     def delete_at_index(cls, idx):
         """
-        Method that returns all the proper list entry of the
+        Returns all the proper list entry of the
         properties of the object, given an index.
+
+        Input
+        -----
+        idx: int or range
+            Index of elements to delete from all lists
         """
         del(cls.timeseries[idx])
         del(cls.ch_name[idx])
@@ -255,7 +311,7 @@ class blueprint_output():
         Input
         -----
         blueprint: :obj: blueprint_input
-            the input blueprint object
+            The input blueprint object
         """
         timeseries = np.asarray(blueprint.timeseries)
         freq = blueprint.freq[0]
