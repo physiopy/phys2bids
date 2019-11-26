@@ -31,7 +31,7 @@ from numpy import savetxt
 
 from phys2bids import utils, viz
 from phys2bids.cli.run import _get_parser
-from phys2bids.physio_obj import blueprint_output
+from phys2bids.physio_obj import BlueprintOutput
 
 
 # #!# This is hardcoded until we find a better solution
@@ -193,16 +193,17 @@ def _main(argv=None):
 
     infile = os.path.join(options.indir, options.filename)
     utils.check_file_exists(infile)
-    outfile = os.path.join(options.outdir, os.path.basename(options.filename[:-4]))
+    outfile = os.path.join(options.outdir,
+                           os.path.basename(os.path.splitext(options.filename)))
 
     # Read file!
     if ftype == 'acq':
         from phys2bids.interfaces.acq import populate_phys_input
     elif ftype == 'txt':
-        raise Exception('txt not yet supported')
+        raise NotImplementedError('txt not yet supported')
     else:
         # #!# We should add a logger here.
-        raise Exception('Currently unsupported file type.')
+        raise NotImplementedError('Currently unsupported file type.')
 
     print('Reading the file')
     phys_in = populate_phys_input(infile, options.chtrig)
@@ -211,84 +212,84 @@ def _main(argv=None):
     # #!# Here the function viz.plot_channel should be called
     # for the desired channels.
 
-    # If file has to be processed, process it
-    if not options.info:
+    # If only info were asked, end here.
+    if options.info:
+        return
 
-        # #!# Get option of no trigger! (which is wrong practice or Respiract)
-        phys_in.check_trigger_amount(options.thr, options.num_tps_expected,
-                                     options.tr)
-        print('Checking that the output folder exists')
-        utils.path_exists_or_make_it(options.outdir)
-        print('Plot trigger')
-        viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[1],
-                         outfile, options)
+    # Run analysis on trigger channel to get first timepoint and the time offset.
+    # #!# Get option of no trigger! (which is wrong practice or Respiract)
+    phys_in.check_trigger_amount(options.thr, options.num_tps_expected,
+                                 options.tr)
+    print('Checking that the output folder exists')
+    utils.path_exists_or_make_it(options.outdir)
+    print('Plot trigger')
+    viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[1],
+                     outfile, options)
 
-        # The next few lines remove the undesired channels from phys_in.
-        if options.chsel:
-            print('Dropping unselected channels')
-            for i in reversed(range(0, phys_in.ch_amout)):
-                if i not in options.chsel:
-                    phys_in.delete_at_index(i)
+    # The next few lines remove the undesired channels from phys_in.
+    if options.chsel:
+        print('Dropping unselected channels')
+        for i in reversed(range(0, phys_in.ch_amout)):
+            if i not in options.chsel:
+                phys_in.delete_at_index(i)
 
-        # If requested, change channel names.
-        if options.ch_name:
-            print('Renaming channels with given names')
-            phys_in.rename_channels(options.ch_name)
+    # If requested, change channel names.
+    if options.ch_name is not None:
+        print('Renaming channels with given names')
+        phys_in.rename_channels(options.ch_name)
 
-        # The next few lines create a dictionary of different blueprint_input
-        # objects, one for each unique frequency in phys_in
-        uniq_freq_list = set(phys_in.freq)
-        print(f'Found {len(uniq_freq_list)} unique frequencies.')
-        phys_out = {}
-        for uniq_freq in uniq_freq_list:
-            phys_out[uniq_freq] = deepcopy(phys_in)
-            for i in reversed(phys_in.freq):
-                if i != uniq_freq:
-                    phys_out[uniq_freq].delete_at_index(phys_in.ch_amount-i-1)
+    # The next few lines create a dictionary of different BlueprintInput
+    # objects, one for each unique frequency in phys_in
+    uniq_freq_list = set(phys_in.freq)
+    output_amount = len(uniq_freq_list)
+    if output_amount > 1:
+        print(f'Found {output_amount} different frequencies in input!')
 
-        # Create a blueprint_output object for each unique frequency found.
+    print(f'Preparing {output_amount} output files.')
+    phys_out = {}
+    for uniq_freq in uniq_freq_list:
+        phys_out[uniq_freq] = deepcopy(phys_in)
+        for i in reversed(phys_in.freq):
+            if i != uniq_freq:
+                phys_out[uniq_freq].delete_at_index(phys_in.ch_amount-i-1)
+
+        # Also create a BlueprintOutput object for each unique frequency found.
         # Populate it with the corresponding blueprint input and replace it
         # in the dictionary.
-        for uniq_freq in uniq_freq_list:
-            phys_out[uniq_freq] = blueprint_output.init_from_blueprint(phys_out[uniq_freq])
+        phys_out[uniq_freq] = BlueprintOutput.init_from_blueprint(phys_out[uniq_freq])
 
-        output_amount = len(uniq_freq_list)
-        if output_amount > 1:
-            print(f'Found {output_amount} different frequencies in input!\n'
-                  f'Preparing {output_amount} output files')
+    if options.heur_file and options.sub:
+        print(f'Preparing BIDS output using {options.heur_file}')
+    elif options.heur_file and not options.sub:
+        print(f'While "-heur" was specified, option "-sub" was not.\n'
+              f'Skipping BIDS formatting.')
 
+    for uniq_freq in uniq_freq_list:
+        # If possible, prepare bids renaming.
         if options.heur_file and options.sub:
-            print(f'Preparing BIDS output using {options.heur_file}')
-        elif options.heur_file and not options.sub:
-            print(f'While "-heur" was specified, option "-sub" was not.\n'
-                  f'Skipping BIDS formatting.')
+            if output_amount > 1:
+                # Add "recording-freq" to filename if more than one freq
+                outfile = use_heuristic(options.heur_file, options.sub,
+                                        options.ses, options.filename,
+                                        options.outdir, uniq_freq)
+            else:
+                outfile = use_heuristic(options.heur_file, options.sub,
+                                        options.ses, options.filename,
+                                        options.outdir)
 
-        for uniq_freq in uniq_freq_list:
-            # If possible, prepare bids renaming.
-            if options.heur_file and options.sub:
-                if output_amount > 1:
-                    # Add "recording-freq" to filename if more than one freq
-                    outfile = use_heuristic(options.heur_file, options.sub,
-                                            options.ses, options.filename,
-                                            options.outdir, uniq_freq)
-                else:
-                    outfile = use_heuristic(options.heur_file, options.sub,
-                                            options.ses, options.filename,
-                                            options.outdir)
+        elif output_amount > 1:
+            # Append "freq" to filename if more than one freq
+            outfile = f'outfile_{uniq_freq}'
 
-            elif output_amount > 1:
-                # Append "freq" to filename if more than one freq
-                outfile = f'outfile_{uniq_freq}'
-
-            print('Exporting files for freq {uniq_freq}')
-            savetxt(outfile + '.tsv.gz', phys_out[uniq_freq].timeseries,
-                    fmt='%.8e', delimiter='\t')
-            print_json(outfile, phys_out[uniq_freq].freq,
-                       phys_out[uniq_freq].start_time,
-                       phys_out[uniq_freq].ch_name)
-            print_summary(options.filename, options.num_tps_expected,
-                          phys_in.num_tps_found, uniq_freq,
-                          phys_out[uniq_freq].start_time, outfile)
+        print('Exporting files for freq {uniq_freq}')
+        savetxt(outfile + '.tsv.gz', phys_out[uniq_freq].timeseries,
+                fmt='%.8e', delimiter='\t')
+        print_json(outfile, phys_out[uniq_freq].freq,
+                   phys_out[uniq_freq].start_time,
+                   phys_out[uniq_freq].ch_name)
+        print_summary(options.filename, options.num_tps_expected,
+                      phys_in.num_tps_found, uniq_freq,
+                      phys_out[uniq_freq].start_time, outfile)
 
 
 if __name__ == '__main__':

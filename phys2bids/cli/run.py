@@ -73,7 +73,7 @@ def _get_parser():
                           type=int,
                           help=('The number corresponding to the trigger channel.'
                                 ' Channel numbering starts with 0'),
-                          default=1)
+                          default=0)
     optional.add_argument('-chsel', '--channel-selection',
                           dest='chsel',
                           nargs='*',
@@ -100,7 +100,7 @@ def _get_parser():
                           nargs='*',
                           type=str,
                           help='Columns header (for json file).',
-                          default=[''])
+                          default=None)
 
     optional.add_argument('-v', '--version', action='version',
                           version=('%(prog)s ' + __version__))

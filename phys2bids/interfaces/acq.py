@@ -6,7 +6,7 @@ phys2bids interface for acqknowledge files.
 """
 from bioread import read_file
 
-from phys2bids.physio_obj import blueprint_input
+from phys2bids.physio_obj import BlueprintInput
 
 
 def populate_phys_input(filename, chtrig):
@@ -21,13 +21,11 @@ def populate_phys_input(filename, chtrig):
     units = ['s', data[chtrig].units]
     names = ['time', 'trigger']
 
-    k = 0
-    for ch in data:
+    for k, ch in enumerate(data):
         if k != chtrig:
             print(f'{k:02d}. {ch}')
             timeseries.append(ch.data)
             freq.append(ch.samples_per_second)
             units.append(ch.units)
-        k += 1
 
-    return blueprint_input(timeseries, freq, names, units)
+    return BlueprintInput(timeseries, freq, names, units)

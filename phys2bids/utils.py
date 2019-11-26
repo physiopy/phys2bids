@@ -4,6 +4,8 @@ import json
 import os
 import sys
 
+from pathlib import Path
+
 SUPPORTED_FTYPES = ('acq')  # , 'txt', 'mat', ...
 
 
@@ -21,10 +23,12 @@ def check_input_ext(filename, ext):
     """
     Checks that the given file has the given extension
     """
-    if filename[-len(ext):] != ext:
-        filename = filename + ext
-
-    return filename
+    if '.gz' in ext:
+        if filename[-len(ext):] != ext:
+            filename = filename + ext
+        return filename
+    else:
+        return Path(filename).with_suffix(ext)
 
 
 def check_input_type(filename, indir):
@@ -34,14 +38,14 @@ def check_input_type(filename, indir):
     """
     fftype_found = False
     for ftype in SUPPORTED_FTYPES:
-        filename = check_input_ext(filename, ftype)
-        if os.path.isfile(os.path.join(indir, filename)):
+        fname = check_input_ext(filename, ftype)
+        if os.path.isfile(os.path.join(indir, fname)):
             fftype_found = True
             break
 
     if fftype_found:
         print(f'File extension is .{ftype}')
-        return filename, ftype
+        return fname, ftype
     else:
         raise Exception(f'The file {filename} wasn\'t found in {indir}'
                         f' or {ftype} is not supported yet.\n'
@@ -67,7 +71,7 @@ def check_file_exists(filename):
 
 def print_info(filename, phys_object):
     """
-    Print the info of the input files, using blueprint_input object
+    Print the info of the input files, using BlueprintInput object
     """
     print(f'File {filename} contains:\n')
 

@@ -8,7 +8,7 @@ I/O objects for phys2bids.
 import numpy as np
 
 
-def is_valid(var, var_type, list_type=None, return_var=True):
+def is_valid(var, var_type, list_type=None):
     """
     Checks that the var is of a certain type.
     If type is list and list_type is specified,
@@ -21,9 +21,6 @@ def is_valid(var, var_type, list_type=None, return_var=True):
         Type the variable is assumed to be.
     list_type: type
         Like var_type, but applies to list elements.
-    return_var: boolean
-        If true, the function returns the input variable.
-        Useful for checking over assignment.
 
     Output
     ------
@@ -35,10 +32,9 @@ def is_valid(var, var_type, list_type=None, return_var=True):
 
     if var_type is list and list_type is not None:
         for element in var:
-            is_valid(element, list_type, return_var=False)
+            _ = is_valid(element, list_type, return_var=False)
 
-    if return_var:
-        return var
+    return var
 
 
 def has_size(var, data_size, token):
@@ -47,7 +43,7 @@ def has_size(var, data_size, token):
     If it's not the case, fill in the var or removes exceding var entry.
     Input
     -----
-    var: any type
+    var: list
         Variable to be checked.
     data_size: int
         Size of data of interest.
@@ -58,20 +54,20 @@ def has_size(var, data_size, token):
 
     Output
     ------
-    var: any type
+    var: list
         Variable to be checked (same as input).
     """
     if len(var) > data_size:
         var = var[:data_size]
 
     if len(var) < data_size:
-        is_valid(token, type(var))
+        _ = is_valid(token, type(var[0]))
         var = var + [token] * (data_size - len(var))
 
     return var
 
 
-class blueprint_input():
+class BlueprintInput():
     """
     Main input object for phys2bids.
     Contains the blueprint to be populated.
@@ -145,14 +141,14 @@ class blueprint_input():
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
 
-    def rename_channels(cls, new_names, ch_trigger=None):
+    def rename_channels(self, new_names, ch_trigger=None):
         """
         Renames the channels. If 'time' or 'trigger' were specified,
         it makes sure that they're the first and second entry.
 
         Input
         -----
-        cls: :obj: `blueprint_input`
+        self: :obj: `BlueprintInput`
             The object on which to operate
         new_names: list of str
             New names for channels.
@@ -161,7 +157,7 @@ class blueprint_input():
 
         Outcome
         -------
-        cls.ch_name:
+        self.ch_name:
             Changes content to new_name.
         """
         if 'time' in new_names:
@@ -174,17 +170,17 @@ class blueprint_input():
 
         new_names = ['time', 'trigger'] + new_names
 
-        cls.ch_name = has_size(is_valid(new_names, list, list_type=str),
-                               cls.ch_amount, 'unknown')
+        self.ch_name = has_size(is_valid(new_names, list, list_type=str),
+                                self.ch_amount, 'unknown')
 
-    def return_index(cls, idx):
+    def return_index(self, idx):
         """
         Returns the proper list entry of all the
         properties of the object, given an index.
 
         Input
         -----
-        cls: :obj: `blueprint_input`
+        self: :obj: `BlueprintInput`
             The object on which to operate
         idx: int
             Index of elements to return
@@ -195,40 +191,41 @@ class blueprint_input():
             Tuple containing the proper list entry of all the
             properties of the object with index `idx`
         """
-        return (cls.timeseries[idx], cls.ch_amount, cls.freq[idx],
-                cls.ch_name[idx], cls.units[idx])
+        return (self.timeseries[idx], self.ch_amount, self.freq[idx],
+                self.ch_name[idx], self.units[idx])
 
-    def delete_at_index(cls, idx):
+    def delete_at_index(self, idx):
         """
         Returns all the proper list entry of the
         properties of the object, given an index.
 
         Input
         -----
-        cls: :obj: `blueprint_input`
+        self: :obj: `BlueprintInput`
             The object on which to operate
         idx: int or range
             Index of elements to delete from all lists
 
         Outcome
         -------
-        cls:
+        self:
             In all the property that are lists, the element correspondent to
             `idx` gets deleted
          """
-        del(cls.timeseries[idx])
-        del(cls.freq[idx])
-        del(cls.ch_name[idx])
-        del(cls.units[idx])
+        del(self.timeseries[idx])
+        del(self.freq[idx])
+        del(self.ch_name[idx])
+        del(self.units[idx])
+        self.ch_amount -= 1
 
-    def check_trigger_amount(cls, thr=2.5, num_timepoints_expected=0, tr=0):
+    def check_trigger_amount(self, thr=2.5, num_timepoints_expected=0, tr=0):
         """
         Counts trigger points and corrects time offset in
         the list representing time.
 
         Input
         -----
-        cls: :obj: `blueprint_input`
+        self: :obj: `BlueprintInput`
             The object on which to operate
         thr: float
             Threshold to be used to detect trigger points.
@@ -240,24 +237,24 @@ class blueprint_input():
 
         Output
         ------
-        cls.num_timepoints_found: int
-            Property of the `blueprint_input` class.
+        self.num_timepoints_found: int
+            Property of the `BlueprintInput` class.
             Contains the number of timepoints found
             with the automatic estimation.
 
         Outcome
         -------
-        cls.timeseries:
+        self.timeseries:
             The property `timeseries` is shifted with the 0 being
             the time of first trigger.
         """
         print('Counting trigger points')
         # Use first derivative of the trigger channel to find the TRs,
         # comparing it to a given threshold.
-        trigger_deriv = np.diff(cls.timeseries[1])
+        trigger_deriv = np.diff(self.timeseries[1])
         timepoints = trigger_deriv > thr
         num_timepoints_found = timepoints.sum()
-        time_offset = cls.timeseries[0][timepoints.argmax()]
+        time_offset = self.timeseries[0][timepoints.argmax()]
 
         if num_timepoints_expected:
             print('Checking number of timepoints')
@@ -289,11 +286,11 @@ class blueprint_input():
         else:
             print('Cannot check the number of timepoints')
 
-        cls.timeseries[0] -= time_offset
-        cls.num_timepoints_found = num_timepoints_found
+        self.timeseries[0] -= time_offset
+        self.num_timepoints_found = num_timepoints_found
 
 
-class blueprint_output():
+class BlueprintOutput():
     """
     Main output object for phys2bids.
     Contains the blueprint to be exported.
@@ -335,14 +332,14 @@ class blueprint_output():
         self.units = has_size(units, self.ch_amount, '[]')
         self.start_time = start_time
 
-    def return_index(cls, idx):
+    def return_index(self, idx):
         """
         Returns all the proper list entry of the
         properties of the object, given an index.
 
         Input
         -----
-        cls: :obj: `blueprint_output`
+        self: :obj: `BlueprintOutput`
             The object on which to operate
         idx: int
             Index of elements to return
@@ -353,47 +350,47 @@ class blueprint_output():
             Tuple containing the proper list entry of all the
             properties of the object with index `idx`
         """
-        return (cls.timeseries[idx], cls.ch_amount, cls.freq,
-                cls.ch_name[idx], cls.units[idx], cls.start_time)
+        return (self.timeseries[idx], self.ch_amount, self.freq,
+                self.ch_name[idx], self.units[idx], self.start_time)
 
-    def delete_at_index(cls, idx):
+    def delete_at_index(self, idx):
         """
         Returns all the proper list entry of the
         properties of the object, given an index.
 
         Input
         -----
-        cls: :obj: `blueprint_output`
+        self: :obj: `BlueprintOutput`
             The object on which to operate
         idx: int or range
             Index of elements to delete from all lists
 
         Outcome
         -------
-        cls:
+        self:
             In all the property that are lists, the element correspondent to
             `idx` gets deleted
         """
-        del(cls.timeseries[idx])
-        del(cls.ch_name[idx])
-        del(cls.units[idx])
+        del(self.timeseries[idx])
+        del(self.ch_name[idx])
+        del(self.units[idx])
 
     @classmethod
     def init_from_blueprint(cls, blueprint):
         """
-        Method to populate the output blueprint using blueprint_input.
+        Method to populate the output blueprint using BlueprintInput.
 
         Input
         -----
-        cls: :obj: `blueprint_output`
+        cls: :obj: `BlueprintOutput`
             The object on which to operate
-        blueprint: :obj: `blueprint_input`
+        blueprint: :obj: `BlueprintInput`
             The input blueprint object
 
         Output
         ------
-        cls: :obj: `blueprint_output`
-            Populated `blueprint_output` object.
+        cls: :obj: `BlueprintOutput`
+            Populated `BlueprintOutput` object.
         """
         timeseries = np.asarray(blueprint.timeseries)
         freq = blueprint.freq[0]
