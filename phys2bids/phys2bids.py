@@ -234,7 +234,7 @@ def _main(argv=None):
                 phys_in.delete_at_index(i)
 
     # If requested, change channel names.
-    if options.ch_name is not None:
+    if options.ch_name:
         print('Renaming channels with given names')
         phys_in.rename_channels(options.ch_name)
 

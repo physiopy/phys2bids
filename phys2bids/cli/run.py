@@ -100,7 +100,7 @@ def _get_parser():
                           nargs='*',
                           type=str,
                           help='Columns header (for json file).',
-                          default=None)
+                          default=[])
 
     optional.add_argument('-v', '--version', action='version',
                           version=('%(prog)s ' + __version__))
