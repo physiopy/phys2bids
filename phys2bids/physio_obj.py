@@ -408,7 +408,8 @@ class BlueprintOutput():
         cls: :obj: `BlueprintOutput`
             The object on which to operate
         blueprint: :obj: `BlueprintInput`
-            The input blueprint object
+            The input blueprint object.
+            !!! All its frequencies should be the same !!!
 
         Output
         ------
