@@ -158,6 +158,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     heur = utils.load_heuristic(heur_file)
     name = heur.heur(filename[:-4], name)
 
+recording = ''
     if record_label:
         recording = f'_recording-{record_label}'
 
