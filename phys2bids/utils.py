@@ -6,7 +6,7 @@ import sys
 
 from pathlib import Path
 
-SUPPORTED_FTYPES = ('acq')  # , 'txt', 'mat', ...
+SUPPORTED_FTYPES = ('acq', )  # 'txt', 'mat', ...
 
 
 def check_input_dir(indir):
@@ -28,6 +28,9 @@ def check_input_ext(filename, ext):
             filename = filename + ext
         return filename
     else:
+        if ext[0] != '.':
+            ext = '.' + ext
+
         return Path(filename).with_suffix(ext)
 
 
