@@ -289,6 +289,29 @@ class BlueprintInput():
         self.timeseries[0] -= time_offset
         self.num_timepoints_found = num_timepoints_found
 
+    def print_info(self, filename):
+        """
+        Print info on the file, channel by channel.
+
+        Input
+        -----
+        self: :obj: `BlueprintInput`
+            The object on which to operate
+        filename: str or path
+            Name of the input file to phys2bids
+
+        Outcome
+        -------
+        ch:
+            Returns to stdout (e.g. on screen) channels,
+            their names and their sampling rate.
+        """
+        print(f'File {filename} contains:\n')
+
+        for ch in range(2, self.ch_amount):
+            print(f'{(ch-2):02d}. {self.ch_name[ch]};'
+                  f' sampled at {self.freq[ch]} Hz')
+
 
 class BlueprintOutput():
     """

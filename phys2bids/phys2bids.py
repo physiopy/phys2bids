@@ -209,7 +209,7 @@ def _main(argv=None):
     print('Reading the file')
     phys_in = populate_phys_input(infile, options.chtrig)
     print('Reading infos')
-    utils.print_info(options.filename, phys_in)
+    phys_in.print_info(options.filename)
     # #!# Here the function viz.plot_channel should be called
     # for the desired channels.
 
