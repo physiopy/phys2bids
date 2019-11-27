@@ -27,5 +27,6 @@ def populate_phys_input(filename, chtrig):
             timeseries.append(ch.data)
             freq.append(ch.samples_per_second)
             units.append(ch.units)
+            names.append(ch.name)
 
     return BlueprintInput(timeseries, freq, names, units)

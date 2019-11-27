@@ -195,7 +195,7 @@ def _main(argv=None):
     infile = os.path.join(options.indir, options.filename)
     utils.check_file_exists(infile)
     outfile = os.path.join(options.outdir,
-                           os.path.basename(os.path.splitext(options.filename)))
+                           os.path.splitext(os.path.basename(options.filename))[0])
 
     # Read file!
     if ftype == 'acq':

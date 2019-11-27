@@ -32,7 +32,7 @@ def is_valid(var, var_type, list_type=None):
 
     if var_type is list and list_type is not None:
         for element in var:
-            _ = is_valid(element, list_type, return_var=False)
+            _ = is_valid(element, list_type,)
 
     return var
 
