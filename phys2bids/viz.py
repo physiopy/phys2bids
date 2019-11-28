@@ -34,8 +34,8 @@ def plot_trigger(time, trigger, outfile, options, figsize=FIGSIZE, dpi=SET_DPI):
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
     subplot.plot(time, trigger, '-', time, time, '-')
     subplot = fig.add_subplot(224)
-    subplot.set_xlim([options.tr * (options.num_tps_expected - 4),
-                      options.tr * (options.num_tps_expected + 4)])
+    subplot.set_xlim([options.tr * (options.num_timepoints_expected - 4),
+                      options.tr * (options.num_timepoints_expected + 4)])
     subplot.set_ylim([-0.2, options.thr * 3])
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
     subplot.plot(time, trigger, '-', time, time, '-')

@@ -219,7 +219,7 @@ def _main(argv=None):
 
     # Run analysis on trigger channel to get first timepoint and the time offset.
     # #!# Get option of no trigger! (which is wrong practice or Respiract)
-    phys_in.check_trigger_amount(options.thr, options.num_tps_expected,
+    phys_in.check_trigger_amount(options.thr, options.num_timepoints_expected,
                                  options.tr)
     print('Checking that the output folder exists')
     utils.path_exists_or_make_it(options.outdir)
@@ -288,8 +288,8 @@ def _main(argv=None):
         print_json(outfile, phys_out[uniq_freq].freq,
                    phys_out[uniq_freq].start_time,
                    phys_out[uniq_freq].ch_name)
-        print_summary(options.filename, options.num_tps_expected,
-                      phys_in.num_tps_found, uniq_freq,
+        print_summary(options.filename, options.num_timepoints_expected,
+                      phys_in.num_timepoints_found, uniq_freq,
                       phys_out[uniq_freq].start_time, outfile)
 
 

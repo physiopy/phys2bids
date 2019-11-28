@@ -81,7 +81,7 @@ def _get_parser():
                           help='The number corresponding to the channels to process.',
                           default=None)
     optional.add_argument('-ntp', '--numtps',
-                          dest='num_tps_expected',
+                          dest='num_timepoints_expected',
                           type=int,
                           help='Number of expected timepoints.',
                           default=0)
@@ -89,7 +89,7 @@ def _get_parser():
                           dest='tr',
                           type=float,
                           help='TR of sequence in seconds.',
-                          default=0)
+                          default=1)
     optional.add_argument('-thr', '--threshold',
                           dest='thr',
                           type=float,
