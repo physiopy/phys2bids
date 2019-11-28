@@ -28,11 +28,11 @@ import os
 
 from copy import deepcopy
 from numpy import savetxt
+from pathlib import Path
 
 from phys2bids import utils, viz
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
-
 
 # #!# This is hardcoded until we find a better solution
 HEADERLENGTH = 9
@@ -114,13 +114,13 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
 
     Input
     -----
-    heur_file: str or path
+    heur_file: path
         Fullpath to heuristic file.
     sub: str or int
         Name of subject.
     ses: str or int or None
         Name of session.
-    filename: str
+    filename: path
         Name of the input of phys2bids.
     outdir: str or path
         Path to the directory that will become the "site" folder
@@ -156,7 +156,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     os.chdir(outdir)
 
     heur = utils.load_heuristic(heur_file)
-    name = heur.heur(filename[:-4], name)
+    name = heur.heur(Path(filename).stem, name)
 
     recording = ''
     if record_label:

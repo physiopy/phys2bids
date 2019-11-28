@@ -127,7 +127,7 @@ def load_heuristic(heuristic):
     Copied from [nipy/heudiconv](https://github.com/nipy/heudiconv)
     Copyright [2014-2019] [Heudiconv developers], Apache 2 license.
     """
-    if os.path.sep in heuristic or os.path.lexists(heuristic):
+    if os.path.lexists(heuristic):
         heuristic_file = os.path.realpath(heuristic)
         path, fname = os.path.split(heuristic_file)
         try:
