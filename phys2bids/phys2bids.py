@@ -30,38 +30,44 @@ Please scroll to bottom to read full license.
 
 import os
 
-import numpy as np
-import pandas as pd
+from copy import deepcopy
+from numpy import savetxt
+from pathlib import Path
 
 from phys2bids import utils, viz
 from phys2bids.cli.run import _get_parser
+from phys2bids.physio_obj import BlueprintOutput
 
 # #!# This is hardcoded until we find a better solution
 HEADERLENGTH = 9
 
 
-# #!# Different frequencies == different files!
-def print_info_acq(filename, data):
-    print('File ' + filename + ' contains:\n')
-    for ch in range(0, len(data)):
-        print(str(ch) + ': ' + data[ch].name)
-
-
-def print_info_txt(filename):
-    with open(filename) as txtfile:
-        header = [next(txtfile) for x in range(HEADERLENGTH - 2)]
-
-    del header[1:4]
-    del header[2]
-
-    print('File ' + filename + ' contains:\n')
-    for line in header:
-        print(line)
-
-    return header
-
-
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
+    """
+    Prints a summary onscreen and in file with informations on the files.
+
+    Input
+    -----
+    filename: str
+        Name of the input of phys2bids.
+    ntp_expected: int
+        Number of expected timepoints, as defined by user.
+    ntp_found: int
+        Number of timepoints found with the automatic process.
+    samp_freq: float
+        Frequency of sampling for the output file.
+    time_offset: float
+        Difference between beginning of file and first TR.
+    outfile: str or path
+        Fullpath to output file.
+
+    Outcome
+    -------
+    summary: str
+        Prints the summary on screen
+    outfile: .log file
+        File containing summary
+    """
     start_time = -time_offset
     summary = (f'------------------------------------------------\n'
                f'Filename:            {filename}\n'
@@ -76,16 +82,61 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
     utils.writefile(outfile, '.log', summary)
 
 
-def print_json(filename, samp_freq, time_offset, table_header):
+def print_json(outfile, samp_freq, time_offset, ch_name):
+    """
+    Prints the json required by BIDS format.
+
+    Input
+    -----
+    outfile: str or path
+        Fullpath to output file.
+    samp_freq: float
+        Frequency of sampling for the output file.
+    time_offset: float
+        Difference between beginning of file and first TR.
+    ch_name: list of str
+        List of channel names, as specified by BIDS format.
+
+    Outcome
+    -------
+
+    outfile: .json file
+        File containing information for BIDS.
+    """
     start_time = -time_offset
     summary = dict(SamplingFrequency=samp_freq,
                    StartTime=start_time,
-                   Columns=table_header)
-    utils.writejson(filename, summary, indent=4, sort_keys=False)
+                   Columns=ch_name)
+    utils.writejson(outfile, summary, indent=4, sort_keys=False)
 
 
-def use_heuristic(heur_file, sub, ses, filename, outdir):
+def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     utils.check_file_exists(heur_file)
+    """
+    Import the heuristic file specified by the user and uses its output
+    to rename the file.
+
+    Input
+    -----
+    heur_file: path
+        Fullpath to heuristic file.
+    sub: str or int
+        Name of subject.
+    ses: str or int or None
+        Name of session.
+    filename: path
+        Name of the input of phys2bids.
+    outdir: str or path
+        Path to the directory that will become the "site" folder
+        ("root" folder of BIDS database).
+    record_label: str
+        Optional label for the "record" entry of BIDS.
+
+    Output
+    -------
+    heurpath: str or path
+        Returned fullpath to tsv.gz new file (post BIDS formatting).
+    """
 
     if sub[:4] != 'sub-':
         name = 'sub-' + sub
@@ -109,9 +160,13 @@ def use_heuristic(heur_file, sub, ses, filename, outdir):
     os.chdir(outdir)
 
     heur = utils.load_heuristic(heur_file)
-    name = heur.heur(filename[:-4], name)
+    name = heur.heur(Path(filename).stem, name)
 
-    heurpath = fldr + '/' + name + '_physio'
+    recording = ''
+    if record_label:
+        recording = f'_recording-{record_label}'
+
+    heurpath = fldr + '/' + name + recording + '_physio'
     # for ext in ['.tsv.gz', '.json', '.log']:
     #     move_file(outfile, heurpath, ext)
     os.chdir(cwd)
@@ -120,166 +175,130 @@ def use_heuristic(heur_file, sub, ses, filename, outdir):
 
 
 def _main(argv=None):
+    """
+    Main workflow of phys2bids.
+    Runs the parser, does some checks on input, then imports
+    the right interface file to read the input. If only info is required,
+    it returns a summary onscreen.
+    Otherwise, it operates on the input to return a .tsv.gz file, possibily
+    in BIDS format.
+
+    """
     options = _get_parser().parse_args(argv)
     # Check options to make them internally coherent
     # #!# This can probably be done while parsing?
-    # #!# Make filename check better somehow.
     options.indir = utils.check_input_dir(options.indir)
     options.outdir = utils.check_input_dir(options.outdir)
-    options.filename = utils.check_input_ext(options.filename, '.acq')
-    ftype = 'acq'
-    if not os.path.isfile(os.path.join(options.indir, options.filename)):
-        options.filename = utils.check_input_ext(options.filename[:-4], '.txt')
-        ftype = 'txt'
-
-    # #!# Change this to cases of and better message
-    print(f'File extension is .{ftype}')
+    options.filename, ftype = utils.check_input_type(options.filename,
+                                                     options.indir)
 
     if options.heur_file:
         options.heur_file = utils.check_input_ext(options.heur_file, '.py')
+        utils.check_file_exists(options.heur_file)
 
     infile = os.path.join(options.indir, options.filename)
-    outfile = os.path.join(options.outdir, os.path.basename(options.filename[:-4]))
-
     utils.check_file_exists(infile)
-    print('File exists')
+    outfile = os.path.join(options.outdir,
+                           os.path.splitext(os.path.basename(options.filename))[0])
 
-    # Read infos from file
+    # Read file!
     if ftype == 'acq':
-        from bioread import read_file
-
-        data = read_file(infile).channels
-        print_info_acq(options.filename, data)
+        from phys2bids.interfaces.acq import populate_phys_input
     elif ftype == 'txt':
-        header = print_info_txt(options.filename)
+        raise NotImplementedError('txt not yet supported')
+    else:
+        # #!# We should add a logger here.
+        raise NotImplementedError('Currently unsupported file type.')
 
-    # If file has to be processed, process it
-    if not options.info:
+    print('Reading the file')
+    phys_in = populate_phys_input(infile, options.chtrig)
+    print('Reading infos')
+    phys_in.print_info(options.filename)
+    # #!# Here the function viz.plot_channel should be called
+    # for the desired channels.
+
+    # If only info were asked, end here.
+    if options.info:
+        return
+
+    # Run analysis on trigger channel to get first timepoint and the time offset.
+    # #!# Get option of no trigger! (which is wrong practice or Respiract)
+    phys_in.check_trigger_amount(options.thr, options.num_timepoints_expected,
+                                 options.tr)
+    print('Checking that the output folder exists')
+    utils.path_exists_or_make_it(options.outdir)
+    print('Plot trigger')
+    viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[1],
+                     outfile, options)
+
+    # The next few lines remove the undesired channels from phys_in.
+    if options.chsel:
+        print('Dropping unselected channels')
+        for i in reversed(range(0, phys_in.ch_amout)):
+            if i not in options.chsel:
+                phys_in.delete_at_index(i)
+
+    # If requested, change channel names.
+    if options.ch_name:
+        print('Renaming channels with given names')
+        phys_in.rename_channels(options.ch_name)
+
+    # The next few lines create a dictionary of different BlueprintInput
+    # objects, one for each unique frequency in phys_in
+    uniq_freq_list = set(phys_in.freq)
+    output_amount = len(uniq_freq_list)
+    if output_amount > 1:
+        print(f'Found {output_amount} different frequencies in input!')
+
+    print(f'Preparing {output_amount} output files.')
+    phys_out = {}
+    for uniq_freq in uniq_freq_list:
+        phys_out[uniq_freq] = deepcopy(phys_in)
+        for i in reversed(phys_in.freq):
+            if i != uniq_freq:
+                phys_out[uniq_freq].delete_at_index(phys_in.ch_amount-i-1)
+
+        # Also create a BlueprintOutput object for each unique frequency found.
+        # Populate it with the corresponding blueprint input and replace it
+        # in the dictionary.
+        phys_out[uniq_freq] = BlueprintOutput.init_from_blueprint(phys_out[uniq_freq])
+
+    if options.heur_file and options.sub:
+        print(f'Preparing BIDS output using {options.heur_file}')
+    elif options.heur_file and not options.sub:
+        print(f'While "-heur" was specified, option "-sub" was not.\n'
+              f'Skipping BIDS formatting.')
+
+    for uniq_freq in uniq_freq_list:
+        # If possible, prepare bids renaming.
         if options.heur_file and options.sub:
-            utils.check_file_exists(options.heur_file)
-            print(f'Preparing BIDS output using {options.heur_file}')
-            outfile = use_heuristic(options.heur_file, options.sub,
-                                    options.ses, options.filename,
-                                    options.outdir)
-        elif options.heur_file and not options.sub:
-            print(f'While "-heur" was specified, option "-sub" was not.\n'
-                  f'Skipping BIDS formatting.')
-
-        # #!# Get option of no trigger! (which is wrong practice or Respiract)
-        print('Reading trigger data and time index')
-        if ftype == 'acq':
-            trigger = data[options.chtrig].data
-            time = data[options.chtrig].time_index
-        elif ftype == 'txt':
-            # Read full file and extract right lines.
-            data = np.genfromtxt(options.filename, skip_header=HEADERLENGTH)
-            trigger = data[:, options.chtrig + 1]
-            time = data[:, 0]
-
-        print('Counting trigger points')
-        trigger_deriv = np.diff(trigger)
-        tps = trigger_deriv > options.thr
-        num_tps_found = tps.sum()
-        time_offset = time[tps.argmax()]
-
-        if options.num_tps_expected:
-            print('Checking number of tps')
-            if num_tps_found > options.num_tps_expected:
-                tps_extra = num_tps_found - options.num_tps_expected
-                print('Found ' + str(tps_extra) + ' tps more than expected!\n',
-                      'Assuming extra tps are at the end (try again with a ',
-                      'more conservative thr)')
-            elif num_tps_found < options.num_tps_expected:
-                tps_missing = options.num_tps_expected - num_tps_found
-                print('Found ' + str(tps_missing) + ' tps less than expected!')
-                if options.tr:
-                    print('Correcting time offset, assuming missing tps'
-                          'are at the beginning')
-                    # time_offset = time_offset - (tps_missing * options.tr)
-                    time_offset = time[tps.argmax()] - (tps_missing * options.tr)
-                else:
-                    print('Can\'t correct time offset, (try again specifying',
-                          'tr or with a more liberal thr')
-
+            if output_amount > 1:
+                # Add "recording-freq" to filename if more than one freq
+                outfile = use_heuristic(options.heur_file, options.sub,
+                                        options.ses, options.filename,
+                                        options.outdir, uniq_freq)
             else:
-                print('Found just the right amount of tps!')
+                outfile = use_heuristic(options.heur_file, options.sub,
+                                        options.ses, options.filename,
+                                        options.outdir)
 
-        else:
-            print('Not checking the number of tps')
+        elif output_amount > 1:
+            # Append "freq" to filename if more than one freq
+            outfile = f'outfile_{uniq_freq}'
 
-        time = time - time_offset
-        # time = data[options.chtrig].time_index - time_offset
+        print(f'Exporting files for freq {uniq_freq}')
+        savetxt(outfile + '.tsv.gz', phys_out[uniq_freq].timeseries,
+                fmt='%.8e', delimiter='\t')
+        print_json(outfile, phys_out[uniq_freq].freq,
+                   phys_out[uniq_freq].start_time,
+                   phys_out[uniq_freq].ch_name)
+        print_summary(options.filename, options.num_timepoints_expected,
+                      phys_in.num_timepoints_found, uniq_freq,
+                      phys_out[uniq_freq].start_time, outfile)
 
-        utils.path_exists_or_make_it(options.outdir)
 
-        viz.plot_trigger(time, trigger, outfile, options)
-
-        # #!# The following few lines could be a function on its own for use in python
-        table = pd.DataFrame(index=time)
-
-        if ftype == 'txt':
-            col_names = header[1].split('\t')
-            col_names[-1] = col_names[-1][:-1]
-
-        if options.chsel:
-            print('Extracting desired channels')
-            for ch in options.chsel:
-                if ftype == 'acq':
-                    table[data[ch].name] = data[ch].data
-                elif ftype == 'txt':
-                    # preparing channel names from txt file
-                    table[col_names[ch + 1]] = data[:, ch + 1]
-
-        else:
-            # #!# Needs a check on different channel frequency!
-            print('Extracting all channels')
-            if ftype == 'acq':
-                for ch in range(0, len(data)):
-                    table[data[ch].name] = data[ch].data
-            elif ftype == 'txt':
-                for ch in range(0, (data.shape[1] - 1)):
-                    table[col_names[ch + 1]] = data[:, ch + 1]
-
-        print('Extracting minor informations')
-        if ftype == 'acq':
-            samp_freq = data[0].samples_per_second
-        elif ftype == 'txt':
-            freq_list = header[0].split('\t')
-            samp_freq = 1 / float(freq_list[-1][:-2])
-
-        table.index.names = ['time']
-        table_width = len(table.columns)
-
-        if options.table_header:
-            if 'time' in options.table_header:
-                ignored_headers = 1
-            else:
-                ignored_headers = 0
-
-            n_headers = len(options.table_header)
-            if table_width < n_headers - ignored_headers:
-                print(f'Too many table headers specified!\n'
-                      f'{options.table_header}\n'
-                      f'Ignoring the last'
-                      '{n_headers - table_width - ignored_headers}')
-                options.table_header = options.table_header[:(table_width + ignored_headers)]
-            elif table_width > n_headers - ignored_headers:
-                missing_headers = n_headers - table_width - ignored_headers
-                print(f'Not enough table headers specified!\n'
-                      f'{options.table_header}\n'
-                      f'Tailing {missing_headers} headers')
-                for i in range(missing_headers):
-                    options.table_header.append(f'missing n.{i+1}')
-
-            table.columns = options.table_header[ignored_headers:]
-            # #!# Here the function viz.plot_channel should be called for the desired channels.
-
-        print('Printing file')
-        table.to_csv(outfile + '.tsv.gz', sep='\t', index=True, header=False, compression='gzip')
-        # #!# Definitely needs check on samp_freq!
-        print_json(outfile, samp_freq, time_offset, options.table_header)
-        print_summary(options.filename, options.num_tps_expected,
-                      num_tps_found, samp_freq, time_offset, outfile)
+if __name__ == '__main__':
+    _main()
 
 """
 Copyright 2019, The Phys2BIDS community.
@@ -295,5 +314,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
 """

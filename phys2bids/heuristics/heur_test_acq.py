@@ -1,4 +1,3 @@
-import sys
 import fnmatch
 
 
@@ -17,11 +16,10 @@ def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
     # ##    See example below     ## #
     # ############################## #
 
-    if physinfo == 'origfilename1':
-        task = 'newname1'
-    elif physinfo == 'origfilename2':
-        task = 'newname2'
-        run = 'runnum'
+    if fnmatch.fnmatchcase(physinfo, '*samefreq*'):
+        task = 'test'
+        run = '00'
+        rec = 'biopac'
     elif physinfo == 'Example':
         task = 'rest'
         run = '01'
