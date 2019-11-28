@@ -17,7 +17,7 @@ def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
     # ##    See example below     ## #
     # ############################## #
 
-    if fnmatch.fnmatchcase(physinfo, '*samefreq*.acq'):
+    if fnmatch.fnmatchcase(physinfo, '*samefreq*'):
         task = 'test'
         run = '00'
         rec = 'biopac'
@@ -31,7 +31,7 @@ def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
     else:
         # #!# Transform sys.exit in debug warnings or raiseexceptions!
         # #!# Make all of the above a dictionary
-        sys.exit()
+        raise Warning(f'The heuristic {__file__} could not deal with {physinfo}')
 
     if not task:
         sys.exit()

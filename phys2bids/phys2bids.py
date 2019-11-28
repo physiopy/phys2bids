@@ -282,7 +282,7 @@ def _main(argv=None):
             # Append "freq" to filename if more than one freq
             outfile = f'outfile_{uniq_freq}'
 
-        print('Exporting files for freq {uniq_freq}')
+        print(f'Exporting files for freq {uniq_freq}')
         savetxt(outfile + '.tsv.gz', phys_out[uniq_freq].timeseries,
                 fmt='%.8e', delimiter='\t')
         print_json(outfile, phys_out[uniq_freq].freq,
