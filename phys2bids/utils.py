@@ -6,7 +6,7 @@ import sys
 
 from pathlib import Path
 
-SUPPORTED_FTYPES = ('acq', )  # 'txt', 'mat', ...
+SUPPORTED_FTYPES = ('acq', 'txt')  # 'mat', ...
 
 
 def check_input_dir(indir):
