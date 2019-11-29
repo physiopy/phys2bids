@@ -234,7 +234,7 @@ def _main(argv=None):
     # The next few lines remove the undesired channels from phys_in.
     if options.chsel:
         print('Dropping unselected channels')
-        for i in reversed(range(0, phys_in.ch_amout)):
+        for i in reversed(range(0, phys_in.ch_amount)):
             if i not in options.chsel:
                 phys_in.delete_at_index(i)
 
