@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-phys2bids interface for acqknowledge files.
+phys2bids interface for txt files.
 """
 from bioread import read_file
 
