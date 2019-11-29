@@ -137,7 +137,7 @@ class BlueprintInput():
         self.ch_amount = len(self.timeseries)
         self.freq = has_size(is_valid(freq, list,
                                       list_type=(int, float)),
-                             self.ch_amount, 0)
+                             self.ch_amount, 0.0)
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
 
