@@ -1,4 +1,3 @@
-import sys
 import fnmatch
 
 
@@ -17,31 +16,14 @@ def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
     # ##    See example below     ## #
     # ############################## #
 
-    if physinfo == 'origfilename1':
-        task = 'newname1'
-    elif physinfo == 'origfilename2':
-        task = 'newname2'
-        run = 'runnum'
-    elif physinfo == 'BH4':
-        task = 'breathhold'
-    elif fnmatch.fnmatchcase(physinfo, 'MOTOR?'):
-        task = 'motor'
-    elif fnmatch.fnmatchcase(physinfo, 'LOCALIZER?'):
-        task = 'pinel'
-    elif fnmatch.fnmatchcase(physinfo, 'SIMON?'):
-        task = 'simon'
-    elif physinfo == 'RS1':
+    if fnmatch.fnmatchcase(physinfo, '*samefreq*'):
+        task = 'test'
+        run = '00'
+        rec = 'biopac'
+    elif physinfo == 'Example':
         task = 'rest'
         run = '01'
-    elif physinfo == 'RS2':
-        task = 'rest'
-        run = '02'
-    elif physinfo == 'RS3':
-        task = 'rest'
-        run = '03'
-    elif physinfo == 'RS4':
-        task = 'rest'
-        run = '04'
+        acq = 'resp'
         # ############################## #
         # ## Don't modify below this! ## #
         # ############################## #
@@ -55,7 +37,9 @@ def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
 
     name = name + '_task-' + task
 
-    # filename spec: sub-<label>[_ses-<label>]_task-<label>[_acq-<label>][_ce-<label>][_dir-<label>][_rec-<label>][_run-<index>][_recording-<label>]_physio
+    # filename spec: sub-<label>[_ses-<label>]_task-<label>[_acq-<label>] ...
+    #                ... [_ce-<label>][_dir-<label>][_rec-<label>] ...
+    #                ... [_run-<index>][_recording-<label>]_physio
     if acq:
         name = name + '_acq-' + acq
 
