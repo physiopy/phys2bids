@@ -5,9 +5,9 @@
 phys2bids interface for txt files.
 """
 
+import numpy as np
 from phys2bids.physio_obj import BlueprintInput
 
-import numpy as np
 def populate_phys_input(filename, chtrig):
     """
     Populate object phys_input
@@ -54,10 +54,16 @@ def populate_phys_input(filename, chtrig):
     for item in range_list:
         units.append(item.split(' ')[1])
     # get names
-    header[4][1:]
-    names = ['time']+header[4][1:]
+    orig_names=header[4][1:]
+    names = ['time',orig_names[chtrig]]
+    orig_names.pop(chtrig)
+    names=names+orig_names
     # get channels 
     timeseries = np.matrix(channel_list).T.tolist()
     freq = [1/interval[0]]*len(timeseries)
     timeseries=[np.array(darray) for darray in timeseries]
-    return BlueprintInput(timeseries, freq, names, units)
+    ordered_timeseries=[timeseries[0],timeseries[chtrig]]
+    timeseries.pop(chtrig)
+    timeseries.pop(0)
+    ordered_timeseries=ordered_timeseries+timeseries
+    return BlueprintInput(ordered_timeseries, freq, names, units)
