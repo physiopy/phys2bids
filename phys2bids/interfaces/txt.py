@@ -4,7 +4,6 @@
 """
 phys2bids interface for txt files.
 """
-from bioread import read_file
 
 from phys2bids.physio_obj import BlueprintInput
 
