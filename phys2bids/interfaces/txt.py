@@ -8,7 +8,6 @@ phys2bids interface for txt files.
 from phys2bids.physio_obj import BlueprintInput
 
 import numpy as np
-# '/home/vicente/phys2bids/phys2bids/tests/data/Test_multiscan100Hz_trig_samefreq_header.txt'
 def populate_phys_input(filename, chtrig):
     """
     Populate object phys_input
