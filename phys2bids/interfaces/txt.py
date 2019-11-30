@@ -11,7 +11,7 @@ import numpy as np
 def populate_phys_input(filename, chtrig):
     """
     Populate object phys_input
-    for now we this works with labchart files
+    for now this works only with labchart files
     """
     header = []
     channel_list = []
