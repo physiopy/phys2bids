@@ -29,7 +29,8 @@ def populate_phys_input(filename, chtrig):
     # get frequency 
     interval = header[0][1].split(" ")
     if interval[-1] not in ['hr', 'min', 's','ms','µs']:
-        raise AttributeError(f'Interval is not in a valid LabChart time unit, this probably means your file is not in labchart format')
+        raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid LabChart time unit, '
+                             'this probably means your file is not in labchart format')
 
     if interval[-1] != 's':
         print(f'interval is not in s converting')
