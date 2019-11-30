@@ -33,7 +33,7 @@ def populate_phys_input(filename, chtrig):
                              'this probably means your file is not in labchart format')
 
     if interval[-1] != 's':
-        print(f'interval is not in s converting')
+        print('Interval is not in seconds. Converting its value.')
         if interval[-1] == 'hr':
             interval[0] = float(interval)[0]*3600
             interval[-1] = 's'
