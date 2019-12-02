@@ -38,9 +38,6 @@ from phys2bids import utils, viz
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
 
-# #!# This is hardcoded until we find a better solution
-HEADERLENGTH = 9
-
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
     """
@@ -205,7 +202,7 @@ def _main(argv=None):
     if ftype == 'acq':
         from phys2bids.interfaces.acq import populate_phys_input
     elif ftype == 'txt':
-        raise NotImplementedError('txt not yet supported')
+        from phys2bids.interfaces.txt import populate_phys_input
     else:
         # #!# We should add a logger here.
         raise NotImplementedError('Currently unsupported file type.')
