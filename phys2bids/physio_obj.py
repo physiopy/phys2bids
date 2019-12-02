@@ -262,7 +262,7 @@ class BlueprintInput():
                 timepoints_extra = (num_timepoints_found -
                                     num_timepoints_expected)
                 print(f'Found {timepoints_extra} timepoints'
-                      'more than expected!\n'
+                      ' more than expected!\n'
                       'Assuming extra timepoints are at the end '
                       '(try again with a more conservative thr)')
 
@@ -270,7 +270,7 @@ class BlueprintInput():
                 timepoints_missing = (num_timepoints_expected -
                                       num_timepoints_found)
                 print(f'Found {timepoints_missing} timepoints'
-                      'less than expected!')
+                      ' less than expected!')
                 if tr:
                     print('Correcting time offset, assuming missing timepoints'
                           ' are at the beginning (try again with '
