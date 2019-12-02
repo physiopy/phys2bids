@@ -12,13 +12,13 @@ def populate_phys_input(filename, chtrig):
     """
     Populate object phys_input
     for now this works only with labchart files
-     Input (Properties)
+        Input (Properties)
     ------------------
     filename: str 
         path to the txt labchart file
     chtrig : int
-       index of trigger channel 
-    
+        index of trigger channel
+
     Output
     ------------------
     BlueprintInput populated object for more see BlueprintInput docs  
@@ -66,7 +66,7 @@ def populate_phys_input(filename, chtrig):
         units.append(item.split(' ')[1])
     # get names
     orig_names=header[4][1:]
-    names = ['time',orig_names[chtrig]]
+    names = ['time','trigger']
     orig_names.pop(chtrig)
     names=names+orig_names
     # get channels 
