@@ -222,11 +222,21 @@ def _main(argv=None):
     # #!# Get option of no trigger! (which is wrong practice or Respiract)
     phys_in.check_trigger_amount(options.thr, options.num_timepoints_expected,
                                  options.tr)
+
+    # Create output folder if necessary
     print('Checking that the output folder exists')
     utils.path_exists_or_make_it(options.outdir)
+
+    # Create trigger plot. If possible, to have multiple outputs in the same
+    # place, adds sub and ses label.
     print('Plot trigger')
+    plot_path = deepcopy(outfile)
+    if options.sub:
+        plot_path += f'_sub-{options.sub}'
+    if options.ses:
+        plot_path += f'_sub-{options.ses}'
     viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[1],
-                     outfile, options)
+                     plot_path, options)
 
     # The next few lines remove the undesired channels from phys_in.
     if options.chsel:
