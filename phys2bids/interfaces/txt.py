@@ -21,7 +21,7 @@ def populate_phys_input(filename, chtrig):
 
     Output
     ------------------
-    BlueprintInput populated object for more see BlueprintInput docs  
+    BlueprintInput object for more see BlueprintInput docs  
     """
 
     header = []
