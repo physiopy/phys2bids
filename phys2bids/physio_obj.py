@@ -32,7 +32,7 @@ def is_valid(var, var_type, list_type=None):
 
     if var_type is list and list_type is not None:
         for element in var:
-            _ = is_valid(element, list_type,)
+            _ = is_valid(element, list_type)
 
     return var
 
@@ -137,7 +137,7 @@ class BlueprintInput():
         self.ch_amount = len(self.timeseries)
         self.freq = has_size(is_valid(freq, list,
                                       list_type=(int, float)),
-                             self.ch_amount, 0)
+                             self.ch_amount, 0.0)
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
 
@@ -161,10 +161,10 @@ class BlueprintInput():
             Changes content to new_name.
         """
         if 'time' in new_names:
-            del(new_names[new_names.index['time']])
+            del(new_names[new_names.index('time')])
 
         if 'trigger' in new_names:
-            del(new_names[new_names.index['trigger']])
+            del(new_names[new_names.index('trigger')])
         elif ch_trigger:
             del(new_names[ch_trigger])
 
@@ -262,7 +262,7 @@ class BlueprintInput():
                 timepoints_extra = (num_timepoints_found -
                                     num_timepoints_expected)
                 print(f'Found {timepoints_extra} timepoints'
-                      'more than expected!\n'
+                      ' more than expected!\n'
                       'Assuming extra timepoints are at the end '
                       '(try again with a more conservative thr)')
 
@@ -270,7 +270,7 @@ class BlueprintInput():
                 timepoints_missing = (num_timepoints_expected -
                                       num_timepoints_found)
                 print(f'Found {timepoints_missing} timepoints'
-                      'less than expected!')
+                      ' less than expected!')
                 if tr:
                     print('Correcting time offset, assuming missing timepoints'
                           ' are at the beginning (try again with '

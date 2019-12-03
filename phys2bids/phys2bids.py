@@ -38,9 +38,6 @@ from phys2bids import utils, viz
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
 
-# #!# This is hardcoded until we find a better solution
-HEADERLENGTH = 9
-
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
     """
@@ -205,7 +202,7 @@ def _main(argv=None):
     if ftype == 'acq':
         from phys2bids.interfaces.acq import populate_phys_input
     elif ftype == 'txt':
-        raise NotImplementedError('txt not yet supported')
+        from phys2bids.interfaces.txt import populate_phys_input
     else:
         # #!# We should add a logger here.
         raise NotImplementedError('Currently unsupported file type.')
@@ -225,16 +222,26 @@ def _main(argv=None):
     # #!# Get option of no trigger! (which is wrong practice or Respiract)
     phys_in.check_trigger_amount(options.thr, options.num_timepoints_expected,
                                  options.tr)
+
+    # Create output folder if necessary
     print('Checking that the output folder exists')
     utils.path_exists_or_make_it(options.outdir)
+
+    # Create trigger plot. If possible, to have multiple outputs in the same
+    # place, adds sub and ses label.
     print('Plot trigger')
+    plot_path = deepcopy(outfile)
+    if options.sub:
+        plot_path += f'_sub-{options.sub}'
+    if options.ses:
+        plot_path += f'_sub-{options.ses}'
     viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[1],
-                     outfile, options)
+                     plot_path, options)
 
     # The next few lines remove the undesired channels from phys_in.
     if options.chsel:
         print('Dropping unselected channels')
-        for i in reversed(range(0, phys_in.ch_amout)):
+        for i in reversed(range(0, phys_in.ch_amount)):
             if i not in options.chsel:
                 phys_in.delete_at_index(i)
 

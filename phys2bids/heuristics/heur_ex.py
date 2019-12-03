@@ -1,6 +1,5 @@
 import sys
-import fnmatch
-
+# import fnmatch
 
 def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
     # ############################## #
