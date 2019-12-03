@@ -1,0 +1,29 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "smoia",
+      "name": "Stefano Moia",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/35300580?v=4",
+      "profile": "https://github.com/smoia",
+      "contributions": [
+        "code",
+        "ideas",
+        "infra",
+        "maintenance",
+        "projectManagement",
+        "review"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "phys2bids",
+  "projectOwner": "smoia",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
