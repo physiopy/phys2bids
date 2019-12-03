@@ -57,7 +57,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/AyyagariA"><img src="https://avatars1.githubusercontent.com/u/50453337?v=4" width="100px;" alt="Apoorva Ayyagari"/><br /><sub><b>Apoorva Ayyagari</b></sub></a><br /><a href="#userTesting-AyyagariA" title="User Testing">📓</a></td>
     <td align="center"><a href="https://github.com/kristinazvolanek"><img src="https://avatars3.githubusercontent.com/u/54590158?v=4" width="100px;" alt="kristinazvolanek"/><br /><sub><b>kristinazvolanek</b></sub></a><br /><a href="#userTesting-kristinazvolanek" title="User Testing">📓</a></td>
     <td align="center"><a href="https://github.com/CesarCaballeroGaudes"><img src="https://avatars1.githubusercontent.com/u/7611340?v=4" width="100px;" alt="Cesar Caballero Gaudes"/><br /><sub><b>Cesar Caballero Gaudes</b></sub></a><br /><a href="#ideas-CesarCaballeroGaudes" title="Ideas, Planning, & Feedback">🤔</a> <a href="#userTesting-CesarCaballeroGaudes" title="User Testing">📓</a></td>
-
+    <td align="center"><a href="http://brightlab.northwestern.edu"><img src="https://avatars2.githubusercontent.com/u/32640425?v=4" width="100px;" alt="Molly Bright"/><br /><sub><b>Molly Bright</b></sub></a><br /><a href="#ideas-BrightMG" title="Ideas, Planning, & Feedback">🤔</a> <a href="#userTesting-BrightMG" title="User Testing">📓</a></td>
   </tr>
 </table>
 
