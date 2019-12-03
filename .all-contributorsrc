@@ -66,6 +66,15 @@
         "review",
         "test"
       ]
+    },
+    {
+      "login": "AyyagariA",
+      "name": "Apoorva Ayyagari",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/50453337?v=4",
+      "profile": "https://github.com/AyyagariA",
+      "contributions": [
+        "userTesting"
+      ]
     }
   ],
   "contributorsPerLine": 7,
