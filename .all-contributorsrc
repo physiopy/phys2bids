@@ -45,6 +45,16 @@
         "doc",
         "review"
       ]
+    },
+    {
+      "login": "RayStick",
+      "name": "Rachael Stickland",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/50215726?v=4",
+      "profile": "https://github.com/RayStick",
+      "contributions": [
+        "doc",
+        "userTesting"
+      ]
     }
   ],
   "contributorsPerLine": 7,
