@@ -85,6 +85,16 @@
         "userTesting"
       ]
     },
+    {
+      "login": "CesarCaballeroGaudes",
+      "name": "Cesar Caballero Gaudes",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/7611340?v=4",
+      "profile": "https://github.com/CesarCaballeroGaudes",
+      "contributions": [
+        "ideas",
+        "userTesting"
+      ]
+    },
   ],
   "contributorsPerLine": 4,
   "projectName": "phys2bids",
