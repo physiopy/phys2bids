@@ -16,7 +16,8 @@
         "infra",
         "maintenance",
         "projectManagement",
-        "review"
+        "review",
+        "doc"
       ]
     }
   ],
