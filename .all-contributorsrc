@@ -68,6 +68,24 @@
       ]
     },
     {
+      "login": "AyyagariA",
+      "name": "Apoorva Ayyagari",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/50453337?v=4",
+      "profile": "https://github.com/AyyagariA",
+      "contributions": [
+        "userTesting"
+      ]
+    },
+    {
+      "login": "kristinazvolanek",
+      "name": "kristinazvolanek",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/54590158?v=4",
+      "profile": "https://github.com/kristinazvolanek",
+      "contributions": [
+        "userTesting"
+      ]
+    },
+    {
       "login": "CesarCaballeroGaudes",
       "name": "Cesar Caballero Gaudes",
       "avatar_url": "https://avatars1.githubusercontent.com/u/7611340?v=4",
@@ -76,11 +94,11 @@
         "ideas",
         "userTesting"
       ]
-    }
+    },
   ],
-  "contributorsPerLine": 7,
+  "contributorsPerLine": 4,
   "projectName": "phys2bids",
-  "projectOwner": "smoia",
+  "projectOwner": "The phys2bids community",
   "repoType": "github",
   "repoHost": "https://github.com",
   "skipCi": true
