@@ -23,7 +23,6 @@ def populate_phys_input(filename, chtrig):
     ------------------
     BlueprintInput object for more see BlueprintInput docs  
     """
-
     header = []
     channel_list = []
     with open(filename,'r') as f:
@@ -67,7 +66,7 @@ def populate_phys_input(filename, chtrig):
     # get names
     orig_names=header[4][1:]
     names = ['time','trigger']
-    orig_names.pop(chtrig)
+    orig_names.pop(chtrig-1)
     names=names+orig_names
     # get channels 
     timeseries = np.matrix(channel_list).T.tolist()
