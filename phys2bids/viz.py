@@ -42,17 +42,19 @@ def plot_trigger(time, trigger, outfile, options, figsize=FIGSIZE, dpi=SET_DPI):
     plt.savefig(outfile + '_trigger_time.png', dpi=dpi)
     plt.close()
 
-def plot_all(phys_in,infile,outfile,dpi=SET_DPI,size=(15,15)):
+def plot_all(phys_in,infile,outfile,dpi = SET_DPI,size = (15,15)):
     ch_num = len(phys_in.ch_name) # get number of channels:
-    fig,ax = plt.subplots(ch_num-1,1,figsize=size)
+    fig,ax = plt.subplots(ch_num-1,1,figsize = size)
     row = 0
     time = phys_in.timeseries[0] # assume time is first channel
     fig.suptitle(infile)
     for index, timeser in enumerate(phys_in.timeseries[1:]):
-        index+=1
+        index += 1
         ax[row].plot(time,timeser)
         ax[row].set_title(f' Channel {index + 1}: {phys_in.ch_name[index]}')
-        row+=1
-    plt.subplots_adjust(hspace=1)
-    fig.savefig(outfile,dpi=dpi,bbox_inches='tight')
+        ax[row].set_xlabel("seconds")
+        ax[row].set_ylabel(phys_in.units[index-1])
+        row += 1
+    plt.subplots_adjust(hspace = 1)
+    fig.savefig(outfile,dpi = dpi,bbox_inches = 'tight')
 
