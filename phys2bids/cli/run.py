@@ -83,7 +83,7 @@ def _get_parser():
     optional.add_argument('-ntp', '--numtps',
                           dest='num_timepoints_expected',
                           type=int,
-                          help='Number of expected timepoints.',
+                          help='Number of expected timepoints (TRs).',
                           default=0)
     optional.add_argument('-tr', '--tr',
                           dest='tr',
