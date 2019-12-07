@@ -101,6 +101,12 @@ def _get_parser():
                           type=str,
                           help='Columns header (for json file).',
                           default=[])
+    optional.add_argument('-chplot','--channels-plot',
+                          dest='chplot',
+                          nargs='*',
+                          type=str,
+                          help='path to store channels plot ',
+                          default=[""])
 
     optional.add_argument('-v', '--version', action='version',
                           version=('%(prog)s ' + __version__))
