@@ -4,7 +4,6 @@
 
 import os
 import json
-import pytest
 from phys2bids import utils
 from pkg_resources import resource_filename
 
@@ -104,9 +103,6 @@ def test_writejson(tmpdir):
 
 # Tests load_heuristics
 def test_load_heuristics():
-    heuristic_file = 'heur_test_acq'
-    test_heuristic = heuristic_file
-    # test_heuristic = os.path.join(
-    #     '/home/travis/build/physiopy/phys2bids/heuristics', heuristic_file)
+    test_heuristic = 'heur_test_acq'
     heuristic_output_filename = utils.load_heuristic(test_heuristic).filename
     assert test_heuristic in heuristic_output_filename
