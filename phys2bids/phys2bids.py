@@ -3,9 +3,9 @@
 """
 Phys2bids is a python3 library meant to set physiological files in BIDS
 standard.
+
 It was born for Acqknowledge files (BIOPAC), and at the moment it supports
-``.acq`` files and ``.txt`` files obtained by labchart
-(ADInstruments) and Respiract.
+``.acq`` files and ``.txt`` files obtained by labchart (ADInstruments).
 
 It requires python 3.6 or above, as well as the modules:
 - `numpy`
@@ -17,8 +17,9 @@ that can be found at `this link`_
 
 The project is under development.
 
-At the very moment, it assumes all the extracted channels from a file
-have the same sampling freq.
+At the very moment, it assumes:
+-  all the extracted channels from the input file have the same sampling freq.
+-  the input file is from one individual scan, not one session with multiple scans.
 
 .. _this link:
    https://github.com/uwmadison-chm/bioread
