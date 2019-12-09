@@ -18,7 +18,6 @@ that can be found at `this link`_
 The project is under development.
 
 At the very moment, it assumes:
--  all the extracted channels from the input file have the same sampling freq.
 -  the input file is from one individual scan, not one session with multiple scans.
 
 .. _this link:
