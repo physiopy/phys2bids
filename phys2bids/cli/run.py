@@ -22,7 +22,7 @@ def _get_parser():
     required.add_argument('-in', '--input-file',
                           dest='filename',
                           type=str,
-                          help='The name of the acquisition file, with or '
+                          help='The name of the file containing physiological data, with or '
                                'without extension.',
                           required=True)
     optional.add_argument('-info', '--info',
