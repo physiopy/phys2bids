@@ -62,5 +62,8 @@ def test_use_heuristic(tmpdir):
     heur_path = phys2bids.use_heuristic(test_full_heur_path, test_sub, test_ses,
                                         test_full_input_path, test_outdir, test_record_label)
 
-    assert f'_recording-{test_record_label}' in str(heur_path)
-    assert str(tmpdir) in str(heur_path)
+    test_result = ('/sub-SBJ01/ses-S05/func/sub-SBJ01_ses-S05_task-test_rec'
+                   '-biopac_run-00_recording-test_physio')
+    test_result = str(tmpdir) + test_result
+
+    assert test_result == str(heur_path)
