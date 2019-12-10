@@ -117,4 +117,7 @@ def test_BlueprintOutput():
 
     # Tests delete_at_index
     blueprint_out.delete_at_index(1)
+    assert len(blueprint_out.ch_name) == num_channnels - 1
+    assert len(blueprint_out.units) == num_channnels - 1
+    assert blueprint_out.timeseries.shape[0] == num_channnels - 1
     assert blueprint_out.ch_amount == num_channnels - 1
