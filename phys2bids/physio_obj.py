@@ -394,7 +394,7 @@ class BlueprintOutput():
             In all the property that are lists, the element correspondent to
             `idx` gets deleted
         """
-        del(self.timeseries[idx])
+        self.timeseries = np.delete(self.timeseries, idx, axis=0)
         del(self.ch_name[idx])
         del(self.units[idx])
 
