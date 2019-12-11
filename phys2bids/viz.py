@@ -47,7 +47,7 @@ def plot_all(phys_in,infile,outfile,dpi = SET_DPI,size = FIGSIZE):
     fig,ax = plt.subplots(ch_num-1,1,figsize = size,sharex=True)
     row = 0
     time = phys_in.timeseries[0] # assume time is first channel
-    fig.suptitle(infile)
+    fig.suptitle(os.path.basename(infile))
     for index, timeser in enumerate(phys_in.timeseries[1:]):
         index += 1
         ax[row].plot(time,timeser)
@@ -58,4 +58,3 @@ def plot_all(phys_in,infile,outfile,dpi = SET_DPI,size = FIGSIZE):
         row += 1
     ax[row-1].set_xlabel("seconds")
     fig.savefig(outfile,dpi = dpi,bbox_inches = 'tight')
-
