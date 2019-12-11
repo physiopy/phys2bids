@@ -265,7 +265,7 @@ def _main(argv=None):
         phys_out[uniq_freq] = deepcopy(phys_in)
         for i in reversed(phys_in.freq):
             if i != uniq_freq:
-                phys_out[uniq_freq].delete_at_index(phys_in.ch_amount-i-1)
+                phys_out[uniq_freq].delete_at_index(phys_in.ch_amount - i - 1)
 
         # Also create a BlueprintOutput object for each unique frequency found.
         # Populate it with the corresponding blueprint input and replace it
