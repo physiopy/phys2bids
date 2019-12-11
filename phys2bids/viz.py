@@ -3,6 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from os.path import basename
+from scipy.signal import resample
 SET_DPI = 100
 FIGSIZE = (18, 10)
 
@@ -48,7 +49,8 @@ def plot_all(phys_in, infile, outfile, dpi = SET_DPI, size = FIGSIZE):
     time = phys_in.timeseries[0] # assume time is first channel
     fig.suptitle(basename(infile))
     for row, timeser in enumerate(phys_in.timeseries[1:]):
-        if phys_in.freq[0] != phys_in.freq[row+1]:
+        if timeser.shape != time.shape :
+            timeser=resample(timeser.astype(float),time.shape[0]) 
         ax[row].plot(time,timeser)
         ax[row].set_title(f' Channel {row + 2}: {phys_in.ch_name[row+1]}')
         ax[row].set_ylabel(phys_in.units[row +1])
