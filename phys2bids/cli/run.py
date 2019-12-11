@@ -104,9 +104,9 @@ def _get_parser():
     optional.add_argument('-chplot','--channels-plot',
                           dest='chplot',
                           nargs='*',
-                          type=str,
+                          type=list,
                           help='path to store channels plot ',
-                          default='')
+                          default=[''])
 
     optional.add_argument('-v', '--version', action='version',
                           version=('%(prog)s ' + __version__))
