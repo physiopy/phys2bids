@@ -213,7 +213,7 @@ def _main(argv=None):
     phys_in.print_info(options.filename)
     # #!# Here the function viz.plot_channel should be called
     if options.chplot != '' or options.info:
-        plot_all(phys_in, infile, options.chplot)
+        viz.plot_all(phys_in, infile, options.chplot)
     # If only info were asked, end here.
     if options.info:
         return
