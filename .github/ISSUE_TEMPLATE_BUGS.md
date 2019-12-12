@@ -1,0 +1,23 @@
+<!--- Provide a general summary of the issue in the Title above -->
+
+## Expected Behavior
+<!--- Describe what one would expect from the buggy code -->
+
+## Actual Behavior
+<!--- Describe what the buggy code is actually doing/returning -->
+
+## Steps to Reproduce the Problem
+<!--- Briefly point out the steps we should take to reproduce the problem -->
+
+  1.
+  2.
+  3.
+
+## Specifications
+<!--- Point out the version of phys2bids you are running and your OS version -->
+
+  - Version:
+  - Platform:
+
+## Possible solution
+<!--- Describe a possible approach to solve the issue -->
