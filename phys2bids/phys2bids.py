@@ -212,10 +212,9 @@ def _main(argv=None):
     print('Reading infos')
     phys_in.print_info(options.filename)
     # #!# Here the function viz.plot_channel should be called
-    if options.chplot[0] != "":
+    if options.chplot != '' or options.info:
         from phys2bids.viz import plot_all
-        print(f'saving channels plot at plot at {options.chplot[0]}')
-        plot_all(phys_in, infile, options.chplot[0])
+        plot_all(phys_in, infile, options.chplot)
     # If only info were asked, end here.
     if options.info:
         return
