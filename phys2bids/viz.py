@@ -20,7 +20,7 @@ def plot_trigger(time, trigger, outfile, options, figsize=FIGSIZE, dpi=SET_DPI):
         return x / options.tr
 
     def ntr2time(x):
-        return x * options.trprint(f'saving channels plot at plot at {options.chplot}')
+        return x * options.tr
 
     thrline = np.ones(time.shape) * options.thr
     fig = plt.figure(figsize=figsize, dpi=dpi)
