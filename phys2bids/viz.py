@@ -60,6 +60,6 @@ def plot_all(phys_in, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
         row += 1
     ax[row - 1].set_xlabel("seconds")
     if outfile == '':
-        outfile = os.path.splitext(os.path.basename(infile))[0]+'.png'
+        outfile = os.path.splitext(os.path.basename(infile))[0] + '.png'
     print(f'saving channels plot at plot at {outfile}')
     fig.savefig(outfile, dpi=dpi, bbox_inches='tight')
