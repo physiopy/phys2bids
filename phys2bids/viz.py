@@ -3,7 +3,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import os
-from scipy.signal import resample
 SET_DPI = 100
 FIGSIZE = (18, 10)
 

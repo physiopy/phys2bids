@@ -16,7 +16,6 @@ It doesn't support physiological files recorded with the MRI, as you can find a 
 It requires python 3.6 or above, as well as the modules:
 - `numpy >= 1.9.3`
 - `matplotlib >= 3.1.1`
-- `scipy==1.3.3`
 
 In order to process ``.acq`` files, it needs [`bioread`](https://github.com/uwmadison-chm/bioread), an excellent module
 that can be found at [this link](https://github.com/uwmadison-chm/bioread).
