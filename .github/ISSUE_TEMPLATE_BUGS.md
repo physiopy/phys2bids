@@ -1,3 +1,7 @@
+---
+title: '[BUG]'
+labels: Bug
+---
 <!--- Provide a general summary of the issue in the Title above -->
 
 ## Expected Behavior
@@ -5,6 +9,7 @@
 
 ## Actual Behavior
 <!--- Describe what the buggy code is actually doing/returning -->
+<!--- Do not hesitate and share screenshots and code snippets that could help understand the issue -->
 
 ## Steps to Reproduce the Problem
 <!--- Briefly point out the steps we should take to reproduce the problem -->
