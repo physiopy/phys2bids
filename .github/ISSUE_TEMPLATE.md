@@ -12,3 +12,8 @@
 
   - Version:
   - Platform:
+
+## Next steps
+
+  1.
+  2.
