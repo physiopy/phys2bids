@@ -2,7 +2,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-from os.path import basename
+import os
 from scipy.signal import resample
 SET_DPI = 100
 FIGSIZE = (18, 10)
@@ -21,7 +21,7 @@ def plot_trigger(time, trigger, outfile, options, figsize=FIGSIZE, dpi=SET_DPI):
         return x / options.tr
 
     def ntr2time(x):
-        return x * options.tr
+        return x * options.trprint(f'saving channels plot at plot at {options.chplot}')
 
     thrline = np.ones(time.shape) * options.thr
     fig = plt.figure(figsize=figsize, dpi=dpi)
@@ -44,11 +44,11 @@ def plot_trigger(time, trigger, outfile, options, figsize=FIGSIZE, dpi=SET_DPI):
     plt.close()
 
 
-def plot_all(phys_in, infile, outfile, dpi=SET_DPI, size=FIGSIZE):
+def plot_all(phys_in, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
     ch_num = len(phys_in.ch_name)  # get number of channels:
     fig, ax = plt.subplots(ch_num - 1, 1, figsize=size, sharex=True)
     time = phys_in.timeseries[0]  # assume time is first channel
-    fig.suptitle(basename(infile))
+    fig.suptitle(os.path.basename(infile))
     for row, timeser in enumerate(phys_in.timeseries[1:]):
         if timeser.shape != time.shape:
             timeser = resample(timeser.astype(float), time.shape[0])
@@ -59,4 +59,7 @@ def plot_all(phys_in, infile, outfile, dpi=SET_DPI, size=FIGSIZE):
         ax[row].grid()
         row += 1
     ax[row - 1].set_xlabel("seconds")
+    if outfile == '':
+        outfile = os.path.splitext(os.path.basename(infile))[0]+'.png'
+    print(f'saving channels plot at plot at {outfile}')
     fig.savefig(outfile, dpi=dpi, bbox_inches='tight')
