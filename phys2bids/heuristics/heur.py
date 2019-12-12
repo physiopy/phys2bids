@@ -1,4 +1,4 @@
-import sys
+# import sys
 import fnmatch
 
 
@@ -55,7 +55,9 @@ def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
 
     name = name + '_task-' + task
 
-    # filename spec: sub-<label>[_ses-<label>]_task-<label>[_acq-<label>][_ce-<label>][_dir-<label>][_rec-<label>][_run-<index>][_recording-<label>]_physio
+    # filename spec: sub-<label>[_ses-<label>]_task-<label>[_acq-<label>] ...
+    #                ... [_ce-<label>][_dir-<label>][_rec-<label>] ...
+    #                ... [_run-<index>][_recording-<label>]_physio
     if acq:
         name = name + '_acq-' + acq
 
