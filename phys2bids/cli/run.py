@@ -91,7 +91,9 @@ def _get_parser():
                           dest='num_timepoints_expected',
                           type=int,
                           help='Number of expected timepoints (TRs). '
-                               'Default is 0.',
+                               'Default is 0. Note: the estimation of when the '
+                               'neuroimaging acquisition started cannot take place '
+                               'with this default.',
                           default=0)
     optional.add_argument('-tr', '--tr',
                           dest='tr',
