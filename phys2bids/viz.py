@@ -51,7 +51,8 @@ def plot_all(phys_in, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
     fig.suptitle(os.path.basename(infile))
     for row, timeser in enumerate(phys_in.timeseries[1:]):
         if timeser.shape != time.shape:
-            timeser = resample(timeser.astype(float), time.shape[0])
+            time_old = np.linspace(0, time[-1], num=timeser.shape[0])
+            timeser = np.interp(time, time_old, timeser)
         ax[row].plot(time, timeser)
         ax[row].set_title(f' Channel {row + 2}: {phys_in.ch_name[row + 1]}')
         ax[row].set_ylabel(phys_in.units[row + 1])
