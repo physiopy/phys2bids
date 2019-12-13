@@ -57,7 +57,7 @@ def plot_all(phys_in, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
         ax[row].set_ylabel(phys_in.units[row + 1])
         ax[row].xlim = 30 * 60 * phys_in.freq[0]  # maximum display of half an hour
         ax[row].grid()
-    ax[row - 1].set_xlabel("seconds")
+    ax[row].set_xlabel("seconds")
     if outfile == '':
         outfile = os.path.splitext(os.path.basename(infile))[0] + '.png'
     print(f'saving channels plot at plot at {outfile}')
