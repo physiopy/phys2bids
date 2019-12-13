@@ -53,7 +53,7 @@ def plot_all(phys_in, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
             time_old = np.linspace(0, time[-1], num=timeser.shape[0])
             timeser = np.interp(time, time_old, timeser)
         ax[row].plot(time, timeser)
-        ax[row].set_title(f' Channel {row + 2}: {phys_in.ch_name[row + 1]}')
+        ax[row].set_title(f' Channel {row + 1}: {phys_in.ch_name[row + 1]}')
         ax[row].set_ylabel(phys_in.units[row + 1])
         ax[row].xlim = 30 * 60 * phys_in.freq[0]  # maximum display of half an hour
         ax[row].grid()
