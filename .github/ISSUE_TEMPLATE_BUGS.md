@@ -20,7 +20,7 @@ labels: Bug
 ## Specifications
 <!--- Point out the version of phys2bids you are running and your OS version -->
     - Python version: 
-  - Version:
+  - phys2bids version:
   - Platform:
 
 ## Possible solution
