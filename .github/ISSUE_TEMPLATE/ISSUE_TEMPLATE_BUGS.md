@@ -1,5 +1,10 @@
 ---
+name: Bug issue template
+about: Template for bug reporting issues
+title: ''
 labels: Bug
+assignees: ''
+
 ---
 <!--- Provide a general summary of the issue in the Title above -->
 

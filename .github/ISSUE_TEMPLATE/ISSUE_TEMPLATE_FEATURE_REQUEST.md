@@ -1,5 +1,10 @@
 ---
+name: Feature request template
+about: Template for feature request issues
+title: ''
 labels: Enhacement
+assignees: ''
+
 ---
 <!--- Provide a general summary of the issue in the Title above -->
 
