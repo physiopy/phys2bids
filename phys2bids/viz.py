@@ -57,7 +57,6 @@ def plot_all(phys_in, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
         ax[row].set_ylabel(phys_in.units[row + 1])
         ax[row].xlim = 30 * 60 * phys_in.freq[0]  # maximum display of half an hour
         ax[row].grid()
-        row += 1
     ax[row - 1].set_xlabel("seconds")
     if outfile == '':
         outfile = os.path.splitext(os.path.basename(infile))[0] + '.png'
