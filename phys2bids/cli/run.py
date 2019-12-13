@@ -106,7 +106,6 @@ def _get_parser():
                           type=str,
                           help='path to store channels plot ',
                           default='')
-
     optional.add_argument('-v', '--version', action='version',
                           version=('%(prog)s ' + __version__))
 
