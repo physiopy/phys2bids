@@ -1,3 +1,11 @@
+---
+name: General issue template
+about: Template for any issues not related to bugs or feature requests
+title: ''
+labels:
+assignees: ''
+
+---
 <!--- Provide a general summary of the issue in the Title above -->
 <!--- Please label the issue with one of the following: Discussion, Documentation, Outreach or Question -->
 
