@@ -43,6 +43,18 @@
         "ideas",
         "content"
       ]
+    },
+    {
+      "login": "vinferrer",
+      "name": "Vicente Ferrer",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/38909338?v=4",
+      "profile": "https://github.com/vinferrer",
+      "contributions": [
+        "bug",
+        "code",
+        "doc",
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7,
