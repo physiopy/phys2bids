@@ -1,6 +1,6 @@
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3559868.svg)](https://doi.org/10.5281/zenodo.3559868)
 [![Join the chat at https://gitter.im/phys2bids/community](https://badges.gitter.im/phys2bids/community.svg)](https://gitter.im/phys2bids/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -74,6 +74,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/danalclop"><img src="https://avatars0.githubusercontent.com/u/38854309?v=4" width="100px;" alt=""/><br /><sub><b>danalclop</b></sub></a><br /><a href="#design-danalclop" title="Design">🎨</a></td>
     <td align="center"><a href="https://github.com/AyyagariA"><img src="https://avatars1.githubusercontent.com/u/50453337?v=4" width="100px;" alt=""/><br /><sub><b>Apoorva Ayyagari</b></sub></a><br /><a href="https://github.com/physiopy/phys2bids/commits?author=AyyagariA" title="Documentation">📖</a> <a href="#content-AyyagariA" title="Content">🖋</a></td>
     <td align="center"><a href="http://brightlab.northwestern.edu"><img src="https://avatars2.githubusercontent.com/u/32640425?v=4" width="100px;" alt=""/><br /><sub><b>Molly Bright</b></sub></a><br /><a href="#ideas-BrightMG" title="Ideas, Planning, & Feedback">🤔</a> <a href="#content-BrightMG" title="Content">🖋</a></td>
+    <td align="center"><a href="https://github.com/CesarCaballeroGaudes"><img src="https://avatars1.githubusercontent.com/u/7611340?v=4" width="100px;" alt=""/><br /><sub><b>Cesar Caballero Gaudes</b></sub></a><br /><a href="#ideas-CesarCaballeroGaudes" title="Ideas, Planning, & Feedback">🤔</a> <a href="#content-CesarCaballeroGaudes" title="Content">🖋</a></td>
   </tr>
 </table>
 
