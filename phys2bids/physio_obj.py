@@ -134,12 +134,15 @@ class BlueprintInput():
     """
     def __init__(self, timeseries, freq, ch_name, units):
         self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
-        self.ch_amount = len(self.timeseries)
         self.freq = has_size(is_valid(freq, list,
                                       list_type=(int, float)),
                              self.ch_amount, 0.0)
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
+
+    @property
+    def ch_amount(self):
+        return len(self.timeseries)
 
     def rename_channels(self, new_names, ch_trigger=None):
         """
@@ -216,7 +219,6 @@ class BlueprintInput():
         del(self.freq[idx])
         del(self.ch_name[idx])
         del(self.units[idx])
-        self.ch_amount -= 1
 
     def check_trigger_amount(self, thr=2.5, num_timepoints_expected=0, tr=0):
         """
@@ -349,11 +351,14 @@ class BlueprintOutput():
     """
     def __init__(self, timeseries, freq, ch_name, units, start_time):
         self.timeseries = is_valid(timeseries, np.ndarray)
-        self.ch_amount = self.timeseries.shape[0]
         self.freq = is_valid(freq, (int, float))
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
         self.start_time = start_time
+
+    @property
+    def ch_amount(self):
+        return len(self.timeseries)
 
     def return_index(self, idx):
         """
