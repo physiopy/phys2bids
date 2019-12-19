@@ -116,6 +116,16 @@
         "review",
         "test"
       ]
+    },
+    {
+      "login": "kristinazvolanek",
+      "name": "Kristina",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/54590158?v=4",
+      "profile": "https://github.com/kristinazvolanek",
+      "contributions": [
+        "doc",
+        "content"
+      ]
     }
   ],
   "contributorsPerLine": 7,
