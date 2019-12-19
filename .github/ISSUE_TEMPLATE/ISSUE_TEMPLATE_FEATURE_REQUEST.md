@@ -1,11 +1,11 @@
 ---
-name: Feature request template
-about: Template for feature request issues
+name: Feature request
+about: Use this template to request new features.
 title: ''
 labels: Enhacement
 assignees: ''
-
 ---
+
 <!--- Provide a general summary of the issue in the Title above -->
 
 ## Detailed Description
