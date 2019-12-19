@@ -27,7 +27,7 @@ Donwload the package as zip from github and uncompress or if you have ``git`` us
 
 open a terminal in the phy2bids folder and execute the command:
 
-``sudo pip3 install -e .``
+``pip3 install .``
 
 type the command:
 
