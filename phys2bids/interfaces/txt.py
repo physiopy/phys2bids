@@ -22,7 +22,7 @@ def populate_phys_input(filename, chtrig):
 
     Output
     ------------------
-    BlueprintInput object for more see BlueprintInput docs
+    phys_in: BlueprintInput object for more see BlueprintInput docs
     """
 
     header = []
@@ -30,6 +30,9 @@ def populate_phys_input(filename, chtrig):
     with open(filename, 'r') as f:
         for line in f:
             line = line.rstrip('\n').split('\t')
+            for item in line:
+                if '#' in item:
+                    line.remove(item)
             try:
                 float(line[0])
             except ValueError:
@@ -37,15 +40,29 @@ def populate_phys_input(filename, chtrig):
                 continue
             line = [float(i) for i in line]
             channel_list.append(line)
-            if len(header) == 0:
-                raise AttributeError(f'Files without header are not supported yet')
+        if len(header) == 0:
+            raise AttributeError(f'Files without header are not supported yet')
         if 'Interval=' in header[0]:
             print('phys2bids detected that your file is in labchart format')
             phys_in = labchart_read(channel_list, chtrig, header)
     return phys_in
 
 
-def labchart_read(channel_list, chtrig, header=0):
+def labchart_read(channel_list, chtrig, header=[]):
+    """
+    reading function for labchart files
+        Input (Properties)
+    ------------------
+    channel_list: list
+        list with channels only
+    chtrig : int
+        index of trigger channel
+    header: list
+        list with that contains file header
+    Output
+    ------------------
+    BlueprintInput object for more see BlueprintInput docs
+    """
     # get frequency
     if len(header) == 0:
         raise AttributeError(f'Files without header are not supported yet')
