@@ -2,7 +2,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-
+import os
 SET_DPI = 100
 FIGSIZE = (18, 10)
 
@@ -41,3 +41,24 @@ def plot_trigger(time, trigger, outfile, options, figsize=FIGSIZE, dpi=SET_DPI):
     subplot.plot(time, trigger, '-', time, time, '-')
     plt.savefig(outfile + '_trigger_time.png', dpi=dpi)
     plt.close()
+
+
+def plot_all(phys_in, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
+    ch_num = len(phys_in.ch_name)  # get number of channels:
+    fig, ax = plt.subplots(ch_num - 1, 1, figsize=size, sharex=True)
+    time = phys_in.timeseries[0]  # assume time is first channel
+    fig.suptitle(os.path.basename(infile))
+    for row, timeser in enumerate(phys_in.timeseries[1:]):
+        if timeser.shape != time.shape:
+            time_old = np.linspace(0, time[-1], num=timeser.shape[0])
+            timeser = np.interp(time, time_old, timeser)
+        ax[row].plot(time, timeser)
+        ax[row].set_title(f' Channel {row + 1}: {phys_in.ch_name[row + 1]}')
+        ax[row].set_ylabel(phys_in.units[row + 1])
+        ax[row].xlim = 30 * 60 * phys_in.freq[0]  # maximum display of half an hour
+        ax[row].grid()
+    ax[row].set_xlabel("seconds")
+    if outfile == '':
+        outfile = os.path.splitext(os.path.basename(infile))[0] + '.png'
+    print(f'saving channels plot at plot at {outfile}')
+    fig.savefig(outfile, dpi=dpi, bbox_inches='tight')

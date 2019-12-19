@@ -212,8 +212,8 @@ def _main(argv=None):
     print('Reading infos')
     phys_in.print_info(options.filename)
     # #!# Here the function viz.plot_channel should be called
-    # for the desired channels.
-
+    if options.chplot != '' or options.info:
+        viz.plot_all(phys_in, infile, options.chplot)
     # If only info were asked, end here.
     if options.info:
         return
