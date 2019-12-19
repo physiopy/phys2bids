@@ -41,20 +41,20 @@ def _get_parser():
                           dest='outdir',
                           type=str,
                           help='Folder where output should be placed. '
-                                'Default is current folder. '
-                                'If \"-heur\" is used, it\'ll become '
-                                'the site folder. Requires \"-sub\". '
-                                'Optional to specify \"-ses\".',
+                               'Default is current folder. '
+                               'If \"-heur\" is used, it\'ll become '
+                               'the site folder. Requires \"-sub\". '
+                               'Optional to specify \"-ses\".',
                           default='.')
     optional.add_argument('-heur', '--heuristic',
                           dest='heur_file',
                           type=str,
                           help='File containing heuristic, with or without '
-                                'extension. This file is needed in order to '
-                                'convert your input file to BIDS format! '
-                                'If no path is specified, it assumes the file is '
-                                'in the current folder. Edit the heur_ex.py file in '
-                                'heuristics folder.',
+                               'extension. This file is needed in order to '
+                               'convert your input file to BIDS format! '
+                               'If no path is specified, it assumes the file is '
+                               'in the current folder. Edit the heur_ex.py file in '
+                               'heuristics folder.',
                           default=None)
     # optional.add_argument('-hdir', '--heur-dir',
     #                       dest='heurdir',
@@ -65,13 +65,13 @@ def _get_parser():
                           dest='sub',
                           type=str,
                           help='Specify alongside \"-heur\". Code of '
-                                'subject to process.',
+                               'subject to process.',
                           default=None)
     optional.add_argument('-ses', '--session',
                           dest='ses',
                           type=str,
                           help='Specify alongside \"-heur\". Code of '
-                                'session to process.',
+                               'session to process.',
                           default=None)
     optional.add_argument('-chtrig', '--channel-trigger',
                           dest='chtrig',
