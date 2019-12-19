@@ -31,7 +31,7 @@ def populate_phys_input(filename, chtrig):
         for line in f:
             line = line.rstrip('\n').split('\t')
             for item in line:
-                if '#' in item:
+                if '#' in item:  # detecting comments
                     line.remove(item)
             try:
                 float(line[0])
@@ -44,6 +44,8 @@ def populate_phys_input(filename, chtrig):
             raise AttributeError(f'Files without header are not supported yet')
         if 'Interval=' in header[0]:
             print('phys2bids detected that your file is in labchart format')
+        else:
+            raise AttributeError(f'This file format is not supported yet for txt files')
             phys_in = labchart_read(channel_list, chtrig, header)
     return phys_in
 
