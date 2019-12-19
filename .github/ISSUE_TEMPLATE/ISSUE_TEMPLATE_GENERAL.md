@@ -12,10 +12,10 @@ assignees: ''
 ## Summary
 <!--- Describe the motivation behind the issue -->
 
-## Additional detail
+## Additional detail
 <!--- Provide a additional details that could help developers understand the issue -->
 
-## Next Steps
+## Next Steps
 <!--- Provide possible steps to take in order to address the issue -->
 
     * 
