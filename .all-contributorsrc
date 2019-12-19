@@ -64,6 +64,20 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "rmarkello",
+      "name": "Ross Markello",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/14265705?v=4",
+      "profile": "http://rossmarkello.com",
+      "contributions": [
+        "bug",
+        "code",
+        "ideas",
+        "infra",
+        "review",
+        "test"
+      ]
     }
   ],
   "contributorsPerLine": 7,
