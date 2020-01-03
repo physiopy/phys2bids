@@ -40,9 +40,6 @@ if your output is: ``phys2bids 1.2.0-beta`` or similar, phys2bids is ready to be
 **The project is currently under development**.
 Any suggestion/bug report is welcome! Feel free to open an issue.
 
-At the very moment, it assumes all the extracted channels from a file
-have the same sampling freq.
-
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 ## Contributors ✨
