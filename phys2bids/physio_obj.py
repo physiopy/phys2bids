@@ -97,14 +97,14 @@ class BlueprintInput():
         in the output files.
     units : (ch) list of strings
         List of the units of the channels.
-    ch_amount: int
-        Number of channels (ch). This is computed internally.
     num_timepoints_found: int
         Amount of timepoints found in the automatic count.
         This is computed internally, *if* check_trigger_amount() is run
 
     Methods
     -------
+    ch_amount:
+        Property. Returns number of channels (ch).
     rename_channels:
         Changes the list "ch_name" in a controlled way.
     return_index:
@@ -143,6 +143,14 @@ class BlueprintInput():
 
     @property
     def ch_amount(self):
+        """
+        Property. Returns number of channels (ch).
+
+        Returns
+        -------
+        int
+            Number of channels
+        """
         return len(self.timeseries)
 
     def rename_channels(self, new_names, ch_trigger=None):
@@ -164,12 +172,12 @@ class BlueprintInput():
             Changes content to new_name.
         """
         if 'time' in new_names:
-            del(new_names[new_names.index('time')])
+            del new_names[new_names.index('time')]
 
         if 'trigger' in new_names:
-            del(new_names[new_names.index('trigger')])
+            del new_names[new_names.index('trigger')]
         elif ch_trigger:
-            del(new_names[ch_trigger])
+            del new_names[ch_trigger]
 
         new_names = ['time', 'trigger'] + new_names
 
@@ -224,7 +232,6 @@ class BlueprintInput():
         del self.freq[idx]
         del self.ch_name[idx]
         del self.units[idx]
-        self.ch_amount -= 1
 
     def check_trigger_amount(self, thr=2.5, num_timepoints_expected=0, tr=0):
         """
@@ -341,6 +348,8 @@ class BlueprintOutput():
 
     Methods
     -------
+    ch_amount:
+        Property. Returns number of channels (ch).
     return_index:
         Returns the proper list entry of all the
         properties of the object, given an index.
@@ -359,6 +368,14 @@ class BlueprintOutput():
 
     @property
     def ch_amount(self):
+        """
+        Property. Returns number of channels (ch).
+
+        Returns
+        -------
+        int
+            Number of channels
+        """
         return len(self.timeseries)
 
     def return_index(self, idx):
@@ -404,8 +421,8 @@ class BlueprintOutput():
             `idx` gets deleted
         """
         self.timeseries = np.delete(self.timeseries, idx, axis=0)
-        del(self.ch_name[idx])
-        del(self.units[idx])
+        del self.ch_name[idx]
+        del self.units[idx]
 
     @classmethod
     def init_from_blueprint(cls, blueprint):
