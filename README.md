@@ -1,9 +1,9 @@
-# <img alt="Phys2BIDS" src="https://github.com/physiopy/phys2bids/blob/master/docs/phys2bids_logo1280×640.png" height="150">
+<img alt="Phys2BIDS" src="https://github.com/physiopy/phys2bids/blob/master/docs/phys2bids_logo1280×640.png" height="150">
 
 phys2bids
 =========
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3559868.svg)](https://doi.org/10.5281/zenodo.3559868)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3586045.svg)](https://doi.org/10.5281/zenodo.3586045)
 [![Join the chat at https://gitter.im/phys2bids/community](https://badges.gitter.im/phys2bids/community.svg)](https://gitter.im/phys2bids/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors-)
