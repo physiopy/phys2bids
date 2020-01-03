@@ -14,13 +14,13 @@ def check_input_dir(indir):
     Checks that the given indir doesn't have a trailing `/`
     Possibly useless if better way to handle this in Python.
 
-    Input
-    -----
+    Parameters
+    ----------
     indir: str or path
         A string or path that might (or not) end with a `/`
 
-    Output
-    ------
+    Returns
+    -------
     indir: str or path
         Same as input, but surely without trailing `/`
     """
@@ -36,16 +36,16 @@ def check_input_ext(filename, ext):
     It also treats composite extensions such as `.tsv.gz`,
     common in BIDS formats.
 
-    Input
-    -----
+    Parameters
+    ----------
     filename: str or path
         A string representing a file name or a fullpath
         to a file
     ext: str
         Desired file name extension. Doesn't matter if preceded by `.`
 
-    Output
-    ------
+    Returns
+    -------
     Path(filename).with_suffix(ext): path
         Path representing the input filename, but with corrected extension.
     """
@@ -65,8 +65,8 @@ def check_input_type(filename, indir):
     Check which supported type is the filename.
     Alternatively, raise an error if file not found or type not supported.
 
-    Input
-    -----
+    Parameters
+    ----------
     filename: str or path
         A string representing a file name or a fullpath
         to a file
@@ -74,8 +74,8 @@ def check_input_type(filename, indir):
         A string representing a folder in which the file is,
         or a fullpath to such folder
 
-    Output
-    ------
+    Returns
+    -------
     fname: str or path, same as input `filename`
         Complete file name, might be the same or with an extension between
         the supported ones
@@ -83,9 +83,9 @@ def check_input_type(filename, indir):
         Extension of the file, if the extension is supported
         and the file exists
 
-    Outcome
-    -------
-    raise Exception:
+    Raises
+    ------
+    Exception
         If the file doesn't exists or the extension is not supported,
         it interrupts the program and return the issue.
     """
@@ -110,14 +110,15 @@ def path_exists_or_make_it(fldr):
     """
     Check if folder exists, if not make it
 
-    Input
-    -----
+    Parameters
+    ----------
     fldr: str or path
         A string representing a folder,
         or a fullpath to such folder
 
-    Outcome
-    -------
+    Notes
+    -----
+    Outcome:
     fldr:
         Creates the fullpath to `fldr` if it doesn't exists.
     """
@@ -129,15 +130,15 @@ def check_file_exists(filename):
     """
     Check if file exists.
 
-    Input
-    -----
+    Parameters
+    ----------
     filename: str or path
         A string representing a file name or a fullpath
         to a file
 
-    Outcome
-    -------
-    raise FileNotFoundError:
+    Raises
+    ------
+    FileNotFoundError
         If the file doesn't exists.
     """
     if not os.path.isfile(filename) and filename is not None:
@@ -149,8 +150,8 @@ def move_file(oldpath, newpath, ext=''):
     Moves file from oldpath to newpath.
     If file already exists, removes it first.
 
-    Input
-    -----
+    Parameters
+    ----------
     oldpath: str or path
         A string or a fullpath to a file that has to be moved
     newpath: str or path
@@ -158,8 +159,9 @@ def move_file(oldpath, newpath, ext=''):
     ext: str
         Possible extension to add to the oldpath and newpath. Not necessary.
 
-    Outcome
-    -------
+    Notes
+    -----
+    Outcome:
     newpath + ext:
         Moves file to new destination
     """
@@ -176,8 +178,8 @@ def copy_file(oldpath, newpath, ext=''):
     Copy file from oldpath to newpath.
     If file already exists, remove it first.
 
-    Input
-    -----
+    Parameters
+    ----------
     oldpath: str or path
         A string or a fullpath to a file that has to be copied
     newpath: str or path
@@ -185,8 +187,9 @@ def copy_file(oldpath, newpath, ext=''):
     ext: str
         Possible extension to add to the oldpath and newpath. Not necessary.
 
-    Outcome
-    -------
+    Notes
+    -----
+    Outcome:
     newpath + ext:
         Copies file to new destination
     """
@@ -205,8 +208,8 @@ def writefile(filename, ext, text):
     Produces a textfile of the specified extension `ext`,
     containing the given content `text`.
 
-    Input
-    -----
+    Parameters
+    ----------
     filename: str or path
         A string representing a file name or a fullpath
         to a file
@@ -215,8 +218,9 @@ def writefile(filename, ext, text):
     text: str
         Text that has to be printed in `filename`
 
-    Outcome
-    -------
+    Notes
+    -----
+    Outcome:
     filename + ext:
         Creates new file `filename.ext`.
     """
@@ -228,16 +232,17 @@ def writejson(filename, data, **kwargs):
     """
     Outputs a json file with the given data inside.
 
-    Input
-    -----
+    Parameters
+    ----------
     filename: str or path
         A string representing a file name or a fullpath
         to a file
     data: dict
         dictionary containing data to be printed in json.
 
-    Outcome
-    -------
+    Notes
+    -----
+    Outcome:
     filename:
         Creates new file `filename.json`.
     """

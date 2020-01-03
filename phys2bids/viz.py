@@ -12,8 +12,8 @@ def plot_channel(table, channel, fileprefix, figsize=FIGSIZE, dpi=SET_DPI):
     Produces a textfile of the specified extension `ext`,
     containing the given content `text`.
 
-    Input
-    -----
+    Parameters
+    ----------
     table: pandas dataframe
         Dataframe containing channels
     channel: str
@@ -28,8 +28,9 @@ def plot_channel(table, channel, fileprefix, figsize=FIGSIZE, dpi=SET_DPI):
         Desired DPI of the figure (see `matplotlib`),
         Default is {SET_DPI}
 
-    Outcome
-    -------
+    Notes
+    -----
+    Outcome:
     fileprefix + '_' + channel + '_time.png':
         Creates new plot `fileprefix_channel_time.png`.
     """
@@ -46,8 +47,8 @@ def plot_trigger(time, trigger, fileprefix, options, figsize=FIGSIZE, dpi=SET_DP
     Produces a textfile of the specified extension `ext`,
     containing the given content `text`.
 
-    Input
-    -----
+    Parameters
+    ----------
     time: numpy ndarray
         time channel
     trigger: numpy ndarray
@@ -64,8 +65,9 @@ def plot_trigger(time, trigger, fileprefix, options, figsize=FIGSIZE, dpi=SET_DP
         Desired DPI of the figure (see `matplotlib`),
         Default is {SET_DPI}
 
-    Outcome
-    -------
+    Notes
+    -----
+    Outcome:
     fileprefix + _trigger_time.png:
         Creates new plot `fileprefix_trigger_time.png`.
     """

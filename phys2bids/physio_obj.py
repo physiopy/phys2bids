@@ -13,8 +13,9 @@ def is_valid(var, var_type, list_type=None):
     Checks that the var is of a certain type.
     If type is list and list_type is specified,
     checks that the list contains list_type.
-    Input
-    -----
+
+    Parameters
+    ----------
     var: any type
         Variable to be checked.
     var_type: type
@@ -22,10 +23,15 @@ def is_valid(var, var_type, list_type=None):
     list_type: type
         Like var_type, but applies to list elements.
 
-    Output
-    ------
+    Returns
+    -------
     var: any type
         Variable to be checked (same as input).
+
+    Raises
+    ------
+    AttributeError
+        If var is not of var_type
     """
     if not isinstance(var, var_type):
         raise AttributeError(f'The given variable is not a {var_type}')
@@ -41,8 +47,9 @@ def has_size(var, data_size, token):
     """
     Checks that the var has the same dimension of the data
     If it's not the case, fill in the var or removes exceding var entry.
-    Input
-    -----
+
+    Parameters
+    ----------
     var: list
         Variable to be checked.
     data_size: int
@@ -52,8 +59,8 @@ def has_size(var, data_size, token):
         it will be padded at the end with this `token`.
         It has to be the same type as var.
 
-    Output
-    ------
+    Returns
+    -------
     var: list
         Variable to be checked (same as input).
     """
@@ -74,8 +81,8 @@ class BlueprintInput():
     !!! Pay attention: there's rules on how to populate this object.
     See below ("Attention") !!!
 
-    Input (Properties)
-    ------------------
+    Attributes
+    ----------
     timeseries : (ch, [tps]) list
         List of numpy 1d arrays - one for channel, plus one for time.
         Time channel has to be the first, trigger the second.
@@ -90,17 +97,11 @@ class BlueprintInput():
         in the output files.
     units : (ch) list of strings
         List of the units of the channels.
-
-    Properties
-    ----------
     ch_amount: int
-        Number of channels (ch).
-
-    Optional properties
-    -------------------
+        Number of channels (ch). This is computed internally.
     num_timepoints_found: int
-        Amount of timepoints found in the automatic count,
-        *if* check_trigger_amount() is run
+        Amount of timepoints found in the automatic count.
+        This is computed internally, *if* check_trigger_amount() is run
 
     Methods
     -------
@@ -116,8 +117,8 @@ class BlueprintInput():
         Counts the amounts of triggers and corrects time offset
         in "time" ndarray. Also adds property ch_amount.
 
-    Attention
-    ---------
+    Notes
+    -----
     The timeseries (and as a consequence, all the other properties)
     should start with an entry for time and an entry for trigger.
     Both should have the same length - hence same sampling. Meaning:
@@ -146,18 +147,17 @@ class BlueprintInput():
         Renames the channels. If 'time' or 'trigger' were specified,
         it makes sure that they're the first and second entry.
 
-        Input
-        -----
-        self: :obj: `BlueprintInput`
-            The object on which to operate
+        Parameters
+        ----------
         new_names: list of str
             New names for channels.
         ch_trigger:
             Number of the channel containing the trigger.
 
-        Outcome
-        -------
-        self.ch_name:
+        Notes
+        -----
+        Outcome:
+        self.ch_name: list of str
             Changes content to new_name.
         """
         if 'time' in new_names:
@@ -178,15 +178,13 @@ class BlueprintInput():
         Returns the proper list entry of all the
         properties of the object, given an index.
 
-        Input
-        -----
-        self: :obj: `BlueprintInput`
-            The object on which to operate
+        Parameters
+        ----------
         idx: int
             Index of elements to return
 
-        Output
-        ------
+        Returns
+        -------
         out: tuple
             Tuple containing the proper list entry of all the
             properties of the object with index `idx`
@@ -199,23 +197,30 @@ class BlueprintInput():
         Returns all the proper list entry of the
         properties of the object, given an index.
 
-        Input
-        -----
-        self: :obj: `BlueprintInput`
-            The object on which to operate
+        Parameters
+        ----------
         idx: int or range
             Index of elements to delete from all lists
 
-        Outcome
-        -------
-        self:
+        Notes
+        -----
+        Outcome:
+        self.timeseries:
+            Removes element at index idx
+        self.freq:
+            Removes element at index idx
+        self.ch_name:
+            Removes element at index idx
+        self.units:
+            Removes element at index idx
+        self.ch_amount:
             In all the property that are lists, the element correspondent to
             `idx` gets deleted
-         """
-        del(self.timeseries[idx])
-        del(self.freq[idx])
-        del(self.ch_name[idx])
-        del(self.units[idx])
+        """
+        del self.timeseries[idx]
+        del self.freq[idx]
+        del self.ch_name[idx]
+        del self.units[idx]
         self.ch_amount -= 1
 
     def check_trigger_amount(self, thr=2.5, num_timepoints_expected=0, tr=0):
@@ -223,10 +228,8 @@ class BlueprintInput():
         Counts trigger points and corrects time offset in
         the list representing time.
 
-        Input
-        -----
-        self: :obj: `BlueprintInput`
-            The object on which to operate
+        Parameters
+        ----------
         thr: float
             Threshold to be used to detect trigger points.
             Default is 2.5
@@ -235,15 +238,13 @@ class BlueprintInput():
         tr: float
             The Repetition Time of the fMRI data.
 
-        Output
-        ------
+        Notes
+        -----
+        Outcome:
         self.num_timepoints_found: int
             Property of the `BlueprintInput` class.
             Contains the number of timepoints found
             with the automatic estimation.
-
-        Outcome
-        -------
         self.timeseries:
             The property `timeseries` is shifted with the 0 being
             the time of first trigger.
@@ -293,15 +294,14 @@ class BlueprintInput():
         """
         Print info on the file, channel by channel.
 
-        Input
-        -----
-        self: :obj: `BlueprintInput`
-            The object on which to operate
+        Parameters
+        ----------
         filename: str or path
             Name of the input file to phys2bids
 
-        Outcome
-        -------
+        Notes
+        -----
+        Outcome:
         ch:
             Returns to stdout (e.g. on screen) channels,
             their names and their sampling rate.
@@ -318,8 +318,8 @@ class BlueprintOutput():
     Main output object for phys2bids.
     Contains the blueprint to be exported.
 
-    Properties - Input
-    ------------------
+    Attributes
+    ----------
     timeseries : (ch x tps) :obj:`numpy.ndarray`
         Numpy 2d array of timeseries
         Contains all the timeseries recorded.
@@ -360,15 +360,13 @@ class BlueprintOutput():
         Returns all the proper list entry of the
         properties of the object, given an index.
 
-        Input
-        -----
-        self: :obj: `BlueprintOutput`
-            The object on which to operate
+        Parameters
+        ----------
         idx: int
             Index of elements to return
 
-        Output
-        ------
+        Returns
+        -------
         out: tuple
             Tuple containing the proper list entry of all the
             properties of the object with index `idx`
@@ -381,38 +379,43 @@ class BlueprintOutput():
         Returns all the proper list entry of the
         properties of the object, given an index.
 
-        Input
-        -----
-        self: :obj: `BlueprintOutput`
-            The object on which to operate
+        Parameters
+        ----------
         idx: int or range
             Index of elements to delete from all lists
 
-        Outcome
-        -------
-        self:
+        Notes
+        -----
+        Outcome:
+        self.timeseries:
+            Removes element at index idx
+        self.ch_name:
+            Removes element at index idx
+        self.units:
+            Removes element at index idx
+        self.ch_amount:
             In all the property that are lists, the element correspondent to
             `idx` gets deleted
         """
-        del(self.timeseries[idx])
-        del(self.ch_name[idx])
-        del(self.units[idx])
+        del self.timeseries[idx]
+        del self.ch_name[idx]
+        del self.units[idx]
 
     @classmethod
     def init_from_blueprint(cls, blueprint):
         """
         Method to populate the output blueprint using BlueprintInput.
 
-        Input
-        -----
+        Parameters
+        ----------
         cls: :obj: `BlueprintOutput`
             The object on which to operate
         blueprint: :obj: `BlueprintInput`
             The input blueprint object.
             !!! All its frequencies should be the same !!!
 
-        Output
-        ------
+        Returns
+        -------
         cls: :obj: `BlueprintOutput`
             Populated `BlueprintOutput` object.
         """
