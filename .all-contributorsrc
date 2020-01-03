@@ -6,16 +6,66 @@
   "commit": false,
   "contributors": [
     {
-      "login": "smoia",
-      "name": "Stefano Moia",
-      "avatar_url": "https://avatars3.githubusercontent.com/u/35300580?v=4",
-      "profile": "https://github.com/smoia",
+      "login": "danalclop",
+      "name": "Daniel Alcalá",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/38854309?v=4",
+      "profile": "https://github.com/danalclop",
       "contributions": [
-        "code",
+        "design"
+      ]
+    },
+    {
+      "login": "AyyagariA",
+      "name": "Apoorva Ayyagari",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/50453337?v=4",
+      "profile": "https://github.com/AyyagariA",
+      "contributions": [
+        "data",
+        "doc",
+        "content"
+      ]
+    },
+    {
+      "login": "BrightMG",
+      "name": "Molly Bright",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/32640425?v=4",
+      "profile": "http://brightlab.northwestern.edu",
+      "contributions": [
+        "data",
         "ideas",
-        "projectManagement",
-        "review",
-        "doc"
+        "content"
+      ]
+    },
+    {
+      "login": "CesarCaballeroGaudes",
+      "name": "Cesar Caballero Gaudes",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/7611340?v=4",
+      "profile": "https://github.com/CesarCaballeroGaudes",
+      "contributions": [
+        "data",
+        "ideas",
+        "content"
+      ]
+    },
+    {
+      "login": "vinferrer",
+      "name": "Vicente Ferrer",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/38909338?v=4",
+      "profile": "https://github.com/vinferrer",
+      "contributions": [
+        "bug",
+        "code",
+        "doc",
+        "review"
+      ]
+    },
+    {
+      "login": "soichih",
+      "name": "Soichi Hayashi",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/923896?v=4",
+      "profile": "http://soichi.us",
+      "contributions": [
+        "bug"
       ]
     },
     {
@@ -33,25 +83,30 @@
       ]
     },
     {
-      "login": "vinferrer",
-      "name": "Vicente Ferrer",
-      "avatar_url": "https://avatars2.githubusercontent.com/u/38909338?v=4",
-      "profile": "https://github.com/vinferrer",
+      "login": "smoia",
+      "name": "Stefano Moia",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/35300580?v=4",
+      "profile": "https://github.com/smoia",
       "contributions": [
-        "bug",
         "code",
+        "data",
+        "ideas",
+        "infra",
+        "projectManagement",
+        "review",
         "doc",
-        "review"
+        "content"
       ]
     },
     {
-      "login": "RayStick",
+      "login": "raystick",
       "name": "Rachael Stickland",
       "avatar_url": "https://avatars3.githubusercontent.com/u/50215726?v=4",
       "profile": "https://github.com/RayStick",
       "contributions": [
+        "bug",
+        "data",
         "doc",
-        "infra",
         "userTesting"
       ]
     },
@@ -62,56 +117,26 @@
       "profile": "https://github.com/eurunuela",
       "contributions": [
         "bug",
+        "infra",
         "review",
         "test"
       ]
     },
     {
-      "login": "AyyagariA",
-      "name": "Apoorva Ayyagari",
-      "avatar_url": "https://avatars1.githubusercontent.com/u/50453337?v=4",
-      "profile": "https://github.com/AyyagariA",
-      "contributions": [
-        "infra",
-        "userTesting"
-      ]
-    },
-    {
       "login": "kristinazvolanek",
-      "name": "kristinazvolanek",
+      "name": "Kristina Zvolanek",
       "avatar_url": "https://avatars3.githubusercontent.com/u/54590158?v=4",
       "profile": "https://github.com/kristinazvolanek",
       "contributions": [
-        "infra",
-        "userTesting"
+        "data",
+        "doc",
+        "content"
       ]
-    },
-    {
-      "login": "CesarCaballeroGaudes",
-      "name": "Cesar Caballero Gaudes",
-      "avatar_url": "https://avatars1.githubusercontent.com/u/7611340?v=4",
-      "profile": "https://github.com/CesarCaballeroGaudes",
-      "contributions": [
-        "ideas",
-        "infra",
-        "userTesting"
-      ]
-    },
-    {
-      "login": "BrightMG",
-      "name": "Molly Bright",
-      "avatar_url": "https://avatars2.githubusercontent.com/u/32640425?v=4",
-      "profile": "http://brightlab.northwestern.edu",
-      "contributions": [
-        "ideas",
-        "infra",
-        "userTesting"
-      ]
-    },
+    }
   ],
-  "contributorsPerLine": 4,
+  "contributorsPerLine": 5,
   "projectName": "phys2bids",
-  "projectOwner": "The phys2bids community",
+  "projectOwner": "physiopy",
   "repoType": "github",
   "repoHost": "https://github.com",
   "skipCi": true

@@ -135,12 +135,15 @@ class BlueprintInput():
     """
     def __init__(self, timeseries, freq, ch_name, units):
         self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
-        self.ch_amount = len(self.timeseries)
         self.freq = has_size(is_valid(freq, list,
                                       list_type=(int, float)),
                              self.ch_amount, 0.0)
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
+
+    @property
+    def ch_amount(self):
+        return len(self.timeseries)
 
     def rename_channels(self, new_names, ch_trigger=None):
         """
@@ -260,16 +263,16 @@ class BlueprintInput():
         if num_timepoints_expected:
             print('Checking number of timepoints')
             if num_timepoints_found > num_timepoints_expected:
-                timepoints_extra = (num_timepoints_found -
-                                    num_timepoints_expected)
+                timepoints_extra = (num_timepoints_found
+                                    - num_timepoints_expected)
                 print(f'Found {timepoints_extra} timepoints'
                       ' more than expected!\n'
                       'Assuming extra timepoints are at the end '
                       '(try again with a more conservative thr)')
 
             elif num_timepoints_found < num_timepoints_expected:
-                timepoints_missing = (num_timepoints_expected -
-                                      num_timepoints_found)
+                timepoints_missing = (num_timepoints_expected
+                                      - num_timepoints_found)
                 print(f'Found {timepoints_missing} timepoints'
                       ' less than expected!')
                 if tr:
@@ -349,11 +352,14 @@ class BlueprintOutput():
     """
     def __init__(self, timeseries, freq, ch_name, units, start_time):
         self.timeseries = is_valid(timeseries, np.ndarray)
-        self.ch_amount = self.timeseries.shape[0]
         self.freq = is_valid(freq, (int, float))
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
         self.start_time = start_time
+
+    @property
+    def ch_amount(self):
+        return len(self.timeseries)
 
     def return_index(self, idx):
         """
@@ -397,9 +403,9 @@ class BlueprintOutput():
             In all the property that are lists, the element correspondent to
             `idx` gets deleted
         """
-        del self.timeseries[idx]
-        del self.ch_name[idx]
-        del self.units[idx]
+        self.timeseries = np.delete(self.timeseries, idx, axis=0)
+        del(self.ch_name[idx])
+        del(self.units[idx])
 
     @classmethod
     def init_from_blueprint(cls, blueprint):

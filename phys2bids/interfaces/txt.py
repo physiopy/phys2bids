@@ -43,22 +43,22 @@ def populate_phys_input(filename, chtrig):
     # get frequency
     interval = header[0][1].split(" ")
     if interval[-1] not in ['hr', 'min', 's', 'ms', 'µs']:
-        raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid LabChart time unit,'
-                             ' this probably means your file is not in labchart format')
+        raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid LabChart'
+                             'time unit, this probably means your file is not in labchart format')
 
     if interval[-1] != 's':
         print('Interval is not in seconds. Converting its value.')
         if interval[-1] == 'hr':
-            interval[0] = float(interval[0])*3600
+            interval[0] = float(interval)[0] * 3600
             interval[-1] = 's'
         elif interval[-1] == 'min':
-            interval[0] = float(interval[0])*60
+            interval[0] = float(interval[0]) * 60
             interval[-1] = 's'
         elif interval[-1] == 'ms':
-            interval[0] = float(interval[0])/1000
+            interval[0] = float(interval[0]) / 1000
             interval[-1] = 's'
         elif interval[-1] == 'µs':
-            interval[0] = float(interval[0])/1000000
+            interval[0] = float(interval[0]) / 1000000
             interval[-1] = 's'
     else:
         interval[0] = float(interval[0])
@@ -70,11 +70,11 @@ def populate_phys_input(filename, chtrig):
     # get names
     orig_names = header[4][1:]
     names = ['time', 'trigger']
-    orig_names.pop(chtrig)
-    names = names+orig_names
+    orig_names.pop(chtrig - 1)
+    names = names + orig_names
     # get channels
     timeseries = np.matrix(channel_list).T.tolist()
-    freq = [1/interval[0]]*len(timeseries)
+    freq = [1 / interval[0]] * len(timeseries)
     timeseries = [np.array(darray) for darray in timeseries]
     ordered_timeseries = [timeseries[0], timeseries[chtrig]]
     timeseries.pop(chtrig)

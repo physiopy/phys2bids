@@ -24,7 +24,7 @@ def check_input_dir(indir):
     indir: str or path
         Same as input, but surely without trailing `/`
     """
-    if indir[-1:] == '/':
+    if indir.endswith('/'):
         indir = indir[:-1]
 
     return indir
@@ -49,15 +49,13 @@ def check_input_ext(filename, ext):
     Path(filename).with_suffix(ext): path
         Path representing the input filename, but with corrected extension.
     """
-    if '.gz' in ext:
-        if filename[-len(ext):] != ext:
-            filename = filename + ext
-        return filename
-    else:
-        if ext[0] != '.':
-            ext = '.' + ext
+    if filename.endswith('.gz'):
+        filename = filename[:-3]
 
-        return Path(filename).with_suffix(ext)
+    if not ext.startswith('.'):
+        ext = '.' + ext
+
+    return Path(filename).with_suffix(ext)
 
 
 def check_input_type(filename, indir):

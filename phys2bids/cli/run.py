@@ -27,32 +27,39 @@ def _get_parser():
     required.add_argument('-in', '--input-file',
                           dest='filename',
                           type=str,
-                          help=('The name of the acq file, with or without '
-                                'extension.   Must be an .acq file!'),
+                          help='The name of the file containing physiological data, with or '
+                               'without extension.',
                           required=True)
     optional.add_argument('-info', '--info',
                           dest='info',
                           action='store_true',
-                          help='Only output file info, don\'t process.',
+                          help='Only output info about the file, don\'t process. '
+                               'Default is to process.',
                           default=False)
     optional.add_argument('-indir', '--input-dir',
                           dest='indir',
                           type=str,
-                          help='Folder containing input.',
+                          help='Folder containing input. '
+                               'Default is current folder.',
                           default='.')
     optional.add_argument('-outdir', '--output-dir',
                           dest='outdir',
                           type=str,
-                          help=('Folder where output should be placed.'
-                                'If \"-heur\" is used, it\'ll become '
-                                'the site folder. Requires \"-sub\",'
-                                ' and it\'s possible to specify \"-ses\""'),
+                          help='Folder where output should be placed. '
+                               'Default is current folder. '
+                               'If \"-heur\" is used, it\'ll become '
+                               'the site folder. Requires \"-sub\". '
+                               'Optional to specify \"-ses\".',
                           default='.')
     optional.add_argument('-heur', '--heuristic',
                           dest='heur_file',
                           type=str,
-                          help=('File containing heuristic, with or without '
-                                'extension. Specify path to it if necessary.'),
+                          help='File containing heuristic, with or without '
+                               'extension. This file is needed in order to '
+                               'convert your input file to BIDS format! '
+                               'If no path is specified, it assumes the file is '
+                               'in the current folder. Edit the heur_ex.py file in '
+                               'heuristics folder.',
                           default=None)
     # optional.add_argument('-hdir', '--heur-dir',
     #                       dest='heurdir',
@@ -62,51 +69,60 @@ def _get_parser():
     optional.add_argument('-sub', '--subject',
                           dest='sub',
                           type=str,
-                          help=('To be specified with \"-heur\". Code of '
-                                'subject to process.'
-                                'Specify path to it if necessary.'),
+                          help='Specify alongside \"-heur\". Code of '
+                               'subject to process.',
                           default=None)
     optional.add_argument('-ses', '--session',
                           dest='ses',
                           type=str,
-                          help=('To be specified with \"-heur\". Code of '
-                                'session to process.'
-                                'Specify path to it if necessary.'),
+                          help='Specify alongside \"-heur\". Code of '
+                               'session to process.',
                           default=None)
     optional.add_argument('-chtrig', '--channel-trigger',
                           dest='chtrig',
                           type=int,
-                          help=('The number corresponding to the trigger channel.'
-                                ' Channel numbering starts with 0'),
+                          help='The column number of the trigger channel. '
+                               'Channel numbering starts with 0. '
+                               'Default is 0.',
                           default=0)
     optional.add_argument('-chsel', '--channel-selection',
                           dest='chsel',
                           nargs='*',
                           type=int,
-                          help='The number corresponding to the channels to process.',
+                          help='The column numbers of  the channels to process. '
+                               'Default is to process all channels.',
                           default=None)
     optional.add_argument('-ntp', '--numtps',
                           dest='num_timepoints_expected',
                           type=int,
-                          help='Number of expected timepoints.',
+                          help='Number of expected timepoints (TRs). '
+                               'Default is 0. Note: the estimation of when the '
+                               'neuroimaging acquisition started cannot take place '
+                               'with this default.',
                           default=0)
     optional.add_argument('-tr', '--tr',
                           dest='tr',
                           type=float,
-                          help='TR of sequence in seconds.',
+                          help='TR of sequence in seconds. '
+                               'Default is 1 second.',
                           default=1)
     optional.add_argument('-thr', '--threshold',
                           dest='thr',
                           type=float,
-                          help='Threshold used for trigger detection.',
+                          help='Threshold to use for trigger detection. '
+                               'Default is 2.5.',
                           default=2.5)
     optional.add_argument('-chnames', '--channel-names',
                           dest='ch_name',
                           nargs='*',
                           type=str,
-                          help='Columns header (for json file).',
+                          help='Column header (for json file output).',
                           default=[])
-
+    optional.add_argument('-chplot', '--channels-plot',
+                          dest='chplot',
+                          type=str,
+                          help='path to store channels plot ',
+                          default='')
     optional.add_argument('-v', '--version', action='version',
                           version=('%(prog)s ' + __version__))
 
