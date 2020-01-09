@@ -31,6 +31,8 @@ release = phys2bids.__version__
 
 # -- General configuration ---------------------------------------------------
 
+master_doc = 'index'
+
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
@@ -77,11 +79,11 @@ pygments_style = 'sphinx'
 
 # Integrate GitHub
 html_context = {
-    "display_github": True, # Integrate GitHub
-    "github_user": "physiopy", # Username
-    "github_repo": "phys2bids", # Repo name
-    "github_version": "master", # Version
-    "conf_py_path": "/docs/", # Path in the checkout to the docs root
+    "display_github": True,  # Integrate GitHub
+    "github_user": "physiopy",  # Username
+    "github_repo": "phys2bids",  # Repo name
+    "github_version": "master",  # Version
+    "conf_py_path": "/docs/",  # Path in the checkout to the docs root
 }
 
 # -- Options for HTML output -------------------------------------------------
