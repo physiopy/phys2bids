@@ -33,6 +33,8 @@ def populate_phys_input(filename, chtrig):
             for item in line:
                 if '#' in item:  # detecting comments
                     line.remove(item)
+            if line[-1] == '':
+                line.remove('')
             try:
                 float(line[0])
             except ValueError:
@@ -44,9 +46,11 @@ def populate_phys_input(filename, chtrig):
             raise AttributeError(f'Files without header are not supported yet')
         if 'Interval=' in header[0]:
             print('phys2bids detected that your file is in labchart format')
+            phys_in = labchart_read(channel_list, chtrig, header)
+        if 'acq' in header[0][0]:
+            phys_in = acq_read(channel_list, chtrig, header)
         else:
             raise AttributeError(f'This file format is not supported yet for txt files')
-            phys_in = labchart_read(channel_list, chtrig, header)
     return phys_in
 
 
@@ -108,3 +112,22 @@ def labchart_read(channel_list, chtrig, header=[]):
     timeseries.pop(0)
     ordered_timeseries = ordered_timeseries + timeseries
     return BlueprintInput(ordered_timeseries, freq, names, units)
+
+def acq_read(channel_list, chtrig, header=[]):
+    """
+    reading function for acq files in txt format
+        Input (Properties)
+    ------------------
+    channel_list: list
+        list with channels only
+    chtrig : int
+        index of trigger channel
+    header: list
+        list with that contains file header
+    Output
+    ------------------
+    BlueprintInput object for more see BlueprintInput docs
+    """
+    # get frequency
+    if len(header) == 0:
+        raise AttributeError(f'Files without header are not supported yet')
