@@ -1,11 +1,11 @@
 ---
-name: Bug issue template
-about: Template for bug reporting issues
+name: Bug issue
+about: Use this template to report bugs.
 title: ''
 labels: Bug
-assignees: ''
-
+assignees:
 ---
+
 <!--- Provide a general summary of the issue in the Title above -->
 
 ## Expected Behavior

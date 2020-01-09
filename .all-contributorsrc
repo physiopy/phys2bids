@@ -7,7 +7,7 @@
   "contributors": [
     {
       "login": "danalclop",
-      "name": "danalclop",
+      "name": "Daniel Alcalá",
       "avatar_url": "https://avatars0.githubusercontent.com/u/38854309?v=4",
       "profile": "https://github.com/danalclop",
       "contributions": [
@@ -20,6 +20,7 @@
       "avatar_url": "https://avatars1.githubusercontent.com/u/50453337?v=4",
       "profile": "https://github.com/AyyagariA",
       "contributions": [
+        "data",
         "doc",
         "content"
       ]
@@ -30,6 +31,7 @@
       "avatar_url": "https://avatars2.githubusercontent.com/u/32640425?v=4",
       "profile": "http://brightlab.northwestern.edu",
       "contributions": [
+        "data",
         "ideas",
         "content"
       ]
@@ -40,6 +42,7 @@
       "avatar_url": "https://avatars1.githubusercontent.com/u/7611340?v=4",
       "profile": "https://github.com/CesarCaballeroGaudes",
       "contributions": [
+        "data",
         "ideas",
         "content"
       ]
@@ -86,6 +89,7 @@
       "profile": "https://github.com/smoia",
       "contributions": [
         "code",
+        "data",
         "ideas",
         "infra",
         "projectManagement",
@@ -101,6 +105,7 @@
       "profile": "https://github.com/RayStick",
       "contributions": [
         "bug",
+        "data",
         "doc",
         "userTesting"
       ]
@@ -119,16 +124,17 @@
     },
     {
       "login": "kristinazvolanek",
-      "name": "Kristina",
+      "name": "Kristina Zvolanek",
       "avatar_url": "https://avatars3.githubusercontent.com/u/54590158?v=4",
       "profile": "https://github.com/kristinazvolanek",
       "contributions": [
+        "data",
         "doc",
         "content"
       ]
     }
   ],
-  "contributorsPerLine": 7,
+  "contributorsPerLine": 5,
   "projectName": "phys2bids",
   "projectOwner": "physiopy",
   "repoType": "github",
