@@ -134,7 +134,7 @@ def acq_read(channel_list, chtrig, header=[]):
     """
     # get frequency
     if len(header) == 0:
-        raise AttributeError(f'Files without header are not supported yet')
+        raise AttributeError('Files without header are not supported yet')
     interval = header[1][0].split()
     if interval[-1].split('/')[0] not in ['hr', 'min', 'sec', 'µsec', 'msec']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid LabChart'
