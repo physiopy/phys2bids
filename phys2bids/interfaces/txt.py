@@ -50,7 +50,7 @@ def populate_phys_input(filename, chtrig):
         elif 'acq' in header[0][0]:
             phys_in = acq_read(channel_list, chtrig, header)
         else:
-            raise AttributeError(f'This file format is not supported yet for txt files')
+            raise AttributeError('This file format is not supported yet for txt files')
     return phys_in
 
 
