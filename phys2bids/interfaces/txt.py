@@ -43,7 +43,7 @@ def populate_phys_input(filename, chtrig):
             line = [float(i) for i in line]
             channel_list.append(line)
         if len(header) == 0:
-            raise AttributeError(f'Files without header are not supported yet')
+            raise AttributeError('Files without header are not supported yet')
         elif 'Interval=' in header[0]:
             print('phys2bids detected that your file is in labchart format')
             phys_in = labchart_read(channel_list, chtrig, header)
