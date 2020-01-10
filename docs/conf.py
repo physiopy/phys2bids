@@ -110,8 +110,8 @@ def setup(app):  # noqa
     app.add_javascript("https://cdn.rawgit.com/chrisfilo/zenodo.js/v0.1/zenodo.js")
 
 
-html_favicon = 'phys2bids_logo1280×640.png'
-html_logo = 'phys2bids_logo1280×640.png'
+html_favicon = '_static/phys2bids_logo2000x400.png'
+html_logo = '_static/phys2bids_logo2000x400.png'
 
 # -- Options for HTMLHelp output ---------------------------------------------
 

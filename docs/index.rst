@@ -2,10 +2,15 @@
 phys2bids
 =========
 
-<img alt="Phys2BIDS" src="https://github.com/physiopy/phys2bids/blob/master/docs/phys2bids_logo1280×640.png" height="150">
+.. image:: _static/phys2bids_logo1280×640.png
+   :alt: phys2bids logo
+   :align: center
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3586045.svg)](https://doi.org/10.5281/zenodo.3586045)
-[![Join the chat at https://gitter.im/phys2bids/community](https://badges.gitter.im/phys2bids/community.svg)](https://gitter.im/phys2bids/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3586045.svg
+   :target: https://doi.org/10.5281/zenodo.3586045
+
+.. image:: https://badges.gitter.im/phys2bids/community.svg
+   :target: https://badges.gitter.im/phys2bids/community.svg)](https://gitter.im/phys2bids/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
 Phys2bids is a python3 library meant to format physiological files in BIDS.
 It was born for AcqKnowledge files (BIOPAC), and at the moment it supports
