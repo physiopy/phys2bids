@@ -56,7 +56,7 @@ def populate_phys_input(filename, chtrig):
 
 def labchart_read(channel_list, chtrig, header=[]):
     """
-    reading function for labchart files
+    Reading function for labchart files
         Input (Properties)
     ------------------
     channel_list: list
