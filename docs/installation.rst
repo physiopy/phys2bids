@@ -22,7 +22,7 @@ Linux and mac installation
 
 Download the package from github and uncompress it.
 Alternatively, if you have ``git``, use the command::
-``git clone https://github.com/smoia/phys2bids.git``
+``git clone https://github.com/physiopy/phys2bids.git``
 
 Install with ``pip``
 ^^^^^^^^^^^^^^^^^^^^

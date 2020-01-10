@@ -21,11 +21,13 @@ Linux and mac developer installation
 ------------------------------------
 
 Be sure to have git installed, then open a terminal and use the command::
-``git clone https://github.com/smoia/phys2bids.git``
+``git clone https://github.com/physiopy/phys2bids.git``
 
 Move in the ``phy2bids`` folder and execute the command::
 ``pip3 install -e .``
 
+If python 3 is already your default, you might use instead::
+``pip install -e .``
 
 User testing
 ------------
