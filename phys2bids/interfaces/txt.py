@@ -8,55 +8,6 @@ phys2bids interface for txt files.
 import numpy as np
 from phys2bids.physio_obj import BlueprintInput
 
-
-def populate_phys_input(filename, chtrig):
-    """
-    Populate object phys_input, extracts header and deduces from it
-    the format file, afterwards it passes the needed information to
-    the corresponding reading function.
-    Parameters
-    ----------
-    filename: str
-        path to the txt labchart file
-    chtrig : int
-        index of trigger channel
-    Returns
-    -------
-    phys_in
-    See Also
-    --------
-    physio_obj.BlueprintInput
-    """
-
-    header = []
-    channel_list = []
-    with open(filename, 'r') as f:
-        for line in f:
-            line = line.rstrip('\n').split('\t')
-            for item in line:
-                if '#' == item[0]:  # detecting comments
-                    line.remove(item)
-            if line[-1] == '':
-                line.remove('')
-            try:
-                float(line[0])
-            except ValueError:
-                header.append(line)
-                continue
-            line = [float(i) for i in line]
-            channel_list.append(line)
-        if len(header) == 0:
-            raise AttributeError('Files without header are not supported yet')
-        elif 'Interval=' in header[0]:
-            print('phys2bids detected that your file is in labchart format')
-            phys_in = labchart_read(channel_list, chtrig, header)
-        elif 'acq' in header[0][0]:
-            phys_in = acq_read(channel_list, chtrig, header)
-        else:
-            raise AttributeError('This file format is not supported yet for txt files')
-    return phys_in
-
-
 def labchart_read(channel_list, chtrig, header=[]):
     """
     Reading function for labchart files
@@ -191,3 +142,50 @@ def acq_read(channel_list, chtrig, header=[]):
     timeseries.pop(chtrig - 1)
     ordered_timeseries = ordered_timeseries + timeseries
     return BlueprintInput(ordered_timeseries, freq, names, units)
+
+def populate_phys_input(filename, chtrig):
+    """
+    Populate object phys_input, extracts header and deduces from it
+    the format file, afterwards it passes the needed information to
+    the corresponding reading function.
+    Parameters
+    ----------
+    filename: str
+        path to the txt labchart file
+    chtrig : int
+        index of trigger channel
+    Returns
+    -------
+    phys_in
+    See Also
+    --------
+    physio_obj.BlueprintInput
+    """
+
+    header = []
+    channel_list = []
+    with open(filename, 'r') as f:
+        for line in f:
+            line = line.rstrip('\n').split('\t')
+            for item in line:
+                if '#' == item[0]:  # detecting comments
+                    line.remove(item)
+            if line[-1] == '':
+                line.remove('')
+            try:
+                float(line[0])
+            except ValueError:
+                header.append(line)
+                continue
+            line = [float(i) for i in line]
+            channel_list.append(line)
+        if len(header) == 0:
+            raise AttributeError('Files without header are not supported yet')
+        elif 'Interval=' in header[0]:
+            print('phys2bids detected that your file is in labchart format')
+            phys_in = labchart_read(channel_list, chtrig, header)
+        elif 'acq' in header[0][0]:
+            phys_in = acq_read(channel_list, chtrig, header)
+        else:
+            raise AttributeError('This file format is not supported yet for txt files')
+    return phys_in
