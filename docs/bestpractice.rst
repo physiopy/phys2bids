@@ -9,7 +9,7 @@ Best Practices for Collecting Physiological Data
 - Physiological fluctuations can be treated as noise in fMRI data or as signals of interest to characterize different physiological states
 - Add regressors in the modeling of fMRI data to explain signal variance
 
-- Especially cardiac and respiratory effects as they can influence in the BOLD signal
+  - Especially cardiac and respiratory effects as they can influence in the BOLD signal
 - Cardiac pulsatility and breathing related chest/abdomen movement --> RETROICOR
 - Monitor subject/patient during the scan (important during first-time scans, or breathing tasks)
 
