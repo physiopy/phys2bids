@@ -8,6 +8,7 @@ phys2bids interface for txt files.
 import numpy as np
 from phys2bids.physio_obj import BlueprintInput
 
+
 def labchart_read(channel_list, chtrig, header=[]):
     """
     Reading function for labchart files
@@ -142,6 +143,7 @@ def acq_read(channel_list, chtrig, header=[]):
     timeseries.pop(chtrig - 1)
     ordered_timeseries = ordered_timeseries + timeseries
     return BlueprintInput(ordered_timeseries, freq, names, units)
+
 
 def populate_phys_input(filename, chtrig):
     """
