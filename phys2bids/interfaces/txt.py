@@ -11,18 +11,21 @@ from phys2bids.physio_obj import BlueprintInput
 
 def populate_phys_input(filename, chtrig):
     """
-    Populate object phys_input
-    for now this works only with labchart files
-        Input (Properties)
-    ------------------
+    Populate object phys_input, extracts header and deduces from it
+    the format file, afterwards it passes the needed information to
+    the corresponding reading function.
+    Parameters
+    ----------
     filename: str
         path to the txt labchart file
     chtrig : int
         index of trigger channel
-
-    Output
-    ------------------
-    phys_in: BlueprintInput object for more see BlueprintInput docs
+    Returns
+    -------
+    phys_in
+    See Also
+    --------
+    physio_obj.BlueprintInput
     """
 
     header = []
@@ -57,17 +60,20 @@ def populate_phys_input(filename, chtrig):
 def labchart_read(channel_list, chtrig, header=[]):
     """
     Reading function for labchart files
-        Input (Properties)
-    ------------------
+    Parameters
+    ----------
     channel_list: list
         list with channels only
     chtrig : int
         index of trigger channel
     header: list
         list with that contains file header
-    Output
-    ------------------
-    BlueprintInput object for more see BlueprintInput docs
+    Returns
+    -------
+    BlueprintInput
+    See Also
+    --------
+    physio_obj.BlueprintInput
     """
     # get frequency
     if len(header) == 0:
@@ -119,18 +125,21 @@ def labchart_read(channel_list, chtrig, header=[]):
 
 def acq_read(channel_list, chtrig, header=[]):
     """
-    reading function for acq files in txt format
-        Input (Properties)
-    ------------------
+    Reading function for acq files in txt format
+    Parameters
+    ----------
     channel_list: list
         list with channels only
     chtrig : int
         index of trigger channel
     header: list
         list with that contains file header
-    Output
-    ------------------
-    BlueprintInput object for more see BlueprintInput docs
+    Returns
+    -------
+    BlueprintInput
+    See Also
+    --------
+    physio_obj.BlueprintInput
     """
     # get frequency
     if len(header) == 0:
