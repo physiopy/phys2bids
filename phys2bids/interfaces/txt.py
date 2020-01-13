@@ -43,20 +43,20 @@ def populate_phys_input(filename, chtrig):
             line = [float(i) for i in line]
             channel_list.append(line)
         if len(header) == 0:
-            raise AttributeError(f'Files without header are not supported yet')
+            raise AttributeError('Files without header are not supported yet')
         elif 'Interval=' in header[0]:
             print('phys2bids detected that your file is in labchart format')
             phys_in = labchart_read(channel_list, chtrig, header)
         elif 'acq' in header[0][0]:
             phys_in = acq_read(channel_list, chtrig, header)
         else:
-            raise AttributeError(f'This file format is not supported yet for txt files')
+            raise AttributeError('This file format is not supported yet for txt files')
     return phys_in
 
 
 def labchart_read(channel_list, chtrig, header=[]):
     """
-    reading function for labchart files
+    Reading function for labchart files
         Input (Properties)
     ------------------
     channel_list: list
@@ -71,7 +71,7 @@ def labchart_read(channel_list, chtrig, header=[]):
     """
     # get frequency
     if len(header) == 0:
-        raise AttributeError(f'Files without header are not supported yet')
+        raise AttributeError('Files without header are not supported yet')
     interval = header[0][1].split(" ")
     if interval[-1] not in ['hr', 'min', 's', 'ms', 'µs']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid LabChart'
@@ -134,7 +134,7 @@ def acq_read(channel_list, chtrig, header=[]):
     """
     # get frequency
     if len(header) == 0:
-        raise AttributeError(f'Files without header are not supported yet')
+        raise AttributeError('Files without header are not supported yet')
     interval = header[1][0].split()
     if interval[-1].split('/')[0] not in ['hr', 'min', 'sec', 'µsec', 'msec']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid LabChart'
