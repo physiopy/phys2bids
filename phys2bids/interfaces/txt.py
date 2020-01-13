@@ -34,7 +34,7 @@ def populate_phys_input(filename, chtrig):
         for line in f:
             line = line.rstrip('\n').split('\t')
             for item in line:
-                if '#' in item:  # detecting comments
+                if '#' == item[0]:  # detecting comments
                     line.remove(item)
             if line[-1] == '':
                 line.remove('')
@@ -169,9 +169,9 @@ def acq_read(channel_list, chtrig, header=[]):
     # get units and names
     orig_units = []
     orig_names = []
-    for kj in range(3, len(header[-1]) + 8, 2):
-        orig_names.append(header[kj][0])
-        orig_units.append(header[kj + 1][0])
+    for index1 in range(3, len(header[-1]) + 8, 2):
+        orig_names.append(header[index1][0])
+        orig_units.append(header[index1 + 1][0])
     # reorder channels names
     names = ['time', 'trigger']
     orig_names.pop(chtrig - 1)
