@@ -8,7 +8,7 @@ Best Practices for Collecting Physiological Data
 
 .. _whycollectphysdata:
 
-*Why collect physiological data?*
+Why collect physiological data?
 ----------------------------------
 - Physiological fluctuations can be treated as noise in fMRI data or as signals of interest to characterize different physiological states
 - Add regressors in the modeling of fMRI data to explain signal variance
