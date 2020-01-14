@@ -28,7 +28,7 @@ What are the different types of physiological data that can be collected?
 
 .. _howtocollectphysdata:
 
-*How to collect each type of physiological data?*
+How to collect each type of physiological data?
 ---------------------------------------------------
 
 - CO2 & O2: nasal cannula or face mask with gas analyzers, RespirAct (more specifically if you want to modulate end-tidal values)
