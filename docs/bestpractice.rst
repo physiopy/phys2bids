@@ -37,7 +37,7 @@ How to collect each type of physiological data?
 
 .. _whattodowithphysdata:
 
-*What to do with physiological data once it has been collected?*
+What to do with physiological data once it has been collected?
 --------------------------------------------------------------------
 
 - Use phys2bids to organize the data
