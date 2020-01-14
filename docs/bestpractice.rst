@@ -4,7 +4,7 @@
 Best Practices for Collecting Physiological Data
 ================================================
 
-- This document is a work in progress. Currently, an outline of important topics is presented.
+This document is a work in progress. Currently, an outline of important topics is presented.
 
 .. _whycollectphysdata:
 
