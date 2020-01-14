@@ -19,7 +19,7 @@ Why collect physiological data?
 
 .. _differenttypesofphysdata:
 
-*What are the different types of physiological data that can be collected?*
+What are the different types of physiological data that can be collected?
 ----------------------------------------------------------------------------
 
 - CO2& O2: specifically end-tidal pressures of CO2 and O2, which approximate the arterial levels of these gases
