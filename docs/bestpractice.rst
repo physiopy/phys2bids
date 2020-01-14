@@ -4,8 +4,12 @@
 Best Practices for Collecting Physiological Data
 ================================================
 
-**Why collect physiological data?**
+- This document is a work in progress. Currently, an outline of important topics is presented.
 
+.. _whycollectphysdata:
+
+*Why collect physiological data?*
+----------------------------------
 - Physiological fluctuations can be treated as noise in fMRI data or as signals of interest to characterize different physiological states
 - Add regressors in the modeling of fMRI data to explain signal variance
 
@@ -13,19 +17,28 @@ Best Practices for Collecting Physiological Data
 - Cardiac pulsatility and breathing related chest/abdomen movement --> RETROICOR
 - Monitor subject/patient during the scan (important during first-time scans, or breathing tasks)
 
-**What are the different types of physiological data that can be collected?**
+.. _differenttypesofphysdata:
+
+*What are the different types of physiological data that can be collected?*
+----------------------------------------------------------------------------
 
 - CO2& O2: specifically end-tidal pressures of CO2 and O2, which approximate the arterial levels of these gases
 - Cardiac pulsation: heart rate trace
 - Respiration: change in chest volume
 
-**How to collect each type of physiological data?**
+.. _howtocollectphysdata:
+
+*How to collect each type of physiological data?*
+---------------------------------------------------
 
 - CO2 & O2: nasal cannula or face mask with gas analyzers, RespirAct (more specifically if you want to modulate end-tidal values)
 - Pulse: photo-plethysmograph, pulse oximeter
 - Respiration: respiratory belt, respiratory chest bellows
 
-**What to do with physiological data once it has been collected?**
+.. _whattodowithphysdata:
+
+*What to do with physiological data once it has been collected?*
+--------------------------------------------------------------------
 
 - Use phys2bids to organize the data
 - Can also plot each channel from LabChart file the quickly view which kind of physiological data each channel represents
