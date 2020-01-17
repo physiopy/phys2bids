@@ -131,7 +131,7 @@ def acq_read(channel_list, chtrig, header=[]):
         elif interval[-1] == 'msec':
             interval[0] = float(interval[0]) / 1000
             interval[-1] = 's'
-        elif interval[-1] == 'µs':
+        elif interval[-1] == 'µsec':
             interval[0] = float(interval[0]) / 1000000
             interval[-1] = 's'
     else:
@@ -147,7 +147,6 @@ def acq_read(channel_list, chtrig, header=[]):
         orig_names.append(header[index1][0])
         # since units are in the line imediately after we get the units at the same time
         orig_units.append(header[index1 + 1][0])
-    print(orig_names)
     # reorder channels names
     names = ['time', 'trigger']
     orig_names.pop(chtrig - 1)
@@ -205,6 +204,8 @@ def populate_phys_input(filename, chtrig):
     with open(filename, 'r') as f:
         for line in f:
             line = line.rstrip('\n').split('\t')
+            if line[-1] == '':
+                line.remove('')  # sometimes there is an extra space
             for item in line:
                 if '#' == item[0]:  # detecting comments
                     line.remove(item)
