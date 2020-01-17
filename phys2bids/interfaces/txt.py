@@ -11,7 +11,8 @@ from phys2bids.physio_obj import BlueprintInput
 
 def labchart_read(channel_list, chtrig, header=[]):
     """
-    Reading function for labchart files
+    Reading function for Labchart files
+    
     Parameters
     ----------
     channel_list: list
@@ -20,9 +21,18 @@ def labchart_read(channel_list, chtrig, header=[]):
         index of trigger channel
     header: list
         list with that contains file header
+    
     Returns
     -------
     BlueprintInput
+    
+    Raises
+    ------
+    ValueError
+        If len(header) == 0 and therefore there is no header
+        If sampling is not in ['hr', 'min', 's', 'ms', 'µs'] reference:
+        https://www.adinstruments.com/support/knowledge-base/how-can-channel-titles-ranges-intervals-etc-text-file-be-imported-labchart
+    
     See Also
     --------
     physio_obj.BlueprintInput
@@ -33,7 +43,7 @@ def labchart_read(channel_list, chtrig, header=[]):
     interval = header[0][1].split(" ")
     if interval[-1] not in ['hr', 'min', 's', 'ms', 'µs']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid LabChart'
-                             'time unit, this probably means your file is not in labchart format')
+                             'time unit, this probably means your file is not in Labchart format')
 
     if interval[-1] != 's':
         print('Interval is not in seconds. Converting its value.')
@@ -78,6 +88,7 @@ def labchart_read(channel_list, chtrig, header=[]):
 def acq_read(channel_list, chtrig, header=[]):
     """
     Reading function for acq files in txt format
+    
     Parameters
     ----------
     channel_list: list
@@ -86,9 +97,17 @@ def acq_read(channel_list, chtrig, header=[]):
         index of trigger channel
     header: list
         list with that contains file header
+    
     Returns
     -------
     BlueprintInput
+    
+    Raises
+    ------
+    ValueError
+        If len(header) == 0 and therefore there is no header
+        If sampling is not in ['hr', 'min', 'sec', 'µsec', 'msec'] reference:
+    
     See Also
     --------
     physio_obj.BlueprintInput
@@ -98,8 +117,8 @@ def acq_read(channel_list, chtrig, header=[]):
         raise AttributeError('Files without header are not supported yet')
     interval = header[1][0].split()
     if interval[-1].split('/')[0] not in ['hr', 'min', 'sec', 'µsec', 'msec']:
-        raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid LabChart'
-                             'time unit, this probably means your file is not in labchart format')
+        raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid AcqKnowledge format'
+                             'time unit, this probably means your file is not in AcqKnowledge format')
     interval[-1] = interval[-1].split('/')[0]
     if interval[-1] != 'sec':
         print('Interval is not in seconds. Converting its value.')
@@ -121,9 +140,14 @@ def acq_read(channel_list, chtrig, header=[]):
     # get units and names
     orig_units = []
     orig_names = []
-    for index1 in range(3, len(header[-1]) + 8, 2):
+    # the for loop starts at index1 at 3 because that's the first line of the header
+    # with channel name info and ends in 2 + twice the number of channels because
+    # that should be the last channel name
+    for index1 in range(3, 3 + len(header[-1]) * 2, 2):
         orig_names.append(header[index1][0])
+        # since units are in the line imediately after we get the units at the same time
         orig_units.append(header[index1 + 1][0])
+    print(orig_names)
     # reorder channels names
     names = ['time', 'trigger']
     orig_names.pop(chtrig - 1)
@@ -138,7 +162,6 @@ def acq_read(channel_list, chtrig, header=[]):
     timeseries = [np.array(darray) for darray in timeseries]
     duration = (timeseries[0].shape[0] + 1) * interval[0]
     t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
-    # step not equal to sample rate, check with stephano
     ordered_timeseries = [t_ch, timeseries[chtrig - 1]]
     timeseries.pop(chtrig - 1)
     ordered_timeseries = ordered_timeseries + timeseries
@@ -150,15 +173,28 @@ def populate_phys_input(filename, chtrig):
     Populate object phys_input, extracts header and deduces from it
     the format file, afterwards it passes the needed information to
     the corresponding reading function.
+    
     Parameters
     ----------
     filename: str
-        path to the txt labchart file
+        path to the txt Labchart file
     chtrig : int
         index of trigger channel
+    
     Returns
     -------
     phys_in
+        Raises
+    ------
+    
+    ValueError
+        If len(header) == 0 and therefore there is no header
+        If files are not in acq or txt format
+    
+    Notes
+    ------
+    multifrequency not detected yet
+    
     See Also
     --------
     physio_obj.BlueprintInput
@@ -184,9 +220,10 @@ def populate_phys_input(filename, chtrig):
         if len(header) == 0:
             raise AttributeError('Files without header are not supported yet')
         elif 'Interval=' in header[0]:
-            print('phys2bids detected that your file is in labchart format')
+            print('phys2bids detected that your file is in Labchart format')
             phys_in = labchart_read(channel_list, chtrig, header)
         elif 'acq' in header[0][0]:
+            print('phys2bids detected that your file is in AcqKnowledge format')
             phys_in = acq_read(channel_list, chtrig, header)
         else:
             raise AttributeError('This file format is not supported yet for txt files')
