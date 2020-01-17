@@ -106,7 +106,9 @@ def acq_read(channel_list, chtrig, header=[]):
     ------
     ValueError
         If len(header) == 0 and therefore there is no header
-        If sampling is not in ['hr', 'min', 'sec', 'µsec', 'msec'] reference:
+
+    Warning    
+    If sampling is not in ['hr', 'min', 'sec', 'µsec', 'msec']
     
     See Also
     --------
@@ -117,8 +119,9 @@ def acq_read(channel_list, chtrig, header=[]):
         raise AttributeError('Files without header are not supported yet')
     interval = header[1][0].split()
     if interval[-1].split('/')[0] not in ['hr', 'min', 'sec', 'µsec', 'msec']:
-        raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid AcqKnowledge format'
-                             'time unit, this probably means your file is not in AcqKnowledge format')
+        raise Warning(f'Interval unit "{interval[-1]}" is not in a valid AcqKnowledge format'
+                        'time unit, this probably means your file is not in'
+                        'hr, min, sec, msec or µsec, treating the file as it was sec')
     interval[-1] = interval[-1].split('/')[0]
     if interval[-1] != 'sec':
         print('Interval is not in seconds. Converting its value.')
