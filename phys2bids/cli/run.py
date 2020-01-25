@@ -118,6 +118,16 @@ def _get_parser():
                           type=str,
                           help='path to store channels plot ',
                           default='')
+    optional.add_argument('-debug', '--debug',
+                          dest='debug',
+                          action='store_true',
+                          help='Only print debugging info to log file. Default is False.',
+                          default=False)
+    optional.add_argument('-quiet', '--quiet',
+                          dest='quiet',
+                          action='store_true',
+                          help='Only print warnings to log file. Default is False.',
+                          default=False)
     optional.add_argument('-v', '--version', action='version',
                           version=('%(prog)s ' + __version__))
 

@@ -30,6 +30,7 @@ Please scroll to bottom to read full license.
 
 import os
 import logging
+import datetime
 
 from copy import deepcopy
 from numpy import savetxt
@@ -200,6 +201,31 @@ def _main(argv=None):
     utils.check_file_exists(infile)
     outfile = os.path.join(options.outdir,
                            os.path.splitext(os.path.basename(options.filename))[0])
+
+    # Create logfile name
+    basename = 'phys2bids_'
+    extension = 'tsv'
+    isotime = datetime.datetime.now().replace(microsecond=0).isoformat()
+    logname = os.path.join(options.outdir, (basename + isotime + '.' + extension))
+
+    # Set logging format
+    log_formatter = logging.Formatter(
+        '%(asctime)s\t%(name)-12s\t%(levelname)-8s\t%(message)s',
+        datefmt='%Y-%m-%dT%H:%M:%S')
+
+    # Set up logging file and open it for writing
+    log_handler = logging.FileHandler(logname)
+    log_handler.setFormatter(log_formatter)
+
+    if options.quiet:
+        logging.basicConfig(level=logging.WARNING,
+                            handlers=[log_handler])
+    elif options.debug:
+        logging.basicConfig(level=logging.DEBUG,
+                            handlers=[log_handler])
+    else:
+        logging.basicConfig(level=logging.INFO,
+                            handlers=[log_handler])
 
     # Read file!
     if ftype == 'acq':
