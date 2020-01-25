@@ -29,6 +29,7 @@ Please scroll to bottom to read full license.
 """
 
 import os
+import logging
 
 from copy import deepcopy
 from numpy import savetxt
@@ -37,6 +38,8 @@ from pathlib import Path
 from phys2bids import utils, viz
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
+
+LGR = logging.getLogger(__name__)
 
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
@@ -75,7 +78,7 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
                f'Sampling started at: {start_time} s\n'
                f'Tip: Time 0 is the time of first trigger\n'
                f'------------------------------------------------\n')
-    print(summary)
+    LGR.info(summary)
     utils.writefile(outfile, '.log', summary)
 
 
@@ -207,9 +210,9 @@ def _main(argv=None):
         # #!# We should add a logger here.
         raise NotImplementedError('Currently unsupported file type.')
 
-    print('Reading the file')
+    LGR.info('Reading the file')
     phys_in = populate_phys_input(infile, options.chtrig)
-    print('Reading infos')
+    LGR.info('Reading infos')
     phys_in.print_info(options.filename)
     # #!# Here the function viz.plot_channel should be called
     if options.chplot != '' or options.info:
@@ -224,12 +227,12 @@ def _main(argv=None):
                                  options.tr)
 
     # Create output folder if necessary
-    print('Checking that the output folder exists')
+    LGR.info('Checking that the output folder exists')
     utils.path_exists_or_make_it(options.outdir)
 
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
-    print('Plot trigger')
+    LGR.info('Plot trigger')
     plot_path = deepcopy(outfile)
     if options.sub:
         plot_path += f'_sub-{options.sub}'
@@ -240,14 +243,14 @@ def _main(argv=None):
 
     # The next few lines remove the undesired channels from phys_in.
     if options.chsel:
-        print('Dropping unselected channels')
+        LGR.info('Dropping unselected channels')
         for i in reversed(range(0, phys_in.ch_amount)):
             if i not in options.chsel:
                 phys_in.delete_at_index(i)
 
     # If requested, change channel names.
     if options.ch_name:
-        print('Renaming channels with given names')
+        LGR.info('Renaming channels with given names')
         phys_in.rename_channels(options.ch_name)
 
     # The next few lines create a dictionary of different BlueprintInput
@@ -255,9 +258,9 @@ def _main(argv=None):
     uniq_freq_list = set(phys_in.freq)
     output_amount = len(uniq_freq_list)
     if output_amount > 1:
-        print(f'Found {output_amount} different frequencies in input!')
+        LGR.warning(f'Found {output_amount} different frequencies in input!')
 
-    print(f'Preparing {output_amount} output files.')
+    LGR.info(f'Preparing {output_amount} output files.')
     phys_out = {}
     for uniq_freq in uniq_freq_list:
         phys_out[uniq_freq] = deepcopy(phys_in)
@@ -271,10 +274,10 @@ def _main(argv=None):
         phys_out[uniq_freq] = BlueprintOutput.init_from_blueprint(phys_out[uniq_freq])
 
     if options.heur_file and options.sub:
-        print(f'Preparing BIDS output using {options.heur_file}')
+        LGR.info(f'Preparing BIDS output using {options.heur_file}')
     elif options.heur_file and not options.sub:
-        print(f'While "-heur" was specified, option "-sub" was not.\n'
-              f'Skipping BIDS formatting.')
+        LGR.warning(f'While "-heur" was specified, option "-sub" was not.\n'
+                    f'Skipping BIDS formatting.')
 
     for uniq_freq in uniq_freq_list:
         # If possible, prepare bids renaming.
@@ -293,7 +296,7 @@ def _main(argv=None):
             # Append "freq" to filename if more than one freq
             outfile = f'outfile_{uniq_freq}'
 
-        print(f'Exporting files for freq {uniq_freq}')
+        LGR.info(f'Exporting files for freq {uniq_freq}')
         savetxt(outfile + '.tsv.gz', phys_out[uniq_freq].timeseries,
                 fmt='%.8e', delimiter='\t')
         print_json(outfile, phys_out[uniq_freq].freq,

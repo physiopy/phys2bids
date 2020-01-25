@@ -5,8 +5,13 @@
 phys2bids interface for txt files.
 """
 
+import logging
+
 import numpy as np
+
 from phys2bids.physio_obj import BlueprintInput
+
+LGR = logging.getLogger(__name__)
 
 
 def populate_phys_input(filename, chtrig):
@@ -43,7 +48,7 @@ def populate_phys_input(filename, chtrig):
                              'time unit, this probably means your file is not in labchart format')
 
     if interval[-1] != 's':
-        print('Interval is not in seconds. Converting its value.')
+        LGR.warning('Interval is not in seconds. Converting its value.')
         if interval[-1] == 'hr':
             interval[0] = float(interval)[0] * 3600
             interval[-1] = 's'

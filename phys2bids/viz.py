@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
+import os
+import logging
 
 import matplotlib.pyplot as plt
 import numpy as np
-import os
+
+LGR = logging.getLogger(__name__)
+
 SET_DPI = 100
 FIGSIZE = (18, 10)
 
@@ -60,5 +64,5 @@ def plot_all(phys_in, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
     ax[row].set_xlabel("seconds")
     if outfile == '':
         outfile = os.path.splitext(os.path.basename(infile))[0] + '.png'
-    print(f'saving channels plot at plot at {outfile}')
+    LGR.info(f'saving channels plot at plot at {outfile}')
     fig.savefig(outfile, dpi=dpi, bbox_inches='tight')
