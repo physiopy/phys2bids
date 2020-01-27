@@ -137,21 +137,20 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     """
 
     if sub[:4] != 'sub-':
-        name = 'sub-' + sub
+        name = f'sub-{sub}'
     else:
         name = sub
 
-    fldr = outdir + '/' + name
+    fldr = os.path.join(outdir, name)
 
     if ses:
         if ses[:4] != 'ses-':
-            fldr = fldr + '/ses-' + ses
-            name = name + '_ses-' + ses
-        else:
-            fldr = fldr + '/' + ses
-            name = name + ses
+            ses = f'ses-{ses}'
 
-    fldr = fldr + '/func'
+        fldr = os.path.join(fldr, ses)
+        name = f'{name}{ses}'
+
+    fldr = os.path.join(fldr, 'func')
     utils.path_exists_or_make_it(fldr)
 
     cwd = os.getcwd()
@@ -164,7 +163,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     if record_label:
         recording = f'_recording-{record_label}'
 
-    heurpath = fldr + '/' + name + recording + '_physio'
+    heurpath = os.path.join(fldr, f'{name}{recording}_physio')
     # for ext in ['.tsv.gz', '.json', '.log']:
     #     move_file(outfile, heurpath, ext)
     os.chdir(cwd)
