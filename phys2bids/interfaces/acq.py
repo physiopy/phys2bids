@@ -11,7 +11,22 @@ from phys2bids.physio_obj import BlueprintInput
 
 def populate_phys_input(filename, chtrig):
     """
-    Populate object phys_input
+    Populate object phys_input from acq files.
+
+    Parameters
+    ----------
+    filename: str
+        path to the txt labchart file
+    chtrig : int
+        index of trigger channel
+
+    Returns
+    -------
+    BlueprintInput
+
+    See Also
+    --------
+    physio_obj.BlueprintInput
     """
 
     data = read_file(filename).channels

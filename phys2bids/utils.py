@@ -14,7 +14,18 @@ SUPPORTED_FTYPES = ('acq', 'txt')  # 'mat', ...
 
 def check_input_dir(indir):
     """
-    Checks that the given indir doesn't have a trailing '/'
+    Checks that the given indir doesn't have a trailing `/`
+    Possibly useless if better way to handle this in Python.
+
+    Parameters
+    ----------
+    indir: str or path
+        A string or path that might (or not) end with a `/`
+
+    Returns
+    -------
+    indir: str or path
+        Same as input, but surely without trailing `/`
     """
     if indir.endswith('/'):
         indir = indir[:-1]
@@ -24,7 +35,22 @@ def check_input_dir(indir):
 
 def check_input_ext(filename, ext):
     """
-    Checks that the given file has the given extension
+    Checks that the given file has the given extension.
+    It also treats composite extensions such as `.tsv.gz`,
+    common in BIDS formats.
+
+    Parameters
+    ----------
+    filename: str or path
+        A string representing a file name or a fullpath
+        to a file
+    ext: str
+        Desired file name extension. Doesn't matter if preceded by `.`
+
+    Returns
+    -------
+    Path(filename).with_suffix(ext): path
+        Path representing the input filename, but with corrected extension.
     """
     if filename.endswith('.gz'):
         filename = filename[:-3]
@@ -39,6 +65,30 @@ def check_input_type(filename, indir):
     """
     Check which supported type is the filename.
     Alternatively, raise an error if file not found or type not supported.
+
+    Parameters
+    ----------
+    filename: str or path
+        A string representing a file name or a fullpath
+        to a file
+    indir: str or path
+        A string representing a folder in which the file is,
+        or a fullpath to such folder
+
+    Returns
+    -------
+    fname: str or path, same as input `filename`
+        Complete file name, might be the same or with an extension between
+        the supported ones
+    ftype: str
+        Extension of the file, if the extension is supported
+        and the file exists
+
+    Raises
+    ------
+    Exception
+        If the file doesn't exists or the extension is not supported,
+        it interrupts the program and return the issue.
     """
     fftype_found = False
     for ftype in SUPPORTED_FTYPES:
@@ -60,6 +110,18 @@ def check_input_type(filename, indir):
 def path_exists_or_make_it(fldr):
     """
     Check if folder exists, if not make it
+
+    Parameters
+    ----------
+    fldr: str or path
+        A string representing a folder,
+        or a fullpath to such folder
+
+    Notes
+    -----
+    Outcome:
+    fldr:
+        Creates the fullpath to `fldr` if it doesn't exists.
     """
     if not os.path.isdir(fldr):
         os.makedirs(fldr)
@@ -68,6 +130,17 @@ def path_exists_or_make_it(fldr):
 def check_file_exists(filename):
     """
     Check if file exists.
+
+    Parameters
+    ----------
+    filename: str or path
+        A string representing a file name or a fullpath
+        to a file
+
+    Raises
+    ------
+    FileNotFoundError
+        If the file doesn't exists.
     """
     if not os.path.isfile(filename) and filename is not None:
         raise FileNotFoundError(f'The file {filename} does not exist!')
@@ -76,7 +149,22 @@ def check_file_exists(filename):
 def move_file(oldpath, newpath, ext=''):
     """
     Moves file from oldpath to newpath.
-    If file already exists, remove it first.
+    If file already exists, removes it first.
+
+    Parameters
+    ----------
+    oldpath: str or path
+        A string or a fullpath to a file that has to be moved
+    newpath: str or path
+        A string or a fullpath to the new destination of the file
+    ext: str
+        Possible extension to add to the oldpath and newpath. Not necessary.
+
+    Notes
+    -----
+    Outcome:
+    newpath + ext:
+        Moves file to new destination
     """
     check_file_exists(oldpath + ext)
 
@@ -90,6 +178,21 @@ def copy_file(oldpath, newpath, ext=''):
     """
     Copy file from oldpath to newpath.
     If file already exists, remove it first.
+
+    Parameters
+    ----------
+    oldpath: str or path
+        A string or a fullpath to a file that has to be copied
+    newpath: str or path
+        A string or a fullpath to the new destination of the file
+    ext: str
+        Possible extension to add to the oldpath and newpath. Not necessary.
+
+    Notes
+    -----
+    Outcome:
+    newpath + ext:
+        Copies file to new destination
     """
     from shutil import copy as cp
 
@@ -104,7 +207,23 @@ def copy_file(oldpath, newpath, ext=''):
 def writefile(filename, ext, text):
     """
     Produces a textfile of the specified extension `ext`,
-    containing the given content `text`
+    containing the given content `text`.
+
+    Parameters
+    ----------
+    filename: str or path
+        A string representing a file name or a fullpath
+        to a file
+    ext: str
+        Possible extension to add to the oldpath and newpath. Not necessary.
+    text: str
+        Text that has to be printed in `filename`
+
+    Notes
+    -----
+    Outcome:
+    filename + ext:
+        Creates new file `filename.ext`.
     """
     with open(filename + ext, 'w') as text_file:
         print(text, file=text_file)
@@ -113,6 +232,20 @@ def writefile(filename, ext, text):
 def writejson(filename, data, **kwargs):
     """
     Outputs a json file with the given data inside.
+
+    Parameters
+    ----------
+    filename: str or path
+        A string representing a file name or a fullpath
+        to a file
+    data: dict
+        dictionary containing data to be printed in json.
+
+    Notes
+    -----
+    Outcome:
+    filename:
+        Creates new file `filename.json`.
     """
     if not filename.endswith('.json'):
         filename += '.json'
