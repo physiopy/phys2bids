@@ -8,6 +8,7 @@ phys2bids interface for txt files.
 import numpy as np
 from phys2bids.physio_obj import BlueprintInput
 
+
 def populate_phys_input(filename, chtrig):
     """
     Populate object phys_input
