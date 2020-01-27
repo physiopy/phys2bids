@@ -13,16 +13,21 @@ def populate_phys_input(filename, chtrig):
     """
     Populate object phys_input
     for now this works only with labchart files
-        Input (Properties)
-    ------------------
+
+    Parameters
+    ----------
     filename: str
         path to the txt labchart file
     chtrig : int
         index of trigger channel
 
-    Output
-    ------------------
-    BlueprintInput object for more see BlueprintInput docs
+    Returns
+    -------
+    BlueprintInput
+
+    See Also
+    --------
+    physio_obj.BlueprintInput
     """
     header = []
     channel_list = []
