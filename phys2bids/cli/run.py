@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+Parser for phys2bids
+"""
 
 import argparse
 
@@ -13,10 +16,12 @@ def _get_parser():
     -------
     parser.parse_args() : argparse dict
 
-    """
-    parser = argparse.ArgumentParser()
+    Notes
+    -----
     # Argument parser follow template provided by RalphyZ.
     # https://stackoverflow.com/a/43456577
+    """
+    parser = argparse.ArgumentParser()
     optional = parser._action_groups.pop()
     required = parser.add_argument_group('Required Argument:')
     required.add_argument('-in', '--input-file',

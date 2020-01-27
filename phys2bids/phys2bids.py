@@ -43,8 +43,8 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
     """
     Prints a summary onscreen and in file with informations on the files.
 
-    Input
-    -----
+    Parameters
+    ----------
     filename: str
         Name of the input of phys2bids.
     ntp_expected: int
@@ -58,8 +58,9 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
     outfile: str or path
         Fullpath to output file.
 
-    Outcome
-    -------
+    Notes
+    -----
+    Outcome:
     summary: str
         Prints the summary on screen
     outfile: .log file
@@ -83,8 +84,8 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
     """
     Prints the json required by BIDS format.
 
-    Input
-    -----
+    Parameters
+    ----------
     outfile: str or path
         Fullpath to output file.
     samp_freq: float
@@ -94,9 +95,9 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
     ch_name: list of str
         List of channel names, as specified by BIDS format.
 
-    Outcome
-    -------
-
+    Notes
+    -----
+    Outcome:
     outfile: .json file
         File containing information for BIDS.
     """
@@ -113,8 +114,8 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     Import the heuristic file specified by the user and uses its output
     to rename the file.
 
-    Input
-    -----
+    Parameters
+    ----------
     heur_file: path
         Fullpath to heuristic file.
     sub: str or int
@@ -129,7 +130,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     record_label: str
         Optional label for the "record" entry of BIDS.
 
-    Output
+    Returns
     -------
     heurpath: str or path
         Returned fullpath to tsv.gz new file (post BIDS formatting).
@@ -179,6 +180,11 @@ def _main(argv=None):
     it returns a summary onscreen.
     Otherwise, it operates on the input to return a .tsv.gz file, possibily
     in BIDS format.
+
+    Raises
+    ------
+    NotImplementedError
+        If the file extension is not supported yet.
 
     """
     options = _get_parser().parse_args(argv)
