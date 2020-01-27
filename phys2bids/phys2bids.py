@@ -148,7 +148,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
             ses = f'ses-{ses}'
 
         fldr = os.path.join(fldr, ses)
-        name = f'{name}{ses}'
+        name = f'{name}_{ses}'
 
     fldr = os.path.join(fldr, 'func')
     utils.path_exists_or_make_it(fldr)
