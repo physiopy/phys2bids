@@ -11,8 +11,9 @@ from phys2bids.physio_obj import BlueprintInput
 
 def labchart_read(channel_list, chtrig, header=[]):
     """
+<<<<<<< HEAD
     Reading function for Labchart files
-    
+
     Parameters
     ----------
     channel_list: list
@@ -21,18 +22,18 @@ def labchart_read(channel_list, chtrig, header=[]):
         index of trigger channel
     header: list
         list with that contains file header
-    
+
     Returns
     -------
     BlueprintInput
-    
+
     Raises
     ------
     ValueError
         If len(header) == 0 and therefore there is no header
         If sampling is not in ['hr', 'min', 's', 'ms', 'µs'] reference:
         https://www.adinstruments.com/support/knowledge-base/how-can-channel-titles-ranges-intervals-etc-text-file-be-imported-labchart
-    
+
     See Also
     --------
     physio_obj.BlueprintInput
@@ -107,7 +108,7 @@ def acq_read(channel_list, chtrig, header=[]):
     ValueError
         If len(header) == 0 and therefore there is no header
 
-    Warning    
+    Warning
     If sampling is not in ['hr', 'min', 'sec', 'µsec', 'msec']
     
     See Also
