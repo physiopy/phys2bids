@@ -11,7 +11,6 @@ from phys2bids.physio_obj import BlueprintInput
 
 def labchart_read(channel_list, chtrig, header=[]):
     """
-<<<<<<< HEAD
     Reading function for Labchart files
 
     Parameters
@@ -89,7 +88,7 @@ def labchart_read(channel_list, chtrig, header=[]):
 def acq_read(channel_list, chtrig, header=[]):
     """
     Reading function for acq files in txt format
-    
+
     Parameters
     ----------
     channel_list: list
@@ -98,49 +97,59 @@ def acq_read(channel_list, chtrig, header=[]):
         index of trigger channel
     header: list
         list with that contains file header
-    
+
     Returns
     -------
     BlueprintInput
-    
+
     Raises
     ------
     ValueError
         If len(header) == 0 and therefore there is no header
+        If sampling is not in ['min', 'sec', 'µsec', 'msec','MHz', 'kHz', 'Hz'] reference:
+        https://www.biopac.com/wp-content/uploads/acqknowledge_software_guide.pdf page 194
 
-    Warning
-    If sampling is not in ['hr', 'min', 'sec', 'µsec', 'msec']
-    
     See Also
     --------
     physio_obj.BlueprintInput
     """
+    timeseries = np.matrix(channel_list).T.tolist()
     # get frequency
     if len(header) == 0:
         raise AttributeError('Files without header are not supported yet')
     interval = header[1][0].split()
-    if interval[-1].split('/')[0] not in ['hr', 'min', 'sec', 'µsec', 'msec']:
-        raise Warning(f'Interval unit "{interval[-1]}" is not in a valid AcqKnowledge format'
-                        'time unit, this probably means your file is not in'
-                        'hr, min, sec, msec or µsec, treating the file as it was sec')
+    if interval[-1].split('/')[0] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz']:
+        raise AttributeError(f'Interval unit "{interval[-1]}" is not in a '
+                             'valid AcqKnowledge format time unit, this probably'
+                             'means your file is not in min, sec, msec, µsec, Mhz, KHz or Hz')
     interval[-1] = interval[-1].split('/')[0]
-    if interval[-1] != 'sec':
-        print('Interval is not in seconds. Converting its value.')
-        if interval[-1] == 'hr':
-            interval[0] = float(interval)[0] * 3600
-            interval[-1] = 's'
-        elif interval[-1] == 'min':
-            interval[0] = float(interval[0]) * 60
-            interval[-1] = 's'
-        elif interval[-1] == 'msec':
-            interval[0] = float(interval[0]) / 1000
-            interval[-1] = 's'
-        elif interval[-1] == 'µsec':
-            interval[0] = float(interval[0]) / 1000000
-            interval[-1] = 's'
+    if 'Hz' in interval[-1].split('/')[0]:
+        print('frequency is given in the header, calculating sample Interval'
+              ' and standarizing to Hz if needed')
+        freq = [interval[0]]
+        freq_unit = interval[-1]
+        if freq_unit == 'MHz':
+            freq = freq * (10 ^ 6)
+        elif freq_unit == 'kHz':
+            freq = freq * 1000
+        interval[0] = 1 / freq
+        freq = [freq] * (len(timeseries) + 1)
     else:
-        interval[0] = float(interval[0])
-        interval[-1] = 's'
+        if interval[-1].split('/')[0] != 'sec':
+            print('Interval is not in seconds. Converting its value.')
+            if interval[-1].split('/')[0] == 'min':
+                interval[0] = float(interval[0]) * 60
+                interval[-1] = 's'
+            elif interval[-1].split('/')[0] == 'msec':
+                interval[0] = float(interval[0]) / 1000
+                interval[-1] = 's'
+            elif interval[-1].split('/')[0] == 'µsec':
+                interval[0] = float(interval[0]) / 1000000
+                interval[-1] = 's'
+            else:
+                interval[0] = float(interval[0])
+                interval[-1] = 's'
+        freq = [1 / interval[0]] * (len(timeseries) + 1)
     # get units and names
     orig_units = []
     orig_names = []
@@ -160,8 +169,6 @@ def acq_read(channel_list, chtrig, header=[]):
     orig_units.pop(chtrig - 1)
     units = units + orig_units
     # get channels
-    timeseries = np.matrix(channel_list).T.tolist()
-    freq = [1 / interval[0]] * len(timeseries)
     timeseries = [np.array(darray) for darray in timeseries]
     duration = (timeseries[0].shape[0] + 1) * interval[0]
     t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
@@ -176,28 +183,28 @@ def populate_phys_input(filename, chtrig):
     Populate object phys_input, extracts header and deduces from it
     the format file, afterwards it passes the needed information to
     the corresponding reading function.
-    
+
     Parameters
     ----------
     filename: str
         path to the txt Labchart file
     chtrig : int
         index of trigger channel
-    
+
     Returns
     -------
     phys_in
         Raises
     ------
-    
+
     ValueError
         If len(header) == 0 and therefore there is no header
         If files are not in acq or txt format
-    
+
     Notes
     ------
     multifrequency not detected yet
-    
+
     See Also
     --------
     physio_obj.BlueprintInput
