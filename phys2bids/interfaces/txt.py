@@ -178,6 +178,29 @@ def acq_read(channel_list, chtrig, header=[]):
     return BlueprintInput(ordered_timeseries, freq, names, units)
 
 
+def read_header_and_channels(filename, chtrig):
+    header = []
+    channel_list = []
+    with open(filename, 'r') as f:
+        for line in f:
+            line = line.rstrip('\n').split('\t')
+            if line[-1] == '':
+                line.remove('')  # sometimes there is an extra space
+            for item in line:
+                if '#' == item[0]:  # detecting comments
+                    line.remove(item)
+            if line[-1] == '':
+                line.remove('')
+            try:
+                float(line[0])
+            except ValueError:
+                header.append(line)
+                continue
+            line = [float(i) for i in line]
+            channel_list.append(line)
+    return header, channel_list
+
+
 def populate_phys_input(filename, chtrig):
     """
     Populate object phys_input, extracts header and deduces from it
@@ -209,34 +232,15 @@ def populate_phys_input(filename, chtrig):
     --------
     physio_obj.BlueprintInput
     """
-
-    header = []
-    channel_list = []
-    with open(filename, 'r') as f:
-        for line in f:
-            line = line.rstrip('\n').split('\t')
-            if line[-1] == '':
-                line.remove('')  # sometimes there is an extra space
-            for item in line:
-                if '#' == item[0]:  # detecting comments
-                    line.remove(item)
-            if line[-1] == '':
-                line.remove('')
-            try:
-                float(line[0])
-            except ValueError:
-                header.append(line)
-                continue
-            line = [float(i) for i in line]
-            channel_list.append(line)
-        if len(header) == 0:
-            raise AttributeError('Files without header are not supported yet')
-        elif 'Interval=' in header[0]:
-            print('phys2bids detected that your file is in Labchart format')
-            phys_in = labchart_read(channel_list, chtrig, header)
-        elif 'acq' in header[0][0]:
-            print('phys2bids detected that your file is in AcqKnowledge format')
-            phys_in = acq_read(channel_list, chtrig, header)
-        else:
-            raise AttributeError('This file format is not supported yet for txt files')
+    header, channel_list = read_header_and_channels(filename, chtrig)
+    if len(header) == 0:
+        raise AttributeError('Files without header are not supported yet')
+    elif 'Interval=' in header[0]:
+        print('phys2bids detected that your file is in Labchart format')
+        phys_in = labchart_read(channel_list, chtrig, header)
+    elif 'acq' in header[0][0]:
+        print('phys2bids detected that your file is in AcqKnowledge format')
+        phys_in = acq_read(channel_list, chtrig, header)
+    else:
+        raise AttributeError('This file format is not supported yet for txt files')
     return phys_in
