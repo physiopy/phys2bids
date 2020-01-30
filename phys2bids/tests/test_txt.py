@@ -1,6 +1,6 @@
 import os
 from pkg_resources import resource_filename
-from phys2bids.interfaces import txt
+import phys2bids.interfaces.txt as txt
 from pytest import raises
 import sys
 import io
@@ -110,7 +110,7 @@ def test_process_acq():
     assert 'not in a valid AcqKnowledge' in str(errorinfo.value)
 
 
-def  test_raises():
+def test_raises():
     # testing error for files without header for populate_phys_input
     test_filename = 'Test_belt_pulse_samefreq_no_header.txt'
     test_path = resource_filename('phys2bids', 'tests/data')
