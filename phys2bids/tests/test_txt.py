@@ -2,7 +2,8 @@ import os
 from pkg_resources import resource_filename
 from phys2bids.interfaces import txt
 from pytest import raises
-import sys, io
+import sys
+import io
 
 
 def test_read_header_and_channels():
@@ -31,11 +32,11 @@ def test_populate_phys_input():
     test_full_path = os.path.join(test_path, test_filename)
     stdout = sys.stdout
     sys.stdout = io.StringIO()
-    phys_obj = txt.populate_phys_input(test_full_path, chtrig)
+    txt.populate_phys_input(test_full_path, chtrig)
     # testing for labchart files
     test_filename = 'Test_2minRest_trig_multifreq_header_no_comment.txt'
     test_full_path = os.path.join(test_path, test_filename)
-    phys_obj = txt.populate_phys_input(test_full_path, chtrig)
+    txt.populate_phys_input(test_full_path, chtrig)
     output = sys.stdout.getvalue()
     sys.stdout = stdout
     # check the printing output according to each format
