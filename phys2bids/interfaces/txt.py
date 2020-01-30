@@ -48,7 +48,7 @@ def labchart_read(channel_list, chtrig, header=[]):
     if interval[-1] != 's':
         print('Interval is not in seconds. Converting its value.')
         if interval[-1] == 'hr':
-            interval[0] = float(interval)[0] * 3600
+            interval[0] = float(interval[0]) * 3600
             interval[-1] = 's'
         elif interval[-1] == 'min':
             interval[0] = float(interval[0]) * 60
@@ -126,10 +126,10 @@ def acq_read(channel_list, chtrig, header=[]):
     if 'Hz' in interval[-1].split('/')[0]:
         print('frequency is given in the header, calculating sample Interval'
               ' and standarizing to Hz if needed')
-        freq = [interval[0]]
+        freq = float(interval[0])
         freq_unit = interval[-1]
         if freq_unit == 'MHz':
-            freq = freq * (10 ^ 6)
+            freq = freq * (1000000)
         elif freq_unit == 'kHz':
             freq = freq * 1000
         interval[0] = 1 / freq
@@ -146,9 +146,9 @@ def acq_read(channel_list, chtrig, header=[]):
             elif interval[-1].split('/')[0] == 'µsec':
                 interval[0] = float(interval[0]) / 1000000
                 interval[-1] = 's'
-            else:
-                interval[0] = float(interval[0])
-                interval[-1] = 's'
+        else:
+            interval[0] = float(interval[0])
+            interval[-1] = 's'
         freq = [1 / interval[0]] * (len(timeseries) + 1)
     # get units and names
     orig_units = []
