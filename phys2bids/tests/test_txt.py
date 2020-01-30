@@ -24,9 +24,6 @@ def test_populate_phys_input():
     test_path = resource_filename('phys2bids', 'tests/data')
     test_full_path = os.path.join(test_path, test_filename)
     chtrig = 2
-    with raises(AttributeError) as errorinfo:
-        txt.populate_phys_input(test_full_path, chtrig)
-    assert 'not supported' in str(errorinfo.value)
     # testing for AcqKnoledge files
     test_filename = 'Test_belt_pulse_samefreq.txt'
     test_full_path = os.path.join(test_path, test_filename)
@@ -52,9 +49,6 @@ def test_process_labchart():
     test_full_path = os.path.join(test_path, test_filename)
     chtrig = 1
     header, channels = txt.read_header_and_channels(test_full_path, chtrig)
-    with raises(AttributeError) as errorinfo:
-        txt.process_labchart(channels, chtrig)
-    assert 'not supported' in str(errorinfo.value)
     # test file with header and seconds as unit:
     phys_obj = txt.process_labchart(channels, chtrig, header)
     assert phys_obj.freq[0] == 1000
@@ -74,11 +68,6 @@ def test_process_labchart():
     header[0][1] = '1000 µs'
     phys_obj = txt.process_labchart(channels, chtrig, header)
     assert phys_obj.freq[0] == 1000
-    # test when units are not valid:
-    header[0][1] = ' 1 gHz'
-    with raises(AttributeError) as errorinfo:
-        phys_obj = txt.process_labchart(channels, chtrig, header)
-    assert 'not in a valid LabChart' in str(errorinfo.value)
 
 
 def test_process_acq():
@@ -119,3 +108,33 @@ def test_process_acq():
     with raises(AttributeError) as errorinfo:
         phys_obj = txt.process_acq(channels, chtrig, header)
     assert 'not in a valid AcqKnowledge' in str(errorinfo.value)
+
+
+def  test_raises():
+    # testing error for files without header for populate_phys_input
+    test_filename = 'Test_belt_pulse_samefreq_no_header.txt'
+    test_path = resource_filename('phys2bids', 'tests/data')
+    test_full_path = os.path.join(test_path, test_filename)
+    chtrig = 2
+    with raises(AttributeError) as errorinfo:
+        txt.populate_phys_input(test_full_path, chtrig)
+    assert 'not supported' in str(errorinfo.value)
+    # test file without header for process_acq
+    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
+    with raises(AttributeError) as errorinfo:
+        txt.process_acq(channels, chtrig)
+    assert 'not supported' in str(errorinfo.value)
+    # now for labchart read
+    test_path = resource_filename('phys2bids', 'tests/data')
+    test_filename = 'Test_2minRest_trig_multifreq_header_no_comment.txt'
+    test_full_path = os.path.join(test_path, test_filename)
+    chtrig = 1
+    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
+    with raises(AttributeError) as errorinfo:
+        txt.process_labchart(test_full_path, chtrig)
+    assert 'not supported' in str(errorinfo.value)
+    # test when units are not valid for process_labchart
+    header[0][1] = ' 1 gHz'
+    with raises(AttributeError) as errorinfo:
+        txt.process_labchart(channels, chtrig, header)
+    assert 'not in a valid LabChart' in str(errorinfo.value)
