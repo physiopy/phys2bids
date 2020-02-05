@@ -14,8 +14,14 @@ def test_read_header_and_channels():
     header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     assert len(header) == 16  # check proper header lenght
     assert len(channels) == 1336816  # check proper number of timepoints
-    assert len(channels[6]) == 6  # check the comment has been eliminated
     assert len(header[-1]) == 6  # check extra line is deleted
+    # load file with comment
+    assert len(channels[6]) == 6  # check the comment has been eliminated
+    test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'  # this file has a comment and extra tab
+    test_path = resource_filename('phys2bids', 'tests/data')
+    test_full_path = os.path.join(test_path, test_filename)
+    chtrig = 1
+    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
 
 
 def test_populate_phys_input():
@@ -33,6 +39,7 @@ def test_populate_phys_input():
     # testing for labchart files
     test_filename = 'Test_2minRest_trig_multifreq_header_no_comment.txt'
     test_full_path = os.path.join(test_path, test_filename)
+    chtrig = 1
     txt.populate_phys_input(test_full_path, chtrig)
     output = sys.stdout.getvalue()
     sys.stdout = stdout
