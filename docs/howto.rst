@@ -11,14 +11,14 @@ However, future tutorials will go into the specifics of processing different inp
 This tutorial will:
 ###################
 
-Show you how to retrieve information about your input file (with the "-info" option), ensuring phys2bids has the correct information about your file.
-Explain the output files (png, json, tsv) phys2bids generates.
-Explain how phys2bids can return the input file in BIDS format.
+1. Show you how to retrieve information about your input file (with the "-info" option), ensuring phys2bids has the correct information about your file.
+2. Explain the output files (png, json, tsv) phys2bids generates.
+3. Explain how phys2bids can return the input file in BIDS format.
 
 What is in the example text file?
 #################################
 
-This text file has header information (first 9 lines) which the phys2bids software will use, alongside information directly inputted by the user. Following this header information, the data is stored in a column format. In this example, we have time (column 1), MRI trigger pulse (column 2), CO2 (column 3), O2 (column 4) and pulse (column 5). Each column was sampled at 1000Hz (Interval = 0.001 s). ::
+This text file has header information (first 9 lines) which the phys2bids software will use, alongside information directly inputted by the user. Following this header information, the data is stored in a column format. In this example, we have time (column 1), MRI trigger pulse (column 2), CO2 (column 3), O2 (column 4) and pulse (column 5). Each column was sampled at 1000Hz (Interval = 0.001 s).
 
 Interval=	0.001 s
 ExcelDateTime=	4.3749464322749809e+04	10/11/19 11:08:37.485584
