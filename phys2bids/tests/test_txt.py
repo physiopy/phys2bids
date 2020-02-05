@@ -4,40 +4,42 @@ from phys2bids.interfaces import txt
 from pytest import raises
 import sys
 import io
+import wget
 
 
 def test_read_header_and_channels():
-    test_filename = 'Test_belt_pulse_samefreq.txt'  # this file has a comment and extra tab
+    url = 'https://osf.io/sdz4n/download'
     test_path = resource_filename('phys2bids', 'tests/data')
+    test_filename = 'Test_belt_pulse_samefreq.txt'
     test_full_path = os.path.join(test_path, test_filename)
+    wget.download(url, test_full_path)
     chtrig = 2
     header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     assert len(header) == 16  # check proper header lenght
     assert len(channels) == 1336816  # check proper number of timepoints
     assert len(header[-1]) == 6  # check extra line is deleted
     # load file with comment
-    test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'  # this file has a comment and extra tab
+    url = 'https://osf.io/q4x2f/download'
+    test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_full_path = os.path.join(test_path, test_filename)
+    wget.download(url, test_full_path)
     chtrig = 1
     header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     assert len(channels[152109 - 9]) == 6  # check the comment has been eliminated
 
 
 def test_populate_phys_input():
-    # testing error for files without header
-    test_filename = 'Test_belt_pulse_samefreq_no_header.txt'
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_full_path = os.path.join(test_path, test_filename)
-    chtrig = 2
     # testing for AcqKnoledge files
     test_filename = 'Test_belt_pulse_samefreq.txt'
+    test_path = resource_filename('phys2bids', 'tests/data')
     test_full_path = os.path.join(test_path, test_filename)
+    chtrig = 1
     stdout = sys.stdout
     sys.stdout = io.StringIO()
     txt.populate_phys_input(test_full_path, chtrig)
     # testing for labchart files
-    test_filename = 'Test_2minRest_trig_multifreq_header_no_comment.txt'
+    test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_full_path = os.path.join(test_path, test_filename)
     chtrig = 1
     txt.populate_phys_input(test_full_path, chtrig)
@@ -52,7 +54,7 @@ def test_populate_phys_input():
 def test_process_labchart():
     # test file without header
     test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'Test_2minRest_trig_multifreq_header_no_comment.txt'
+    test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_full_path = os.path.join(test_path, test_filename)
     chtrig = 1
     header, channels = txt.read_header_and_channels(test_full_path, chtrig)
@@ -119,9 +121,11 @@ def test_process_acq():
 
 def test_raises():
     # testing error for files without header for populate_phys_input
+    url = 'https://osf.io/sre3h/download'
     test_filename = 'Test_belt_pulse_samefreq_no_header.txt'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_full_path = os.path.join(test_path, test_filename)
+    wget.download(url, test_full_path)
     chtrig = 2
     with raises(AttributeError) as errorinfo:
         txt.populate_phys_input(test_full_path, chtrig)
@@ -133,7 +137,7 @@ def test_raises():
     assert 'not supported' in str(errorinfo.value)
     # now for labchart read
     test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'Test_2minRest_trig_multifreq_header_no_comment.txt'
+    test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_full_path = os.path.join(test_path, test_filename)
     chtrig = 1
     header, channels = txt.read_header_and_channels(test_full_path, chtrig)
