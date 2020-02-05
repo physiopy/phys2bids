@@ -46,7 +46,7 @@ However, we’ll add one more input: ::
 
     phys2bids -in textfile -info
 
-This ‘info’ option means phy2bids does not process the file, but only outputs information it reads from the file, by printing to the terminal and outputting a png plot of the data in the current directory.::
+This "-info" option means phy2bids does not process the file, but only outputs information it reads from the file, by printing to the terminal and outputting a png plot of the data in the current directory. ::
 
     File extension is .txt
     Reading the file
@@ -59,7 +59,7 @@ This ‘info’ option means phy2bids does not process the file, but only output
     02. O2; sampled at 1000.0 Hz
     saving channels plot at plot at Test2_time_trigger_CO2_O2_pulse_1000Hz_534TRs.png
 
-[Wrong channel plot here]
+**[Wrong channel plot here]**
 
 Some of this information is right, but notice  the output does not mention a 'pulse' column, which we know is in the file. Therefore, if any of the information outputted from using the '-info' option is not correct, we need to give phys2bids more options.
 
@@ -67,7 +67,7 @@ Looking through the optional arguments of the phys2bids command (**Link here to 
 
 **explain here how and why you might want to change -indir, -chtrig, -chplot**
 
-**show the correct png plot**
+**[Correct channel plot here]**
 
 Generating outputs
 ##################
