@@ -31,6 +31,7 @@ matrix:
 
 before_install:
   - python -m pip install --upgrade pip
+  - export PYTHONPATH=$PYTHONPATH:$(pwd)
   - if [ "${CHECK_TYPE}" == "linting" ]; then
       pip install flake8;
     fi
@@ -42,7 +43,6 @@ before_install:
     fi
 
 install:
-  - |
     if [ "${INSTALL_TYPE}" == "setup" ]; then
       python setup.py install;
     elif [ "${INSTALL_TYPE}" == "sdist" ]; then
