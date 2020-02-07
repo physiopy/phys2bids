@@ -8,11 +8,13 @@ Requirements
 ------------
 
 ``phys2bids`` requires python 3.6 or above, as well as the modules:
+
 - ``numpy >= 1.9.3``
 - ``matplotlib >= 3.1.1``
 
 Depending on the processed files, it might require the **manual installation** of other modules.
 At the moment, those modules are:
+
 - `bioread`_, for AcqKnowledge (``.acq``) files.
 
 .. _`bioread`: https://github.com/uwmadison-chm/bioread
