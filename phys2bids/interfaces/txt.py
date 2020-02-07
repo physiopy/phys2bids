@@ -68,21 +68,31 @@ def process_labchart(channel_list, chtrig, header=[]):
     for item in range_list:
         orig_units.append(item.split(' ')[1])
     units = ['s', 'V']
-    orig_units.pop(chtrig - 1)
-    units = units + orig_units
     # get names
     orig_names = header[4][1:]
+    orig_names_len = len(orig_names)
     names = ['time', 'trigger']
-    orig_names.pop(chtrig - 1)
-    names = names + orig_names
     # get channels
     timeseries = np.matrix(channel_list).T.tolist()
     freq = [1 / interval[0]] * len(timeseries)
     timeseries = [np.array(darray) for darray in timeseries]
-    ordered_timeseries = [timeseries[0], timeseries[chtrig]]
-    timeseries.pop(chtrig)
-    timeseries.pop(0)
-    ordered_timeseries = ordered_timeseries + timeseries
+    if (orig_names_len < len(timeseries)):
+        ordered_timeseries = [timeseries[0], timeseries[chtrig]]
+        timeseries.pop(chtrig)
+        timeseries.pop(0)
+        ordered_timeseries = ordered_timeseries + timeseries
+        orig_units.pop(chtrig - 1)
+        orig_names.pop(chtrig - 1)
+        names = names + orig_names
+        units = units + orig_units
+    else:
+        duration = (timeseries[0].shape[0] + 1) * interval[0]
+        t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
+        ordered_timeseries = [t_ch, timeseries[chtrig]]
+        timeseries.pop(chtrig)
+        ordered_timeseries = ordered_timeseries + timeseries
+        names = names + orig_names[1:]
+        units = units + orig_units[1:]
     return BlueprintInput(ordered_timeseries, freq, names, units)
 
 
