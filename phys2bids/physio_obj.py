@@ -276,7 +276,7 @@ class BlueprintInput():
             if num_timepoints_found > num_timepoints_expected:
                 timepoints_extra = (num_timepoints_found
                                     - num_timepoints_expected)
-                LGR.info(f'Found {timepoints_extra} timepoints'
+                LGR.warning(f'Found {timepoints_extra} timepoints'
                          ' more than expected!\n'
                          'Assuming extra timepoints are at the end '
                          '(try again with a more conservative thr)')
