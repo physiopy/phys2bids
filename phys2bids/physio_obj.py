@@ -38,7 +38,7 @@ def is_valid(var, var_type, list_type=None):
         If var is not of var_type
     """
     if not isinstance(var, var_type):
-        LGR.error(f'The given variable is not a {var_type}')
+        raise AttributeError(f'The given variable is not a {var_type}')
 
     if var_type is list and list_type is not None:
         for element in var:

@@ -102,10 +102,10 @@ def check_input_type(filename, indir):
         LGR.warning('If both acq and txt files exist in the path, acq will be selected.')
         return fname, ftype
     else:
-        LGR.error(f'The file {filename} wasn\'t found in {indir}'
-                  f' or {ftype} is not supported yet.\n'
-                  f'phys2bids currently supports:'
-                  f' {", ".join(SUPPORTED_FTYPES)}')
+        raise Exception(f'The file {filename} wasn\'t found in {indir}'
+                        f' or {ftype} is not supported yet.\n'
+                        f'phys2bids currently supports:'
+                        f' {", ".join(SUPPORTED_FTYPES)}')
 
 
 def path_exists_or_make_it(fldr):
@@ -144,7 +144,7 @@ def check_file_exists(filename):
         If the file doesn't exists.
     """
     if not os.path.isfile(filename) and filename is not None:
-        LGR.error(f'The file {filename} does not exist!')
+        raise FileNotFoundError(f'The file {filename} does not exist!')
 
 
 def move_file(oldpath, newpath, ext=''):
@@ -279,5 +279,5 @@ def load_heuristic(heuristic):
             # remove c or o from pyc/pyo
             mod.filename = mod.__file__.rstrip('co')
         except Exception as exc:
-            LGR.error(f'Failed to import heuristic {heuristic}: {exc}')
+            raise ImportError(f'Failed to import heuristic {heuristic}: {exc}')
     return mod
