@@ -15,7 +15,7 @@ This tutorial will:
 What is in the tutorial text file?
 #################################
 
-The test file can be found in **location/tutorial_textfile.txt**. This text file has header information (first 9 lines) which phys2bids will use to process this file, alongside information directly inputted by the user. Following this header information, the data in the file is stored in a column format. In this example, we have time (column 1), MRI trigger pulse (column 2), CO2 (column 3), O2 (column 4) and pulse (column 5). Each column was sampled at 1000Hz (Interval = 0.001 s). ::
+The file can be found in *tests/data/tutorial_file.txt*. This file has header information (first 9 lines) which phys2bids will use to process this file, alongside information directly inputted by the user. Following this header information, the data in the file is stored in a column format. In this example, we have time (column 1), MRI trigger pulse (column 2), CO2 (column 3), O2 (column 4) and pulse (column 5). Each column was sampled at 1000Hz (Interval = 0.001 s). ::
 
     Interval=	0.001 s
     ExcelDateTime=	4.3749464322749809e+04	10/11/19 11:08:37.485584
@@ -40,11 +40,11 @@ First, we can see what information phys2bids reads from the file, and make sure 
 
 The simplest way of calling phy2bids is: ::
 
-    phys2bids -in tutorial_textfile
+    phys2bids -in tutorial_file
 
 However, we’ll use one more argument: ::
 
-    phys2bids -in tutorial_textfile -info
+    phys2bids -in tutorial_file -info
 
 This "-info" argument means phy2bids does not process the file, but only outputs information it reads from the file, by printing to the terminal and outputting a png plot of the data in the current directory. ::
 
@@ -52,46 +52,44 @@ This "-info" argument means phy2bids does not process the file, but only outputs
     Reading the file
     phys2bids detected that your file is in Labchart format
     Reading infos
-    File tutorial_textfile.txt contains:
+    File tutorial_file.txt contains:
 
     00. Trigger; sampled at 1000.0 Hz
     01. CO2; sampled at 1000.0 Hz
     02. O2; sampled at 1000.0 Hz
-    saving channels plot at tutorial_textfile.png
+    saving channels plot at tutorial_file.png
     
-**[Wrong channel plot here]**
+** [Wrong channel plot here] **
 
 Some of this information is right, but notice  the output does not mention a 'pulse' column, which we know is in the file. Therefore, if any of the information outputted from using the '-info' option is not correct, we need to give phys2bids more inputs.
 
 Looking through the optional arguments of the phys2bids command (https://phys2bids.readthedocs.io/en/latest/cli.html) we will first ensure that all the channels we want processed are read and plotted correctly. The argument "-chtrig" has a default of 0, which means if there is no input given phys2bids will assume the trigger information is in the first channel. For the text file used in this example, the trigger information is the second column, therefore we need to write: ::
 
-    phys2bids -in tutorial_textfile -info -chtrig 1
+    phys2bids -in tutorial_file -info -chtrig 1
 
-**[Correct channel plot here]**
-
-Two other arguments that relevent to introduce at this stage are "-indir" and "-chplot". If you use "-indir" you can specify a path to your input file i.e. it does not have to be in the current directory, as is the default. Using the "-chplot" argument allows you to specify the name (and full path) for the channel plot, whih is (always) created. ::
-
-    phys2bids -in tutorial_textfile -info -indir /home/my_phys_data/ -chtrig 1 -chplot /home/my_phys_outputs/tutorial_textfile.png
+** [Correct channel plot here] **
 
 Generating outputs
 ##################
 
-First, we'll call phys2bids the same way as above, but without the "-info" option. ::
+Now we'll call phys2bids without the "-info" option. We'll use the same inputs as above, as well as adding "-indir", "outdir", and "-chplot". If you use "-indir" you can specify a path to your input file i.e. it does not have to be in the current directory, as is the default. Using the "-chplot" argument allows you to specify the name (and full path) for the png channel plot. The "-input" and "-chplot" arguments can be used alongside the "-info" argument. When calling phys2bids without the "-info" argument, it will generate files; if you use the "-outdir" argument this is where phys2bids will save these files.
 
-    phys2bids -in tutorial_textfile -indir /home/my_phys_data/ -chtrig 1 -chplot /home/my_phys_outputs/tutorial_textfile.png
+Unless specified with "-chsel" phys2bids will process and output all channels. Unless specified with "-chnames" phys2bids will read the channel names from the header information in the file.  ::
 
-This is outputted to the command line: ::
+    phys2bids -in tutorial_file -indir /home/my_phys_data/ -chtrig 1 -chplot /home/my_phys_outputs/tutorial_file.png -outdir /home/my_phys_outputs/
+
+This is outputted to the terminal: ::
 
     File extension is .txt
     Reading the file
     phys2bids detected that your file is in Labchart format
     Reading infos
-    File tutorial_textfile.txt contains:
+    File tutorial_file.txt contains:
 
     00. CO2; sampled at 1000.0 Hz
     01. O2; sampled at 1000.0 Hz
     02. Pulse; sampled at 1000.0 Hz
-    saving channels plot at plot at /home/my_phys_outputs/tutorial_textfile.png
+    saving channels plot at plot at /home/my_phys_outputs/tutorial_file.png
     Counting trigger points
     Cannot check the number of timepoints
     Checking that the output folder exists
@@ -99,7 +97,7 @@ This is outputted to the command line: ::
     Preparing 1 output files.
     Exporting files for freq 1000.0
     ------------------------------------------------
-    Filename:            tutorial_textfile.txt
+    Filename:            tutorial_file.txt
 
     Timepoints expected: 0
     Timepoints found:    0
@@ -108,28 +106,60 @@ This is outputted to the command line: ::
     Tip: Time 0 is the time of first trigger
     ------------------------------------------------
 
-Four files have been generated:
+Four files have been generated in the output directory:
 
-**tutorial_textfile.log**
-[explain]
+**tutorial_file.log**
+The same information outputted to the terminal. 
 
-**tutorial_textfile.json**
-[explain]
+**tutorial_file.json**
+** [not sure how best to explain this one - "Column header information read from your file"] **
 
-**tutorial_textfile.tsv.gz**
-[explain]
+**tutorial_file.tsv.gz**
+Compressed file containing your data without header information. 
 
-**tutorial_textfile_trigger_time.png**
-[explain]
+**tutorial_file_trigger_time.png**
+** [not sure how best to explain this one] **
 
-**[then explain the -outdir, -chsel, -ntp, -tr, -thr, -chnames options, to make sure the time points are processed correctly]**
+The last command line output said "Cannot check the number of timepoints", so we need to give phys2bids some more information in order so it can correctly read the trigger information in the data. In this tutorial file, there are 534 triggers and the TR is 1.2 seconds. Using these arguments, we can call phys2bids again: ::
 
-Using these extra arguments, we can call phys2bids:
+    phys2bids -in tutorial_file -indir /home/my_phys_data/ -chtrig 1 -chplot /home/my_phys_outputs/tutorial_file.png -outdir /home/my_phys_outputs/ -ntp 534 -tr 1.2
 
-**[new command line output]**
-**[input the trigger_time.png]**
+The output tells us "Found 534 timepoints less than expected! Correcting time offset, assuming missing timepoints are at the beginning (try again with a more liberal thr)." Therefore, we need to change the "-thr" input until phys2bids finds the correct number of timepoints. Looking at the tutorial_file_trigger_time.png file can help your determine what threshold is more appropriate. For this tutorial file, a threshold of 0.735 finds the right number of time points. ::
+
+    phys2bids -in tutorial_file -indir /home/my_phys_data/ -chtrig 1 -chplot /home/my_phys_outputs/tutorial_file.png -outdir /home/my_phys_outputs/ -ntp 534 -tr -thr 0.735
+
+    File extension is .txt
+    Reading the file
+    phys2bids detected that your file is in Labchart format
+    Reading infos
+    File tutorial_file.txt contains:
+
+    00. CO2; sampled at 1000.0 Hz
+    01. O2; sampled at 1000.0 Hz
+    02. Pulse; sampled at 1000.0 Hz
+    saving channels plot at plot at /home/my_phys_outputs/tutorial_file.png
+    Counting trigger points
+    Checking number of timepoints
+    Found just the right amount of timepoints!
+    Checking that the output folder exists
+    Plot trigger
+    Preparing 1 output files.
+    Exporting files for freq 1000.0
+    ------------------------------------------------
+    Filename:            tutorial_file.txt
+
+    Timepoints expected: 534
+    Timepoints found:    534
+    Sampling Frequency:  1000.0 Hz
+    Sampling started at: 48.625999999999976 s
+    Tip: Time 0 is the time of first trigger
+    ------------------------------------------------
+
+** [trigger_time.png here] **
+
+** [explain how the 4 files above have changed] **
 
 Generating outputs in BIDs format
 #################################
- 
-**explain heuristics file and the -sub and -ses inputs**
+
+This section will explain how to use the "-heur", "-sub" and "-ses" arguments, to save the file with BIDS naming.  
