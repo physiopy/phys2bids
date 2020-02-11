@@ -99,6 +99,7 @@ def check_input_type(filename, indir):
 
     if fftype_found:
         LGR.info(f'File extension is .{ftype}')
+        LGR.warning('If both acq and txt files exist in the path, acq will be selected.')
         return fname, ftype
     else:
         raise Exception(f'The file {filename} wasn\'t found in {indir}'

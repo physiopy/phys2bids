@@ -15,7 +15,8 @@ def test_read_header_and_channels():
     assert len(header[-1]) == 6  # check extra line is deleted
     # load file with comment
     assert len(channels[6]) == 6  # check the comment has been eliminated
-    test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'  # this file has a comment and extra tab
+    # this file has a comment and extra tab
+    test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_full_path = os.path.join(test_path, test_filename)
     chtrig = 1

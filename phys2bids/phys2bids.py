@@ -36,7 +36,7 @@ from copy import deepcopy
 from numpy import savetxt
 from pathlib import Path
 
-from phys2bids import utils, viz
+from phys2bids import utils, viz, _version
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
 
@@ -191,6 +191,37 @@ def _main(argv=None):
 
     """
     options = _get_parser().parse_args(argv)
+
+    # Create logfile name
+    basename = 'phys2bids_'
+    extension = 'tsv'
+    isotime = datetime.datetime.now().replace(microsecond=0).isoformat()
+    logname = os.path.join(options.outdir, (basename + isotime + '.' + extension))
+
+    # Set logging format
+    log_formatter = logging.Formatter(
+        '%(asctime)s\t%(name)-12s\t%(levelname)-8s\t%(message)s',
+        datefmt='%Y-%m-%dT%H:%M:%S')
+
+    # Set up logging file and open it for writing
+    log_handler = logging.FileHandler(logname)
+    log_handler.setFormatter(log_formatter)
+    sh = logging.StreamHandler()
+
+    if options.quiet:
+        logging.basicConfig(level=logging.WARNING,
+                            handlers=[log_handler, sh])
+    elif options.debug:
+        logging.basicConfig(level=logging.DEBUG,
+                            handlers=[log_handler, sh])
+    else:
+        logging.basicConfig(level=logging.INFO,
+                            handlers=[log_handler, sh])
+
+    version_number = _version.get_versions()['version']
+    LGR.info(f'Currently running phys2bids version {version_number}')
+    LGR.info(f'Input file is {options.filename}')
+
     # Check options to make them internally coherent
     # #!# This can probably be done while parsing?
     options.indir = utils.check_input_dir(options.indir)
@@ -207,31 +238,6 @@ def _main(argv=None):
     outfile = os.path.join(options.outdir,
                            os.path.splitext(os.path.basename(options.filename))[0])
 
-    # Create logfile name
-    basename = 'phys2bids_'
-    extension = 'tsv'
-    isotime = datetime.datetime.now().replace(microsecond=0).isoformat()
-    logname = os.path.join(options.outdir, (basename + isotime + '.' + extension))
-
-    # Set logging format
-    log_formatter = logging.Formatter(
-        '%(asctime)s\t%(name)-12s\t%(levelname)-8s\t%(message)s',
-        datefmt='%Y-%m-%dT%H:%M:%S')
-
-    # Set up logging file and open it for writing
-    log_handler = logging.FileHandler(logname)
-    log_handler.setFormatter(log_formatter)
-
-    if options.quiet:
-        logging.basicConfig(level=logging.WARNING,
-                            handlers=[log_handler])
-    elif options.debug:
-        logging.basicConfig(level=logging.DEBUG,
-                            handlers=[log_handler])
-    else:
-        logging.basicConfig(level=logging.INFO,
-                            handlers=[log_handler])
-
     # Read file!
     if ftype == 'acq':
         from phys2bids.interfaces.acq import populate_phys_input
@@ -241,7 +247,7 @@ def _main(argv=None):
         # #!# We should add a logger here.
         raise NotImplementedError('Currently unsupported file type.')
 
-    LGR.info('Reading the file')
+    LGR.info(f'Reading the file {infile}')
     phys_in = populate_phys_input(infile, options.chtrig)
     LGR.info('Reading infos')
     phys_in.print_info(options.filename)
