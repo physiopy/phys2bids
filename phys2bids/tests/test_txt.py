@@ -8,7 +8,7 @@ import wget
 
 
 def test_read_header_and_channels():
-    url = 'https://osf.io/sdz4n/download'
+    url = 'https://osf.io/sdz4n/download'  # url to Test_belt_pulse_samefreq.txt
     test_path = resource_filename('phys2bids', 'tests/data')
     test_filename = 'Test_belt_pulse_samefreq.txt'
     test_full_path = os.path.join(test_path, test_filename)
@@ -19,7 +19,8 @@ def test_read_header_and_channels():
     assert len(channels) == 1336816  # check proper number of timepoints
     assert len(header[-1]) == 6  # check extra line is deleted
     # load file with comment
-    url = 'https://osf.io/q4x2f/download'
+    url = 'https://osf.io/q4x2f/download' 
+    # url to Test_2minRest_trig_multifreq_header_comment.txt
     test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_full_path = os.path.join(test_path, test_filename)
@@ -31,6 +32,7 @@ def test_read_header_and_channels():
 
 def test_populate_phys_input():
     # testing for AcqKnoledge files
+    # testing file already downloaded in the first test
     test_filename = 'Test_belt_pulse_samefreq.txt'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_full_path = os.path.join(test_path, test_filename)
@@ -39,6 +41,7 @@ def test_populate_phys_input():
     sys.stdout = io.StringIO()
     txt.populate_phys_input(test_full_path, chtrig)
     # testing for labchart files
+    # testing file already downloaded in the first test
     test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_full_path = os.path.join(test_path, test_filename)
     chtrig = 1
@@ -52,7 +55,7 @@ def test_populate_phys_input():
 
 
 def test_process_labchart():
-    # test file without header
+    # testing file already downloaded in the first test
     test_path = resource_filename('phys2bids', 'tests/data')
     test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_full_path = os.path.join(test_path, test_filename)
@@ -78,6 +81,7 @@ def test_process_labchart():
     phys_obj = txt.process_labchart(channels, chtrig, header)
     assert phys_obj.freq[0] == 1000
     # use file without time column
+    # url to the file Test2_trigger_CO2_O2_pulse_1000Hz_534TRs.txt
     url = 'https://osf.io/hu3sy/download'
     test_filename = 'Test2_trigger_CO2_O2_pulse_1000Hz_534TRs.txt'
     test_path = resource_filename('phys2bids', 'tests/data')
@@ -89,9 +93,9 @@ def test_process_labchart():
     assert len(phys_obj.timeseries[0]) == len(channels)
 
 
-
 def test_process_acq():
     # test file without header
+    # testing file already downloaded in the first test
     test_path = resource_filename('phys2bids', 'tests/data')
     test_filename = 'Test_belt_pulse_samefreq.txt'
     test_full_path = os.path.join(test_path, test_filename)
@@ -132,6 +136,7 @@ def test_process_acq():
 
 def test_raises():
     # testing error for files without header for populate_phys_input
+    # url to the file Test_belt_pulse_samefreq_no_header.txt
     url = 'https://osf.io/sre3h/download'
     test_filename = 'Test_belt_pulse_samefreq_no_header.txt'
     test_path = resource_filename('phys2bids', 'tests/data')
@@ -147,6 +152,7 @@ def test_raises():
         txt.process_acq(channels, chtrig)
     assert 'not supported' in str(errorinfo.value)
     # now for labchart read
+    # testing file already downloaded in the other tests
     test_path = resource_filename('phys2bids', 'tests/data')
     test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_full_path = os.path.join(test_path, test_filename)
