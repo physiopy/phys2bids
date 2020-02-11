@@ -38,7 +38,7 @@ def is_valid(var, var_type, list_type=None):
         If var is not of var_type
     """
     if not isinstance(var, var_type):
-        raise AttributeError(f'The given variable is not a {var_type}')
+        LGR.error(f'The given variable is not a {var_type}')
 
     if var_type is list and list_type is not None:
         for element in var:
@@ -277,9 +277,9 @@ class BlueprintInput():
                 timepoints_extra = (num_timepoints_found
                                     - num_timepoints_expected)
                 LGR.warning(f'Found {timepoints_extra} timepoints'
-                         ' more than expected!\n'
-                         'Assuming extra timepoints are at the end '
-                         '(try again with a more conservative thr)')
+                            ' more than expected!\n'
+                            'Assuming extra timepoints are at the end '
+                            '(try again with a more conservative thr)')
 
             elif num_timepoints_found < num_timepoints_expected:
                 timepoints_missing = (num_timepoints_expected
@@ -293,13 +293,12 @@ class BlueprintInput():
                     time_offset -= (timepoints_missing * tr)
                 else:
                     LGR.warning('Can\'t correct time offset - you should specify the TR')
-                              'tr or with a more liberal thr')
 
             else:
                 LGR.info('Found just the right amount of timepoints!')
 
         else:
-            LGR.error('Cannot check the number of timepoints')
+            LGR.warning('The number of timepoints was not specified.')
 
         self.timeseries[0] -= time_offset
         self.num_timepoints_found = num_timepoints_found
