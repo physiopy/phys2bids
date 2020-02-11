@@ -126,7 +126,7 @@ The last command line output said "Cannot check the number of timepoints", so we
 
 The output tells us "Found 534 timepoints less than expected! Correcting time offset, assuming missing timepoints are at the beginning (try again with a more liberal thr)." Therefore, we need to change the "-thr" input until phys2bids finds the correct number of timepoints. Looking at the tutorial_file_trigger_time.png file can help your determine what threshold is more appropriate. For this tutorial file, a threshold of 0.735 finds the right number of time points. ::
 
-    phys2bids -in tutorial_file -indir /home/my_phys_data/ -chtrig 1 -chplot /home/my_phys_outputs/tutorial_file.png -outdir /home/my_phys_outputs/ -ntp 534 -tr -thr 0.735
+    phys2bids -in tutorial_file -indir /home/my_phys_data/ -chtrig 1 -chplot /home/my_phys_outputs/tutorial_file.png -outdir /home/my_phys_outputs/ -ntp 534 -tr 1.2 -thr 0.735
 
     File extension is .txt
     Reading the file
