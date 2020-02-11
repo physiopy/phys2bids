@@ -152,7 +152,8 @@ def process_acq(channel_list, chtrig, header=[]):
         interval[0] = 1 / freq
         freq = [freq] * (len(timeseries) + 1)
     else:
-        # check if interval is in seconds, if not change the units to seconds and calculate frequency
+        # check if interval is in seconds, if not change the units to seconds and
+        # calculate frequency
         if interval[-1].split('/')[0] != 'sec':
             print('Interval is not in seconds. Converting its value.')
             if interval[-1].split('/')[0] == 'min':

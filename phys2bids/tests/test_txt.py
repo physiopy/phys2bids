@@ -19,7 +19,7 @@ def test_read_header_and_channels():
     assert len(channels) == 1336816  # check proper number of timepoints
     assert len(header[-1]) == 6  # check extra line is deleted
     # load file with comment
-    url = 'https://osf.io/q4x2f/download' 
+    url = 'https://osf.io/q4x2f/download'
     # url to Test_2minRest_trig_multifreq_header_comment.txt
     test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_path = resource_filename('phys2bids', 'tests/data')
