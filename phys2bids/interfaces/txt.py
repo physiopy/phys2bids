@@ -143,7 +143,7 @@ def process_acq(channel_list, chtrig, header=[]):
         freq = [freq] * (len(timeseries) + 1)
     else:
         if interval[-1].split('/')[0] != 'sec':
-            LGR.info('Interval is not in seconds. Converting its value.')
+            LGR.warning('Interval is not in seconds. Converting its value.')
             if interval[-1].split('/')[0] == 'min':
                 interval[0] = float(interval[0]) * 60
                 interval[-1] = 's'
