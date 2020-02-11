@@ -45,11 +45,11 @@ def process_labchart(channel_list, chtrig, header=[]):
     """
     # get frequency
     if len(header) == 0:
-        raise AttributeError('Files without header are not supported yet')
+        LGR.error('Files without header are not supported yet')
     interval = header[0][1].split(" ")
     if interval[-1] not in ['hr', 'min', 's', 'ms', 'µs']:
-        raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid LabChart'
-                             'time unit, this probably means your file is not in Labchart format')
+        LGR.error(f'Interval unit "{interval[-1]}" is not in a valid LabChart'
+                  'time unit, this probably means your file is not in Labchart format')
 
     if interval[-1] != 's':
         LGR.warning('Interval is not in seconds. Converting its value.')
@@ -123,12 +123,12 @@ def process_acq(channel_list, chtrig, header=[]):
     timeseries = np.matrix(channel_list).T.tolist()
     # get frequency
     if len(header) == 0:
-        raise AttributeError('Files without header are not supported yet')
+        LGR.error('Files without header are not supported yet')
     interval = header[1][0].split()
     if interval[-1].split('/')[0] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz']:
-        raise AttributeError(f'Interval unit "{interval[-1]}" is not in a '
-                             'valid AcqKnowledge format time unit, this probably'
-                             'means your file is not in min, sec, msec, µsec, Mhz, KHz or Hz')
+        LGR.error(f'Interval unit "{interval[-1]}" is not in a '
+                  'valid AcqKnowledge format time unit, this probably'
+                  'means your file is not in min, sec, msec, µsec, Mhz, KHz or Hz')
     interval[-1] = interval[-1].split('/')[0]
     if 'Hz' in interval[-1].split('/')[0]:
         print('frequency is given in the header, calculating sample Interval'
@@ -259,7 +259,7 @@ def populate_phys_input(filename, chtrig):
     """
     header, channel_list = read_header_and_channels(filename, chtrig)
     if len(header) == 0:
-        raise AttributeError('Files without header are not supported yet')
+        LGR.error('Files without header are not supported yet')
     elif 'Interval=' in header[0]:
         LGR.info('phys2bids detected that your file is in Labchart format')
         phys_in = process_labchart(channel_list, chtrig, header)
@@ -267,5 +267,5 @@ def populate_phys_input(filename, chtrig):
         LGR.info('phys2bids detected that your file is in AcqKnowledge format')
         phys_in = process_acq(channel_list, chtrig, header)
     else:
-        raise AttributeError('This file format is not supported yet for txt files')
+        LGR.error('This file format is not supported yet for txt files')
     return phys_in

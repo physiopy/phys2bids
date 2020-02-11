@@ -245,7 +245,7 @@ def _main(argv=None):
         from phys2bids.interfaces.txt import populate_phys_input
     else:
         # #!# We should add a logger here.
-        raise NotImplementedError('Currently unsupported file type.')
+        LGR.error('Currently unsupported file type.')
 
     LGR.info(f'Reading the file {infile}')
     phys_in = populate_phys_input(infile, options.chtrig)
