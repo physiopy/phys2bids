@@ -292,7 +292,7 @@ class BlueprintInput():
                                 'a more liberal thr')
                     time_offset -= (timepoints_missing * tr)
                 else:
-                    LGR.error('Can\'t correct time offset, (try again specifying '
+                    LGR.warning('Can\'t correct time offset - you should specify the TR')
                               'tr or with a more liberal thr')
 
             else:
