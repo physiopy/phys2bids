@@ -120,5 +120,5 @@ def plot_all(phys_in, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
     ax[row].set_xlabel("seconds")
     if outfile == '':
         outfile = os.path.splitext(os.path.basename(infile))[0] + '.png'
-    LGR.info(f'saving channels plot at plot at {outfile}')
+    LGR.info(f'saving channel plot to {outfile}')
     fig.savefig(outfile, dpi=dpi, bbox_inches='tight')
