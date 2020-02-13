@@ -28,9 +28,6 @@ ignore:
   - "tests"
   - "heuristics"
 
-fixes:
-  - "phys2bids/::"
-
 comment:
   layout: "reach,diff,flags,tree"
   behavior: default
