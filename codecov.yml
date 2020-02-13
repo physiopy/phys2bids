@@ -23,10 +23,10 @@ parsers:
 
 ignore:
   - "docs"
-  - "phys2bids/_version.py"
+  - "_version.py"
   - "**/__init__.py"
-  - "phys2bids/tests"
-  - "phys2bids/heuristics"
+  - "tests"
+  - "heuristics"
 
 fixes:
   - "phys2bids/::"
