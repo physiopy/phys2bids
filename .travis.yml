@@ -36,7 +36,7 @@ before_install:
       pip install flake8;
     fi
   - if [ "${CHECK_TYPE}" == "test" ]; then
-      pip install "pytest>=3.6" pytest-cov coverage coveralls codecov;
+      pip install "pytest>=3.6" pytest-cov coverage coveralls codecov wget;
     fi
   - if [ "${CHECK_TYPE}" == "docdoctest" ]; then
       pip install "sphinx>2.0" sphinx_rtd_theme pandas sphinx-argparse;

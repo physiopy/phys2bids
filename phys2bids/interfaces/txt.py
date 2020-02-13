@@ -39,13 +39,15 @@ def process_labchart(channel_list, chtrig, header=[]):
     physio_obj.BlueprintInput
     """
     # get frequency
+    # check header has some length
     if len(header) == 0:
         raise AttributeError('Files without header are not supported yet')
     interval = header[0][1].split(" ")
+    # check the interval is in some of the correct labchart units
     if interval[-1] not in ['hr', 'min', 's', 'ms', 'µs']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid LabChart'
                              'time unit, this probably means your file is not in Labchart format')
-
+    # check if interval is in seconds, if not change the units to seconds
     if interval[-1] != 's':
         print('Interval is not in seconds. Converting its value.')
         if interval[-1] == 'hr':
@@ -68,21 +70,32 @@ def process_labchart(channel_list, chtrig, header=[]):
     for item in range_list:
         orig_units.append(item.split(' ')[1])
     units = ['s', 'V']
-    orig_units.pop(chtrig - 1)
-    units = units + orig_units
     # get names
     orig_names = header[4][1:]
+    orig_names_len = len(orig_names)
     names = ['time', 'trigger']
-    orig_names.pop(chtrig - 1)
-    names = names + orig_names
     # get channels
     timeseries = np.matrix(channel_list).T.tolist()
     freq = [1 / interval[0]] * len(timeseries)
     timeseries = [np.array(darray) for darray in timeseries]
-    ordered_timeseries = [timeseries[0], timeseries[chtrig]]
-    timeseries.pop(chtrig)
-    timeseries.pop(0)
-    ordered_timeseries = ordered_timeseries + timeseries
+    # check the file has a time channel if not create it and add it
+    if (orig_names_len < len(timeseries)):
+        ordered_timeseries = [timeseries[0], timeseries[chtrig]]
+        timeseries.pop(chtrig)
+        timeseries.pop(0)
+        ordered_timeseries = ordered_timeseries + timeseries
+        orig_units.pop(chtrig - 1)
+        orig_names.pop(chtrig - 1)
+        names = names + orig_names
+        units = units + orig_units
+    else:
+        duration = (timeseries[0].shape[0] + 1) * interval[0]
+        t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
+        ordered_timeseries = [t_ch, timeseries[chtrig]]
+        timeseries.pop(chtrig)
+        ordered_timeseries = ordered_timeseries + timeseries
+        names = names + orig_names[1:]
+        units = units + orig_units[1:]
     return BlueprintInput(ordered_timeseries, freq, names, units)
 
 
@@ -116,15 +129,17 @@ def process_acq(channel_list, chtrig, header=[]):
     physio_obj.BlueprintInput
     """
     timeseries = np.matrix(channel_list).T.tolist()
-    # get frequency
+    # check header is not empty
     if len(header) == 0:
         raise AttributeError('Files without header are not supported yet')
     interval = header[1][0].split()
+    # check the interval is in some of the correct AcqKnowledge units
     if interval[-1].split('/')[0] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a '
                              'valid AcqKnowledge format time unit, this probably'
                              'means your file is not in min, sec, msec, µsec, Mhz, KHz or Hz')
     interval[-1] = interval[-1].split('/')[0]
+    # Check if the header is in frequency or sampling interval
     if 'Hz' in interval[-1].split('/')[0]:
         print('frequency is given in the header, calculating sample Interval'
               ' and standarizing to Hz if needed')
@@ -137,6 +152,8 @@ def process_acq(channel_list, chtrig, header=[]):
         interval[0] = 1 / freq
         freq = [freq] * (len(timeseries) + 1)
     else:
+        # check if interval is in seconds, if not change the units to seconds and
+        # calculate frequency
         if interval[-1].split('/')[0] != 'sec':
             print('Interval is not in seconds. Converting its value.')
             if interval[-1].split('/')[0] == 'min':
@@ -253,6 +270,7 @@ def populate_phys_input(filename, chtrig):
     physio_obj.BlueprintInput
     """
     header, channel_list = read_header_and_channels(filename, chtrig)
+    # check header is not empty and detect if it is in labchart or Acqknoledge format
     if len(header) == 0:
         raise AttributeError('Files without header are not supported yet')
     elif 'Interval=' in header[0]:
