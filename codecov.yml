@@ -23,10 +23,11 @@ parsers:
 
 ignore:
   - "docs"
-  - "_version.py"
+  - "phys2bids/_version.py"
   - "**/__init__.py"
-  - "tests"
-  - "heuristics"
+  - "**/**/__init__.py"
+  - "phys2bids/tests"
+  - "phys2bids/heuristics"
 
 comment:
   layout: "reach,diff,flags,tree"
