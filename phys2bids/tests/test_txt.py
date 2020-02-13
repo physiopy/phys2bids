@@ -81,16 +81,16 @@ def test_process_labchart():
     phys_obj = txt.process_labchart(channels, chtrig, header)
     assert phys_obj.freq[0] == 1000
     # use file without time column
-    # url to the file Test2_trigger_CO2_O2_pulse_1000Hz_534TRs.txt
-    url = 'https://osf.io/hu3sy/download'
-    test_filename = 'Test2_trigger_CO2_O2_pulse_1000Hz_534TRs.txt'
+    # url to the file Test2_trigger_CO2_O2_pulse_1000Hz_534TRs_no_time.txt
+    url = 'https://osf.io/u5dq8/download'
+    test_filename = 'Test2_trigger_CO2_O2_pulse_1000Hz_534TRs_no_time.txt'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_full_path = os.path.join(test_path, test_filename)
     wget.download(url, test_full_path)
     chtrig = 0
     header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     phys_obj = txt.process_labchart(channels, chtrig, header)
-    assert len(phys_obj.timeseries[0]) == len(channels)
+    assert len(phys_obj.timeseries) == len(channels[0]) + 1
 
 
 def test_process_acq():
