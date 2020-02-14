@@ -1,3 +1,4 @@
+<a name="readme"></a>
 <img alt="Phys2BIDS" src="https://github.com/physiopy/phys2bids/blob/master/docs/_static/phys2bids_logo1280×640.png" height="150">
 
 phys2bids
