@@ -121,7 +121,7 @@ def _get_parser():
     optional.add_argument('-chplot', '--channels-plot',
                           dest='chplot',
                           type=str,
-                          help='path to store channels plot ',
+                          help='full path to store channels plot ',
                           default='')
     optional.add_argument('-debug', '--debug',
                           dest='debug',

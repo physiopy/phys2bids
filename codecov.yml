@@ -1,0 +1,35 @@
+codecov:
+  branch: master
+  strict_yaml_branch: master
+  require_ci_to_pass: yes
+  bot: "codecov-io"
+  ci:
+    - "travis.org"
+  max_report_age: 48
+  disable_default_path_fixes: no
+
+coverage:
+  precision: 2
+  round: down
+  range: "60...90"
+
+parsers:
+  gcov:
+    branch_detection:
+      conditional: yes
+      loop: yes
+      method: no
+      macro: no
+
+ignore:
+  - "docs"
+  - "phys2bids/_version.py"
+  - "**/__init__.py"
+  - "**/**/__init__.py"
+  - "phys2bids/tests"
+  - "phys2bids/heuristics"
+
+comment:
+  layout: "reach,diff,flags,tree"
+  behavior: default
+  require_changes: no
