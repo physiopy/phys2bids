@@ -22,6 +22,7 @@ def test_populate_phys_input():
     assert phys_obj.ch_name[chtrig - 1] == 'trigger'
     assert phys_obj.freq[chtrig - 1] == 10000.0
     assert phys_obj.units[chtrig - 1] == 'Volts'
+    os.remove(test_full_path)
 
 
 def test_read_file():
@@ -35,3 +36,4 @@ def test_read_file():
     wget.download(url, test_full_path)
     data = read_file(test_full_path).channels
     assert data[0].units == 'Volts'
+    os.remove(test_full_path)
