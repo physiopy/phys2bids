@@ -4,9 +4,13 @@
 """
 phys2bids interface for acqknowledge files.
 """
+import logging
+
 from bioread import read_file
 
 from phys2bids.physio_obj import BlueprintInput
+
+LGR = logging.getLogger(__name__)
 
 
 def populate_phys_input(filename, chtrig):
@@ -38,7 +42,7 @@ def populate_phys_input(filename, chtrig):
 
     for k, ch in enumerate(data):
         if k != chtrig:
-            print(f'{k:02d}. {ch}')
+            LGR.info(f'{k:02d}. {ch}')
             timeseries.append(ch.data)
             freq.append(ch.samples_per_second)
             units.append(ch.units)

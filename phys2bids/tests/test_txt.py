@@ -2,8 +2,6 @@ import os
 from pkg_resources import resource_filename
 from phys2bids.interfaces import txt
 from pytest import raises
-import sys
-import io
 import wget
 
 
@@ -37,21 +35,17 @@ def test_populate_phys_input():
     test_path = resource_filename('phys2bids', 'tests/data')
     test_full_path = os.path.join(test_path, test_filename)
     chtrig = 1
-    stdout = sys.stdout
-    sys.stdout = io.StringIO()
+    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
+    assert 'acq' in header[0][0]
     txt.populate_phys_input(test_full_path, chtrig)
     # testing for labchart files
     # testing file already downloaded in the first test
     test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_full_path = os.path.join(test_path, test_filename)
     chtrig = 1
-    txt.populate_phys_input(test_full_path, chtrig)
-    output = sys.stdout.getvalue()
-    sys.stdout = stdout
+    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     # check the printing output according to each format
-    output = output.split('\n')
-    assert 'AcqKnowledge format' in output[0]
-    assert 'Labchart format' in output[2]
+    assert 'Interval=' in header[0]
 
 
 def test_process_labchart():

@@ -5,7 +5,11 @@
 I/O objects for phys2bids.
 """
 
+import logging
+
 import numpy as np
+
+LGR = logging.getLogger(__name__)
 
 
 def is_valid(var, var_type, list_type=None):
@@ -259,7 +263,7 @@ class BlueprintInput():
             The property `timeseries` is shifted with the 0 being
             the time of first trigger.
         """
-        print('Counting trigger points')
+        LGR.info('Counting trigger points')
         # Use first derivative of the trigger channel to find the TRs,
         # comparing it to a given threshold.
         trigger_deriv = np.diff(self.timeseries[1])
@@ -268,34 +272,34 @@ class BlueprintInput():
         time_offset = self.timeseries[0][timepoints.argmax()]
 
         if num_timepoints_expected:
-            print('Checking number of timepoints')
+            LGR.info('Checking number of timepoints')
             if num_timepoints_found > num_timepoints_expected:
                 timepoints_extra = (num_timepoints_found
                                     - num_timepoints_expected)
-                print(f'Found {timepoints_extra} timepoints'
-                      ' more than expected!\n'
-                      'Assuming extra timepoints are at the end '
-                      '(try again with a more conservative thr)')
+                LGR.warning(f'Found {timepoints_extra} timepoints'
+                            ' more than expected!\n'
+                            'Assuming extra timepoints are at the end '
+                            '(try again with a more conservative thr)')
 
             elif num_timepoints_found < num_timepoints_expected:
                 timepoints_missing = (num_timepoints_expected
                                       - num_timepoints_found)
-                print(f'Found {timepoints_missing} timepoints'
-                      ' less than expected!')
+                LGR.warning(f'Found {timepoints_missing} timepoints'
+                            ' less than expected!')
                 if tr:
-                    print('Correcting time offset, assuming missing timepoints'
-                          ' are at the beginning (try again with '
-                          'a more liberal thr')
+                    LGR.warning('Correcting time offset, assuming missing timepoints'
+                                ' are at the beginning (try again with '
+                                'a more liberal thr)')
                     time_offset -= (timepoints_missing * tr)
                 else:
-                    print('Can\'t correct time offset, (try again specifying '
-                          'tr or with a more liberal thr')
+                    LGR.warning('Can\'t correct time offset - you should specify the TR')
 
             else:
-                print('Found just the right amount of timepoints!')
+                LGR.info('Found just the right amount of timepoints!')
 
         else:
-            print('Cannot check the number of timepoints')
+            LGR.warning('The necessary options to find the amount of timepoints '
+                        'were not provided.')
 
         self.timeseries[0] -= time_offset
         self.num_timepoints_found = num_timepoints_found
@@ -316,11 +320,11 @@ class BlueprintInput():
             Returns to stdout (e.g. on screen) channels,
             their names and their sampling rate.
         """
-        print(f'File {filename} contains:\n')
+        LGR.info(f'File {filename} contains:\n')
 
         for ch in range(2, self.ch_amount):
-            print(f'{(ch-2):02d}. {self.ch_name[ch]};'
-                  f' sampled at {self.freq[ch]} Hz')
+            LGR.info(f'{(ch-2):02d}. {self.ch_name[ch]};'
+                     f' sampled at {self.freq[ch]} Hz')
 
 
 class BlueprintOutput():

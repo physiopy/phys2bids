@@ -5,8 +5,13 @@
 phys2bids interface for txt files.
 """
 
+import logging
+
 import numpy as np
+
 from phys2bids.physio_obj import BlueprintInput
+
+LGR = logging.getLogger(__name__)
 
 
 def process_labchart(channel_list, chtrig, header=[]):
@@ -49,7 +54,7 @@ def process_labchart(channel_list, chtrig, header=[]):
                              'time unit, this probably means your file is not in Labchart format')
     # check if interval is in seconds, if not change the units to seconds
     if interval[-1] != 's':
-        print('Interval is not in seconds. Converting its value.')
+        LGR.warning('Interval is not in seconds. Converting its value.')
         if interval[-1] == 'hr':
             interval[0] = float(interval[0]) * 3600
             interval[-1] = 's'
@@ -155,7 +160,7 @@ def process_acq(channel_list, chtrig, header=[]):
         # check if interval is in seconds, if not change the units to seconds and
         # calculate frequency
         if interval[-1].split('/')[0] != 'sec':
-            print('Interval is not in seconds. Converting its value.')
+            LGR.warning('Interval is not in seconds. Converting its value.')
             if interval[-1].split('/')[0] == 'min':
                 interval[0] = float(interval[0]) * 60
                 interval[-1] = 's'
@@ -274,10 +279,10 @@ def populate_phys_input(filename, chtrig):
     if len(header) == 0:
         raise AttributeError('Files without header are not supported yet')
     elif 'Interval=' in header[0]:
-        print('phys2bids detected that your file is in Labchart format')
+        LGR.info('phys2bids detected that your file is in Labchart format')
         phys_in = process_labchart(channel_list, chtrig, header)
     elif 'acq' in header[0][0]:
-        print('phys2bids detected that your file is in AcqKnowledge format')
+        LGR.info('phys2bids detected that your file is in AcqKnowledge format')
         phys_in = process_acq(channel_list, chtrig, header)
     else:
         raise AttributeError('This file format is not supported yet for txt files')
