@@ -10,7 +10,7 @@ def test_populate_phys_input():
     # url to Test_belt_pulse_samefreq.acq
     url = 'https://osf.io/pn7vt/download'
     test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'Test_belt_pulse_samefreq.txt'
+    test_filename = 'Test_belt_pulse_samefreq.acq'
     test_full_path = os.path.join(test_path, test_filename)
     wget.download(url, test_full_path)
     chtrig = 2
@@ -30,7 +30,7 @@ def test_read_file():
     # url to Test_belt_pulse_samefreq.acq
     url = 'https://osf.io/pn7vt/download'
     test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'Test_belt_pulse_samefreq.txt'
+    test_filename = 'Test_belt_pulse_samefreq.acq'
     test_full_path = os.path.join(test_path, test_filename)
     wget.download(url, test_full_path)
     data = read_file(test_full_path).channels
