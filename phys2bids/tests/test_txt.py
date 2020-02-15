@@ -2,8 +2,6 @@ import os
 from pkg_resources import resource_filename
 from phys2bids.interfaces import txt
 from pytest import raises
-import sys
-import io
 import wget
 
 
