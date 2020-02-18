@@ -10,6 +10,11 @@ def test_run():
     test_full_path = os.path.join(test_path, test_filename)
     wget.download(url, test_full_path)
     chtrig = 2
+    os.system('mkdir $HOME/test_run')
     os.system('phys2bids -in ' + test_full_path + ' -info -indir '
-              + test_path + ' -chtrig ' + str(chtrig))
+              + test_path + ' -chtrig ' + str(chtrig) + ' -outdir $HOME/test_run '
+              + '-chplot $HOME/test_run/plot.png')
+    os.system('phys2bids -in ' + test_full_path + ' -indir '
+              + test_path + ' -chtrig ' + str(chtrig) + ' -outdir $HOME/test_run '
+              + '-chplot $HOME/test_run/plot.png')
     return
