@@ -274,6 +274,8 @@ def populate_phys_input(filename, chtrig):
     --------
     physio_obj.BlueprintInput
     """
+    chtrig = chtrig -1 # now for the user channel indexing starts at 1 as it 
+    # happens in acq call 
     header, channel_list = read_header_and_channels(filename, chtrig)
     # check header is not empty and detect if it is in labchart or Acqknoledge format
     if len(header) == 0:
