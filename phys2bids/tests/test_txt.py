@@ -46,7 +46,6 @@ def test_populate_phys_input():
     header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     # check the printing output according to each format
     assert 'Interval=' in header[0]
-    txt.populate_phys_input(test_full_path, chtrig)
 
 
 def test_process_labchart():
