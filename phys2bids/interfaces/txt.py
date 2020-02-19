@@ -133,13 +133,12 @@ def process_acq(channel_list, chtrig, header=[]):
     --------
     physio_obj.BlueprintInput
     """
-    # put number of samples in the header instead of the channel_list
-    header.append(channel_list[0])
-    del channel_list[0]
-    timeseries = np.matrix(channel_list).T.tolist()
     # check header is not empty
     if len(header) == 0:
         raise AttributeError('Files without header are not supported yet')
+    header.append(channel_list[0])
+    del channel_list[0]  # delete sample size from channel list
+    timeseries = np.matrix(channel_list).T.tolist()
     interval = header[1][0].split()
     # check the interval is in some of the correct AcqKnowledge units
     if interval[-1].split('/')[0] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz']:
