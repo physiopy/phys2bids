@@ -34,19 +34,19 @@ def test_populate_phys_input():
     test_filename = 'Test_belt_pulse_samefreq.txt'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_full_path = os.path.join(test_path, test_filename)
-    chtrig = 1
+    chtrig = 2
     header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     assert 'acq' in header[0][0]
-    txt.populate_phys_input(test_full_path, chtrig)
+    txt.populate_phys_input(test_full_path, chtrig + 1)
     # testing for labchart files
     # testing file already downloaded in the first test
     test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_full_path = os.path.join(test_path, test_filename)
-    chtrig = 1
+    chtrig = 2
     header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     # check the printing output according to each format
     assert 'Interval=' in header[0]
-    txt.populate_phys_input(test_full_path, chtrig)
+    txt.populate_phys_input(test_full_path, chtrig + 1)
 
 
 def test_process_labchart():
