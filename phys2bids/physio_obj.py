@@ -323,7 +323,7 @@ class BlueprintInput():
         LGR.info(f'File {filename} contains:\n')
 
         for ch in range(2, self.ch_amount):
-            LGR.info(f'{(ch-1):02d}. {self.ch_name[ch]};'
+            LGR.info(f'{(ch):02d}. {self.ch_name[ch]};'
                      f' sampled at {self.freq[ch]} Hz')
 
 
