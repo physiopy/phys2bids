@@ -29,7 +29,7 @@ def test_check_input_ext():
 
 # Tests check_input_type
 def test_check_input_type():
-    url = 'https://osf.io/pn7vt/download'
+    url = 'https://osf.io/27gqb/download'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_filename = 'Test_belt_pulse_samefreq.acq'
     test_full_path = os.path.join(test_path, test_filename)
@@ -52,7 +52,7 @@ def test_path_exists_or_make_it(tmpdir):
 
 # Tests check_file_exists
 def test_check_file_exists():
-    url = 'https://osf.io/pn7vt/download'
+    url = 'https://osf.io/27gqb/download'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_filename = 'Test_belt_pulse_samefreq.acq'
     test_full_path = os.path.join(test_path, test_filename)
