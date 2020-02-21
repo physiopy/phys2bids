@@ -109,7 +109,6 @@ def process_labchart(channel_list, chtrig, header=[]):
     names = ['time', 'trigger']
     # get channels
     timeseries = np.matrix(channel_list).T.tolist()
-    freq = [1 / interval[0]] * len(timeseries)
     timeseries = [np.array(darray) for darray in timeseries]
     # check the file has a time channel if not create it and add it
     if (orig_names_len < len(timeseries)):
@@ -129,6 +128,7 @@ def process_labchart(channel_list, chtrig, header=[]):
         ordered_timeseries = ordered_timeseries + timeseries
         names = names + orig_names[1:]
         units = units + orig_units[1:]
+    freq = [1 / interval[0]] * len(ordered_timeseries)
     freq = multifreq(ordered_timeseries, freq)
     return BlueprintInput(ordered_timeseries, freq, names, units)
 
