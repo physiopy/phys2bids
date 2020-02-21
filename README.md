@@ -1,12 +1,17 @@
-<img alt="Phys2BIDS" src="https://github.com/physiopy/phys2bids/blob/master/docs/phys2bids_logo1280×640.png" height="150">
+<a name="readme"></a>
+<img alt="Phys2BIDS" src="https://github.com/physiopy/phys2bids/blob/master/docs/_static/phys2bids_logo1280×640.png" height="150">
 
 phys2bids
 =========
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3586045.svg)](https://doi.org/10.5281/zenodo.3586045)
+[![Build Status](https://travis-ci.org/physiopy/phys2bids.svg?branch=master)](https://travis-ci.org/physiopy/phys2bids)
 [![Join the chat at https://gitter.im/phys2bids/community](https://badges.gitter.im/phys2bids/community.svg)](https://gitter.im/phys2bids/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Documentation Status](https://readthedocs.org/projects/phys2bids/badge/?version=latest)](https://phys2bids.readthedocs.io/en/latest/?badge=latest)
+[![Requirements Status](https://requires.io/github/physiopy/phys2bids/requirements.svg?branch=master)](https://requires.io/github/physiopy/phys2bids/requirements/?branch=master)
+[![codecov](https://codecov.io/gh/physiopy/phys2bids/branch/master/graph/badge.svg)](https://codecov.io/gh/physiopy/phys2bids)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Phys2bids is a python3 library meant to format physiological files in BIDS.
@@ -15,33 +20,17 @@ It was born for AcqKnowledge files (BIOPAC), and at the moment it supports
 (ADInstruments).
 It doesn't support physiological files recorded with the MRI, as you can find a software for it [here](https://github.com/tarrlab/physio2bids).
 
-It requires python 3.6 or above, as well as the modules:
-- `numpy >= 1.9.3`
-- `matplotlib >= 3.1.1`
+[Read the latest documentation](https://phys2bids.readthedocs.io/en/latest/) for more information on phys2bids!
 
-In order to process ``.acq`` files, it needs [`bioread`](https://github.com/uwmadison-chm/bioread), an excellent module
-that can be found at [this link](https://github.com/uwmadison-chm/bioread).
-
-### Linux and mac installation
-Donwload the package as zip from github and uncompress or if you have ``git`` use the command:
-
-``git clone https://github.com/smoia/phys2bids.git``
-
-open a terminal in the phy2bids folder and execute the command:
-
-``pip3 install .``
-
-type the command:
-
-``phys2bids -v``
-
-if your output is: ``phys2bids 1.2.0-beta`` or similar, phys2bids is ready to be used.
+Shortcuts:
+- [Requirements](https://phys2bids.readthedocs.io/en/latest/installation.html#requirements)
+- [Installation](https://phys2bids.readthedocs.io/en/latest/installation.html#linux-and-mac-installation)
+- [Usage](https://phys2bids.readthedocs.io/en/latest/cli.html)
+- [Contributing to phys2bids](https://phys2bids.readthedocs.io/en/latest/contributing.html)
+- [Developer installation](https://phys2bids.readthedocs.io/en/latest/contributing.html#linux-and-mac-developer-installation)
 
 **The project is currently under development**.
 Any suggestion/bug report is welcome! Feel free to open an issue.
-
-At the very moment, it assumes all the extracted channels from a file
-have the same sampling freq.
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
@@ -65,7 +54,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://github.com/smoia"><img src="https://avatars3.githubusercontent.com/u/35300580?v=4" width="100px;" alt=""/><br /><sub><b>Stefano Moia</b></sub></a><br /><a href="https://github.com/physiopy/phys2bids/commits?author=smoia" title="Code">💻</a> <a href="#data-AyyagariA" title="Data">🔣</a> <a href="#ideas-smoia" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-smoia" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#projectManagement-smoia" title="Project Management">📆</a> <a href="https://github.com/physiopy/phys2bids/pulls?q=is%3Apr+reviewed-by%3Asmoia" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/physiopy/phys2bids/commits?author=smoia" title="Documentation">📖</a> <a href="#content-smoia" title="Content">🖋</a></td>
     <td align="center"><a href="https://github.com/RayStick"><img src="https://avatars3.githubusercontent.com/u/50215726?v=4" width="100px;" alt=""/><br /><sub><b>Rachael Stickland</b></sub></a><br /><a href="https://github.com/physiopy/phys2bids/issues?q=author%3Araystick" title="Bug reports">🐛</a> <a href="#data-AyyagariA" title="Data">🔣</a> <a href="https://github.com/physiopy/phys2bids/commits?author=raystick" title="Documentation">📖</a> <a href="#userTesting-raystick" title="User Testing">📓</a></td>
-    <td align="center"><a href="https://github.com/eurunuela"><img src="https://avatars0.githubusercontent.com/u/13706448?v=4" width="100px;" alt=""/><br /><sub><b>Eneko Uruñuela</b></sub></a><br /><a href="https://github.com/physiopy/phys2bids/issues?q=author%3Aeurunuela" title="Bug reports">🐛</a> <a href="#infra-eurunuela" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/physiopy/phys2bids/pulls?q=is%3Apr+reviewed-by%3Aeurunuela" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/physiopy/phys2bids/commits?author=eurunuela" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/eurunuela"><img src="https://avatars0.githubusercontent.com/u/13706448?v=4" width="100px;" alt=""/><br /><sub><b>Eneko Uruñuela</b></sub></a><br /><a href="https://github.com/physiopy/phys2bids/issues?q=author%3Aeurunuela" title="Bug reports">🐛</a> <a href="https://github.com/physiopy/phys2bids/commits?author=eurunuela" title="Code">💻</a> <a href="#infra-eurunuela" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/physiopy/phys2bids/pulls?q=is%3Apr+reviewed-by%3Aeurunuela" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/physiopy/phys2bids/commits?author=eurunuela" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/kristinazvolanek"><img src="https://avatars3.githubusercontent.com/u/54590158?v=4" width="100px;" alt=""/><br /><sub><b>Kristina Zvolanek</b></sub></a><br /><a href="#data-AyyagariA" title="Data">🔣</a> <a href="https://github.com/physiopy/phys2bids/commits?author=kristinazvolanek" title="Documentation">📖</a> <a href="#content-kristinazvolanek" title="Content">🖋</a></td>
   </tr>
 </table>

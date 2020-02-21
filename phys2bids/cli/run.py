@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+Parser for phys2bids
+"""
 
 import argparse
 
@@ -13,10 +16,12 @@ def _get_parser():
     -------
     parser.parse_args() : argparse dict
 
-    """
-    parser = argparse.ArgumentParser()
+    Notes
+    -----
     # Argument parser follow template provided by RalphyZ.
     # https://stackoverflow.com/a/43456577
+    """
+    parser = argparse.ArgumentParser()
     optional = parser._action_groups.pop()
     required = parser.add_argument_group('Required Argument:')
     required.add_argument('-in', '--input-file',
@@ -116,8 +121,18 @@ def _get_parser():
     optional.add_argument('-chplot', '--channels-plot',
                           dest='chplot',
                           type=str,
-                          help='path to store channels plot ',
+                          help='full path to store channels plot ',
                           default='')
+    optional.add_argument('-debug', '--debug',
+                          dest='debug',
+                          action='store_true',
+                          help='Only print debugging info to log file. Default is False.',
+                          default=False)
+    optional.add_argument('-quiet', '--quiet',
+                          dest='quiet',
+                          action='store_true',
+                          help='Only print warnings to log file. Default is False.',
+                          default=False)
     optional.add_argument('-v', '--version', action='version',
                           version=('%(prog)s ' + __version__))
 
