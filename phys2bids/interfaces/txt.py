@@ -14,6 +14,19 @@ from phys2bids.physio_obj import BlueprintInput
 LGR = logging.getLogger(__name__)
 
 
+def multifreq(header, timeseries, freq, interval):
+    mfreq = []
+    for idx, chann in enumerate(timeseries):
+        eq_samples = 1
+        for idx2, value in enumerate(chann[1:]):
+            if value == chann[idx2]:
+                eq_samples += 1
+            else:
+                break
+        mfreq.append(freq[idx] / eq_samples)
+    return mfreq
+
+
 def process_labchart(channel_list, chtrig, header=[]):
     """
     Process labchart header and channel_list and puts it in
