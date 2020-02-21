@@ -8,7 +8,7 @@ from phys2bids.interfaces.acq import populate_phys_input
 def test_populate_phys_input():
     # Read data to test
     # url to Test_belt_pulse_samefreq.acq
-    url = 'https://osf.io/pn7vt/download'
+    url = 'https://osf.io/27gqb/download'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_filename = 'Test_belt_pulse_samefreq.acq'
     test_full_path = os.path.join(test_path, test_filename)
@@ -29,7 +29,7 @@ def test_read_file():
     # Makes sure that the read_file method from bioread works
     # Read data to test
     # url to Test_belt_pulse_samefreq.acq
-    url = 'https://osf.io/pn7vt/download'
+    url = 'https://osf.io/27gqb/download'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_filename = 'Test_belt_pulse_samefreq.acq'
     test_full_path = os.path.join(test_path, test_filename)
