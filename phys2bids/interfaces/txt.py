@@ -14,7 +14,22 @@ from phys2bids.physio_obj import BlueprintInput
 LGR = logging.getLogger(__name__)
 
 
-def multifreq(header, timeseries, freq, interval):
+def multifreq(timeseries, freq):
+    """
+    Checks if there are channels with different frequency than the maximum one
+
+    Parameters
+    ----------
+    timeseries: list
+        list with channels only in np array format
+    freq : list
+        list with the maximun frequency
+
+    Returns
+    -------
+    mfreq: list
+        new list with the actual frequency of the channels
+    """
     mfreq = []
     for idx, chann in enumerate(timeseries):
         eq_samples = 1
@@ -114,6 +129,7 @@ def process_labchart(channel_list, chtrig, header=[]):
         ordered_timeseries = ordered_timeseries + timeseries
         names = names + orig_names[1:]
         units = units + orig_units[1:]
+    freq = multifreq(timeseries, freq)
     return BlueprintInput(ordered_timeseries, freq, names, units)
 
 
@@ -214,6 +230,7 @@ def process_acq(channel_list, chtrig, header=[]):
     ordered_timeseries = [t_ch, timeseries[chtrig - 1]]
     timeseries.pop(chtrig - 1)
     ordered_timeseries = ordered_timeseries + timeseries
+    freq = multifreq(timeseries, freq)
     return BlueprintInput(ordered_timeseries, freq, names, units)
 
 
