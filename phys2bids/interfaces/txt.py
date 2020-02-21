@@ -129,7 +129,7 @@ def process_labchart(channel_list, chtrig, header=[]):
         ordered_timeseries = ordered_timeseries + timeseries
         names = names + orig_names[1:]
         units = units + orig_units[1:]
-    freq = multifreq(timeseries, freq)
+    freq = multifreq(ordered_timeseries, freq)
     return BlueprintInput(ordered_timeseries, freq, names, units)
 
 
@@ -230,7 +230,7 @@ def process_acq(channel_list, chtrig, header=[]):
     ordered_timeseries = [t_ch, timeseries[chtrig - 1]]
     timeseries.pop(chtrig - 1)
     ordered_timeseries = ordered_timeseries + timeseries
-    freq = multifreq(timeseries, freq)
+    freq = multifreq(ordered_timeseries, freq)
     return BlueprintInput(ordered_timeseries, freq, names, units)
 
 
