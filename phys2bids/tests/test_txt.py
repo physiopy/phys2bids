@@ -6,7 +6,7 @@ import wget
 
 
 def test_read_header_and_channels():
-    url = 'https://osf.io/27gqb/download'  # url to Test_belt_pulse_samefreq.txt
+    url = 'https://osf.io/9ct2g/download'  # url to Test_belt_pulse_samefreq.txt
     test_path = resource_filename('phys2bids', 'tests/data')
     test_filename = 'Test_belt_pulse_samefreq.txt'
     test_full_path = os.path.join(test_path, test_filename)
