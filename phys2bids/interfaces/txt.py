@@ -40,10 +40,12 @@ def multifreq(timeseries, freq):
             if value == chann[idx2]:
                 # sample duplicated by interpolation
                 # increase counter so we have the number of
-                # interpolated samples
+                # equal samples continuos
                 eq_samples += 1
             else:
                 break
+        # if there are interpolated samples, it means the frequency is lower
+        # decrease frequency by dividing for the number of equal samples continuosS
         mfreq.append(freq[idx] / eq_samples)
     return mfreq
 
