@@ -31,10 +31,16 @@ def multifreq(timeseries, freq):
         new list with the actual frequency of the channels
     """
     mfreq = []
+    # for each channel check frequency
     for idx, chann in enumerate(timeseries):
-        eq_samples = 1
+        eq_samples = 1 # start counter
+        # get value on the channel
         for idx2, value in enumerate(chann[1:]):
+            # if value equal to previous value
             if value == chann[idx2]:
+                # sample duplicated by interpolation
+                # increase counter so we have the number of
+                # interpolated samples
                 eq_samples += 1
             else:
                 break
