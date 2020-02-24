@@ -160,3 +160,15 @@ def test_raises():
     with raises(AttributeError) as errorinfo:
         txt.process_labchart(channels, chtrig, header)
     assert 'not in a valid LabChart' in str(errorinfo.value)
+
+
+def test_muiltifreq():
+    # testing file already downloaded in the first test
+    test_path = resource_filename('phys2bids', 'tests/data')
+    test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
+    test_full_path = os.path.join(test_path, test_filename)
+    chtrig = 1
+    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
+    phys_obj = txt.process_labchart(channels, chtrig, header)
+    new_freq = txt.multifreq(phys_obj.timeseries, [phys_obj.freq[0]] * len(phys_obj.freq))
+    assert new_freq[-1] == 500.0
