@@ -33,7 +33,7 @@ def multifreq(timeseries, freq):
     mfreq = []
     # for each channel check frequency
     for idx, chann in enumerate(timeseries):
-        eq_samples = 1 # start counter
+        eq_samples = 1  # start counter
         # get value on the channel
         for idx2, value in enumerate(chann[1:]):
             # if value equal to previous value
