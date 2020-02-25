@@ -80,6 +80,8 @@ def process_labchart(channel_list, chtrig, header=[]):
     orig_names_len = len(orig_names)
     names = ['time', 'trigger']
     # get channels
+    # this transposes the channel_list from a list of samples x channels to
+    # a list of channels x samples
     timeseries = list(map(list, zip(*channel_list)))
     freq = [1 / interval[0]] * len(timeseries)
     timeseries = [np.array(darray) for darray in timeseries]
@@ -138,6 +140,8 @@ def process_acq(channel_list, chtrig, header=[]):
         raise AttributeError('Files without header are not supported yet')
     header.append(channel_list[0])
     del channel_list[0]  # delete sample size from channel list
+    # this transposes the channel_list from a list of samples x channels to
+    # a list of channels x samples
     timeseries = list(map(list, zip(*channel_list)))
 
     interval = header[1][0].split()
