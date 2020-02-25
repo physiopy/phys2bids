@@ -116,7 +116,10 @@ def process_labchart(channel_list, chtrig, header=[]):
     orig_names_len = len(orig_names)
     names = ['time', 'trigger']
     # get channels
-    timeseries = np.matrix(channel_list).T.tolist()
+    # this transposes the channel_list from a list of samples x channels to
+    # a list of channels x samples
+    timeseries = list(map(list, zip(*channel_list)))
+    freq = [1 / interval[0]] * len(timeseries)
     timeseries = [np.array(darray) for darray in timeseries]
     # check the file has a time channel if not create it and add it
     if (orig_names_len < len(timeseries)):
@@ -175,7 +178,10 @@ def process_acq(channel_list, chtrig, header=[]):
         raise AttributeError('Files without header are not supported yet')
     header.append(channel_list[0])
     del channel_list[0]  # delete sample size from channel list
-    timeseries = np.matrix(channel_list).T.tolist()
+    # this transposes the channel_list from a list of samples x channels to
+    # a list of channels x samples
+    timeseries = list(map(list, zip(*channel_list)))
+
     interval = header[1][0].split()
     # check the interval is in some of the correct AcqKnowledge units
     if interval[-1].split('/')[0] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz']:
@@ -266,7 +272,7 @@ def read_header_and_channels(filename, chtrig):
     with open(filename, 'r') as f:
         for line in f:
             line = line.rstrip('\n').split('\t')
-            if line[-1] == '':
+            while line[-1] == '':
                 line.remove('')  # sometimes there is an extra space
             for item in line:
                 if '#' == item[0]:  # detecting comments
