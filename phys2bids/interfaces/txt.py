@@ -10,11 +10,13 @@ import logging
 import numpy as np
 
 from phys2bids.physio_obj import BlueprintInput
+from operator import itemgetter
+from collections import Counter
 
 LGR = logging.getLogger(__name__)
 
 
-def check_multifreq(timeseries, freq):
+def check_multifreq(timeseries, freq, start=1000, leftout=1000):
     """
     Checks if there are channels with different frequency than the maximum one
 
@@ -24,7 +26,11 @@ def check_multifreq(timeseries, freq):
         list with channels only in np array format
     freq : list
         list with the maximun frequency
-
+    start : integer
+        first sample of the channel to be considered
+    leftout : integer
+        number of sample at the end of the channel that are not considered
+        This is done  so this process doesn't take forever
     Returns
     -------
     mfreq: list
@@ -33,20 +39,29 @@ def check_multifreq(timeseries, freq):
     mfreq = []
     # for each channel check frequency
     for idx, chann in enumerate(timeseries):
-        eq_samples = 1  # start counter
-        # get value on the channel
-        for idx2, value in enumerate(chann[1:]):
-            # if value equal to previous value
-            if value == chann[idx2]:
-                # sample duplicated by interpolation
-                # increase counter so we have the number of
-                # equal samples continuos
-                eq_samples += 1
-            else:
-                break
+        eq_list = []
+        # cut the beggining of the channel
+        chann = chann[start:]
+        while len(chann) > leftout:
+            eq_samples = 1  # start counter
+            for idx2, value in enumerate(chann[1:]):
+                # if value equal to previous value
+                if value == chann[idx2]:
+                    # count number of identic samples
+                    eq_samples += 1
+                else:
+                    # save this number when the next sample is not equal
+                    eq_list.append(eq_samples)
+                    # remove the samples that where equal
+                    chann = chann[idx2 + 1:]
+                    break
+        # count the number of ocurrences in eq_list
+        dict_fr = Counter(eq_list)
+        # get maximum
+        n_inter_samples = max(dict_fr.items(), key=itemgetter(1))[0]
         # if there are interpolated samples, it means the frequency is lower
-        # decrease frequency by dividing for the number of equal samples continuosS
-        mfreq.append(freq[idx] / eq_samples)
+        # decrease frequency by dividing for the number of equal samples continuos
+        mfreq.append(freq[idx] / n_inter_samples)
     return mfreq
 
 
