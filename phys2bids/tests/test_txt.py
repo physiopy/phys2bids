@@ -187,5 +187,5 @@ def test_multifreq():
     header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     phys_obj = txt.process_labchart(channels, chtrig, header)
     new_freq = txt.check_multifreq(phys_obj.timeseries, [phys_obj.freq[0]] * len(phys_obj.freq))
-    assert new_freq[-1] == 500.0
+    assert new_freq[-3] == 40
     os.remove(test_full_path)
