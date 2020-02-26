@@ -14,7 +14,7 @@ from phys2bids.physio_obj import BlueprintInput
 LGR = logging.getLogger(__name__)
 
 
-def multifreq(timeseries, freq):
+def check_multifreq(timeseries, freq):
     """
     Checks if there are channels with different frequency than the maximum one
 
@@ -140,7 +140,7 @@ def process_labchart(channel_list, chtrig, header=[]):
         names = names + orig_names[1:]
         units = units + orig_units[1:]
     freq = [1 / interval[0]] * len(ordered_timeseries)
-    freq = multifreq(ordered_timeseries, freq)
+    freq = check_multifreq(ordered_timeseries, freq)
     return BlueprintInput(ordered_timeseries, freq, names, units)
 
 
@@ -244,7 +244,7 @@ def process_acq(channel_list, chtrig, header=[]):
     ordered_timeseries = [t_ch, timeseries[chtrig - 1]]
     timeseries.pop(chtrig - 1)
     ordered_timeseries = ordered_timeseries + timeseries
-    freq = multifreq(ordered_timeseries, freq)
+    freq = check_multifreq(ordered_timeseries, freq)
     return BlueprintInput(ordered_timeseries, freq, names, units)
 
 
@@ -311,10 +311,6 @@ def populate_phys_input(filename, chtrig):
     ValueError
         If len(header) == 0 and therefore there is no header
         If files are not in acq or txt format
-
-    Notes
-    ------
-    multifrequency not detected yet
 
     See Also
     --------
