@@ -81,6 +81,8 @@ def plot_trigger(time, trigger, fileprefix, options, figsize=FIGSIZE, dpi=SET_DP
 
     def ntr2time(x):
         return x * options.tr
+    trigger_idx = (range(len(trigger)))
+    thr_idex = [i for (i, j) in zip(trigger_idx, trigger) if j >= options.thr]
     outname = os.path.splitext(os.path.basename(options.filename))[0]
     thrline = np.ones(time.shape) * options.thr
     fig = plt.figure(figsize=figsize, dpi=dpi)
@@ -94,8 +96,8 @@ def plot_trigger(time, trigger, fileprefix, options, figsize=FIGSIZE, dpi=SET_DP
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
     subplot.plot(time, trigger, '-', time, time, '-')
     subplot = fig.add_subplot(224)
-    subplot.set_xlim([options.tr * (options.num_timepoints_expected - 4),
-                      options.tr * (options.num_timepoints_expected + 4)])
+    subplot.set_xlim([time[thr_idex[-1]] - 4,
+                      time[thr_idex[-1]] + 4])
     subplot.set_ylim([-0.2, options.thr * 3])
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
     subplot.plot(time, trigger, '-', time, time, '-')
