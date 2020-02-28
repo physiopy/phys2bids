@@ -81,11 +81,11 @@ def plot_trigger(time, trigger, fileprefix, options, figsize=FIGSIZE, dpi=SET_DP
 
     def ntr2time(x):
         return x * options.tr
-
+    outname = os.path.splitext(os.path.basename(options.filename))[0]
     thrline = np.ones(time.shape) * options.thr
     fig = plt.figure(figsize=figsize, dpi=dpi)
     subplot = fig.add_subplot(211)
-    subplot.set_title('trigger and time')
+    subplot.set_title(f'trigger and time for {outname}.tsv.gz')
     subplot.set_ylim([-0.2, options.thr * 10])
     subplot.plot(time, trigger, '-', time, thrline, 'r-.', time, time, '-')
     subplot = fig.add_subplot(223)
