@@ -275,7 +275,7 @@ def _main(argv=None):
         plot_path += f'_sub-{options.sub}'
     if options.ses:
         plot_path += f'_sub-{options.ses}'
-    viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[1],
+    viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[options.chtrig],
                      plot_path, options)
 
     # The next few lines remove the undesired channels from phys_in.
