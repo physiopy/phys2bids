@@ -192,6 +192,11 @@ def _main(argv=None):
     """
     options = _get_parser().parse_args(argv)
 
+    # Check options to make them internally coherent pt. I
+    # #!# This can probably be done while parsing?
+    options.outdir = utils.check_input_dir(options.outdir)
+    utils.path_exists_or_make_it(options.outdir)
+
     # Create logfile name
     basename = 'phys2bids_'
     extension = 'tsv'
@@ -222,10 +227,9 @@ def _main(argv=None):
     LGR.info(f'Currently running phys2bids version {version_number}')
     LGR.info(f'Input file is {options.filename}')
 
-    # Check options to make them internally coherent
+    # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
     options.indir = utils.check_input_dir(options.indir)
-    options.outdir = utils.check_input_dir(options.outdir)
     options.filename, ftype = utils.check_input_type(options.filename,
                                                      options.indir)
 
@@ -262,10 +266,6 @@ def _main(argv=None):
     # #!# Get option of no trigger! (which is wrong practice or Respiract)
     phys_in.check_trigger_amount(options.thr, options.num_timepoints_expected,
                                  options.tr)
-
-    # Create output folder if necessary
-    LGR.info('Checking that the output folder exists')
-    utils.path_exists_or_make_it(options.outdir)
 
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
