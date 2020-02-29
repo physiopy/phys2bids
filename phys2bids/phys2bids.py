@@ -9,7 +9,6 @@ It was born for Acqknowledge files (BIOPAC), and at the moment it supports
 
 It requires python 3.6 or above, as well as the modules:
 - `numpy`
-- `pandas`
 - `matplotlib`
 
 In order to process ``.acq`` files, it needs `bioread`, an excellent module
