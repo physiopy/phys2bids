@@ -9,7 +9,7 @@ First of all: thank you!
 Contributions can be made in different ways, not only code!
 As we follow the `all-contributors`_ specification, any contribution will be recognised accordingly.
 
-The first thing you might want to do, is having a look at the ``contributors.md`` file as well as the ``conduct.md`` guidelines.
+The first thing you might want to do, is having a look at the :ref: `contributor guide <contributorfile>`_ page as well as the ``conduct.md`` guidelines.
 
 The second thing is to install ``phys2bids`` as a developer.
 This will let you run the program with the latest modification, without requiring to re-install it every time.

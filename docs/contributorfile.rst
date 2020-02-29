@@ -7,10 +7,28 @@ Welcome to the physiopy organisation! It’s great news you’re thinking about 
 Working with many people from many different places is great, but sometimes this means the code can become messy due to the many different ways a contribution can be made. For this reason, we have set up some guidelines for contributions - to help you get along ASAP!
 Before you start you'll need to set up a free `GitHub <https://github.com/>`_ account and sign in. Here are some `instructions <https://help.github.com/articles/signing-up-for-a-new-github-account>`_.
 If you lack knowledge in python development / github use / physiological data handling, don’t be scared! Try to jump in anyway. Most of the original contributors learned these things exactly this way - jumping in and hoping to fall in the right way without breaking too many bones.
-Do you want to jump in but don’t exactly know where/how? You can drop a few lines in gitter [link], so we can help you find something that suits you!
+Do you want to jump in but don’t exactly know where/how? You can drop a few lines in `gitter <https://gitter.im/phys2bids/community>`_, so we can help you find something that suits you!
 Already know what you're looking for in this guide? Jump to the following sections:
 
-[Menu for when it’s implemented in GitHub] |
+- :ref:`Aims of physiopy <aims>`_
+- :ref:`Join the conversation <joinconvo>`_
+- :ref:`Contributions <contributions>`_
+ - :ref:`Contributing with small documentation changes <smalldocs>`_
+ - :ref:`Contributing with User testing <usertests>`_
+ - :ref:`Contributing with test files <testfile>`_
+ - :ref:`Contributing documentation through GitHub <documenting>`_
+ - :ref:`Contributing code through GitHub <code>`_
+- :ref:`Issues and Milestones <issues>`_
+- :ref:`Labels <labels>`_
+ - :ref:`Issues labels <issuelabel>`_
+ - :ref:`PRs labels <prlabel>`_
+ - :ref:`Issues & PRs labels <issueprlabels>`_
+ - :ref:`Good First Issues <g1i>`_
+- :ref:`Contribution workflow <workflow>`_
+- :ref:`Pull Requests <pr>`_
+- :ref:`Style Guide <styling>`_
+- :ref:`Automatic Testing <testing>`_
+- :ref:`Recognizing contributors <recognising>`_
 
 .. _aims:
 
@@ -29,7 +47,7 @@ Our main goal is to help collect, analyse and share physiological data interfaci
 Joining the conversation
 ------------------------
 We’re trying to keep all the conversation related to the project development in GitHub `issues <https://github.com/smoia/phys2bids/issues>`_.
-We maintain a `gitter chat room <https://gitter.im/phys2bids>`_ for more informal conversations and general project updates.
+We maintain a `gitter chat room <https://gitter.im/phys2bids/community>`_ for more informal conversations and general project updates.
 We also have a dev call once a month - specifically the second Thursday of the month! If you want to participate, drop a line in gitter!
 When interacting in the common channels, please adhere to our `code of conduct <https://github.com/physiopy/phys2bids/blob/master/Code_of_Conduct.md>`_.
 
@@ -40,39 +58,40 @@ Contributions
 
 .. _smalldocs:
 
-Contributing with small documentation changes 
+Contributing with small documentation changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 If you are new to GitHub and just have a small documentation change recommendation (such as: typos detection, small improvements in the content, ...), please open an issue in the relative project, and label it with the “Documentation” label.
 Chances are those types of changes are easily doable with the online editor, which means you can do them, or ask for help from the developers!
 
 .. _usertests:
 
-Contributing with User testing 
+Contributing with User testing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Another, non-coding friendly way to contribute to physiopy is by testing the packages.
 There are different kinds of tests, but to simplify things you can think mainly about automatic tests and user tests.
-To know more about **Automatic tests**, you can read the `testing section <...>`_.
+To know more about **Automatic tests**, you can read the :ref:`testing section <testing>`_.
 **User testing** are warm, human, emotional and opinionated tests that not only check that the code is doing what it needs to do, but also whether there’s a better way to do it - namely better reports, clearer screen outputs, warnings and exceptions, unexpected bugs that have to be corrected.
-If you want to perform one, open an issue on GitHub or drop a comment in Gitter, refer to this `blueprint <[https://docs.google.com/document/d/1b6wc7JVDs3vi-2IqGg_Ed_oWKbZ6siboAJHf55nodKo/edit?usp=sharing](https://docs.google.com/document/d/1b6wc7JVDs3vi-2IqGg_Ed_oWKbZ6siboAJHf55nodKo/edit?usp=sharing)>`_ and don’t be afraid to ask questions!
+If you want to perform one, open an issue on GitHub or drop a comment in Gitter, refer to this `blueprint <https://docs.google.com/document/d/1b6wc7JVDs3vi-2IqGg_Ed_oWKbZ6siboAJHf55nodKo/edit?usp=sharing>`_ and don’t be afraid to ask questions!
 
 .. _testfile:
 
-Contributing with test files 
+Contributing with test files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 At physiopy we always try to imagine and support every possible setting out there. However, our imagination has a limit - but if you think our packages should process a specific format/setting that you have, we’re more than glad to do so!
 To make it happen, we need an example of the file we want to process, so you will have to share it with us (and the rest of the world)! The contribution can be a full file of data that you already acquired, a part of that file (pay attention to what is the minimum you need to share!), or mock data.
-To contribute with a test file, open an Issue in GitHub and label it with “Test”. We’ll help you add the file in our `osf.io <https://osf.io/3txqr/>`_ space.
+To contribute with a test file, open an Issue in GitHub and label it with *Test*. We’ll help you add the file in our 
+`OSF <https://osf.io/3txqr/>`_ space.
 We’re extremely grateful for this type of contribution - so grateful that we asked allcontributors to add a dedicated category!
 
 .. _documenting:
 
-Contributing documentation through GitHub 
+Contributing documentation through GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-We use `readthedocs <[https://readthedocs.org/](https://readthedocs.org/)>`_ to create our documentation. Every contribution is welcome - and it follows the steps of a code contribution.
+We use `readthedocs <https://readthedocs.org/>`_ to create our documentation. Every contribution is welcome - and it follows the steps of a code contribution.
 
 .. _code:
 
-Contributing code through GitHub 
+Contributing code through GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This section covers 90% of the contributions a project like physiopy receives - code, documentation and tests.
 The best way to make this kind of contributions, in a nutshell, would be:
@@ -94,11 +113,11 @@ At physiopy, we use Issues and Milestones to keep track of and organise our work
 
 Labels
 ------
-The current list of labels are here[link]. They can be used for **Issues**, **PRs**, or both.
+The current list of labels are `here <https://github.com/physiopy/phys2bids/labels>`_. They can be used for **Issues**, **PRs**, or both.
 
 .. _issuelabel:
 
-Issues labels 
+Issues labels
 ~~~~~~~~~~~~~
 -  Bug: Something isn’t working. It either breaks the code or has an unexpected outcome.
 -  Discussion: Discussion of a concept or implementation. These Issues are prone to be open ad infinitum. Jump in the conversation if you want!
@@ -111,7 +130,7 @@ Issues labels
 
 .. _prlabel:
 
-PRs labels 
+PRs labels
 ~~~~~~~~~~
 -  BugFIX: These PRs close an issue labelled ``bug``. they also increase the semantic versioning for fixes (+0.0.1).
 -  Invalid: These PRs don't seem right. They actually seem so not right that they won’t be further processed. This label invalidates an Hacktoberfest contribution. If you think this is wrong, start a discussion in the relevant issue (or open one if missing). Reviewers are asked to give an explanation for the use of this label.
@@ -120,7 +139,7 @@ PRs labels
 
 .. _issueprlabels:
 
-Issues & PRs labels 
+Issues & PRs labels
 ~~~~~~~~~~~~~~~~~~~
 -  Documentation: Improvements or additions to documentation. This category includes (but is not limited to) docs pages, docstrings, and code comments.
 -  Duplicate: Whatever this is, it exists already! Maybe it’s a closed Issue/PR, that should be reopened.
@@ -132,7 +151,7 @@ Issues & PRs labels
 
 .. _g1i:
 
-Good First Issues 
+Good First Issues
 ~~~~~~~~~~~~~~~~~
 Good First Issues are issues that are either very simple, or that help knowing the programs or the language better. We use it to help contributors with less experience to learn and familiarise with Git, GitHub, Python3, and physiology.
 We invite more expert contributors to avoid those issues, leave them to beginners and possibly help them out in the resolution of the issue. However, if the issue is left unassigned or unattended for long, and it’s considered important or urgent, anyone can tackle it.
@@ -141,7 +160,7 @@ We invite more expert contributors to avoid those issues, leave them to beginner
 
 Contribution workflow
 ---------------------
-There are many descriptions of a good contribution workflow out there. For instance, we suggest to have a look at `tedana’s workflow <[https://github.com/ME-ICA/tedana/blob/master/CONTRIBUTING.md#making-a-change](https://github.com/ME-ICA/tedana/blob/master/CONTRIBUTING.md#making-a-change)>`_.
+There are many descriptions of a good contribution workflow out there. For instance, we suggest to have a look at `tedana's workflow <https://github.com/ME-ICA/tedana/blob/master/CONTRIBUTING.md#making-a-change>`_.
 At physiopy, we follow a very similar workflow. The only two differences are:
 -  We ask you to test the code locally before merging it, and then, if possible, write some automatic tests for the code to be run in our Continuous Integration! Check the testing section below to know more.
 -  We suggest opening a draft PR as soon as you can - so it’s easier for us to help you!
@@ -175,7 +194,7 @@ Automatic Testing
 -----------------
 physiopy uses Continuous Integration (CI) to make life easier. In particular, we use the `Travis CI <https://travis-ci.org/>`_ platform to run automatic testing!
 **Automatic tests** are cold, robotic, emotionless, and opinionless tests that check that the program is doing what it is expected to. They are written by the developers and run (by Travis CI) every time they send a Pull Request to physiopy repositories. They complement the warm, human, emotional and opinionated **user tests**, as they tell us if a piece of code is failing.
-Travis CI uses `pytest <[https://docs.pytest.org/en/latest/](https://docs.pytest.org/en/latest/)>`_ to run the tests. The great thing about it is that you can run it in advance on your local version of the code!
+Travis CI uses `pytest <https://docs.pytest.org/en/latest/>`_ to run the tests. The great thing about it is that you can run it in advance on your local version of the code!
 We can measure the amount of code that is tested with [codecov]8https://docs.pytest.org/en/latest/), which is an indication of how reliable our packages are! We try to maintain a 90% code coverage, and for this reason, PR should contain tests!
 The four main type of tests we use are:
 1. Unit tests
