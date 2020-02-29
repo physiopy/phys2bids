@@ -10,25 +10,25 @@ If you lack knowledge in python development / github use / physiological data ha
 Do you want to jump in but don’t exactly know where/how? You can drop a few lines in `gitter <https://gitter.im/phys2bids/community>`_, so we can help you find something that suits you!
 Already know what you're looking for in this guide? Jump to the following sections:
 
-- :ref:`Aims of physiopy <aims>`_
-- :ref:`Join the conversation <joinconvo>`_
-- :ref:`Contributions <contributions>`_
- - :ref:`Contributing with small documentation changes <smalldocs>`_
- - :ref:`Contributing with User testing <usertests>`_
- - :ref:`Contributing with test files <testfile>`_
- - :ref:`Contributing documentation through GitHub <documenting>`_
- - :ref:`Contributing code through GitHub <code>`_
-- :ref:`Issues and Milestones <issues>`_
-- :ref:`Labels <labels>`_
- - :ref:`Issues labels <issuelabel>`_
- - :ref:`PRs labels <prlabel>`_
- - :ref:`Issues & PRs labels <issueprlabels>`_
- - :ref:`Good First Issues <g1i>`_
-- :ref:`Contribution workflow <workflow>`_
-- :ref:`Pull Requests <pr>`_
-- :ref:`Style Guide <styling>`_
-- :ref:`Automatic Testing <testing>`_
-- :ref:`Recognizing contributors <recognising>`_
+- `Aims of physiopy <#aims>`_
+- `Join the conversation <#joinconvo>`_
+- `Contributions <#contributions>`_
+ - `Contributing with small documentation changes <#smalldocs>`_
+ - `Contributing with User testing <#usertests>`_
+ - `Contributing with test files <#testfile>`_
+ - `Contributing documentation through GitHub <#documenting>`_
+ - `Contributing code through GitHub <#code>`_
+- `Issues and Milestones <#issues>`_
+- `Labels <#labels>`_
+ - `Issues labels <#issuelabel>`_
+ - `PRs labels <#prlabel>`_
+ - `Issues & PRs labels <#issueprlabels>`_
+ - `Good First Issues <#g1i>`_
+- `Contribution workflow <#workflow>`_
+- `Pull Requests <#pr>`_
+- `Style Guide <#styling>`_
+- `Automatic Testing <#testing>`_
+- `Recognizing contributors <#recognising>`_
 
 .. _aims:
 
@@ -69,7 +69,7 @@ Contributing with User testing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Another, non-coding friendly way to contribute to physiopy is by testing the packages.
 There are different kinds of tests, but to simplify things you can think mainly about automatic tests and user tests.
-To know more about **Automatic tests**, you can read the :ref:`testing section <testing>`_.
+To know more about **Automatic tests**, you can read the `testing section <#testing>`_.
 **User testing** are warm, human, emotional and opinionated tests that not only check that the code is doing what it needs to do, but also whether there’s a better way to do it - namely better reports, clearer screen outputs, warnings and exceptions, unexpected bugs that have to be corrected.
 If you want to perform one, open an issue on GitHub or drop a comment in Gitter, refer to this `blueprint <https://docs.google.com/document/d/1b6wc7JVDs3vi-2IqGg_Ed_oWKbZ6siboAJHf55nodKo/edit?usp=sharing>`_ and don’t be afraid to ask questions!
 
