@@ -71,7 +71,7 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
         File containing summary
     """
     start_time = -time_offset
-    summary = (f'------------------------------------------------\n'
+    summary = (f'\n------------------------------------------------\n'
                f'Filename:            {filename}\n'
                f'\n'
                f'Timepoints expected: {ntp_expected}\n'
