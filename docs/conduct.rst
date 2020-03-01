@@ -1,4 +1,4 @@
-.. _codeofconduct:
+.. _conduct:
 
 Physiopy Code of Conduct
 =========================
