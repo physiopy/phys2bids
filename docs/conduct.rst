@@ -3,7 +3,11 @@
 Physiopy Code of Conduct
 =========================
 
-Based on the Contributor Covenant Code of Conduct.
+*Based on the* |covenant|_.
+
+.. _covenant: https://www.contributor-covenant.org/
+
+.. |covenant| replace:: *Contributor Covenant Code of Conduct*
 
 Our Pledge
 ----------
@@ -138,12 +142,12 @@ Attribution
 -----------
 
 This Code of Conduct is adapted from the `Contributor
-Covenant <https://www.contributor-covenant.org>`__, version 2.0,
+Covenant <https://www.contributor-covenant.org>`_, version 2.0,
 available at
 https://www.contributor-covenant.org/version/2/0/code\_of\_conduct.html.
 
 Community Impact Guidelines were inspired by `Mozilla's code of conduct
-enforcement ladder <https://github.com/mozilla/diversity>`__.
+enforcement ladder <https://github.com/mozilla/diversity>`_.
 
 For answers to common questions about this code of conduct, see the FAQ
 at https://www.contributor-covenant.org/faq. Translations are available
