@@ -12,18 +12,18 @@ Already know what you're looking for in this guide? Jump to the following sectio
 
 - `Aims of physiopy <#aims>`_
 - `Join the conversation <#joinconvo>`_
-- `Contributions <#contributions>`_
- - `Contributing with small documentation changes <#smalldocs>`_
- - `Contributing with User testing <#usertests>`_
- - `Contributing with test files <#testfile>`_
- - `Contributing documentation through GitHub <#documenting>`_
- - `Contributing code through GitHub <#code>`_
-- `Issues and Milestones <#issues>`_
-- `Labels <#labels>`_
- - `Issues labels <#issuelabel>`_
- - `PRs labels <#prlabel>`_
- - `Issues & PRs labels <#issueprlabels>`_
- - `Good First Issues <#g1i>`_
+- `Contributions <#contributiontypes>`_
+   - `Contributing with small documentation changes <#smalldocs>`_
+   - `Contributing with User testing <#usertests>`_
+   - `Contributing with test files <#testfile>`_
+   - `Contributing documentation through GitHub <#documenting>`_
+   - `Contributing code through GitHub <#code>`_
+- `Issues and Milestones <#issuesmilestones>`_
+- `Labels <#labeltypes>`_
+   - `Issues labels <#issuelabel>`_
+   - `PRs labels <#prlabel>`_
+   - `Issues & PRs labels <#issueprlabels>`_
+   - `Good First Issues <#g1i>`_
 - `Contribution workflow <#workflow>`_
 - `Pull Requests <#pr>`_
 - `Style Guide <#styling>`_
@@ -49,9 +49,9 @@ Joining the conversation
 We’re trying to keep all the conversation related to the project development in GitHub `issues <https://github.com/smoia/phys2bids/issues>`_.
 We maintain a `gitter chat room <https://gitter.im/phys2bids/community>`_ for more informal conversations and general project updates.
 We also have a dev call once a month - specifically the second Thursday of the month! If you want to participate, drop a line in gitter!
-When interacting in the common channels, please adhere to our `code of conduct <https://github.com/physiopy/phys2bids/blob/master/Code_of_Conduct.md>`_.
+When interacting in the common channels, please adhere to our `code of conduct <conduct.html>`_.
 
-.. _contributions:
+.. _contributiontypes:
 
 Contributions
 -------------
@@ -101,7 +101,7 @@ The best way to make this kind of contributions, in a nutshell, would be:
 4. Wait for a review, discuss it or comply, repeat until ready.
 Issues and PR chats are great to maintain track of the conversation on the contribution. They are based upon GitHub-flavoured `Markdown <https://daringfireball.net/projects/markdown>`_. GitHub has a helpful page on `getting started with writing and formatting Markdown on GitHub <https://help.github.com/articles/getting-started-with-writing-and-formatting-on-github>`_.
 
-.. _issues:
+.. _issuesmilestones:
 
 Issues and Milestones
 ---------------------
@@ -109,7 +109,7 @@ At physiopy, we use Issues and Milestones to keep track of and organise our work
 - **Issues** describe pieces of work that need to be completed to move the project forwards. We try to keep them as simple and clear as possible: an issue should describe a unitary, possibly small piece of work (unless it’s about refactoring). Don’t be scared of opening many issues at once, if it makes sense! Just check that what you’re proposing is not listed in a previous issue (open or closed) yet - we don’t like doubles. Issues get labelled. That helps the contributors to know what they’re about. Check the label list to know what types are there, and use them accordingly! Issues can also be **assigned**. If you want to work on an assigned issue, ask permission first!
 - **Milestones** set the higher level workflow. They sketch deadlines and important releases. Issues are assigned to these milestones by the maintainers. If you feel that an issue should be assigned to a specific milestone but the maintainers have not done so, discuss it in the issue chat or in Gitter! We might have just missed it, or we might not (yet) see how it aligns with the overall project structure/milestone.
 
-.. _labels:
+.. _labeltypes:
 
 Labels
 ------

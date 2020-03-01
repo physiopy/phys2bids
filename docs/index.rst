@@ -34,5 +34,6 @@ Contents
    cli
    contributing
    contributorfile
+   conduct
    license
    api
