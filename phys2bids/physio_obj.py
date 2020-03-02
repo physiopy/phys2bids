@@ -315,11 +315,12 @@ class BlueprintInput():
             Returns to stdout (e.g. on screen) channels,
             their names and their sampling rate.
         """
-        LGR.info(f'File {filename} contains:\n')
-
+        info = f'\nFile {filename} contains:\n'
         for ch in range(1, self.ch_amount):
-            LGR.info(f'{ch:02d}. {self.ch_name[ch]};'
-                     f' sampled at {self.freq[ch]} Hz')
+            info = info + (f'{ch:02d}. {self.ch_name[ch]};'
+                           f' sampled at {self.freq[ch]} Hz\n')
+
+        LGR.info(info)
 
 
 class BlueprintOutput():
