@@ -263,7 +263,7 @@ def _main(argv=None):
 
     # Run analysis on trigger channel to get first timepoint and the time offset.
     # #!# Get option of no trigger! (which is wrong practice or Respiract)
-    phys_in.check_trigger_amount(options.thr, options.num_timepoints_expected,
+    phys_in.check_trigger_amount(options.chtrig, options.thr, options.num_timepoints_expected,
                                  options.tr)
 
     # Create trigger plot. If possible, to have multiple outputs in the same
@@ -274,7 +274,7 @@ def _main(argv=None):
         plot_path += f'_sub-{options.sub}'
     if options.ses:
         plot_path += f'_sub-{options.ses}'
-    viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[1],
+    viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[options.chtrig],
                      plot_path, options)
 
     # The next few lines remove the undesired channels from phys_in.
