@@ -9,7 +9,6 @@ It was born for Acqknowledge files (BIOPAC), and at the moment it supports
 
 It requires python 3.6 or above, as well as the modules:
 - `numpy`
-- `pandas`
 - `matplotlib`
 
 In order to process ``.acq`` files, it needs `bioread`, an excellent module
@@ -71,7 +70,7 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
         File containing summary
     """
     start_time = -time_offset
-    summary = (f'------------------------------------------------\n'
+    summary = (f'\n------------------------------------------------\n'
                f'Filename:            {filename}\n'
                f'\n'
                f'Timepoints expected: {ntp_expected}\n'

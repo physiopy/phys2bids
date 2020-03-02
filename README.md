@@ -28,6 +28,8 @@ Shortcuts:
 - [Usage](https://phys2bids.readthedocs.io/en/latest/cli.html)
 - [Contributing to phys2bids](https://phys2bids.readthedocs.io/en/latest/contributing.html)
 - [Developer installation](https://phys2bids.readthedocs.io/en/latest/contributing.html#linux-and-mac-developer-installation)
+- [**Contributor guide**](https://phys2bids.readthedocs.io/en/latest/contributorfile.html)
+- [**Code of Conduct**](https://phys2bids.readthedocs.io/en/latest/conduct.html)
 
 **The project is currently under development**.
 Any suggestion/bug report is welcome! Feel free to open an issue.
