@@ -185,21 +185,17 @@ def process_acq(channel_list, chtrig, header=[]):
         # since units are in the line imediately after we get the units at the same time
         orig_units.append(header[index1 + 1][0])
     # reorder channels names
-    names = ['time', 'trigger']
-    orig_names.pop(chtrig - 1)
+    names = ['time', ]
     names = names + orig_names
     # reoder channels units
-    units = ['s', 'Volts']
-    orig_units.pop(chtrig - 1)
+    units = ['s', ]
     units = units + orig_units
     # get channels
     timeseries = [np.array(darray) for darray in timeseries]
     duration = (timeseries[0].shape[0] + 1) * interval[0]
     t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
-    ordered_timeseries = [t_ch, timeseries[chtrig - 1]]
-    timeseries.pop(chtrig - 1)
-    ordered_timeseries = ordered_timeseries + timeseries
-    return BlueprintInput(ordered_timeseries, freq, names, units)
+    timeseries = [t_ch, ] + timeseries
+    return BlueprintInput(timeseries, freq, names, units)
 
 
 def read_header_and_channels(filename, chtrig):
