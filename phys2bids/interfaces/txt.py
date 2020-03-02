@@ -74,11 +74,11 @@ def process_labchart(channel_list, chtrig, header=[]):
     orig_units = []
     for item in range_list:
         orig_units.append(item.split(' ')[1])
-    units = ['s', 'V']
+    units = ['s', ]
     # get names
     orig_names = header[4][1:]
     orig_names_len = len(orig_names)
-    names = ['time', 'trigger']
+    names = ['time', ]
     # get channels
     # this transposes the channel_list from a list of samples x channels to
     # a list of channels x samples
@@ -86,24 +86,17 @@ def process_labchart(channel_list, chtrig, header=[]):
     freq = [1 / interval[0]] * len(timeseries)
     timeseries = [np.array(darray) for darray in timeseries]
     # check the file has a time channel if not create it and add it
-    if (orig_names_len < len(timeseries)):
-        ordered_timeseries = [timeseries[0], timeseries[chtrig]]
-        timeseries.pop(chtrig)
-        timeseries.pop(0)
-        ordered_timeseries = ordered_timeseries + timeseries
-        orig_units.pop(chtrig - 1)
-        orig_names.pop(chtrig - 1)
-        names = names + orig_names
-        units = units + orig_units
-    else:
+    # As the "time" doesn't have a column header, if the number of header names
+    # is less than the number of timesieries, then "time" is column 0...
+    # ...otherwise, create the time channel
+    if not (orig_names_len < len(timeseries)):
         duration = (timeseries[0].shape[0] + 1) * interval[0]
         t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
-        ordered_timeseries = [t_ch, timeseries[chtrig]]
-        timeseries.pop(chtrig)
-        ordered_timeseries = ordered_timeseries + timeseries
-        names = names + orig_names[1:]
-        units = units + orig_units[1:]
-    return BlueprintInput(ordered_timeseries, freq, names, units)
+        timeseries = [t_ch, ] + timeseries
+
+    names = names + orig_names
+    units = units + orig_units
+    return BlueprintInput(timeseries, freq, names, units)
 
 
 def process_acq(channel_list, chtrig, header=[]):
