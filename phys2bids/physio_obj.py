@@ -178,12 +178,7 @@ class BlueprintInput():
         if 'time' in new_names:
             del new_names[new_names.index('time')]
 
-        if 'trigger' in new_names:
-            del new_names[new_names.index('trigger')]
-        elif ch_trigger:
-            del new_names[ch_trigger]
-
-        new_names = ['time', 'trigger'] + new_names
+        new_names = ['time', ] + new_names
 
         self.ch_name = has_size(is_valid(new_names, list, list_type=str),
                                 self.ch_amount, 'unknown')
@@ -237,7 +232,7 @@ class BlueprintInput():
         del self.ch_name[idx]
         del self.units[idx]
 
-    def check_trigger_amount(self, thr=2.5, num_timepoints_expected=0, tr=0):
+    def check_trigger_amount(self, chtrig=1, thr=2.5, num_timepoints_expected=0, tr=0):
         """
         Counts trigger points and corrects time offset in
         the list representing time.
@@ -266,7 +261,7 @@ class BlueprintInput():
         LGR.info('Counting trigger points')
         # Use first derivative of the trigger channel to find the TRs,
         # comparing it to a given threshold.
-        trigger_deriv = np.diff(self.timeseries[1])
+        trigger_deriv = np.diff(self.timeseries[chtrig])
         timepoints = trigger_deriv > thr
         num_timepoints_found = timepoints.sum()
         time_offset = self.timeseries[0][timepoints.argmax()]
@@ -322,7 +317,7 @@ class BlueprintInput():
         """
         LGR.info(f'File {filename} contains:\n')
 
-        for ch in range(2, self.ch_amount):
+        for ch in range(1, self.ch_amount):
             LGR.info(f'{(ch-2):02d}. {self.ch_name[ch]};'
                      f' sampled at {self.freq[ch]} Hz')
 

@@ -263,7 +263,7 @@ def _main(argv=None):
 
     # Run analysis on trigger channel to get first timepoint and the time offset.
     # #!# Get option of no trigger! (which is wrong practice or Respiract)
-    phys_in.check_trigger_amount(options.thr, options.num_timepoints_expected,
+    phys_in.check_trigger_amount(options.chtrig, options.thr, options.num_timepoints_expected,
                                  options.tr)
 
     # Create trigger plot. If possible, to have multiple outputs in the same
