@@ -9,7 +9,6 @@ It was born for Acqknowledge files (BIOPAC), and at the moment it supports
 
 It requires python 3.6 or above, as well as the modules:
 - `numpy`
-- `pandas`
 - `matplotlib`
 
 In order to process ``.acq`` files, it needs `bioread`, an excellent module
@@ -29,14 +28,18 @@ Please scroll to bottom to read full license.
 """
 
 import os
+import logging
+import datetime
 
 from copy import deepcopy
 from numpy import savetxt
 from pathlib import Path
 
-from phys2bids import utils, viz
+from phys2bids import utils, viz, _version
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
+
+LGR = logging.getLogger(__name__)
 
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
@@ -67,7 +70,7 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
         File containing summary
     """
     start_time = -time_offset
-    summary = (f'------------------------------------------------\n'
+    summary = (f'\n------------------------------------------------\n'
                f'Filename:            {filename}\n'
                f'\n'
                f'Timepoints expected: {ntp_expected}\n'
@@ -76,7 +79,7 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
                f'Sampling started at: {start_time} s\n'
                f'Tip: Time 0 is the time of first trigger\n'
                f'------------------------------------------------\n')
-    print(summary)
+    LGR.info(summary)
     utils.writefile(outfile, '.log', summary)
 
 
@@ -187,10 +190,45 @@ def _main(argv=None):
 
     """
     options = _get_parser().parse_args(argv)
-    # Check options to make them internally coherent
+
+    # Check options to make them internally coherent pt. I
+    # #!# This can probably be done while parsing?
+    options.outdir = utils.check_input_dir(options.outdir)
+    utils.path_exists_or_make_it(options.outdir)
+
+    # Create logfile name
+    basename = 'phys2bids_'
+    extension = 'tsv'
+    isotime = datetime.datetime.now().replace(microsecond=0).isoformat()
+    logname = os.path.join(options.outdir, (basename + isotime + '.' + extension))
+
+    # Set logging format
+    log_formatter = logging.Formatter(
+        '%(asctime)s\t%(name)-12s\t%(levelname)-8s\t%(message)s',
+        datefmt='%Y-%m-%dT%H:%M:%S')
+
+    # Set up logging file and open it for writing
+    log_handler = logging.FileHandler(logname)
+    log_handler.setFormatter(log_formatter)
+    sh = logging.StreamHandler()
+
+    if options.quiet:
+        logging.basicConfig(level=logging.WARNING,
+                            handlers=[log_handler, sh])
+    elif options.debug:
+        logging.basicConfig(level=logging.DEBUG,
+                            handlers=[log_handler, sh])
+    else:
+        logging.basicConfig(level=logging.INFO,
+                            handlers=[log_handler, sh])
+
+    version_number = _version.get_versions()['version']
+    LGR.info(f'Currently running phys2bids version {version_number}')
+    LGR.info(f'Input file is {options.filename}')
+
+    # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
     options.indir = utils.check_input_dir(options.indir)
-    options.outdir = utils.check_input_dir(options.outdir)
     options.filename, ftype = utils.check_input_type(options.filename,
                                                      options.indir)
 
@@ -212,9 +250,9 @@ def _main(argv=None):
         # #!# We should add a logger here.
         raise NotImplementedError('Currently unsupported file type.')
 
-    print('Reading the file')
+    LGR.info(f'Reading the file {infile}')
     phys_in = populate_phys_input(infile, options.chtrig)
-    print('Reading infos')
+    LGR.info('Reading infos')
     phys_in.print_info(options.filename)
     # #!# Here the function viz.plot_channel should be called
     if options.chplot != '' or options.info:
@@ -225,34 +263,30 @@ def _main(argv=None):
 
     # Run analysis on trigger channel to get first timepoint and the time offset.
     # #!# Get option of no trigger! (which is wrong practice or Respiract)
-    phys_in.check_trigger_amount(options.thr, options.num_timepoints_expected,
+    phys_in.check_trigger_amount(options.chtrig, options.thr, options.num_timepoints_expected,
                                  options.tr)
-
-    # Create output folder if necessary
-    print('Checking that the output folder exists')
-    utils.path_exists_or_make_it(options.outdir)
 
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
-    print('Plot trigger')
+    LGR.info('Plot trigger')
     plot_path = deepcopy(outfile)
     if options.sub:
         plot_path += f'_sub-{options.sub}'
     if options.ses:
         plot_path += f'_sub-{options.ses}'
-    viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[1],
+    viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[options.chtrig],
                      plot_path, options)
 
     # The next few lines remove the undesired channels from phys_in.
     if options.chsel:
-        print('Dropping unselected channels')
+        LGR.info('Dropping unselected channels')
         for i in reversed(range(0, phys_in.ch_amount)):
             if i not in options.chsel:
                 phys_in.delete_at_index(i)
 
     # If requested, change channel names.
     if options.ch_name:
-        print('Renaming channels with given names')
+        LGR.info('Renaming channels with given names')
         phys_in.rename_channels(options.ch_name)
 
     # The next few lines create a dictionary of different BlueprintInput
@@ -260,9 +294,9 @@ def _main(argv=None):
     uniq_freq_list = set(phys_in.freq)
     output_amount = len(uniq_freq_list)
     if output_amount > 1:
-        print(f'Found {output_amount} different frequencies in input!')
+        LGR.warning(f'Found {output_amount} different frequencies in input!')
 
-    print(f'Preparing {output_amount} output files.')
+    LGR.info(f'Preparing {output_amount} output files.')
     phys_out = {}
     for uniq_freq in uniq_freq_list:
         phys_out[uniq_freq] = deepcopy(phys_in)
@@ -276,10 +310,10 @@ def _main(argv=None):
         phys_out[uniq_freq] = BlueprintOutput.init_from_blueprint(phys_out[uniq_freq])
 
     if options.heur_file and options.sub:
-        print(f'Preparing BIDS output using {options.heur_file}')
+        LGR.info(f'Preparing BIDS output using {options.heur_file}')
     elif options.heur_file and not options.sub:
-        print(f'While "-heur" was specified, option "-sub" was not.\n'
-              f'Skipping BIDS formatting.')
+        LGR.warning(f'While "-heur" was specified, option "-sub" was not.\n'
+                    f'Skipping BIDS formatting.')
 
     for uniq_freq in uniq_freq_list:
         # If possible, prepare bids renaming.
@@ -298,7 +332,7 @@ def _main(argv=None):
             # Append "freq" to filename if more than one freq
             outfile = f'outfile_{uniq_freq}'
 
-        print(f'Exporting files for freq {uniq_freq}')
+        LGR.info(f'Exporting files for freq {uniq_freq}')
         savetxt(outfile + '.tsv.gz', phys_out[uniq_freq].timeseries,
                 fmt='%.8e', delimiter='\t')
         print_json(outfile, phys_out[uniq_freq].freq,

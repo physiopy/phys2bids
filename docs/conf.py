@@ -17,7 +17,7 @@ import sys
 
 # Add project name, copyright holder, and author(s)
 project = 'phys2bids'
-author = '{} developers'.format(project)
+author = 'the {} developers'.format(project)
 copyright = '2019-{}, {}'.format(datetime.now().year, author)
 
 # Import project to get version info
