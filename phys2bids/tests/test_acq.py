@@ -13,15 +13,15 @@ def test_populate_phys_input():
     test_filename = 'Test_belt_pulse_samefreq.acq'
     test_full_path = os.path.join(test_path, test_filename)
     wget.download(url, test_full_path)
-    chtrig = 2
+    chtrig = 3
     phys_obj = populate_phys_input(test_full_path, chtrig)
     assert phys_obj.ch_name[0] == 'time'
     assert phys_obj.freq[0] == 10000.0
     assert phys_obj.units[0] == 's'
-    # checkts that the trigger is in the given channel
-    assert phys_obj.ch_name[chtrig - 1] == 'trigger'
-    assert phys_obj.freq[chtrig - 1] == 10000.0
-    assert phys_obj.units[chtrig - 1] == 'Volts'
+    # checkts that the trigger is in the right channel
+    assert phys_obj.ch_name[chtrig] == 'MR TRIGGER - Custom, HLT100C - A 5'
+    assert phys_obj.freq[chtrig] == 10000.0
+    assert phys_obj.units[chtrig] == 'Volts'
     os.remove(test_full_path)
 
 
