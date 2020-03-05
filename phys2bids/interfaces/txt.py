@@ -16,7 +16,7 @@ from collections import Counter
 LGR = logging.getLogger(__name__)
 
 
-def check_multifreq(timeseries, freq, start=1000, leftout=1000):
+def check_multifreq(timeseries, freq, start=0, leftout=0):
     """
     Checks if there are channels with different frequency than the maximum one
 
@@ -38,11 +38,12 @@ def check_multifreq(timeseries, freq, start=1000, leftout=1000):
     """
     mfreq = []
     # for each channel check frequency
+    max_equal = 1
     for idx, chann in enumerate(timeseries):
         eq_list = []
         # cut the beggining of the channel
         chann = chann[start:]
-        while len(chann) > leftout:
+        while len(chann) > max_equal:
             eq_samples = 1  # start counter
             for idx2, value in enumerate(chann[1:]):
                 # if value equal to previous value
@@ -54,6 +55,8 @@ def check_multifreq(timeseries, freq, start=1000, leftout=1000):
                     eq_list.append(eq_samples)
                     # remove the samples that where equal
                     chann = chann[idx2 + 1:]
+                    if max_equal < eq_samples:
+                        max_equal = eq_samples
                     break
         # count the number of ocurrences in eq_list
         dict_fr = Counter(eq_list)
