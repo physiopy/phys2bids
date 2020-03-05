@@ -63,7 +63,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
         # get maximum
         n_inter_samples = max(dict_fr.items(), key=itemgetter(1))[0]
         # if there are interpolated samples, it means the frequency is lower
-        # decrease frequency by dividing for the number of equal samples continuos
+        # decrease frequency by dividing for the number of interpolated samples
         mfreq.append(freq[idx] / n_inter_samples)
     return mfreq
 
