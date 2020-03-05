@@ -29,7 +29,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
     start : integer
         first sample of the channel to be considered
     leftout : integer
-        number of sample at the end of the channel that are not considered
+        number of samples at the end of the channel that are not considered
         This is done  so this process doesn't take forever
     Returns
     -------
