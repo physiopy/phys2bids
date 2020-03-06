@@ -33,5 +33,7 @@ Contents
    bestpractice
    cli
    contributing
+   contributorfile
+   conduct
    license
    api

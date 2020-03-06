@@ -10,8 +10,62 @@ import logging
 import numpy as np
 
 from phys2bids.physio_obj import BlueprintInput
+from operator import itemgetter
+from collections import Counter
 
 LGR = logging.getLogger(__name__)
+
+
+def check_multifreq(timeseries, freq, start=0, leftout=0):
+    """
+    Checks if there are channels with different frequency than the maximum one
+
+    Parameters
+    ----------
+    timeseries: list
+        list with channels only in np array format
+    freq : list
+        list with the maximun frequency
+    start : integer
+        first sample of the channel to be considered
+    leftout : integer
+        number of samples at the end of the channel that are not considered
+        This is done  so this process doesn't take forever
+    Returns
+    -------
+    mfreq: list
+        new list with the actual frequency of the channels
+    """
+    mfreq = []
+    # for each channel check frequency
+    max_equal = 1
+    for idx, chann in enumerate(timeseries):
+        eq_list = []
+        # cut the beggining of the channel
+        chann = chann[start:]
+        while len(chann) > max_equal:
+            eq_samples = 1  # start counter
+            for idx2, value in enumerate(chann[1:]):
+                # if value equal to previous value
+                if value == chann[idx2]:
+                    # count number of identic samples
+                    eq_samples += 1
+                else:
+                    # save this number when the next sample is not equal
+                    eq_list.append(eq_samples)
+                    # remove the samples that where equal
+                    chann = chann[idx2 + 1:]
+                    if max_equal < eq_samples:
+                        max_equal = eq_samples
+                    break
+        # count the number of ocurrences in eq_list
+        dict_fr = Counter(eq_list)
+        # get maximum
+        n_inter_samples = max(dict_fr.items(), key=itemgetter(1))[0]
+        # if there are interpolated samples, it means the frequency is lower
+        # decrease frequency by dividing for the number of interpolated samples
+        mfreq.append(freq[idx] / n_inter_samples)
+    return mfreq
 
 
 def process_labchart(channel_list, chtrig, header=[]):
@@ -74,11 +128,11 @@ def process_labchart(channel_list, chtrig, header=[]):
     orig_units = []
     for item in range_list:
         orig_units.append(item.split(' ')[1])
-    units = ['s', 'V']
+    units = ['s', ]
     # get names
     orig_names = header[4][1:]
     orig_names_len = len(orig_names)
-    names = ['time', 'trigger']
+    names = ['time', ]
     # get channels
     # this transposes the channel_list from a list of samples x channels to
     # a list of channels x samples
@@ -86,24 +140,18 @@ def process_labchart(channel_list, chtrig, header=[]):
     freq = [1 / interval[0]] * len(timeseries)
     timeseries = [np.array(darray) for darray in timeseries]
     # check the file has a time channel if not create it and add it
-    if (orig_names_len < len(timeseries)):
-        ordered_timeseries = [timeseries[0], timeseries[chtrig]]
-        timeseries.pop(chtrig)
-        timeseries.pop(0)
-        ordered_timeseries = ordered_timeseries + timeseries
-        orig_units.pop(chtrig - 1)
-        orig_names.pop(chtrig - 1)
-        names = names + orig_names
-        units = units + orig_units
-    else:
+    # As the "time" doesn't have a column header, if the number of header names
+    # is less than the number of timesieries, then "time" is column 0...
+    # ...otherwise, create the time channel
+    if not (orig_names_len < len(timeseries)):
         duration = (timeseries[0].shape[0] + 1) * interval[0]
         t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
-        ordered_timeseries = [t_ch, timeseries[chtrig]]
-        timeseries.pop(chtrig)
-        ordered_timeseries = ordered_timeseries + timeseries
-        names = names + orig_names[1:]
-        units = units + orig_units[1:]
-    return BlueprintInput(ordered_timeseries, freq, names, units)
+        timeseries = [t_ch, ] + timeseries
+    names = names + orig_names
+    units = units + orig_units
+    freq = [1 / interval[0]] * len(timeseries)
+    freq = check_multifreq(timeseries, freq)
+    return BlueprintInput(timeseries, freq, names, units)
 
 
 def process_acq(channel_list, chtrig, header=[]):
@@ -192,21 +240,18 @@ def process_acq(channel_list, chtrig, header=[]):
         # since units are in the line imediately after we get the units at the same time
         orig_units.append(header[index1 + 1][0])
     # reorder channels names
-    names = ['time', 'trigger']
-    orig_names.pop(chtrig - 1)
+    names = ['time', ]
     names = names + orig_names
     # reoder channels units
-    units = ['s', 'Volts']
-    orig_units.pop(chtrig - 1)
+    units = ['s', ]
     units = units + orig_units
     # get channels
     timeseries = [np.array(darray) for darray in timeseries]
     duration = (timeseries[0].shape[0] + 1) * interval[0]
     t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
-    ordered_timeseries = [t_ch, timeseries[chtrig - 1]]
-    timeseries.pop(chtrig - 1)
-    ordered_timeseries = ordered_timeseries + timeseries
-    return BlueprintInput(ordered_timeseries, freq, names, units)
+    timeseries = [t_ch, ] + timeseries
+    freq = check_multifreq(timeseries, freq)
+    return BlueprintInput(timeseries, freq, names, units)
 
 
 def read_header_and_channels(filename, chtrig):
@@ -272,10 +317,6 @@ def populate_phys_input(filename, chtrig):
     ValueError
         If len(header) == 0 and therefore there is no header
         If files are not in acq or txt format
-
-    Notes
-    ------
-    multifrequency not detected yet
 
     See Also
     --------
