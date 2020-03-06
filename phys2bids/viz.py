@@ -86,20 +86,53 @@ def plot_trigger(time, trigger, fileprefix, options, figsize=FIGSIZE, dpi=SET_DP
     outname = os.path.splitext(os.path.basename(options.filename))[0]
     thrline = np.ones(time.shape) * options.thr
     fig = plt.figure(figsize=figsize, dpi=dpi)
+    plt.subplots_adjust(hspace=0.4)
     subplot = fig.add_subplot(211)
     subplot.set_title(f'trigger and time for {outname}.tsv.gz')
     subplot.set_ylim([-0.2, options.thr * 10])
+    subplot.set_xlabel('time')
+    subplot.set_ylabel('Volts')
     subplot.plot(time, trigger, '-', time, thrline, 'r-.', time, time, '-')
     subplot = fig.add_subplot(223)
     subplot.set_xlim([-options.tr * 4, options.tr * 4])
     subplot.set_ylim([-0.2, options.thr * 3])
+    subplot.set_xlabel('time')
+    subplot.set_ylabel('Volts')
+    ax2 = subplot.twiny()
+    ax2.set_xticklabels('')
+    ax2.tick_params(
+                    axis='x',          # changes apply to the x-axis
+                    which='both',      # both major and minor ticks are affected
+                    bottom=False,      # ticks along the bottom edge are off
+                    top=False,         # ticks along the top edge are off
+                    labelbottom=False,
+                    pad=15)
+    # tr_array = []
+    # for sample in time:
+    #     tr_array.append(time2ntr(sample))
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
+    ax2.set_xlabel('TR')
     subplot.plot(time, trigger, '-', time, time, '-')
+    ax2.set_title('Initial trigger for inputed threshold')
     subplot = fig.add_subplot(224)
-    subplot.set_xlim([time[thr_idex[-1]] - 4,
-                      time[thr_idex[-1]] + 4])
+    subplot.set_xlim([options.tr * (options.num_timepoints_expected) - 4,
+                      options.tr * (options.num_timepoints_expected) + 4])
+    subplot.set_xlabel('time')
+    subplot.set_ylabel('Volts')
     subplot.set_ylim([-0.2, options.thr * 3])
+    ax2 = subplot.twiny()
+    ax2.set_xticklabels('')
+    ax2.tick_params(
+                    axis='x',          # changes apply to the x-axis
+                    which='both',      # both major and minor ticks are affected
+                    bottom=False,      # ticks along the bottom edge are off
+                    top=False,         # ticks along the top edge are off
+                    labelbottom=False,
+                    pad=15)
+    # tr_array = []
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
+    ax2.set_xlabel('TR')
+    ax2.set_title('Last trigger for inputed threshold')
     subplot.plot(time, trigger, '-', time, time, '-')
     plt.savefig(fileprefix + '_trigger_time.png', dpi=dpi)
     plt.close()
