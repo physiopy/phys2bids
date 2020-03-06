@@ -46,7 +46,8 @@ def plot_channel(table, channel, fileprefix, figsize=FIGSIZE, dpi=SET_DPI):
     plt.close()
 
 
-def plot_trigger(time, trigger, fileprefix, options, figsize=FIGSIZE, dpi=SET_DPI):
+def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
+                 filename, figsize=FIGSIZE, dpi=SET_DPI):
     """
     Produces a textfile of the specified extension `ext`,
     containing the given content `text`.
@@ -77,25 +78,25 @@ def plot_trigger(time, trigger, fileprefix, options, figsize=FIGSIZE, dpi=SET_DP
     """
 
     def time2ntr(x):
-        return x / options.tr
+        return x / tr
 
     def ntr2time(x):
-        return x * options.tr
+        return x * tr
     # trigger_idx = (range(len(trigger)))
     # thr_idex = [i for (i, j) in zip(trigger_idx, trigger) if j >= options.thr]
-    outname = os.path.splitext(os.path.basename(options.filename))[0]
-    thrline = np.ones(time.shape) * options.thr
+    outname = os.path.splitext(os.path.basename(filename))[0]
+    thrline = np.ones(time.shape) * thr
     fig = plt.figure(figsize=figsize, dpi=dpi)
     plt.subplots_adjust(hspace=0.4)
     subplot = fig.add_subplot(211)
     subplot.set_title(f'trigger and time for {outname}.tsv.gz')
-    subplot.set_ylim([-0.2, options.thr * 10])
+    subplot.set_ylim([-0.2, thr * 10])
     subplot.set_xlabel('time')
     subplot.set_ylabel('Volts')
     subplot.plot(time, trigger, '-', time, thrline, 'r-.', time, time, '-')
     subplot = fig.add_subplot(223)
-    subplot.set_xlim([-options.tr * 4, options.tr * 4])
-    subplot.set_ylim([-0.2, options.thr * 3])
+    subplot.set_xlim([-tr * 4, tr * 4])
+    subplot.set_ylim([-0.2, thr * 3])
     subplot.set_xlabel('time')
     subplot.set_ylabel('Volts')
     ax2 = subplot.twiny()
@@ -115,11 +116,11 @@ def plot_trigger(time, trigger, fileprefix, options, figsize=FIGSIZE, dpi=SET_DP
     subplot.plot(time, trigger, '-', time, time, '-')
     ax2.set_title('Initial trigger for inputed threshold')
     subplot = fig.add_subplot(224)
-    subplot.set_xlim([options.tr * (options.num_timepoints_expected) - 4,
-                      options.tr * (options.num_timepoints_expected) + 4])
+    subplot.set_xlim([tr * (num_timepoints_expected) - 4,
+                      tr * (num_timepoints_expected) + 4])
     subplot.set_xlabel('time')
     subplot.set_ylabel('Volts')
-    subplot.set_ylim([-0.2, options.thr * 3])
+    subplot.set_ylim([-0.2, thr * 3])
     ax2 = subplot.twiny()
     ax2.set_xticklabels('')
     ax2.tick_params(
