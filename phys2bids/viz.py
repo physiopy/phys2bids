@@ -46,7 +46,8 @@ def plot_channel(table, channel, fileprefix, figsize=FIGSIZE, dpi=SET_DPI):
     plt.close()
 
 
-def plot_trigger(time, trigger, fileprefix, options, figsize=FIGSIZE, dpi=SET_DPI):
+def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
+                 figsize=FIGSIZE, dpi=SET_DPI):
     """
     Produces a textfile of the specified extension `ext`,
     containing the given content `text`.
@@ -77,26 +78,26 @@ def plot_trigger(time, trigger, fileprefix, options, figsize=FIGSIZE, dpi=SET_DP
     """
 
     def time2ntr(x):
-        return x / options.tr
+        return x / tr
 
     def ntr2time(x):
-        return x * options.tr
+        return x * tr
 
-    thrline = np.ones(time.shape) * options.thr
+    thrline = np.ones(time.shape) * thr
     fig = plt.figure(figsize=figsize, dpi=dpi)
     subplot = fig.add_subplot(211)
     subplot.set_title('trigger and time')
-    subplot.set_ylim([-0.2, options.thr * 10])
+    subplot.set_ylim([-0.2, thr * 10])
     subplot.plot(time, trigger, '-', time, thrline, 'r-.', time, time, '-')
     subplot = fig.add_subplot(223)
-    subplot.set_xlim([-options.tr * 4, options.tr * 4])
-    subplot.set_ylim([-0.2, options.thr * 3])
+    subplot.set_xlim([-tr * 4, tr * 4])
+    subplot.set_ylim([-0.2, thr * 3])
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
     subplot.plot(time, trigger, '-', time, time, '-')
     subplot = fig.add_subplot(224)
-    subplot.set_xlim([options.tr * (options.num_timepoints_expected - 4),
-                      options.tr * (options.num_timepoints_expected + 4)])
-    subplot.set_ylim([-0.2, options.thr * 3])
+    subplot.set_xlim([tr * (num_timepoints_expected - 4),
+                      tr * (num_timepoints_expected + 4)])
+    subplot.set_ylim([-0.2, thr * 3])
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
     subplot.plot(time, trigger, '-', time, time, '-')
     plt.savefig(fileprefix + '_trigger_time.png', dpi=dpi)
