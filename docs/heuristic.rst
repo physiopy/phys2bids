@@ -10,73 +10,19 @@ Anatomy of a heuristic file
 ---------------------------
 
 Let's have a look under the hood of the heuristic files used in the `tutorial <howto.html>`_.
-It's the file ``heur_tutorial.py`` in ``phys2bids/phy2bids/heuristics/``::
+It's the file ``heur_tutorial.py`` in ``phys2bids/phy2bids/heuristics/``:
 
-    import fnmatch
-
-
-    def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
-        # ############################## #
-        # ##       Modify here!       ## #
-        # ##                          ## #
-        # ##  Possible variables are: ## #
-        # ##    -task (required)      ## #
-        # ##    -run                  ## #
-        # ##    -rec                  ## #
-        # ##    -acq                  ## #
-        # ##    -direct               ## #
-        # ##                          ## #
-        # ##                          ## #
-        # ##    See example below     ## #
-        # ############################## #
-
-        if fnmatch.fnmatchcase(physinfo, '*tutorial*'):
-            task = 'test'
-            run = '00'
-            rec = 'labchart'
-        elif physinfo == 'Example':
-            task = 'rest'
-            run = '01'
-            acq = 'resp'
-            # ############################## #
-            # ## Don't modify below this! ## #
-            # ############################## #
-        else:
-            # #!# Transform sys.exit in debug warnings or raiseexceptions!
-            # #!# Make all of the above a dictionary
-            raise Warning(f'The heuristic {__file__} could not deal with {physinfo}')
-
-        if not task:
-            raise KeyError(f'No "task" attribute found')
-
-        name = name + '_task-' + task
-
-        # filename spec: sub-<label>[_ses-<label>]_task-<label>[_acq-<label>] ...
-        #                ... [_ce-<label>][_dir-<label>][_rec-<label>] ...
-        #                ... [_run-<index>][_recording-<label>]_physio
-        if acq:
-            name = name + '_acq-' + acq
-
-        if direct:
-            name = name + '_dir-' + direct
-
-        if rec:
-            name = name + '_rec-' + rec
-
-        if run:
-            name = name + '_run-' + run
-
-        return name
+.. literalinclude:: ../phys2bids/heuristics/heur_tutorial.py
+   :linenos:
 
 We can split this file into three parts: the initialisation, the dictionaries, and the functional code.
 
 Initialisation
 ^^^^^^^^^^^^^^
-::
-    import fnmatch
 
-
-    def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
+.. literalinclude:: ../phys2bids/heuristics/heur_tutorial.py
+   :linenos:
+   :lines: 1-4
 
 It's important **not to modify this part of the file**. Instead, you can copy and paste it into your own heuristic file.
 
@@ -90,32 +36,12 @@ The scripts imports ``fnmatch``, a nice python module that lets you use bash-lik
 
 Dictionaries
 ^^^^^^^^^^^^
-::
-    # ############################## #
-    # ##       Modify here!       ## #
-    # ##                          ## #
-    # ##  Possible variables are: ## #
-    # ##    -task (required)      ## #
-    # ##    -run                  ## #
-    # ##    -rec                  ## #
-    # ##    -acq                  ## #
-    # ##    -direct               ## #
-    # ##                          ## #
-    # ##                          ## #
-    # ##    See example below     ## #
-    # ############################## #
 
-    if fnmatch.fnmatchcase(physinfo, '*tutorial*'):
-        task = 'test'
-        run = '00'
-        rec = 'labchart'
-    elif physinfo == 'Example':
-        task = 'rest'
-        run = '01'
-        acq = 'resp'
-        # ############################## #
-        # ## Don't modify below this! ## #
-        # ############################## #
+.. literalinclude:: ../phys2bids/heuristics/heur_tutorial.py
+   :linenos:
+   :lines: 5-29
+   :lineno-start: 5
+   :dedent: 4
 
 This is the core of the function, and the part that should be adapted to process your files. In practice, it's the beginning of a |statement|_.
 | You need an ``if`` or ``elif`` statement for each file that you want to process, that will test if the ``physinfo`` is similar to a string (first case) or exactly matches a string (second case). The content of the statement is a set of `variable initialisations as a string <https://www.w3schools.com/python/python_strings.asp>`_.
@@ -127,7 +53,7 @@ This is the core of the function, and the part that should be adapted to process
 - ``acq`` is the optional entity for the `set of acquisition parameters <https://bids-specification.readthedocs.io/en/stable/04-modality-specific-files/01-magnetic-resonance-imaging-data.html#the-acq-entity>`_.
 - ``direct`` is the equivalent of the ``dic`` entity, an optional entity for the phase encoding direction (see `here <https://bids-specification.readthedocs.io/en/stable/04-modality-specific-files/01-magnetic-resonance-imaging-data.html#task-including-resting-state-imaging-data>`_).
 
-Note that one mandatory BIDs entity is missing: the **``sub`` entity**, corresponding to the subject label. This is because it has to be specified while calling ``phys2bids``, as it's explained in the `tutorial <howto.html#generating-outputs-in-bids-format>`_. The **session entity** can be specified in the same way. Moreover, if you have a **multifrequency file** there will be another entity, ``recording`` automatically added to those specified here, and containing the sample frequency of the different outputs.
+Note that one mandatory BIDs entity is missing: the **``sub`` entity**, correspondent to the subject label. This is because it has to be specified while calling ``phys2bids``, as it's explained in the tutorial section `"generating-outputs-in-bids-format" <howto.html#generating-outputs-in-bids-format>`_. The **session entity** can be specified in the same way. Moreover, if you have a **multifrequency file** there will be another entity, ``recording`` automatically added to those specified here, and containing the sample frequency of the different outputs.
 
 Let's try to read the first statement in the example:
 
@@ -137,40 +63,16 @@ Note that we used only a subset of possible entities.
 
 .. _statement: https://www.w3resource.com/python/python-if-else-statements.php
 
-.. |covenant| replace:: ``if .. elif .. else`` statement.
+.. |statement| replace:: ``if .. elif .. else`` statement.
 
 Functional code
 ^^^^^^^^^^^^^^^
-::
-    # ############################## #
-    # ## Don't modify below this! ## #
-    # ############################## #
-    else:
-        # #!# Transform sys.exit in debug warnings or raiseexceptions!
-        # #!# Make all of the above a dictionary
-        raise Warning(f'The heuristic {__file__} could not deal with {physinfo}')
 
-    if not task:
-        raise KeyError(f'No "task" attribute found')
-
-    name = name + '_task-' + task
-
-    # filename spec: sub-<label>[_ses-<label>]_task-<label>[_acq-<label>] ...
-    #                ... [_ce-<label>][_dir-<label>][_rec-<label>] ...
-    #                ... [_run-<index>][_recording-<label>]_physio
-    if acq:
-        name = name + '_acq-' + acq
-
-    if direct:
-        name = name + '_dir-' + direct
-
-    if rec:
-        name = name + '_rec-' + rec
-
-    if run:
-        name = name + '_run-' + run
-
-    return name
+.. literalinclude:: ../phys2bids/heuristics/heur_tutorial.py
+   :linenos:
+   :lines: 27-
+   :lineno-start: 27
+   :dedent: 4
 
 This part contains some code that composes the heuristic function output.
 It's important **not to modify this part of the file**. Instead, you can copy paste it in your own heuristic file.
@@ -179,9 +81,12 @@ There's a warning that will raise if the file wasn't able to process the input f
 Using the heuristic file
 ------------------------
 
-Once you modified your heuristic file or created a new one, you can save it anywhere you want, as a python script (``somename.py``). Check that the file is **executable**! Then, you will have to call ``phys2bids`` using the ``-heur``, the ``-sub``, and optionally the ``-ses``, arguments::
+Once you modified your heuristic file or created a new one, you can save it anywhere you want, as a python script (``somename.py``). Check that the file is **executable**! Then, you will have to call ``phys2bids`` using the ``-heur``, the ``-sub``, and optionally the ``-ses``, arguments:
+
+.. code-block:: shell
 
     phys2bids -in tutorial_file.txt -chtrig 1 -outdir /home/arthurdent/physio_bids -ntp 158 -tr 1.2 -thr 0.735 -heur /home/arthurdent/git/phys2bids/phys2bids/heuristics/heur_tutorial.py -sub 006 -ses 01
 
 Remember to **specify the full path** to the heuristic file. A copy of the heuristic file will be saved in the site folder.
-You can find more information in the `tutorial <howto.html#generating-outputs-in-bids-format>`_.
+
+You can find more information in the `relevant tutorial section <howto.html#generating-outputs-in-bids-format>`_.
