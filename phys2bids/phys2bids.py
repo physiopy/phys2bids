@@ -300,15 +300,15 @@ def _main(argv=None):
     phys_out = {}
     for uniq_freq in uniq_freq_list:
         phys_out[uniq_freq] = deepcopy(phys_in)
-        for idx, i in enumerate(phys_out[uniq_freq].freq):
+        count = 0
+        for idx, i in enumerate(phys_in.freq):
             if i != uniq_freq:
-                phys_out[uniq_freq].delete_at_index(idx)
-
+                phys_out[uniq_freq].delete_at_index(idx - count)
+                count += 1
         # Also create a BlueprintOutput object for each unique frequency found.
         # Populate it with the corresponding blueprint input and replace it
         # in the dictionary.
         phys_out[uniq_freq] = BlueprintOutput.init_from_blueprint(phys_out[uniq_freq])
-
     if options.heur_file and options.sub:
         LGR.info(f'Preparing BIDS output using {options.heur_file}')
     elif options.heur_file and not options.sub:
