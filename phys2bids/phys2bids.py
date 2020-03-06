@@ -174,7 +174,9 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     return heurpath
 
 
-def _main(argv=None):
+def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
+              sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=0,
+              tr=1, thr=2.5, ch_name=[], chplot='', debug=False, quiet=False):
     """
     Main workflow of phys2bids.
     Runs the parser, does some checks on input, then imports
@@ -189,18 +191,16 @@ def _main(argv=None):
         If the file extension is not supported yet.
 
     """
-    options = _get_parser().parse_args(argv)
-
     # Check options to make them internally coherent pt. I
     # #!# This can probably be done while parsing?
-    options.outdir = utils.check_input_dir(options.outdir)
-    utils.path_exists_or_make_it(options.outdir)
+    outdir = utils.check_input_dir(outdir)
+    utils.path_exists_or_make_it(outdir)
 
     # Create logfile name
     basename = 'phys2bids_'
     extension = 'tsv'
     isotime = datetime.datetime.now().replace(microsecond=0).isoformat()
-    logname = os.path.join(options.outdir, (basename + isotime + '.' + extension))
+    logname = os.path.join(outdir, (basename + isotime + '.' + extension))
 
     # Set logging format
     log_formatter = logging.Formatter(
@@ -212,10 +212,10 @@ def _main(argv=None):
     log_handler.setFormatter(log_formatter)
     sh = logging.StreamHandler()
 
-    if options.quiet:
+    if quiet:
         logging.basicConfig(level=logging.WARNING,
                             handlers=[log_handler, sh])
-    elif options.debug:
+    elif debug:
         logging.basicConfig(level=logging.DEBUG,
                             handlers=[log_handler, sh])
     else:
@@ -224,22 +224,22 @@ def _main(argv=None):
 
     version_number = _version.get_versions()['version']
     LGR.info(f'Currently running phys2bids version {version_number}')
-    LGR.info(f'Input file is {options.filename}')
+    LGR.info(f'Input file is {filename}')
 
     # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
-    options.indir = utils.check_input_dir(options.indir)
-    options.filename, ftype = utils.check_input_type(options.filename,
-                                                     options.indir)
+    indir = utils.check_input_dir(indir)
+    filename, ftype = utils.check_input_type(filename,
+                                             indir)
 
-    if options.heur_file:
-        options.heur_file = utils.check_input_ext(options.heur_file, '.py')
-        utils.check_file_exists(options.heur_file)
+    if heur_file:
+        heur_file = utils.check_input_ext(heur_file, '.py')
+        utils.check_file_exists(heur_file)
 
-    infile = os.path.join(options.indir, options.filename)
+    infile = os.path.join(indir, filename)
     utils.check_file_exists(infile)
-    outfile = os.path.join(options.outdir,
-                           os.path.splitext(os.path.basename(options.filename))[0])
+    outfile = os.path.join(outdir,
+                           os.path.splitext(os.path.basename(filename))[0])
 
     # Read file!
     if ftype == 'acq':
@@ -251,44 +251,42 @@ def _main(argv=None):
         raise NotImplementedError('Currently unsupported file type.')
 
     LGR.info(f'Reading the file {infile}')
-    phys_in = populate_phys_input(infile, options.chtrig)
+    phys_in = populate_phys_input(infile, chtrig)
     LGR.info('Reading infos')
-    phys_in.print_info(options.filename)
+    phys_in.print_info(filename)
     # #!# Here the function viz.plot_channel should be called
-    if options.chplot != '' or options.info:
-        viz.plot_all(phys_in, infile, options.chplot)
+    if chplot != '' or info:
+        viz.plot_all(phys_in, infile, chplot)
     # If only info were asked, end here.
-    if options.info:
+    if info:
         return
 
     # Run analysis on trigger channel to get first timepoint and the time offset.
     # #!# Get option of no trigger! (which is wrong practice or Respiract)
-    phys_in.check_trigger_amount(options.chtrig, options.thr,
-                                 options.num_timepoints_expected,
-                                 options.tr)
+    phys_in.check_trigger_amount(chtrig, thr, num_timepoints_expected, tr)
 
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
     LGR.info('Plot trigger')
     plot_path = deepcopy(outfile)
-    if options.sub:
-        plot_path += f'_sub-{options.sub}'
-    if options.ses:
-        plot_path += f'_ses-{options.ses}'
-    viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[options.chtrig],
-                     plot_path, options)
+    if sub:
+        plot_path += f'_sub-{sub}'
+    if ses:
+        plot_path += f'_ses-{ses}'
+    viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
+                     plot_path, tr, thr, num_timepoints_expected)
 
     # The next few lines remove the undesired channels from phys_in.
-    if options.chsel:
+    if chsel:
         LGR.info('Dropping unselected channels')
         for i in reversed(range(0, phys_in.ch_amount)):
-            if i not in options.chsel:
+            if i not in chsel:
                 phys_in.delete_at_index(i)
 
     # If requested, change channel names.
-    if options.ch_name:
+    if ch_name:
         LGR.info('Renaming channels with given names')
-        phys_in.rename_channels(options.ch_name)
+        phys_in.rename_channels(ch_name)
 
     # The next few lines create a dictionary of different BlueprintInput
     # objects, one for each unique frequency in phys_in
@@ -298,36 +296,44 @@ def _main(argv=None):
         LGR.warning(f'Found {output_amount} different frequencies in input!')
 
     LGR.info(f'Preparing {output_amount} output files.')
-    phys_out = {}
+    phys_out = {}  # create phys_out dict that will have a
+    # blueprint object per frequency
+    # for each different frequency
     for uniq_freq in uniq_freq_list:
+        # copy the phys_in object to the new dict entry
         phys_out[uniq_freq] = deepcopy(phys_in)
-        for i in reversed(phys_in.freq):
+        # this counter will take into account how many channels are eliminated
+        count = 0
+        # for each channel in the original phys_in object
+        # take the frequency
+        for idx, i in enumerate(phys_in.freq):
+            # if that frequency is different than the frequency of the phys_obj entry
             if i != uniq_freq:
-                phys_out[uniq_freq].delete_at_index(phys_in.ch_amount - i - 1)
-
+                # eliminate that channel from the dict since we only want channels
+                # with the same frequency
+                phys_out[uniq_freq].delete_at_index(idx - count)
+                # take into acount the elimination so in the next eliminated channel we
+                # eliminate correctly
+                count += 1
         # Also create a BlueprintOutput object for each unique frequency found.
         # Populate it with the corresponding blueprint input and replace it
         # in the dictionary.
         phys_out[uniq_freq] = BlueprintOutput.init_from_blueprint(phys_out[uniq_freq])
-
-    if options.heur_file and options.sub:
-        LGR.info(f'Preparing BIDS output using {options.heur_file}')
-    elif options.heur_file and not options.sub:
+    if heur_file and sub:
+        LGR.info(f'Preparing BIDS output using {heur_file}')
+    elif heur_file and not sub:
         LGR.warning(f'While "-heur" was specified, option "-sub" was not.\n'
                     f'Skipping BIDS formatting.')
 
     for uniq_freq in uniq_freq_list:
         # If possible, prepare bids renaming.
-        if options.heur_file and options.sub:
+        if heur_file and sub:
             if output_amount > 1:
                 # Add "recording-freq" to filename if more than one freq
-                outfile = use_heuristic(options.heur_file, options.sub,
-                                        options.ses, options.filename,
-                                        options.outdir, uniq_freq)
+                outfile = use_heuristic(heur_file, sub, ses, filename,
+                                        outdir, uniq_freq)
             else:
-                outfile = use_heuristic(options.heur_file, options.sub,
-                                        options.ses, options.filename,
-                                        options.outdir)
+                outfile = use_heuristic(heur_file, sub, ses, filename, outdir)
 
         elif output_amount > 1:
             # Append "freq" to filename if more than one freq
@@ -339,9 +345,14 @@ def _main(argv=None):
         print_json(outfile, phys_out[uniq_freq].freq,
                    phys_out[uniq_freq].start_time,
                    phys_out[uniq_freq].ch_name)
-        print_summary(options.filename, options.num_timepoints_expected,
+        print_summary(filename, num_timepoints_expected,
                       phys_in.num_timepoints_found, uniq_freq,
                       phys_out[uniq_freq].start_time, outfile)
+
+
+def _main(argv=None):
+    options = _get_parser().parse_args(argv)
+    phys2bids(**vars(options))
 
 
 if __name__ == '__main__':
