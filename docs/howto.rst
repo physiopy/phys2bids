@@ -42,20 +42,20 @@ The file can be found in ``phys2bids/phys2bids/tests/data/tutorial_file.txt``. T
     432.004 0.5810 0.7621 157.9255 0.0275
     432.005 0.5809 0.7595 157.8775 0.0288
 
-**Note**: time is not a "real" channel recorded by LabChart or AcqKnowledge. For this reason, ``phys2bids`` treats it as hidden channel, always in position 0 - channel 1 will be the first channel recorded in either software.
+**Note**: time is not a "real" channel recorded by LabChart or AcqKnowledge. For this reason, ``phys2bids`` treats it as a hidden channel, always in position 0. Channel 1 will be the first channel recorded in either software.
 
 Using the -info option
 ######################
 
 First, we can see what information ``phys2bids`` reads from the file, and make sure this is correct before processing the file.
 
-The simplest way of calling ``phys2bids`` is moving to the folder containing the physiological file and call::
+The simplest way of calling ``phys2bids`` is moving to the folder containing the physiological file and typing::
 
     cd phys2bids/phys2bids/tests/data/
     phys2bids -in tutorial_file
 
 ``pys2bids`` will try to get the extension for you. 
-However, we’ll use one more argument to have a sneak peak of the content of the file::
+However, we’ll use one more argument to have a sneak peak into the content of the file::
 
     phys2bids -in tutorial_file.txt -info
 
@@ -83,7 +83,7 @@ This ``-info`` argument means ``phy2bids`` does not process the file, but only o
    :alt: tutorial_file_channels
    :align: center
     
-Great! Now we know that the our file contains four channels, sampled at the same frequency, and that the trigger is in the first position. All this information will become useful.
+Great! Now we know that the our file contains four channels, sampled at the same frequency, and that the trigger is in the first column. All this information will become useful.
 
 Generating outputs
 ##################
@@ -136,12 +136,12 @@ Five files have been generated in the output directory:
 
 - **tutorial_file.log**
     The same information outputted to the terminal at the end of the call. 
-- **tutorial_file.json**
-    As phys2bids is thought to be bids compatible, this is one of the two necessary bids files. It describes the content of your ``tsv.gz`` file.
 - **tutorial_file.tsv.gz**
     Compressed file in ``tsv`` format containing your data without header information.
+- **tutorial_file.json**
+    As phys2bids is thought to be bids compatible, this is one of the two necessary bids files. It describes the content of your ``tsv.gz`` file.
 - **tutorial_file_trigger_time.png**
-    This file will become important later, but in a nutshell it shows the trigger channel of your file, as well as an indication on when the "0" time (corresponding to the first tr) should be.
+    This file will become important later, but in a nutshell it shows the trigger channel from your file, as well as an indication of when the "0" time (corresponding to the first TR) should be.
     If you're just transforming files into ``tsv.gz``, **you can ignore this**
 - **phys2bids_yyyy-mm-ddThh:mm:ss.tsv**
     This is the logger file. It contains the full terminal output of your ``phys2bids`` call.
@@ -149,10 +149,10 @@ Five files have been generated in the output directory:
 Finding the "start time"
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-If you recorded the trigger of your **(f)MRI**, ``phys2bids`` can use it to detect the moment in which you started sampling your neuroimaging data, and set the "0" time to that point.  
+If you recorded the trigger of your **(f)MRI**, ``phys2bids`` can use it to detect the moment in which you started sampling your neuroimaging data, and set the "0" time to be that point.  
 
-First, we need to tell ``phys2bids`` what is our trigger channel, and we can use the argument ``-chtrig``. ``-chtrig`` has a default of 0, which means that if there is no input given ``phys2bids`` will assume the trigger information is in the hidden time channel.
-For the text file used in this example, the trigger information is the second column of the raw file, and first recorded channel.
+First, we need to tell ``phys2bids`` where our trigger channel is, and we can use the argument ``-chtrig``. ``-chtrig`` has a default of 0, which means that if there is no input given ``phys2bids`` will assume the trigger information is in the hidden time channel.
+For the text file used in this example, the trigger information is the second column of the raw file; the first recorded channel.
 
 The last command line output said "Counting trigger points" and "The necessary options to find the amount of timepoints were not provided", so we need to give ``phys2bids`` some more information for it to correctly read the trigger information in the data. In this tutorial file, there are 158 triggers and the TR is 1.2 seconds. Using these arguments, we can call ``phys2bids`` again::
 
@@ -163,9 +163,8 @@ The output still warns us about something::
     WARNING:phys2bids.physio_obj:Found 158 timepoints less than expected!
     WARNING:phys2bids.physio_obj:Correcting time offset, assuming missing timepoints are at the beginning (try again with a more liberal thr)
 
-How come?!? We know there are exactly 158 timepoints!
-In order to find the triggers, ``phys2bids`` gets the first derivative of the trigger channel, and uses a threshold (default 2.5) to get the peaks of the derivative, corresponding to the trigger event. If the threshold is too strict or is too liberal for the recorded trigger, it won't get all the trigger points.
-| ``phys2bids`` was created to stand little sampling errors - such as distracted researchers that started sampling a bit too late than expected. For this reason, if it finds less timepoints than the amount specified, it will assume that the error was caused by a *distracted researcher*. 
+How come?!? We know there are exactly 158 timepoints![#]_ In order to find the triggers, ``phys2bids`` gets the first derivative of the trigger channel, and uses a threshold (default 2.5) to get the peaks of the derivative, corresponding to the trigger event. If the threshold is too strict or is too liberal for the recorded trigger, it won't get all the trigger points.
+| ``phys2bids`` was created to deal with little sampling errors - such as distracted researchers that started sampling a bit too late than expected. For this reason, if it finds less timepoints than the amount specified, it will assume that the error was caused by a *distracted researcher*. 
 
 Therefore, we need to change the ``-thr`` input until ``phys2bids`` finds the correct number of timepoints. Looking at the tutorial_file_trigger_time.png file can help determine what threshold is more appropriate. For this tutorial file, a threshold of 0.735 finds the right number of time points. ::
 
@@ -214,7 +213,7 @@ Therefore, we need to change the ``-thr`` input until ``phys2bids`` finds the co
 Alright! Now we have some outputs that make sense.
 The main difference from the previous call is in **tutorial_file.log** and **tutorial_file_trigger_time.png**.
 The first one now reports 158 timepoints expected (as input) and found (as correctly estimated) and it also tells us that the sampling of the neuroimaging files started around 0.25 seconds later than the physiological sampling.
-The second file now contains an orange trace that intersect the 0 x- and y-axis in correspondence with the first trigger.
+The second file now contains an orange trace that intersect the 0 x-axis and y-axis in correspondence with the first trigger.
 In the first row, there's the whole trigger channel. In the second row, we see the first and last trigger (or expected first and last).
 
 **Note**: It is *very* important to calibrate the threshold in a couple of files. This still *won't* necessarily mean that it's the right threshold for all the files, but there's a chance that it's ok(ish) for most of them.
@@ -225,7 +224,7 @@ Generating outputs in BIDs format
 
 Alright, now the really interesting part! This section will explain how to use the ``-heur``, ``-sub``, and ``-ses`` arguments, to save the files in BIDs format. After all, that's probably why you're here.
 
-``phys2bids`` uses heuristic rules *à la* `heudiconv <https://github.com/nipy/heudiconv>`_. At the moment, it can only use the name of the file to understand what should be done with it - but we're working on making it *smarter*. There is a ready heuristic file for the tutorial, in the ``heuristics`` folder. Inside it looks more or less like this::
+``phys2bids`` uses heuristic rules *à la* `heudiconv <https://github.com/nipy/heudiconv>`_. At the moment, it can only use the name of the file to understand what should be done with it but we're working on making it *smarter*. There is a complete heuristic file for the tutorial, in the ``heuristics`` folder. Inside it looks more or less like this::
 
     def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
     # ############################## #
@@ -249,11 +248,11 @@ Alright, now the really interesting part! This section will explain how to use t
     [...]
 
 The heuristic file has to be written accordingly, with a set of rules that could work for all the files in your dataset. You can learn more about it if you check the `guide on how to set it up <heuristic.html>`_.
-In this case, our heuristic file looks for a file that contains in the name ``tutorial``. It corresponds to the task ``test`` and run ``00``. Note that **only the task is required**, all the other fields are optional - look them up in the BIDs documentation and see if you need them.
+In this case, our heuristic file looks for a file that contains the name ``tutorial``. It corresponds to the task ``test`` and run ``00``. Note that **only the task is required**, all the other fields are optional - look them up in the BIDs documentation and see if you need them.
 
-As there might not be a link between the physiological file and the subject (and session) that it relates to, ``phys2bids`` requires such information to be given from the user. In order for the *BIDsification* to happen, ``phys2bids`` needs the **full path** to the heuristic file, as well as the subject label. The session label is optional. The ``-outdir`` option will become the root folder of your BIDs files - i.e. your *site folder* ::
+As there might not be a link between the physiological file and the subject (and session) that it relates to, ``phys2bids`` requires such information to be given from the user. In order for the *BIDsification* to happen, ``phys2bids`` needs the **full path** to the heuristic file, as well as the subject label. The session label is optional. The ``-outdir`` option will become the root folder for your BIDs files - i.e. your *site folder* ::
 
-    phys2bids -in tutorial_file.txt -chtrig 1 -outdir /home/arthurdent/physio_bids -ntp 158 -tr 1.2 -thr 0.735 -heur /home/arthurdent/git/phys2bids/phys2bids/heuristics/heur_tutorial.py -sub 006 -ses 42
+    phys2bids -in tutorial_file.txt -chtrig 1 -outdir /home/arthurdent/physio_bids -ntp 158 -tr 1.2 -thr 0.735 -heur /home/arthurdent/git/phys2bids/phys2bids/heuristics/heur_tutorial.py -sub 006 -ses 01
 
 The terminal output is as follows::
 
@@ -296,16 +295,18 @@ It seems very similar to the last call - let's check the output folder.
 It now contains the logger file, the trigger_time plot, and a folder for the specified subject, that (optionally) contains a folder for the session, containing a folder for the functional data, containing the log file and the required BIDs files with the right name! ::
 
     - /home/arthurdent/physio_bids /
-        - tutorial_file_sub-006_sub-42_trigger_time.png                              [delete]
-        - phys2bids_yyyy-mm-ddThh:mm:ss.tsv                                          [delete]
+        - tutorial_file_sub-006_sub-01_trigger_time.png                              
+        - phys2bids_yyyy-mm-ddThh:mm:ss.tsv                                          
         - sub-006 /
-            - ses-42 /
+            - ses-01 /
                 - func /
-                    - sub-006_ses-42_task-test_rec-labchart_run-00_physio.json
-                    - sub-006_ses-42_task-test_rec-labchart_run-00_physio.tsv.gz
-                    - sub-006_ses-42_task-test_rec-labchart_run-00_physio.log        [delete]
+                    - sub-006_ses-01_task-test_rec-labchart_run-00_physio.json
+                    - sub-006_ses-01_task-test_rec-labchart_run-00_physio.tsv.gz
+                    - sub-006_ses-01_task-test_rec-labchart_run-00_physio.log        
 
 **Note**: The main idea is that ``phys2bids`` should be called through a loop that can process all the files of your dataset. It's still a bit cranky, but we're looking to implement *smarter* solutions.
-**Important**: modify your heuristic file only between the parts specified!
+**Important**: Do not edit the heuristic file under where it says 'Don't modify below this!'.
 
 One last thing left to do: take these files, remove the logs, and share them in public platforms!
+
+ .. [#] Don't Panic.
