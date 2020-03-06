@@ -297,7 +297,7 @@ def _main(argv=None):
         LGR.warning(f'Found {output_amount} different frequencies in input!')
 
     LGR.info(f'Preparing {output_amount} output files.')
-    phys_out = {} # create phys_out dict that will have a 
+    phys_out = {}  # create phys_out dict that will have a
     # blueprint object per frequency
     # for each different frequency
     for uniq_freq in uniq_freq_list:
