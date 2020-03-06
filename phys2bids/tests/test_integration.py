@@ -2,6 +2,7 @@ import os
 # import wget
 import glob
 import json
+import subprocess
 
 from pkg_resources import resource_filename
 
@@ -79,7 +80,7 @@ def test_logger():
 
     # Move into folder
     test_path = resource_filename('phys2bids', 'tests/data')
-    os.system(f'cd {test_path}')
+    subprocess.run(f'cd {test_path}')
 
     # Input arguments
     test_filename = 'tutorial_file.txt'
@@ -87,8 +88,8 @@ def test_logger():
     test_outdir = test_path
 
     # Phys2bids call through terminal
-    os.system(f'phys2bids -in {test_filename} -indir {test_path} '
-              f'-chtrig {test_chtrig} -outdir {test_outdir}')
+    subprocess.run(f'phys2bids -in {test_filename} -indir {test_path} '
+                   f'-chtrig {test_chtrig} -outdir {test_outdir}')
 
     # Read logger file
     files = os.listdir(test_path)
