@@ -8,20 +8,20 @@ from phys2bids.interfaces.acq import populate_phys_input
 def test_populate_phys_input():
     # Read data to test
     # url to Test_belt_pulse_samefreq.acq
-    url = 'https://osf.io/pn7vt/download'
+    url = 'https://osf.io/27gqb/download'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_filename = 'Test_belt_pulse_samefreq.acq'
     test_full_path = os.path.join(test_path, test_filename)
     wget.download(url, test_full_path)
-    chtrig = 2
+    chtrig = 3
     phys_obj = populate_phys_input(test_full_path, chtrig)
     assert phys_obj.ch_name[0] == 'time'
     assert phys_obj.freq[0] == 10000.0
     assert phys_obj.units[0] == 's'
-    # checkts that the trigger is in the given channel
-    assert phys_obj.ch_name[chtrig - 1] == 'trigger'
-    assert phys_obj.freq[chtrig - 1] == 10000.0
-    assert phys_obj.units[chtrig - 1] == 'Volts'
+    # checkts that the trigger is in the right channel
+    assert phys_obj.ch_name[chtrig] == 'MR TRIGGER - Custom, HLT100C - A 5'
+    assert phys_obj.freq[chtrig] == 10000.0
+    assert phys_obj.units[chtrig] == 'Volts'
     os.remove(test_full_path)
 
 
@@ -29,7 +29,7 @@ def test_read_file():
     # Makes sure that the read_file method from bioread works
     # Read data to test
     # url to Test_belt_pulse_samefreq.acq
-    url = 'https://osf.io/pn7vt/download'
+    url = 'https://osf.io/27gqb/download'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_filename = 'Test_belt_pulse_samefreq.acq'
     test_full_path = os.path.join(test_path, test_filename)
