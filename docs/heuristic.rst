@@ -75,7 +75,7 @@ Functional code
    :dedent: 4
 
 This part contains some code that composes the heuristic function output.
-It's important **not to modify this part of the file**. Instead, you can copy paste it in your own heuristic file.
+It's important **not to modify this part of the file**. Instead, you can copy and paste it into your own heuristic file.
 There's a warning that will raise if the file wasn't able to process the input file, and an error that will raise if the mandatory ``task`` entity is still empty after the dictionary attribution.
 
 Using the heuristic file
