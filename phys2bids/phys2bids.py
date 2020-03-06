@@ -274,7 +274,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     if ses:
         plot_path += f'_sub-{ses}'
     viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
-                     plot_path, tr, thr, num_timepoints_expected,filename)
+                     plot_path, tr, thr, num_timepoints_expected, filename)
 
     # The next few lines remove the undesired channels from phys_in.
     if chsel:
