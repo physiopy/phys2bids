@@ -273,7 +273,7 @@ def _main(argv=None):
     if options.sub:
         plot_path += f'_sub-{options.sub}'
     if options.ses:
-        plot_path += f'_sub-{options.ses}'
+        plot_path += f'_ses-{options.ses}'
     viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[options.chtrig],
                      plot_path, options)
 
