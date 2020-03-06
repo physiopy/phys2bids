@@ -89,7 +89,7 @@ Specifying paths and names
 
 Now we'll call ``phys2bids`` without the ``-info`` option. We'll use the same inputs as above, as well as adding ``-indir``, ``-outdir``, and ``-chplot``. If you use ``-indir`` you can specify a path to your input file i.e. it does not have to be in the current directory, as is the default. Using the ``-chplot`` argument allows you to specify the name (and full path) for the png channel plot. The ``-indir`` and ``-chplot`` arguments can be used alongside the ``-info`` argument. When calling ``phys2bids`` without the ``-info`` argument, it will generate files; if you use the ``-outdir`` argument this is where ``phys2bids`` will save these files - if the folder doesn't exist, it will be created.
 
-Unless specified with ``-chsel`` ``phys2bids`` will process and output all channels. Unless specified with ``-chnames`` ``phys2bids`` will read the channel names from the header information in the file.
+Unless specified with ``-chsel``, ``phys2bids`` will process and output all channels. Unless specified with ``-chnames``, ``phys2bids`` will read the channel names from the header information in the file.
 
 .. code-block:: shell
 
@@ -139,7 +139,7 @@ Five files have been generated in the output directory:
 - **tutorial_file.tsv.gz**
     Compressed file in ``tsv`` format containing your data without header information.
 - **tutorial_file.json**
-    As phys2bids is thought to be bids compatible, this is one of the two necessary bids files. It describes the content of your ``tsv.gz`` file.
+    As phys2bids is designed to be BIDs compatible, this is one of the two necessary BIDs files. It describes the content of your ``tsv.gz`` file.
 - **tutorial_file_trigger_time.png**
     This file will become important later, but in a nutshell it shows the trigger channel from your file, as well as an indication of when the "0" time (corresponding to the first TR) should be.
     If you're just transforming files into ``tsv.gz``, **you can ignore this**
@@ -167,10 +167,10 @@ The output still warns us about something:
     WARNING:phys2bids.physio_obj:Found 158 timepoints less than expected!
     WARNING:phys2bids.physio_obj:Correcting time offset, assuming missing timepoints are at the beginning (try again with a more liberal thr)
 
-How come?!? We know there are exactly 158 timepoints![1]_ In order to find the triggers, ``phys2bids`` gets the first derivative of the trigger channel, and uses a threshold (default 2.5) to get the peaks of the derivative, corresponding to the trigger event. If the threshold is too strict or is too liberal for the recorded trigger, it won't get all the trigger points.
-| ``phys2bids`` was created to deal with little sampling errors - such as distracted researchers that started sampling a bit too late than expected. For this reason, if it finds less timepoints than the amount specified, it will assume that the error was caused by a *distracted researcher*. 
+How come?!? We know there are exactly 158 timepoints! Don't Panic. In order to find the triggers, ``phys2bids`` gets the first derivative of the trigger channel, and uses a threshold (default 2.5) to get the peaks of the derivative, corresponding to the trigger event. If the threshold is too strict or is too liberal for the recorded trigger, it won't get all the trigger points.
+``phys2bids`` was created to deal with little sampling errors - such as distracted researchers that started sampling a bit too late than expected. For this reason, if it finds less timepoints than the amount specified, it will assume that the error was caused by a *distracted researcher*. 
 
-Therefore, we need to change the ``-thr`` input until ``phys2bids`` finds the correct number of timepoints. Looking at the tutorial_file_trigger_time.png file can help determine what threshold is more appropriate. For this tutorial file, a threshold of 0.735 finds the right number of time points.
+Therefore, we need to change the ``-thr`` input until ``phys2bids`` finds the correct number of timepoints. Looking at the tutorial_file_trigger_time.png file can help determine what threshold is most appropriate. For this tutorial file, a threshold of 0.735 finds the right number of time points.
 
 .. code-block:: shell
 
@@ -300,8 +300,7 @@ It now contains the logger file, the trigger_time plot, and a folder for the spe
                     - sub-006_ses-01_task-test_rec-labchart_run-00_physio.log        
 
 **Note**: The main idea is that ``phys2bids`` should be called through a loop that can process all the files of your dataset. It's still a bit cranky, but we're looking to implement *smarter* solutions.
+
 **Important**: Do not edit the heuristic file under where it says 'Don't modify below this!'.
 
-One last thing left to do: take these files, remove the logs, and share them in public platforms!
-
- .. [#] Don't Panic.
+*One last thing left to do:* take these files, remove the logs, and share them in public platforms!
