@@ -1,3 +1,4 @@
 phys2bids/_version.py export-subst
 
-* eol=lf
+*.py eol=lf
+*.rst eol=lf

@@ -4,6 +4,7 @@
 
 import os
 import json
+import wget
 from phys2bids import utils
 from pkg_resources import resource_filename
 
@@ -28,9 +29,13 @@ def test_check_input_ext():
 
 # Tests check_input_type
 def test_check_input_type():
-    test_filename = 'Test_belt_pulse_samefreq.acq'
+    url = 'https://osf.io/27gqb/download'
     test_path = resource_filename('phys2bids', 'tests/data')
+    test_filename = 'Test_belt_pulse_samefreq.acq'
+    test_full_path = os.path.join(test_path, test_filename)
+    wget.download(url, test_full_path)
     assert utils.check_input_type(test_filename, test_path)
+    os.remove(test_full_path)
 
 
 # Tests path_exists_or_make_it
@@ -47,10 +52,13 @@ def test_path_exists_or_make_it(tmpdir):
 
 # Tests check_file_exists
 def test_check_file_exists():
-    test_filename = 'Test_belt_pulse_samefreq.acq'
+    url = 'https://osf.io/27gqb/download'
     test_path = resource_filename('phys2bids', 'tests/data')
+    test_filename = 'Test_belt_pulse_samefreq.acq'
     test_full_path = os.path.join(test_path, test_filename)
+    wget.download(url, test_full_path)
     utils.check_file_exists(test_full_path)
+    os.remove(test_full_path)
 
 
 # Tests move_file

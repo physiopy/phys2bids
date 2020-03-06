@@ -3,8 +3,11 @@
 import json
 import os
 import sys
+import logging
 
 from pathlib import Path
+
+LGR = logging.getLogger(__name__)
 
 SUPPORTED_FTYPES = ('acq', 'txt')  # 'mat', ...
 
@@ -95,7 +98,8 @@ def check_input_type(filename, indir):
             break
 
     if fftype_found:
-        print(f'File extension is .{ftype}')
+        LGR.info(f'File extension is .{ftype}')
+        LGR.warning('If both acq and txt files exist in the path, acq will be selected.')
         return fname, ftype
     else:
         raise Exception(f'The file {filename} wasn\'t found in {indir}'
