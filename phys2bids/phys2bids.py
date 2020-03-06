@@ -297,18 +297,29 @@ def _main(argv=None):
         LGR.warning(f'Found {output_amount} different frequencies in input!')
 
     LGR.info(f'Preparing {output_amount} output files.')
-    phys_out = {}
+    phys_out = {}  # create phys_out dict that will have a
+    # blueprint object per frequency
+    # for each different frequency
     for uniq_freq in uniq_freq_list:
+        # copy the phys_in object to the new dict entry
         phys_out[uniq_freq] = deepcopy(phys_in)
-        for i in reversed(phys_in.freq):
+        # this counter will take into account how many channels are eliminated
+        count = 0
+        # for each channel in the original phys_in object
+        # take the frequency
+        for idx, i in enumerate(phys_in.freq):
+            # if that frequency is different than the frequency of the phys_obj entry
             if i != uniq_freq:
-                phys_out[uniq_freq].delete_at_index(phys_in.ch_amount - i - 1)
-
+                # eliminate that channel from the dict since we only want channels
+                # with the same frequency
+                phys_out[uniq_freq].delete_at_index(idx - count)
+                # take into acount the elimination so in the next eliminated channel we
+                # eliminate correctly
+                count += 1
         # Also create a BlueprintOutput object for each unique frequency found.
         # Populate it with the corresponding blueprint input and replace it
         # in the dictionary.
         phys_out[uniq_freq] = BlueprintOutput.init_from_blueprint(phys_out[uniq_freq])
-
     if options.heur_file and options.sub:
         LGR.info(f'Preparing BIDS output using {options.heur_file}')
     elif options.heur_file and not options.sub:
