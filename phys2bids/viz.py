@@ -61,6 +61,8 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     fileprefix: str or path
         A string representing a file name or a fullpath
         to a file, WITHOUT extension
+    filename: string
+        name of the original file
     options: argparse object
         The object produced by `get_parser` in `cli.run.py`
     figsize: tuple
