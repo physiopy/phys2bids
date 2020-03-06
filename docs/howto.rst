@@ -303,4 +303,4 @@ It now contains the logger file, the trigger_time plot, and a folder for the spe
 
 **Important**: Do not edit the heuristic file under where it says 'Don't modify below this!'.
 
-*One last thing left to do:* take these files, remove the logs, and share them in public platforms!
+One last thing left to do: take these files, remove the logs, and share them in public platforms!
