@@ -8,7 +8,7 @@ This tutorial uses a text file exported from LabChart software. The principles o
 
 This tutorial will:
 
-1. Run ``phys2bids`` with the "-info" option, to show how to retrieve information about your input file.
+1. Run ``phys2bids`` with the ``-info`` option, to show how to retrieve information about your input file.
 2. Run ``phys2bids`` and explain the output files (png, json, tsv) that are generated.
 3. Run ``phys2bids`` with a heuristic file, showing how the input file can be outputted in BIDS format.
 
