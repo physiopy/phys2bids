@@ -49,17 +49,17 @@ Using the -info option
 
 First, we can see what information ``phys2bids`` reads from the file, and make sure this is correct before processing the file.
 
-The simplest way of calling ``phys2bids`` is moving to the folder containing the physiological file and call: ::
+The simplest way of calling ``phys2bids`` is moving to the folder containing the physiological file and call::
 
     cd phys2bids/phys2bids/tests/data/
     phys2bids -in tutorial_file
 
 ``pys2bids`` will try to get the extension for you. 
-However, we’ll use one more argument to have a sneak peak of the content of the file: ::
+However, we’ll use one more argument to have a sneak peak of the content of the file::
 
     phys2bids -in tutorial_file.txt -info
 
-This ``-info`` argument means ``phy2bids`` does not process the file, but only outputs information it reads from the file, by printing to the terminal and outputting a png plot of the data in the current directory. ::
+This ``-info`` argument means ``phy2bids`` does not process the file, but only outputs information it reads from the file, by printing to the terminal and outputting a png plot of the data in the current directory::
 
     INFO:phys2bids.phys2bids:Currently running phys2bids version v1.3.0-beta+149.ge4a3c87
     INFO:phys2bids.phys2bids:Input file is tutorial_file.txt
@@ -97,7 +97,7 @@ Unless specified with ``-chsel`` ``phys2bids`` will process and output all chann
 
     phys2bids -in tutorial_file.txt -indir /home/arthurdent/git/phys2bids/phys2bids/tests/data/ -chtrig 1 -outdir /home/arthurdent/physio
 
-This is outputted to the terminal: ::
+This is outputted to the terminal::
 
     INFO:phys2bids.phys2bids:Currently running phys2bids version v1.3.0-beta+149.ge4a3c87.dirty
     INFO:phys2bids.phys2bids:Input file is tutorial_file.txt
@@ -154,20 +154,20 @@ If you recorded the trigger of your **(f)MRI**, ``phys2bids`` can use it to dete
 First, we need to tell ``phys2bids`` what is our trigger channel, and we can use the argument ``-chtrig``. ``-chtrig`` has a default of 0, which means that if there is no input given ``phys2bids`` will assume the trigger information is in the hidden time channel.
 For the text file used in this example, the trigger information is the second column of the raw file, and first recorded channel.
 
-The last command line output said "Counting trigger points" and "The necessary options to find the amount of timepoints were not provided", so we need to give ``phys2bids`` some more information for it to correctly read the trigger information in the data. In this tutorial file, there are 158 triggers and the TR is 1.2 seconds. Using these arguments, we can call ``phys2bids`` again: ::
+The last command line output said "Counting trigger points" and "The necessary options to find the amount of timepoints were not provided", so we need to give ``phys2bids`` some more information for it to correctly read the trigger information in the data. In this tutorial file, there are 158 triggers and the TR is 1.2 seconds. Using these arguments, we can call ``phys2bids`` again::
 
     phys2bids -in tutorial_file -chtrig 1 -outdir /home/arthurdent/physio -ntp 158 -tr 1.2
 
-The output still warns us about something: ::
+The output still warns us about something::
 
     WARNING:phys2bids.physio_obj:Found 158 timepoints less than expected!
     WARNING:phys2bids.physio_obj:Correcting time offset, assuming missing timepoints are at the beginning (try again with a more liberal thr)
 
 How come?!? We know there are exactly 158 timepoints!
 In order to find the triggers, ``phys2bids`` gets the first derivative of the trigger channel, and uses a threshold (default 2.5) to get the peaks of the derivative, corresponding to the trigger event. If the threshold is too strict or is too liberal for the recorded trigger, it won't get all the trigger points.
-``phys2bids`` was created to stand little sampling errors - such as distracted researchers that started sampling a bit too late than expected. For this reason, if it finds less timepoints than the amount specified, it will assume that the error was caused by a *distracted researcher*. 
+| ``phys2bids`` was created to stand little sampling errors - such as distracted researchers that started sampling a bit too late than expected. For this reason, if it finds less timepoints than the amount specified, it will assume that the error was caused by a *distracted researcher*. 
 
-Therefore, we need to change the "-thr" input until ``phys2bids`` finds the correct number of timepoints. Looking at the tutorial_file_trigger_time.png file can help determine what threshold is more appropriate. For this tutorial file, a threshold of 0.735 finds the right number of time points. ::
+Therefore, we need to change the ``-thr`` input until ``phys2bids`` finds the correct number of timepoints. Looking at the tutorial_file_trigger_time.png file can help determine what threshold is more appropriate. For this tutorial file, a threshold of 0.735 finds the right number of time points. ::
 
     phys2bids -in tutorial_file -chtrig 1 -outdir /home/arthurdent/physio -ntp 158 -tr 1.2 -thr 0.735
 
@@ -223,9 +223,9 @@ In the first row, there's the whole trigger channel. In the second row, we see t
 Generating outputs in BIDs format
 #################################
 
-Alright, now the really interesting part! This section will explain how to use the "-heur", "-sub" and "-ses" arguments, to save the files in BIDs format. After all, that's probably why you're here.
+Alright, now the really interesting part! This section will explain how to use the ``-heur``, ``-sub``, and ``-ses`` arguments, to save the files in BIDs format. After all, that's probably why you're here.
 
-``phys2bids`` uses heuristic rules *à la* `heudiconv <https://github.com/nipy/heudiconv>`_. At the moment, it can only use the name of the file to understand what should be done with it - but we're working on making it *smarter*. There is a ready heuristic file for the tutorial, in the ``heuristics`` folder. Inside it's more or less like this: ::
+``phys2bids`` uses heuristic rules *à la* `heudiconv <https://github.com/nipy/heudiconv>`_. At the moment, it can only use the name of the file to understand what should be done with it - but we're working on making it *smarter*. There is a ready heuristic file for the tutorial, in the ``heuristics`` folder. Inside it looks more or less like this::
 
     def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
     # ############################## #
@@ -248,14 +248,14 @@ Alright, now the really interesting part! This section will explain how to use t
         rec = 'labchart'
     [...]
 
-The heuristic file has to be written accordingly, with a set of rules that could work for all the files in your dataset.
+The heuristic file has to be written accordingly, with a set of rules that could work for all the files in your dataset. You can learn more about it if you check the `guide on how to set it up <heuristic.html>`_.
 In this case, our heuristic file looks for a file that contains in the name ``tutorial``. It corresponds to the task ``test`` and run ``00``. Note that **only the task is required**, all the other fields are optional - look them up in the BIDs documentation and see if you need them.
 
 As there might not be a link between the physiological file and the subject (and session) that it relates to, ``phys2bids`` requires such information to be given from the user. In order for the *BIDsification* to happen, ``phys2bids`` needs the **full path** to the heuristic file, as well as the subject label. The session label is optional. The ``-outdir`` option will become the root folder of your BIDs files - i.e. your *site folder* ::
 
     phys2bids -in tutorial_file.txt -chtrig 1 -outdir /home/arthurdent/physio_bids -ntp 158 -tr 1.2 -thr 0.735 -heur /home/arthurdent/git/phys2bids/phys2bids/heuristics/heur_tutorial.py -sub 006 -ses 42
 
-The terminal output is as follows:  ::
+The terminal output is as follows::
 
     INFO:phys2bids.phys2bids:Currently running phys2bids version v1.3.0-beta+152.g1f98d16.dirty
     INFO:phys2bids.phys2bids:Input file is tutorial_file.txt

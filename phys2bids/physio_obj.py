@@ -274,7 +274,7 @@ class BlueprintInput():
                 LGR.warning(f'Found {timepoints_extra} timepoints'
                             ' more than expected!\n'
                             'Assuming extra timepoints are at the end '
-                            '(try again with a more conservative thr)')
+                            '(try again with a more liberal thr)')
 
             elif num_timepoints_found < num_timepoints_expected:
                 timepoints_missing = (num_timepoints_expected
@@ -282,12 +282,13 @@ class BlueprintInput():
                 LGR.warning(f'Found {timepoints_missing} timepoints'
                             ' less than expected!')
                 if tr:
-                    LGR.warning('Correcting time offset, assuming missing timepoints'
-                                ' are at the beginning (try again with '
-                                'a more liberal thr)')
+                    LGR.warning('Correcting time offset, assuming missing '
+                                'timepoints are at the beginning (try again '
+                                'with a more conservative thr)')
                     time_offset -= (timepoints_missing * tr)
                 else:
-                    LGR.warning('Can\'t correct time offset - you should specify the TR')
+                    LGR.warning('Can\'t correct time offset - you should '
+                                'specify the TR')
 
             else:
                 LGR.info('Found just the right amount of timepoints!')
