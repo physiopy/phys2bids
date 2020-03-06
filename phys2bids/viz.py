@@ -81,8 +81,8 @@ def plot_trigger(time, trigger, fileprefix, options, figsize=FIGSIZE, dpi=SET_DP
 
     def ntr2time(x):
         return x * options.tr
-    trigger_idx = (range(len(trigger)))
-    thr_idex = [i for (i, j) in zip(trigger_idx, trigger) if j >= options.thr]
+    # trigger_idx = (range(len(trigger)))
+    # thr_idex = [i for (i, j) in zip(trigger_idx, trigger) if j >= options.thr]
     outname = os.path.splitext(os.path.basename(options.filename))[0]
     thrline = np.ones(time.shape) * options.thr
     fig = plt.figure(figsize=figsize, dpi=dpi)
