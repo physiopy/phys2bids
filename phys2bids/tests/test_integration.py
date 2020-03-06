@@ -1,5 +1,5 @@
 import os
-import wget
+# import wget
 import glob
 import json
 
@@ -87,7 +87,8 @@ def test_logger():
     test_outdir = test_path
 
     # Phys2bids call through terminal
-    os.system(f'phys2bids -in {test_filename} -indir {test_path} -chtrig {test_chtrig} -outdir {test_outdir}')
+    os.system(f'phys2bids -in {test_filename} -indir {test_path} '
+              f'-chtrig {test_chtrig} -outdir {test_outdir}')
 
     # Read logger file
     files = os.listdir(test_path)
