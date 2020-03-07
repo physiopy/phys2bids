@@ -1,8 +1,8 @@
 .. _contributorfile:
 
-===============================
-How to contribute to `physiopy`
-===============================
+=================================
+How to contribute to ``physiopy``
+=================================
 Welcome to the physiopy organisation! It’s great news you’re thinking about contributing!
 Working with many people from many different places is great, but sometimes this means the code can become messy due to the many different ways a contribution can be made. For this reason, we have set up some guidelines for contributions - to help you get along ASAP!
 Before you start you'll need to set up a free `GitHub <https://github.com/>`_ account and sign in. Here are some `instructions <https://help.github.com/articles/signing-up-for-a-new-github-account>`_.
