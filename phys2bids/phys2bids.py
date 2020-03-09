@@ -267,7 +267,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # place, adds sub and ses label.
     LGR.info('Plot trigger')
     plot_path = os.path.join(outdir,
-                         os.path.splitext(os.path.basename(filename))[0]))
+                         os.path.splitext(os.path.basename(filename))[0])
     if sub:
         plot_path += f'_sub-{sub}'
     if ses:
