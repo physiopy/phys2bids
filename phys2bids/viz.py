@@ -55,6 +55,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     thrline = np.ones(time.shape) * thr
     # define figure and space between plots
     fig = plt.figure(figsize=figsize, dpi=dpi)
+    block = time > 0
     plt.subplots_adjust(hspace=0.7)
     # plot of the hole trigger
     subplot = fig.add_subplot(311)
@@ -62,7 +63,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     subplot.set_ylim([-0.2, thr * 10])
     subplot.set_xlabel('time')
     subplot.set_ylabel('Volts')
-    subplot.plot(time, trigger, '-', time, thrline, 'r-.', time, time, '-')
+    subplot.plot(time, trigger, '-', time, thrline, 'r-.', time, block, '-')
     # plot the first spike according to the user threshold
     subplot = fig.add_subplot(323)
     subplot.set_xlim([-tr * 4, tr * 4])
@@ -82,7 +83,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
     # add secondary acis labelS
     ax2.set_xlabel('TR')
-    subplot.plot(time, trigger, '-', time, time, '-')
+    subplot.plot(time, trigger, '-', time, block, '-')
     ax2.set_title('Initial trigger for inputed threshold')
     # plot the last spike according to the user threshold
     subplot = fig.add_subplot(324)
@@ -103,7 +104,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
     ax2.set_xlabel('TR')
     ax2.set_title('Last trigger for inputed threshold')
-    subplot.plot(time, trigger, '-', time, time, '-')
+    subplot.plot(time, trigger, '-', time, block, '-')
     # lets do the suggested threshold plot
     trigger_idx = (range(len(trigger)))
     thr_idex = [i for (i, j) in zip(trigger_idx, trigger) if j >= thr]
@@ -133,7 +134,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     #     tr_array.append(time2ntr(sample))
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
     ax2.set_xlabel('TR')
-    subplot.plot(time, trigger, '-', time, time, '-')
+    subplot.plot(time, trigger, '-', time, block, '-')
     ax2.set_title(f'Initial trigger for suggested threshold {new_thr}')
     # plot the last spike according to the suggested threshold
     subplot = fig.add_subplot(326)
@@ -155,7 +156,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
     ax2.set_xlabel('TR')
     ax2.set_title(f'Last trigger for suggested threshold {new_thr}')
-    subplot.plot(time, trigger, '-', time, time, '-')
+    subplot.plot(time, trigger, '-', time, block, '-')
     plt.savefig(fileprefix + '_trigger_time.png', dpi=dpi)
     plt.close()
 
