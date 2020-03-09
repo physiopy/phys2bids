@@ -266,7 +266,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
     LGR.info('Plot trigger')
-    plot_path = deepcopy(outfile)
+    plot_path = deepcopy(os.path.basename(filename))[0])
     if sub:
         plot_path += f'_sub-{sub}'
     if ses:
@@ -317,7 +317,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         # Populate it with the corresponding blueprint input and replace it
         # in the dictionary.
         phys_out[uniq_freq] = BlueprintOutput.init_from_blueprint(phys_out[uniq_freq])
-    
+
     if heur_file and sub:
         LGR.info(f'Preparing BIDS output using {heur_file}')
     elif heur_file and not sub:
@@ -336,7 +336,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                 outfile = use_heuristic(heur_file, sub, ses, filename, outdir)
 
         else:
-            outfile = os.path.join(outdir,  
+            outfile = os.path.join(outdir,
                                    os.path.splitext(os.path.basename(filename))[0])
             if output_amount > 1:
                 # Append "freq" to filename if more than one freq
