@@ -336,7 +336,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                 outfile = use_heuristic(heur_file, sub, ses, filename, outdir)
 
         elif output_amount > 1:
-            # Append "freq" to filename if more than one freq
+            # Append "freq" to filename if more than one freq is present
             outfile = f'{os.path.join(outdir, os.path.splitext(filename)[0])}_{uniq_freq}'
 
         LGR.info(f'Exporting files for freq {uniq_freq}')
