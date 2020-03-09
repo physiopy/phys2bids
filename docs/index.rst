@@ -31,7 +31,7 @@ phys2bids
 It was born for AcqKnowledge files (BIOPAC), and at the moment it supports
 ``.acq`` files as well as ``.txt`` files obtained by labchart
 (ADInstruments).
-It doesn't support physiological files recorded with the MRI, as you can find a software for it [here](https://github.com/tarrlab/physio2bids).
+It doesn't support physiological files recorded with the MRI, as you can find a software for it `here <https://github.com/tarrlab/physio2bids>`_.
 
 **The project is currently under development**.
 Any suggestion/bug report is welcome! Feel free to open an issue.

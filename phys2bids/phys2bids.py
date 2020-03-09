@@ -238,8 +238,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     infile = os.path.join(indir, filename)
     utils.check_file_exists(infile)
-    outfile = os.path.join(outdir,
-                           os.path.splitext(os.path.basename(filename))[0])
 
     # Read file!
     if ftype == 'acq':
@@ -268,7 +266,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
     LGR.info('Plot trigger')
-    plot_path = deepcopy(outfile)
+    plot_path = os.path.join(outdir,
+                             os.path.splitext(os.path.basename(filename))[0])
     if sub:
         plot_path += f'_sub-{sub}'
     if ses:
@@ -319,12 +318,14 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         # Populate it with the corresponding blueprint input and replace it
         # in the dictionary.
         phys_out[uniq_freq] = BlueprintOutput.init_from_blueprint(phys_out[uniq_freq])
+
     if heur_file and sub:
         LGR.info(f'Preparing BIDS output using {heur_file}')
     elif heur_file and not sub:
         LGR.warning(f'While "-heur" was specified, option "-sub" was not.\n'
                     f'Skipping BIDS formatting.')
 
+    # Preparing output parameters: name and folder.
     for uniq_freq in uniq_freq_list:
         # If possible, prepare bids renaming.
         if heur_file and sub:
@@ -335,9 +336,12 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             else:
                 outfile = use_heuristic(heur_file, sub, ses, filename, outdir)
 
-        elif output_amount > 1:
-            # Append "freq" to filename if more than one freq
-            outfile = f'outfile_{uniq_freq}'
+        else:
+            outfile = os.path.join(outdir,
+                                   os.path.splitext(os.path.basename(filename))[0])
+            if output_amount > 1:
+                # Append "freq" to filename if more than one freq
+                outfile = f'{outfile}_{uniq_freq}'
 
         LGR.info(f'Exporting files for freq {uniq_freq}')
         savetxt(outfile + '.tsv.gz', phys_out[uniq_freq].timeseries,

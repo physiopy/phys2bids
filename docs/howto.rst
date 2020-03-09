@@ -46,7 +46,7 @@ The simplest way of calling ``phys2bids`` is moving to the folder containing the
     cd phys2bids/phys2bids/tests/data/
     phys2bids -in tutorial_file
 
-``pys2bids`` will try to get the extension for you. 
+``phys2bids`` will try to get the extension for you. 
 However, we’ll use one more argument to have a sneak peak into the content of the file:
 
 .. code-block:: shell
