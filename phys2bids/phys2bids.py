@@ -337,7 +337,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
         elif output_amount > 1:
             # Append "freq" to filename if more than one freq
-            outfile = f'{os.path.join(outdir, filename)}_{uniq_freq}'
+            outfile = f'{os.path.join(outdir, os.path.splitext(filename)[0])}_{uniq_freq}'
 
         LGR.info(f'Exporting files for freq {uniq_freq}')
         savetxt(outfile + '.tsv.gz', phys_out[uniq_freq].timeseries,
