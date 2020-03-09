@@ -1,8 +1,8 @@
 .. _contributorfile:
 
-==========================
-Contributing to `physiopy`
-==========================
+=================================
+How to contribute to ``physiopy``
+=================================
 Welcome to the physiopy organisation! It’s great news you’re thinking about contributing!
 Working with many people from many different places is great, but sometimes this means the code can become messy due to the many different ways a contribution can be made. For this reason, we have set up some guidelines for contributions - to help you get along ASAP!
 Before you start you'll need to set up a free `GitHub <https://github.com/>`_ account and sign in. Here are some `instructions <https://help.github.com/articles/signing-up-for-a-new-github-account>`_.
@@ -36,6 +36,7 @@ Aims of physiopy
 ----------------
 physiopy is a **very** young project developed by a bunch of researchers from the two different sides of the Atlantic Ocean (for now).
 Our main goal is to help collect, analyse and share physiological data interfacing with (MRI) neuroimaging. We’re trying to do so by:
+
 1. Write packages to make a user-friendly pipeline to deal with physiological data.
 2. Organising a documentation containing tips and strategies on how to collect such data and use our packages.
 3. Write packages that take into account the use of such data in combination with neuroimaging (MRI) - by getting everything ready for that analysis.
@@ -175,9 +176,11 @@ When opening a pull request, assign it to at least one label.
 We encourage you to open a PR as soon as possible - even before you finish working on them. This is useful especially to you - so that you can receive comments and suggestions early on, rather than having to process a lot of comments in the final review step! 
 However, if it’s an incomplete PR, please open a **Draft PR**. That helps us process PRs by knowing which one to have a look first - and how picky to be when doing so.
 To be merged, PRs have to:
+
 1. Pass all the Travis CI tests.
 2. Have the necessary amount of approving reviews, even if you’re a long time contributor. You can ask one (or more) contributor to do that review, if you think they align more with the content of your PR. You need **one** review for documentation, tests, and small changes, and **two** reviews for bugs, refactoring and enhancements.
-3. Contain at least a unit test for your contribution, if the PR contains code (it would be better if it contains an integration or function test and all the breaking tests necessary), or an integration test if it contains documentation. If you’re not confident about writing tests, it is possible to refer to an issue that asks for the test to be written, or another (Draft) PR that contains the tests required.
+3. Contain at least a unit test for your contribution, if the PR contains code (it would be better if it contains an integration or function test and all the breaking tests necessary). If you’re not confident about writing tests, it is possible to refer to an issue that asks for the test to be written, or another (Draft) PR that contains the tests required.
+
 As we’re trying to maintain at least a 90% code coverance, you’re strongly encouraged to write all the necessary tests not to drop below the threshold. If our coverance becomes too low, you might be asked to add more tests and/or your PR might be rejected.
 
 .. _styling:
@@ -197,18 +200,19 @@ physiopy uses Continuous Integration (CI) to make life easier. In particular, we
 Travis CI uses `pytest <https://docs.pytest.org/en/latest/>`_ to run the tests. The great thing about it is that you can run it in advance on your local version of the code!
 We can measure the amount of code that is tested with [codecov]8https://docs.pytest.org/en/latest/), which is an indication of how reliable our packages are! We try to maintain a 90% code coverage, and for this reason, PR should contain tests!
 The four main type of tests we use are:
+
 1. Unit tests
-Unit tests check that a minimal piece of code is doing what it should be doing. Normally this means calling a function with some mock parameters and checking that the output is equal to the expected output. For example, to test a function that adds two given numbers together (1 and 3), we would call the function with those parameters, and check that the output is 4.
+    Unit tests check that a minimal piece of code is doing what it should be doing. Normally this means calling a function with some mock parameters and checking that the output is equal to the expected output. For example, to test a function that adds two given numbers together (1 and 3), we would call the function with those parameters, and check that the output is 4.
 2. Breaking tests
-Breaking tests are what you expect - they check that the program is breaking when it should. This means calling a function with parameters that are expected **not** to work, and check that it raises a proper error or warning.
+    Breaking tests are what you expect - they check that the program is breaking when it should. This means calling a function with parameters that are expected **not** to work, and check that it raises a proper error or warning.
 3. Integration tests
-Integration tests check that the code has an expected output, being blind to its content. This means that if the program should output a new file, the file exists - even if it’s empty. This type of tests are normally run on real data and call the program itself. For instance, documentation PRs should check that the documentation page is produced!
+    Integration tests check that the code has an expected output, being blind to its content. This means that if the program should output a new file, the file exists - even if it’s empty. This type of tests are normally run on real data and call the program itself. For instance, documentation PRs should check that the documentation page is produced!
 4. Functional tests
-If integration tests and unit tests could have babies, those would be functional tests. In practice, this kind of tests check that an output is produced, and *also* that it contains what it should contain. If a function should output a new file or an object, this test passes only if the file exists *and* it is like we expect it to be. They are run on real or mock data, and call the program itself or a function.
+    If integration tests and unit tests could have babies, those would be functional tests. In practice, this kind of tests check that an output is produced, and *also* that it contains what it should contain. If a function should output a new file or an object, this test passes only if the file exists *and* it is like we expect it to be. They are run on real or mock data, and call the program itself or a function.
 
 .. _recognising:
 
-Recognizing contributors
+Recognising contributors
 ------------------------
 We welcome and recognize `all contributions <https://allcontributors.org/docs/en/specification>`_ from documentation to testing to code development. You can see a list of current contributors in the README (kept up to date by the `all contributors bot <https://allcontributors.org/docs/en/bot/overview>`_).
 

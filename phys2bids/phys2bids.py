@@ -271,7 +271,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     if sub:
         plot_path += f'_sub-{sub}'
     if ses:
-        plot_path += f'_sub-{ses}'
+        plot_path += f'_ses-{ses}'
     viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
                      plot_path, tr, thr, num_timepoints_expected)
 

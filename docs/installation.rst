@@ -22,35 +22,50 @@ At the moment, those modules are:
 Linux and mac installation
 --------------------------
 
-Download the package from github and uncompress it.
-Alternatively, if you have ``git``, use the command::
-``git clone https://github.com/physiopy/phys2bids.git``
-
 Install with ``pip``
 ^^^^^^^^^^^^^^^^^^^^
 
+Pipy has the latest stable version of ``phys2bids`` as a package. Just run
+``pip3 install phys2bids`` or ``pip install phys2bids`` if your default python is python3.
+
+If you want the latest development version of the program, download the package from `github <https://github.com/physiopy/phys2bids>`_ and uncompress it.
+Alternatively, if you have ``git``, use the command::
+
+    git clone https://github.com/physiopy/phys2bids.git
+
 Open a terminal in the ``phy2bids`` folder and execute the command::
-``pip3 install .``
+
+    pip3 install .
 
 If python 3 is already your default, you might use instead::
-``pip install .``
+
+    pip install .
 
 If you need to install other libraries, you can call again ``pip``::
-``pip3 install bioread``
+
+    pip3 install bioread
 
 Install without ``pip``
 ^^^^^^^^^^^^^^^^^^^^^^^
 
+Download the package from github and uncompress it.
+Alternatively, if you have ``git``, use the command::
+
+    git clone https://github.com/physiopy/phys2bids.git
+
 Open a terminal in the phy2bids folder and execute the command::
-``python3 setup.py``
+
+    python3 setup.py
 
 If python 3 is already your default, you might use instead::
-``python setup.py``
+
+    python setup.py
 
 Check your installation!
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 Type the command::
-``phys2bids -v``
 
-If your output is: ``phys2bids 1.2.0-beta`` or similar, ``phys2bids`` is ready to be used.
+    phys2bids -v
+
+If your output is: ``phys2bids 1.3.0-beta`` or similar, ``phys2bids`` is ready to be used.
