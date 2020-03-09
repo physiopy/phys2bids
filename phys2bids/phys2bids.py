@@ -266,7 +266,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
     LGR.info('Plot trigger')
-    plot_path = deepcopy(os.path.basename(filename))[0])
+    plot_path = deepcopy(os.path.basename(filename)[0])
     if sub:
         plot_path += f'_sub-{sub}'
     if ses:
