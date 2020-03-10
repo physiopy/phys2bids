@@ -80,6 +80,7 @@ Contributing with test files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 At physiopy we always try to imagine and support every possible setting out there. However, our imagination has a limit - but if you think our packages should process a specific format/setting that you have, we’re more than glad to do so!
 To make it happen, we need an example of the file we want to process, so you will have to share it with us (and the rest of the world)! The contribution can be a full file of data that you already acquired, a part of that file (pay attention to what is the minimum you need to share!), or mock data.
+The file contribution should come with a json file of the same name that contains the necessary information to run ``phys2bids`` on that file contribution. There is a `json blueprint in OSF <https://mfr.de-1.osf.io/render?url=https://osf.io/jrnxv/?direct%26mode=render%26action=download%26mode=render>`_, you can download it and adapt it. Note that the frequency list **has to be expressed in Hz** as an integer or float.
 To contribute with a test file, open an Issue in GitHub and label it with *Test*. We’ll help you add the file in our 
 `OSF <https://osf.io/3txqr/>`_ space.
 We’re extremely grateful for this type of contribution - so grateful that we asked allcontributors to add a dedicated category!
@@ -163,6 +164,7 @@ Contribution workflow
 ---------------------
 There are many descriptions of a good contribution workflow out there. For instance, we suggest to have a look at `tedana's workflow <https://github.com/ME-ICA/tedana/blob/master/CONTRIBUTING.md#making-a-change>`_.
 At physiopy, we follow a very similar workflow. The only two differences are:
+
 -  We ask you to test the code locally before merging it, and then, if possible, write some automatic tests for the code to be run in our Continuous Integration! Check the testing section below to know more.
 -  We suggest opening a draft PR as soon as you can - so it’s easier for us to help you!
 
