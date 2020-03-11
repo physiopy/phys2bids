@@ -416,14 +416,16 @@ def test_integration_info():
     subprocess.run(f'cd {test_path}', shell=True, check=True)
 
     # Phys2bids call through terminal
-    command_str = (f'phys2bids -in {test_filename} -indir {test_path} '
+    command_str = (f'phys2bids -in {test_filename} -indir {test_path} ',
                    f'-chtrig {test_chtrig} -outdir {test_outdir} ',
                    f'-tr {test_tr} -ntp {test_ntp} -thr {test_thr} ',
                    f'-info')
+    command_str = ''.join(command_str)
+
     subprocess.run(command_str, shell=True, check=True)
 
     # Check that plot all file is generated
-    assert os.path.isfile(os.path.join(test_path, 'tutorial_file.png'))
+    assert os.path.isfile('tutorial_file.png')
 
     # Read logger file
     files = os.listdir(test_path)
