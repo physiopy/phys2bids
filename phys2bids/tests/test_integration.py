@@ -422,8 +422,6 @@ def test_integration_info():
                    f'-info')
     subprocess.run(command_str, shell=True, check=True)
 
-    breakpoint()
-
     # Check that plot all file is generated
     assert os.path.isfile(os.path.join(test_path, 'tutorial_file.png'))
 
