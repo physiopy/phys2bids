@@ -402,7 +402,7 @@ def test_integration_heuristic():
 
 def test_integration_info():
     """
-    Does an integration test with the tutorial file
+    Tests the info option
     """
     test_path = resource_filename('phys2bids', 'tests/data')
     test_filename = 'tutorial_file.txt'
@@ -422,8 +422,10 @@ def test_integration_info():
                    f'-info')
     subprocess.run(command_str, shell=True, check=True)
 
+    breakpoint()
+
     # Check that plot all file is generated
-    assert os.path.isfile('tutorial_file.png')
+    assert os.path.isfile(os.path.join(test_path, 'tutorial_file.png'))
 
     # Read logger file
     files = os.listdir(test_path)
