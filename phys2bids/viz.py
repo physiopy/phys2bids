@@ -60,8 +60,8 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     plt.subplots_adjust(hspace=0.7)
     # plot of the hole trigger
     subplot = fig.add_subplot(311)
-    subplot.set_title(f'trigger and time for {outname}.tsv.gz')
-    subplot.set_ylim([-0.2, thr * 10])
+    subplot.set_title(f'Trigger and time for {outname}.tsv.gz')
+    subplot.set_ylim([-0.2, thr * 3])
     subplot.set_xlabel('Seconds')
     subplot.set_ylabel('Volts')
     subplot.plot(time, trigger, '-', time, thrline, 'r-.', time, block, '-')
