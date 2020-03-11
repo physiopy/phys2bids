@@ -398,3 +398,67 @@ def test_integration_heuristic():
         os.remove(filename)
     for filename in glob.glob(os.path.join(test_path_output, '*')):
         os.remove(filename)
+
+
+def test_integration_info():
+    """
+    Does an integration test with the tutorial file
+    """
+    test_path = resource_filename('phys2bids', 'tests/data')
+    test_filename = 'tutorial_file.txt'
+    test_chtrig = 1
+    test_outdir = test_path
+    test_ntp = 158
+    test_tr = 1.2
+    test_thr = 0.735
+
+    # Move into folder
+    subprocess.run(f'cd {test_path}', shell=True, check=True)
+
+    # Phys2bids call through terminal
+    command_str = (f'phys2bids -in {test_filename} -indir {test_path} '
+                   f'-chtrig {test_chtrig} -outdir {test_outdir} ',
+                   f'-tr {test_tr} -ntp {test_ntp} -thr {test_thr} ',
+                   f'-info')
+    subprocess.run(command_str, shell=True, check=True)
+
+    # Check that plot all file is generated
+    assert os.path.isfile('tutorial_file.png')
+
+    # Read logger file
+    files = os.listdir(test_path)
+    logger_idx = [log_idx for log_idx, log_str in enumerate(
+                      files) if 'phys2bids' in log_str]
+    logger_file = files[logger_idx[0]]
+
+    # Check files were correctly read
+    with open(os.path.join(test_path, logger_file)) as logger_info:
+        logger_info = logger_info.readlines()
+
+    # Get trigger info
+    trigger_idx = [log_idx for log_idx, log_str in enumerate(
+                      logger_info) if 'Trigger; sampled at' in log_str]
+    trigger_found = logger_info[trigger_idx[0]]
+    assert '1000.0' in trigger_found
+
+    # Get CO2 info
+    co2_idx = [log_idx for log_idx, log_str in enumerate(
+                      logger_info) if 'CO2; sampled at' in log_str]
+    co2_found = logger_info[co2_idx[0]]
+    assert '1000.0' in co2_found
+
+    # Get O2 info
+    o2_idx = [log_idx for log_idx, log_str in enumerate(
+                      logger_info) if 'O2; sampled at' in log_str]
+    o2_found = logger_info[o2_idx[0]]
+    assert '1000.0' in o2_found
+
+    # Get pulse info
+    pulse_idx = [log_idx for log_idx, log_str in enumerate(
+                      logger_info) if 'Pulse; sampled at' in log_str]
+    pulse_found = logger_info[pulse_idx[0]]
+    assert '1000.0' in pulse_found
+
+    # Remove generated files
+    for filename in glob.glob(os.path.join(test_path, 'phys2bids*')):
+        os.remove(filename)

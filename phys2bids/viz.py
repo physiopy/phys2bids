@@ -11,41 +11,6 @@ SET_DPI = 100
 FIGSIZE = (18, 10)
 
 
-def plot_channel(table, channel, fileprefix, figsize=FIGSIZE, dpi=SET_DPI):
-    """
-    Produces a textfile of the specified extension `ext`,
-    containing the given content `text`.
-
-    Parameters
-    ----------
-    table: pandas dataframe
-        Dataframe containing channels
-    channel: str
-        name of the desired channel (`table` column)
-    fileprefix: str or path
-        A string representing a file name or a fullpath
-        to a file, WITHOUT extension
-    figsize: tuple
-        Desired size of the figure (see `matplotlib`),
-        Default is {FIGSIZE}
-    dpi: int
-        Desired DPI of the figure (see `matplotlib`),
-        Default is {SET_DPI}
-
-    Notes
-    -----
-    Outcome:
-    fileprefix + '_' + channel + '_time.png':
-        Creates new plot `fileprefix_channel_time.png`.
-    """
-
-    plt.figure(figsize=figsize, dpi=dpi)
-    plt.title(channel)
-    plt.plot(table.index.values, table[channel], '-')
-    plt.savefig(fileprefix + '_' + channel + '_time.png', dpi=dpi)
-    plt.close()
-
-
 def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
                  figsize=FIGSIZE, dpi=SET_DPI):
     """
