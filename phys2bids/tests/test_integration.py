@@ -175,7 +175,7 @@ def test_integration_acq():
 
     # Compares values in json file with ground truth
     assert json_data['SamplingFrequency'] == 10000.0
-    assert json_data['StartTime'] == 10.425007798392297
+    assert math.isclose(json_data['StartTime'], 10.425007798392297)
     assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'PULSE - Custom, DA100C',
                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
