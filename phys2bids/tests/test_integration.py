@@ -380,7 +380,7 @@ def test_integration_heuristic():
 
     # Compares values in json file with ground truth
     assert json_data['SamplingFrequency'] == 1000.0
-    assert json_data['StartTime'] == 0.24499999999989086
+    assert math.isclose(json_data['StartTime'], 0.24499999999989086)
     assert json_data['Columns'] == ['time', 'Trigger', 'CO2', 'O2', 'Pulse']
 
     # Remove generated files
