@@ -48,7 +48,7 @@ def test_logger():
 
     # Get version info
     current_version = get_versions()
-    assert check_string(logger_info, 'phys2bids version', current_version)
+    assert check_string(logger_info, 'phys2bids version', current_version['version'], is_num=False)
 
     # Removes generated files
     os.remove(os.path.join(test_path, logger_file))
