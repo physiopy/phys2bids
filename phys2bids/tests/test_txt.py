@@ -3,108 +3,103 @@ from pkg_resources import resource_filename
 from phys2bids.interfaces import txt
 from pytest import raises
 import wget
+import pytest
+url = 'https://osf.io/sdz4n/download'  # url to Test_belt_pulse_samefreq.txt
+test_path = resource_filename('phys2bids', 'tests/data')
+test_filename = 'Test_belt_pulse_samefreq.txt'
+test_full_path1 = os.path.join(test_path, test_filename)
+wget.download(url, test_full_path1)
+chtrig = 2
+header_TBSF, channels_TBSF = txt.read_header_and_channels(test_full_path1, chtrig)
+# load file with comment
+url = 'https://osf.io/q4x2f/download'
+# url to Test_2minRest_trig_multifreq_header_comment.txt
+test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
+test_path = resource_filename('phys2bids', 'tests/data')
+test_full_path2 = os.path.join(test_path, test_filename)
+wget.download(url, test_full_path2)
+chtrig = 1
+header_T2MF, channels_T2MF = txt.read_header_and_channels(test_full_path2, chtrig)
+# use file without time column
+# # url to the file Test2_trigger_CO2_O2_pulse_1000Hz_534TRs_no_time.txt
+url = 'https://osf.io/u5dq8/download'
+test_filename = 'Test2_trigger_CO2_O2_pulse_1000Hz_534TRs_no_time.txt'
+test_path = resource_filename('phys2bids', 'tests/data')
+test_full_path3 = os.path.join(test_path, test_filename)
+wget.download(url, test_full_path3)
+chtrig = 0
+header_T2ntime, channels_T2ntime = txt.read_header_and_channels(test_full_path3, chtrig)
 
 
 def test_read_header_and_channels():
-    url = 'https://osf.io/sdz4n/download'  # url to Test_belt_pulse_samefreq.txt
     test_path = resource_filename('phys2bids', 'tests/data')
     test_filename = 'Test_belt_pulse_samefreq.txt'
     test_full_path = os.path.join(test_path, test_filename)
-    wget.download(url, test_full_path)
     chtrig = 2
     header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     assert len(header) == 16  # check proper header lenght
     assert len(channels) == 1336816  # check proper number of timepoints
     assert len(header[-1]) == 6  # check extra line is deleted
-    os.remove(test_full_path)
     # load file with comment
-    url = 'https://osf.io/q4x2f/download'
     # url to Test_2minRest_trig_multifreq_header_comment.txt
     test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_full_path = os.path.join(test_path, test_filename)
-    wget.download(url, test_full_path)
     chtrig = 1
     header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     assert len(channels[152109 - 9]) == 6  # check the comment has been eliminated
-    os.remove(test_full_path)
 
 
-def test_populate_phys_input():
+testdata = [(header_TBSF, header_T2MF)]
+@pytest.mark.parametrize("header_acq,header_lab", testdata)
+def test_populate_phys_input(header_acq, header_lab):
     # testing for AcqKnoledge files
-    url = 'https://osf.io/sdz4n/download'
     test_filename = 'Test_belt_pulse_samefreq.txt'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_full_path = os.path.join(test_path, test_filename)
-    wget.download(url, test_full_path)
     chtrig = 1
-    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
-    assert 'acq' in header[0][0]
+    assert 'acq' in header_acq[0][0]
     txt.populate_phys_input(test_full_path, chtrig)
-    os.remove(test_full_path)
     # testing for labchart files
-    url = 'https://osf.io/q4x2f/download'
     test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_full_path = os.path.join(test_path, test_filename)
-    wget.download(url, test_full_path)
     chtrig = 1
-    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     # check the printing output according to each format
-    assert 'Interval=' in header[0]
-    os.remove(test_full_path)
+    assert 'Interval=' in header_lab[0]
+    txt.populate_phys_input(test_full_path, chtrig)
 
 
-def test_process_labchart():
-    url = 'https://osf.io/q4x2f/download'
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
-    test_full_path = os.path.join(test_path, test_filename)
-    wget.download(url, test_full_path)
+testdata = [(header_T2MF, channels_T2MF, header_T2ntime, channels_T2ntime)]
+@pytest.mark.parametrize("header_time, channels_time, header_no_time, channels_no_time", testdata)
+def test_process_labchart(header_time, channels_time, header_no_time, channels_no_time):
     chtrig = 1
-    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     # test file with header and seconds as unit:
-    phys_obj = txt.process_labchart(channels, chtrig, header)
+    phys_obj = txt.process_labchart(channels_time, chtrig, header_time)
     assert phys_obj.freq[0] == 1000
     # test when units are min:
-    header[0][1] = '0.001 min'
-    phys_obj = txt.process_labchart(channels, chtrig, header)
+    header_time[0][1] = '0.001 min'
+    phys_obj = txt.process_labchart(channels_time, chtrig, header_time)
     assert phys_obj.freq[0] == 16.666666666666668
     # test when units are hr:
-    header[0][1] = '0.001 hr'
-    phys_obj = txt.process_labchart(channels, chtrig, header)
+    header_time[0][1] = '0.001 hr'
+    phys_obj = txt.process_labchart(channels_time, chtrig, header_time)
     assert phys_obj.freq[0] == 0.2777777777777778
     # test when units are ms:
-    header[0][1] = '1 ms'
-    phys_obj = txt.process_labchart(channels, chtrig, header)
+    header_time[0][1] = '1 ms'
+    phys_obj = txt.process_labchart(channels_time, chtrig, header_time)
     assert phys_obj.freq[0] == 1000
     # test when units are µs:
-    header[0][1] = '1000 µs'
-    phys_obj = txt.process_labchart(channels, chtrig, header)
+    header_time[0][1] = '1000 µs'
+    phys_obj = txt.process_labchart(channels_time, chtrig, header_time)
     assert phys_obj.freq[0] == 1000
-    os.remove(test_full_path)
-    # use file without time column
-    # url to the file Test2_trigger_CO2_O2_pulse_1000Hz_534TRs_no_time.txt
-    url = 'https://osf.io/u5dq8/download'
-    test_filename = 'Test2_trigger_CO2_O2_pulse_1000Hz_534TRs_no_time.txt'
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_full_path = os.path.join(test_path, test_filename)
-    wget.download(url, test_full_path)
-    chtrig = 0
-    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
-    phys_obj = txt.process_labchart(channels, chtrig, header)
-    assert len(phys_obj.timeseries) == len(channels[0]) + 1
-    os.remove(test_full_path)
+    phys_obj = txt.process_labchart(channels_no_time, chtrig, header_no_time)
+    assert len(phys_obj.timeseries) == len(channels_no_time[0]) + 1
 
 
-def test_process_acq():
+testdata = [(header_TBSF, channels_TBSF)]
+@pytest.mark.parametrize("header,channels", testdata)
+def test_process_acq(header, channels):
     # test file without header
-    url = 'https://osf.io/sdz4n/download'
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'Test_belt_pulse_samefreq.txt'
-    test_full_path = os.path.join(test_path, test_filename)
-    wget.download(url, test_full_path)
-    chtrig = 1
-    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     with raises(AttributeError) as errorinfo:
         txt.process_acq(channels, chtrig)
     assert 'not supported' in str(errorinfo.value)
@@ -136,7 +131,6 @@ def test_process_acq():
     with raises(AttributeError) as errorinfo:
         phys_obj = txt.process_acq(channels, chtrig, header)
     assert 'not in a valid AcqKnowledge' in str(errorinfo.value)
-    os.remove(test_full_path)
 
 
 def test_raises():
@@ -159,11 +153,9 @@ def test_raises():
     os.remove(test_full_path)
     # now for labchart read
     # testing file already downloaded in the other tests
-    url = 'https://osf.io/q4x2f/download'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_full_path = os.path.join(test_path, test_filename)
-    wget.download(url, test_full_path)
     chtrig = 1
     header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     with raises(AttributeError) as errorinfo:
@@ -174,18 +166,15 @@ def test_raises():
     with raises(AttributeError) as errorinfo:
         txt.process_labchart(channels, chtrig, header)
     assert 'not in a valid LabChart' in str(errorinfo.value)
-    os.remove(test_full_path)
 
 
-def test_multifreq():
-    url = 'https://osf.io/q4x2f/download'
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
-    test_full_path = os.path.join(test_path, test_filename)
-    wget.download(url, test_full_path)
+testdata = [(header_T2MF, channels_T2MF)]
+@pytest.mark.parametrize("header,channels", testdata)
+def test_multifreq(header, channels):
     chtrig = 1
-    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
     phys_obj = txt.process_labchart(channels, chtrig, header)
     new_freq = txt.check_multifreq(phys_obj.timeseries, [phys_obj.freq[0]] * len(phys_obj.freq))
     assert new_freq[-3] == 40
-    os.remove(test_full_path)
+os.remove(test_full_path1)
+os.remove(test_full_path2)
+os.remove(test_full_path3)
