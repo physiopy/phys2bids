@@ -112,8 +112,6 @@ def test_integration_tutorial():
     # Remove generated files
     for filename in glob.glob(os.path.join(test_path, 'phys2bids*')):
         os.remove(filename)
-    # for filename in glob.glob(os.path.join(test_path, 'tutorial*')):
-    #     os.remove(filename)
 
 
 def test_integration_acq():
