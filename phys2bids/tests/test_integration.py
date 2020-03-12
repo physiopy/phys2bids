@@ -47,13 +47,8 @@ def test_logger():
         logger_info = logger_info.readlines()
 
     # Get version info
-    version_idx = [log_idx for log_idx, log_str in enumerate(
-                      logger_info) if 'phys2bids version' in log_str]
-    version_found = logger_info[version_idx[0]]
     current_version = get_versions()
-
-    # Checks logger version is the current version
-    assert current_version['version'] in version_found
+    assert check_string(logger_info, 'phys2bids version', current_version)
 
     # Removes generated files
     os.remove(os.path.join(test_path, logger_file))
