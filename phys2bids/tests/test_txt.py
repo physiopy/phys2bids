@@ -175,11 +175,3 @@ def test_multifreq(header, channels):
     phys_obj = txt.process_labchart(channels, chtrig, header)
     new_freq = txt.check_multifreq(phys_obj.timeseries, [phys_obj.freq[0]] * len(phys_obj.freq))
     assert new_freq[-3] == 40
-
-
-testdata = [(test_full_path1, test_full_path2, test_full_path3)]
-@pytest.mark.parametrize("file1,file2,file3", testdata)
-def eliminate_files(file1, file2, file3):
-    os.remove(file1)
-    os.remove(file2)
-    os.remove(file3)
