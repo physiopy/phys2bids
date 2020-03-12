@@ -66,10 +66,8 @@ def test_integration_tutorial():
               num_timepoints_expected=test_ntp, tr=test_tr, thr=test_thr)
 
     # Check that files are generated
-    assert os.path.isfile(os.path.join(test_path, 'tutorial_file.log'))
-    assert os.path.isfile(os.path.join(test_path, 'tutorial_file.json'))
-    assert os.path.isfile(os.path.join(test_path, 'tutorial_file.tsv.gz'))
-    assert os.path.isfile(os.path.join(test_path, 'tutorial_file_trigger_time.png'))
+    for suffix in ['.log', '.json', '.tsv.gz', '_trigger_time.png']:
+        assert os.path.isfile(os.path.join(test_path, 'tutorial_file' + suffix))
 
     # Read log file (note that this file is not the logger file)
     with open(os.path.join(test_path, 'tutorial_file.log')) as log_info:
