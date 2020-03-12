@@ -101,7 +101,6 @@ def test_integration_tutorial():
     assert 'Time 0' in start_found
 
     # Checks json file
-    # json_data = json.load(os.path.join(test_path, 'tutorial_file.json'))
     with open(os.path.join(test_path, 'tutorial_file.json')) as json_file:
         json_data = json.load(json_file)
 
