@@ -29,10 +29,7 @@ def test_logger():
                    f'-chtrig {test_chtrig} -outdir {test_outdir}', shell=True, check=True)
 
     # Read logger file
-    files = os.listdir(test_path)
-    logger_idx = [log_idx for log_idx, log_str in enumerate(
-                      files) if 'phys2bids' in log_str]
-    logger_file = files[logger_idx[0]]
+    logger_file = glob.glob(os.path.join(test_path, '*phys2bids*'))[0]
 
     with open(os.path.join(test_path, logger_file)) as logger_info:
         logger_info = logger_info.readlines()
