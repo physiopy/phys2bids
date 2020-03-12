@@ -31,7 +31,6 @@ matrix:
 
 before_install:
   - python -m pip install --upgrade pip
-  - export PYTHONPATH=$PYTHONPATH:$(pwd)
   - if [ "${CHECK_TYPE}" == "linting" ]; then
       pip install flake8;
     fi
