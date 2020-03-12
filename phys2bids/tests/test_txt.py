@@ -31,23 +31,15 @@ chtrig = 0
 header_T2ntime, channels_T2ntime = txt.read_header_and_channels(test_full_path3, chtrig)
 
 
-def test_read_header_and_channels():
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'Test_belt_pulse_samefreq.txt'
-    test_full_path = os.path.join(test_path, test_filename)
-    chtrig = 2
-    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
-    assert len(header) == 16  # check proper header lenght
-    assert len(channels) == 1336816  # check proper number of timepoints
-    assert len(header[-1]) == 6  # check extra line is deleted
+testdata = [(header_TBSF, channels_TBSF, header_T2MF, channels_T2MF)]
+@pytest.mark.parametrize("header_acq, channels_acq, header_lab, channels_lab", testdata)
+def test_read_header_and_channels(header_acq, channels_acq, header_lab, channels_lab):
+    assert len(header_acq) == 16  # check proper header lenght
+    assert len(channels_acq) == 1336816  # check proper number of timepoints
+    assert len(header_acq[-1]) == 6  # check extra line is deleted
     # load file with comment
     # url to Test_2minRest_trig_multifreq_header_comment.txt
-    test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_full_path = os.path.join(test_path, test_filename)
-    chtrig = 1
-    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
-    assert len(channels[152109 - 9]) == 6  # check the comment has been eliminated
+    assert len(channels_lab[152109 - 9]) == 6  # check the comment has been eliminated
 
 
 testdata = [(header_TBSF, header_T2MF)]
