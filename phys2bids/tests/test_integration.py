@@ -253,7 +253,7 @@ def test_integration_multifreq():
 
     # Compares values in json file with ground truth
     assert json_data['SamplingFrequency'] == 625.0
-    assert json_data['StartTime'] == 0.29052734375
+    assert math.isclose(json_data['StartTime'], 0.29052734375)
     assert json_data['Columns'] == ['PULSE - Custom, DA100C']
 
     """
