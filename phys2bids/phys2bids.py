@@ -265,15 +265,19 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
-    LGR.info('Plot trigger')
-    plot_path = os.path.join(outdir,
-                             os.path.splitext(os.path.basename(filename))[0])
-    if sub:
-        plot_path += f'_sub-{sub}'
-    if ses:
-        plot_path += f'_ses-{ses}'
-    viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
-                     plot_path, tr, thr, num_timepoints_expected, filename)
+    if tr != 1 or num_timepoints_expected != 0:
+        LGR.info('Plot trigger')
+        plot_path = os.path.join(outdir,
+                                 os.path.splitext(os.path.basename(filename))[0])
+        if sub:
+            plot_path += f'_sub-{sub}'
+        if ses:
+            plot_path += f'_ses-{ses}'
+        viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
+                         plot_path, tr, thr, num_timepoints_expected, filename)
+    else:
+        LGR.info('Not plotting trigger. If you want trigger to be plot please'
+                 'please enter -tr or -ntp, preferebly both')
 
     # The next few lines remove the undesired channels from phys_in.
     if chsel:
