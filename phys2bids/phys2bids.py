@@ -265,7 +265,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
-    if tr != 1 or num_timepoints_expected != 0:
+    if tr != 0 or num_timepoints_expected != 0:
         LGR.info('Plot trigger')
         plot_path = os.path.join(outdir,
                                  os.path.splitext(os.path.basename(filename))[0])
