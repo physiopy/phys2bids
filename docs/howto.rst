@@ -148,7 +148,7 @@ Finding the "start time"
 
 If you're just transforming files into ``tsv.gz``, **you can ignore this**. If you recorded the trigger of your **(f)MRI**, ``phys2bids`` can use it to detect the moment in which you started sampling your neuroimaging data, and set the "0" time to be that point.  
 
-First, we need to tell ``phys2bids`` where our trigger channel is, and we can use the argument ``-chtrig``. ``-chtrig`` has a default of 0, which means that if there is no input given ``phys2bids`` will assume the trigger information is in the hidden time channel.
+First, we need to tell ``phys2bids`` where our trigger channel is, and we can use the argument ``-chtrig``. ``-chtrig`` has a default of 1.
 For the text file used in this example, the trigger information is the second column of the raw file; the first recorded channel.
 
 The last command line output said "Counting trigger points" and "The necessary options to find the amount of timepoints were not provided", so we need to give ``phys2bids`` some more information for it to correctly read the trigger information in the data. In this tutorial file, there are 158 triggers and the TR is 1.2 seconds. Using these arguments, we can call ``phys2bids`` again:
