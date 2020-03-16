@@ -11,6 +11,7 @@ test_full_path1 = os.path.join(test_path, test_filename)
 wget.download(url, test_full_path1)
 chtrig = 2
 header_TBSF, channels_TBSF = txt.read_header_and_channels(test_full_path1, chtrig)
+txt.populate_phys_input(test_full_path1, chtrig)
 # load file with comment
 url = 'https://osf.io/q4x2f/download'
 # url to Test_2minRest_trig_multifreq_header_comment.txt
@@ -20,6 +21,7 @@ test_full_path2 = os.path.join(test_path, test_filename)
 wget.download(url, test_full_path2)
 chtrig = 1
 header_T2MF, channels_T2MF = txt.read_header_and_channels(test_full_path2, chtrig)
+txt.populate_phys_input(test_full_path2, chtrig)
 # use file without time column
 # # url to the file Test2_trigger_CO2_O2_pulse_1000Hz_534TRs_no_time.txt
 url = 'https://osf.io/u5dq8/download'
@@ -51,14 +53,12 @@ def test_populate_phys_input(header_acq, header_lab):
     test_full_path = os.path.join(test_path, test_filename)
     chtrig = 1
     assert 'acq' in header_acq[0][0]
-    txt.populate_phys_input(test_full_path, chtrig)
     # testing for labchart files
     test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
     test_full_path = os.path.join(test_path, test_filename)
     chtrig = 1
     # check the printing output according to each format
     assert 'Interval=' in header_lab[0]
-    txt.populate_phys_input(test_full_path, chtrig)
 
 
 testdata = [(header_T2MF, channels_T2MF, header_T2ntime, channels_T2ntime)]
