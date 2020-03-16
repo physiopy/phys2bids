@@ -199,7 +199,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # Create logfile name
     basename = 'phys2bids_'
     extension = 'tsv'
-    isotime = datetime.datetime.now().replace(microsecond=0).isoformat()
+    isotime = datetime.datetime.now().strftime('%Y-%m-%dT%H%M%S')
     logname = os.path.join(outdir, (basename + isotime + '.' + extension))
 
     # Set logging format
