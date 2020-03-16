@@ -4,9 +4,9 @@ from phys2bids.interfaces import txt
 from pytest import raises
 import wget
 import pytest
-url = 'https://osf.io/sdz4n/download'  # url to Test_belt_pulse_samefreq.txt
+url = 'https://osf.io/4yudk/download'  # url to Test_belt_pulse_samefreq.txt
 test_path = resource_filename('phys2bids', 'tests/data')
-test_filename = 'Test_belt_pulse_samefreq.txt'
+test_filename = 'Test_belt_pulse_samefreq_short.txt'
 test_full_path1 = os.path.join(test_path, test_filename)
 wget.download(url, test_full_path1)
 chtrig = 2
@@ -34,9 +34,9 @@ header_T2ntime, channels_T2ntime = txt.read_header_and_channels(test_full_path3,
 testdata = [(header_TBSF, channels_TBSF, header_T2MF, channels_T2MF)]
 @pytest.mark.parametrize("header_acq, channels_acq, header_lab, channels_lab", testdata)
 def test_read_header_and_channels(header_acq, channels_acq, header_lab, channels_lab):
-    assert len(header_acq) == 16  # check proper header lenght
-    assert len(channels_acq) == 1336816  # check proper number of timepoints
-    assert len(header_acq[-1]) == 6  # check extra line is deleted
+    assert len(header_acq) == 8  # check proper header lenght
+    assert len(channels_acq) == 1048560  # check proper number of timepoints
+    assert len(header_acq[-1]) == 2  # check extra line is deleted
     # load file with comment
     # url to Test_2minRest_trig_multifreq_header_comment.txt
     assert len(channels_lab[152109 - 9]) == 6  # check the comment has been eliminated
@@ -46,7 +46,7 @@ testdata = [(header_TBSF, header_T2MF)]
 @pytest.mark.parametrize("header_acq,header_lab", testdata)
 def test_populate_phys_input(header_acq, header_lab):
     # testing for AcqKnoledge files
-    test_filename = 'Test_belt_pulse_samefreq.txt'
+    test_filename = 'Test_belt_pulse_samefreq_short.txt'
     test_path = resource_filename('phys2bids', 'tests/data')
     test_full_path = os.path.join(test_path, test_filename)
     chtrig = 1
