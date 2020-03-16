@@ -3,17 +3,18 @@
 ================================================
 Best Practices for Collecting Physiological Data
 ================================================
-This document is a work in progress.
+This document is a work in progress. Currently, an outline of important topics is presented.
+NOTE: This information is presented within the context of fMRI data collection.
 
 **Best Practices for Collecting Physiological Data**
 
 **Why collect physiological data?**
 
-- Physiological fluctuations can be treated as noise in fMRI data or as signals of interest to characterize different physiological states
-- Add regressors in the modeling of fMRI data to explain signal variance
-- Especially cardiac and respiratory effects as they can influence the BOLD signal
-- Cardiac pulsatility and breathing-related chest/abdomen movement → RETROICOR
-- Monitor subject/patient during the scan (important during first-time scans, or breathing tasks)
+Physiological monitoring is a key component of imaging analysis. In fMRI, physiological fluctuations can be identified as noise or as signals of interest, depending on the research question. These data can aid in characterizing different physiological states of the subject during a scan and account for noise components of the overall signal . CO2 is a known vasodilator and creating variability in blood flow can enhance the BOLD signal. Having this data allows one to more accurately model fMRI data by using physiological traces collected during the scan, and adding them as regressors. Each component of physiological data can add motion and variation to the signal of interest and can be accounted for in this way. More specifically, cardiac and respiratory effects are especially important as they can influence the BOLD signal. 
+
+An important aspect of accounting for physiological fluctuations is RETROICOR, a method that retrospectively uses information about the cardiac and respiratory cycles to identify which phase of these cycles is represented in each time point of the fMRI time series. This can be particularly useful when imaging regions that are more susceptible to cardiac and respiratory noise, such as spinal cord or brainstem.
+
+Another benefit of collecting physiological data is that it provides a method to monitor the subject and/or patient during the scan, in real-time. Any sudden changes in the different aspects being monitored can help those in the control room identify if the subject and/or patient is under duress. Looking out for these changes is emphasized during first time MRI scans, and ensuring values stay within safe and IRB approved limits, especially during breathing tasks.
 
 **What are the different types of physiological data that can be collected?**
 
