@@ -48,15 +48,8 @@ testdata = [(header_TBSF, header_T2MF)]
 @pytest.mark.parametrize("header_acq,header_lab", testdata)
 def test_populate_phys_input(header_acq, header_lab):
     # testing for AcqKnoledge files
-    test_filename = 'Test_belt_pulse_samefreq_short.txt'
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_full_path = os.path.join(test_path, test_filename)
-    chtrig = 1
     assert 'acq' in header_acq[0][0]
     # testing for labchart files
-    test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
-    test_full_path = os.path.join(test_path, test_filename)
-    chtrig = 1
     # check the printing output according to each format
     assert 'Interval=' in header_lab[0]
 
@@ -167,11 +160,3 @@ def test_multifreq(header, channels):
     phys_obj = txt.process_labchart(channels, chtrig, header)
     new_freq = txt.check_multifreq(phys_obj.timeseries, [phys_obj.freq[0]] * len(phys_obj.freq))
     assert new_freq[-3] == 40
-
-
-testdata = [(test_full_path1, test_full_path2, test_full_path3)]
-@pytest.mark.parametrize("file1,file2,file3", testdata)
-def eliminate_files(file1, file2, file3):
-    os.remove(file1)
-    os.remove(file2)
-    os.remove(file3)
