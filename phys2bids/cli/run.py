@@ -104,8 +104,8 @@ def _get_parser():
                           dest='tr',
                           type=float,
                           help='TR of sequence in seconds. '
-                               'Default is 1 second.',
-                          default=1)
+                               'Default is 0 second.',
+                          default=0)
     optional.add_argument('-thr', '--threshold',
                           dest='thr',
                           type=float,
