@@ -118,7 +118,7 @@ This is outputted to the terminal:
     INFO:phys2bids.viz:saving channel plot to tutorial_file.png
     INFO:phys2bids.physio_obj:Counting trigger points
     WARNING:phys2bids.physio_obj:The necessary options to find the amount of timepoints were not provided.
-    INFO:phys2bids.phys2bids:Not plotting trigger. If you want trigger to be plot pleaseplease enter -tr or -ntp, preferebly both
+    INFO:phys2bids.phys2bids:Not plotting trigger. If you want the trigger to be plotted enter -tr or -ntp, preferably both.
     INFO:phys2bids.phys2bids:Preparing 1 output files.
     INFO:phys2bids.phys2bids:Exporting files for freq 1000.0
     INFO:phys2bids.phys2bids:
