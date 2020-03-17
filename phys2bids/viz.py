@@ -88,7 +88,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     ax2.set_xlabel('TR')
     subplot.plot(time, trigger, '-', time, block, '-')
     subplot.fill_between(time, block, where=block >= d, interpolate=True, color='#ffbb6e')
-    ax2.set_title('Initial trigger for selected threshold')
+    ax2.set_title('Starting triggers for selected threshold')
     # plot the last spike according to the user threshold
     subplot = fig.add_subplot(224)
     subplot.set_xlim([tr * (num_timepoints_expected) - 4,
@@ -107,7 +107,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
                     pad=15)
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
     ax2.set_xlabel('TR')
-    ax2.set_title('Last trigger for selected threshold')
+    ax2.set_title('Ending triggers for selected threshold')
     subplot.plot(time, trigger, '-', time, block, '-')
     subplot.fill_between(time, block, where=block >= d, interpolate=True, color='#ffbb6e')
     plt.savefig(fileprefix + '_trigger_time.png', dpi=dpi)
