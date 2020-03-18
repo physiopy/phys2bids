@@ -118,7 +118,7 @@ This is outputted to the terminal:
     INFO:phys2bids.viz:saving channel plot to tutorial_file.png
     INFO:phys2bids.physio_obj:Counting trigger points
     WARNING:phys2bids.physio_obj:The necessary options to find the amount of timepoints were not provided.
-    INFO:phys2bids.phys2bids:Plot trigger
+    INFO:phys2bids.phys2bids:Not plotting trigger. If you want the trigger to be plotted enter -tr or -ntp, preferably both.
     INFO:phys2bids.phys2bids:Preparing 1 output files.
     INFO:phys2bids.phys2bids:Exporting files for freq 1000.0
     INFO:phys2bids.phys2bids:
@@ -140,18 +140,15 @@ Five files have been generated in the output directory:
     Compressed file in ``tsv`` format containing your data without header information.
 - **tutorial_file.json**
     As phys2bids is designed to be BIDs compatible, this is one of the two necessary BIDs files. It describes the content of your ``tsv.gz`` file.
-- **tutorial_file_trigger_time.png**
-    This file will become important later, but in a nutshell it shows the trigger channel from your file, as well as an indication of when the "0" time (corresponding to the first TR) should be.
-    If you're just transforming files into ``tsv.gz``, **you can ignore this**
 - **phys2bids_yyyy-mm-ddThh:mm:ss.tsv**
     This is the logger file. It contains the full terminal output of your ``phys2bids`` call.
 
 Finding the "start time"
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-If you recorded the trigger of your **(f)MRI**, ``phys2bids`` can use it to detect the moment in which you started sampling your neuroimaging data, and set the "0" time to be that point.  
+If you're just transforming files into ``tsv.gz``, **you can ignore this**. If you recorded the trigger of your **(f)MRI**, ``phys2bids`` can use it to detect the moment in which you started sampling your neuroimaging data, and set the "0" time to be that point.  
 
-First, we need to tell ``phys2bids`` where our trigger channel is, and we can use the argument ``-chtrig``. ``-chtrig`` has a default of 0, which means that if there is no input given ``phys2bids`` will assume the trigger information is in the hidden time channel.
+First, we need to tell ``phys2bids`` where our trigger channel is, and we can use the argument ``-chtrig``. ``-chtrig`` has a default of 1.
 For the text file used in this example, the trigger information is the second column of the raw file; the first recorded channel.
 
 The last command line output said "Counting trigger points" and "The necessary options to find the amount of timepoints were not provided", so we need to give ``phys2bids`` some more information for it to correctly read the trigger information in the data. In this tutorial file, there are 158 triggers and the TR is 1.2 seconds. Using these arguments, we can call ``phys2bids`` again:
@@ -218,8 +215,9 @@ Therefore, we need to change the ``-thr`` input until ``phys2bids`` finds the co
 Alright! Now we have some outputs that make sense.
 The main difference from the previous call is in **tutorial_file.log** and **tutorial_file_trigger_time.png**.
 The first one now reports 158 timepoints expected (as input) and found (as correctly estimated) and it also tells us that the sampling of the neuroimaging files started around 0.25 seconds later than the physiological sampling.
-The second file now contains an orange trace that intersect the 0 x-axis and y-axis in correspondence with the first trigger.
-In the first row, there's the whole trigger channel. In the second row, we see the first and last trigger (or expected first and last).
+The second file contais two plots:
+In the first row, there's the whole trigger channel in blue, an orange block that shows were the time starts (if not there could be something wrong with the threshold). 
+In the second row, we see the first and last trigger (or expected first and last).
 
 **Note**: It is *very* important to calibrate the threshold in a couple of files. This still *won't* necessarily mean that it's the right threshold for all the files, but there's a chance that it's ok(ish) for most of them.
 

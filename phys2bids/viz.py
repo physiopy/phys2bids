@@ -12,7 +12,7 @@ FIGSIZE = (18, 10)
 
 
 def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
-                 figsize=FIGSIZE, dpi=SET_DPI):
+                 filename, figsize=FIGSIZE, dpi=SET_DPI):
     """
     Produces a textfile of the specified extension `ext`,
     containing the given content `text`.
@@ -26,6 +26,8 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     fileprefix: str or path
         A string representing a file name or a fullpath
         to a file, WITHOUT extension
+    filename: string
+        name of the original file
     options: argparse object
         The object produced by `get_parser` in `cli.run.py`
     figsize: tuple
@@ -47,24 +49,67 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
 
     def ntr2time(x):
         return x * tr
-
+    # get filename
+    outname = os.path.splitext(os.path.basename(filename))[0]
+    # create threshold line
     thrline = np.ones(time.shape) * thr
+    # define figure and space between plots
     fig = plt.figure(figsize=figsize, dpi=dpi)
+    block = time > 0
+    d = np.zeros(len(time))
+    plt.subplots_adjust(hspace=0.7)
+    # plot of the hole trigger
     subplot = fig.add_subplot(211)
-    subplot.set_title('trigger and time')
-    subplot.set_ylim([-0.2, thr * 10])
-    subplot.plot(time, trigger, '-', time, thrline, 'r-.', time, time, '-')
+    subplot.set_title(f'Trigger and time for {outname}.tsv.gz')
+    subplot.set_ylim([-0.2, thr * 3])
+    subplot.set_xlabel('Seconds')
+    subplot.set_ylabel('Volts')
+    subplot.plot(time, trigger, '-', time, thrline, 'r-.', time, block, '-')
+    subplot.fill_between(time, block, where=block >= d, interpolate=True, color='#ffbb6e')
+    subplot.legend(["trigger", "input threshold", "time block"])
+    # plot the first spike according to the user threshold
     subplot = fig.add_subplot(223)
     subplot.set_xlim([-tr * 4, tr * 4])
     subplot.set_ylim([-0.2, thr * 3])
+    subplot.set_xlabel('Seconds')
+    subplot.set_ylabel('Volts')
+    ax2 = subplot.twiny()
+    ax2.set_xticklabels('')
+    ax2.tick_params(
+                    axis='x',          # changes apply to the x-axis
+                    which='both',      # both major and minor ticks are affected
+                    bottom=False,      # ticks along the bottom edge are off
+                    top=False,         # ticks along the top edge are off
+                    labelbottom=False,
+                    pad=15)
+    # add secondary axis ticks
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
-    subplot.plot(time, trigger, '-', time, time, '-')
+    # add secondary axis labelS
+    ax2.set_xlabel('TR')
+    subplot.plot(time, trigger, '-', time, block, '-')
+    subplot.fill_between(time, block, where=block >= d, interpolate=True, color='#ffbb6e')
+    ax2.set_title('Starting triggers for selected threshold')
+    # plot the last spike according to the user threshold
     subplot = fig.add_subplot(224)
-    subplot.set_xlim([tr * (num_timepoints_expected - 4),
-                      tr * (num_timepoints_expected + 4)])
+    subplot.set_xlim([tr * (num_timepoints_expected) - 4,
+                      tr * (num_timepoints_expected) + 4])
+    subplot.set_xlabel('Seconds')
+    subplot.set_ylabel('Volts')
     subplot.set_ylim([-0.2, thr * 3])
+    ax2 = subplot.twiny()
+    ax2.set_xticklabels('')
+    ax2.tick_params(
+                    axis='x',          # changes apply to the x-axis
+                    which='both',      # both major and minor ticks are affected
+                    bottom=False,      # ticks along the bottom edge are off
+                    top=False,         # ticks along the top edge are off
+                    labelbottom=False,
+                    pad=15)
     subplot.secondary_xaxis('top', functions=(time2ntr, ntr2time))
-    subplot.plot(time, trigger, '-', time, time, '-')
+    ax2.set_xlabel('TR')
+    ax2.set_title('Ending triggers for selected threshold')
+    subplot.plot(time, trigger, '-', time, block, '-')
+    subplot.fill_between(time, block, where=block >= d, interpolate=True, color='#ffbb6e')
     plt.savefig(fileprefix + '_trigger_time.png', dpi=dpi)
     plt.close()
 
