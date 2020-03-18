@@ -11,7 +11,7 @@ test_full_path1 = os.path.join(test_path, test_filename)
 wget.download(url, test_full_path1)
 chtrig = 2
 header_TBSF, channels_TBSF = txt.read_header_and_channels(test_full_path1, chtrig)
-txt.populate_phys_input(test_full_path1, chtrig)
+# txt.populate_phys_input(test_full_path1, chtrig)
 # load file with comment
 url = 'https://osf.io/q4x2f/download'
 # url to Test_2minRest_trig_multifreq_header_comment.txt
@@ -21,7 +21,7 @@ test_full_path2 = os.path.join(test_path, test_filename)
 wget.download(url, test_full_path2)
 chtrig = 1
 header_T2MF, channels_T2MF = txt.read_header_and_channels(test_full_path2, chtrig)
-txt.populate_phys_input(test_full_path2, chtrig)
+# txt.populate_phys_input(test_full_path2, chtrig)
 # use file without time column
 # # url to the file Test2_trigger_CO2_O2_pulse_1000Hz_534TRs_no_time.txt
 url = 'https://osf.io/u5dq8/download'
@@ -44,13 +44,15 @@ def test_read_header_and_channels(header_acq, channels_acq, header_lab, channels
     assert len(channels_lab[152109 - 9]) == 6  # check the comment has been eliminated
 
 
-testdata = [(header_TBSF, header_T2MF)]
+testdata = [(header_TBSF, header_T2MF, test_full_path1, test_full_path2)]
 @pytest.mark.parametrize("header_acq,header_lab", testdata)
-def test_populate_phys_input(header_acq, header_lab):
+def test_populate_phys_input(header_acq, header_lab, full_path1, full_path2):
     # testing for AcqKnoledge files
     assert 'acq' in header_acq[0][0]
+    txt.populate_phys_input(full_path1, chtrig)
     # testing for labchart files
     # check the printing output according to each format
+    txt.populate_phys_input(full_path2, chtrig)
     assert 'Interval=' in header_lab[0]
 
 
