@@ -44,8 +44,8 @@ def test_read_header_and_channels(header_acq, channels_acq, header_lab, channels
     assert len(channels_lab[152109 - 9]) == 6  # check the comment has been eliminated
 
 
-testdata = [(header_TBSF, header_T2MF, test_full_path1, test_full_path2)]
-@pytest.mark.parametrize("header_acq, header_lab, full_path1, full_path2", testdata)
+testdata = [(header_TBSF, header_T2MF)]
+@pytest.mark.parametrize("header_acq, header_lab", testdata)
 def test_populate_phys_input(header_acq, header_lab):
     # testing for AcqKnoledge files
     url = 'https://osf.io/4yudk/download'  # url to Test_belt_pulse_samefreq.txt
