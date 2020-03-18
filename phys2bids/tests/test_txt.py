@@ -46,13 +46,26 @@ def test_read_header_and_channels(header_acq, channels_acq, header_lab, channels
 
 testdata = [(header_TBSF, header_T2MF, test_full_path1, test_full_path2)]
 @pytest.mark.parametrize("header_acq, header_lab, full_path1, full_path2", testdata)
-def test_populate_phys_input(header_acq, header_lab, full_path1, full_path2):
+def test_populate_phys_input(header_acq, header_lab):
     # testing for AcqKnoledge files
+    url = 'https://osf.io/4yudk/download'  # url to Test_belt_pulse_samefreq.txt
+    test_path = resource_filename('phys2bids', 'tests/data')
+    test_filename = 'Test_belt_pulse_samefreq_short2.txt'
+    test_full_path1 = os.path.join(test_path, test_filename)
+    wget.download(url, test_full_path1)
+    chtrig = 2
     assert 'acq' in header_acq[0][0]
-    txt.populate_phys_input(full_path1, chtrig)
+    txt.populate_phys_input(test_full_path1, chtrig)
     # testing for labchart files
     # check the printing output according to each format
-    txt.populate_phys_input(full_path2, chtrig)
+    url = 'https://osf.io/q4x2f/download'
+    # url to Test_2minRest_trig_multifreq_header_comment.txt
+    chtrig = 3
+    test_filename = 'Test_2minRest_trig_multifreq_header_comment_2.txt'
+    test_path = resource_filename('phys2bids', 'tests/data')
+    test_full_path2 = os.path.join(test_path, test_filename)
+    wget.download(url, test_full_path2)
+    txt.populate_phys_input(test_full_path2, chtrig)
     assert 'Interval=' in header_lab[0]
 
 
