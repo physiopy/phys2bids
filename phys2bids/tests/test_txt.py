@@ -45,7 +45,7 @@ def test_read_header_and_channels(header_acq, channels_acq, header_lab, channels
 
 
 testdata = [(header_TBSF, header_T2MF, test_full_path1, test_full_path2)]
-@pytest.mark.parametrize("header_acq,header_lab", testdata)
+@pytest.mark.parametrize("header_acq, header_lab, full_path1, full_path2", testdata)
 def test_populate_phys_input(header_acq, header_lab, full_path1, full_path2):
     # testing for AcqKnoledge files
     assert 'acq' in header_acq[0][0]
