@@ -1,185 +1,127 @@
-import os
-from pkg_resources import resource_filename
-from phys2bids.interfaces import txt
-from pytest import raises
-import wget
+import math
+
 import pytest
+from pytest import raises
+
+from phys2bids.interfaces import txt
 
 
-@pytest.fixture
-def samefreq_acq_file():
-    url = 'https://osf.io/4yudk/download'  # url to Test_belt_pulse_samefreq.txt
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'Test_belt_pulse_samefreq_short.txt'
-    test_full_path1 = os.path.join(test_path, test_filename)
-    if not os.path.isfile(test_full_path1):
-        wget.download(url, test_full_path1)
-    # chtrig = 2
-    return test_full_path1
+@pytest.fixture(scope='function')
+def loaded_acq_file(samefreq_short_txt_file):
+    chtrig = 2
+    header_acq, channels_acq = txt.read_header_and_channels(samefreq_short_txt_file, chtrig)
 
-
-@pytest.fixture
-def multi_lab_file():
-    url = 'https://osf.io/q4x2f/download'
-    # url to Test_2minRest_trig_multifreq_header_comment.txt
-    test_filename = 'Test_2minRest_trig_multifreq_header_comment.txt'
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_full_path2 = os.path.join(test_path, test_filename)
-    if not os.path.isfile(test_full_path2):
-        wget.download(url, test_full_path2)
-    # chtrig = 1
-    return test_full_path2
-
-
-@pytest.fixture
-def no_time_file():
-    # use file without time column
-    # # url to the file Test2_trigger_CO2_O2_pulse_1000Hz_534TRs_no_time.txt
-    url = 'https://osf.io/u5dq8/download'
-    test_filename = 'Test2_trigger_CO2_O2_pulse_1000Hz_534TRs_no_time.txt'
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_full_path3 = os.path.join(test_path, test_filename)
-    if not os.path.isfile(test_full_path3):
-        wget.download(url, test_full_path3)
-    # chtrig = 0
-    return test_full_path3
-# header_T2ntime, channels_T2ntime = txt.read_header_and_channels(test_full_path3, chtrig)
-
-
-@pytest.fixture
-def test_read_header_and_channels(samefreq_acq_file, multi_lab_file):
-    header_acq, channels_acq = txt.read_header_and_channels(samefreq_acq_file, 2)
-    header_lab, channels_lab = txt.read_header_and_channels(multi_lab_file, 1)
+    # just a few quick checks to make sure the data loaded correctly
     assert len(header_acq) == 8  # check proper header lenght
     assert len(channels_acq) == 1048560  # check proper number of timepoints
     assert len(header_acq[-1]) == 2  # check extra line is deleted
-    # load file with comment
-    # url to Test_2minRest_trig_multifreq_header_comment.txt
-    assert len(channels_lab[152109 - 9]) == 6  # check the comment has been eliminated
-    return header_acq, channels_acq, header_lab, channels_lab
-
-
-def test_populate_phys_input(samefreq_acq_file, multi_lab_file, test_read_header_and_channels):
-    # testing for AcqKnoledge files
-    chtrig = 2
-    header_acq = test_read_header_and_channels[0]
     assert 'acq' in header_acq[0][0]
-    txt.populate_phys_input(samefreq_acq_file, chtrig)
-    # testing for labchart files
-    # check the printing output according to each format
-    header_lab = test_read_header_and_channels[2]
+
+    return header_acq, channels_acq, chtrig
+
+
+@pytest.fixture(scope='function')
+def loaded_lab_file(multifreq_lab_file):
+    chtrig = 1
+    header_lab, channels_lab = txt.read_header_and_channels(multifreq_lab_file, chtrig)
+
+    # just a few quick checks to make sure the data loaded correctly
+    assert len(channels_lab[152109 - 9]) == 6  # check the comment has been eliminated
     assert 'Interval=' in header_lab[0]
-    chtrig = 1
-    txt.populate_phys_input(multi_lab_file, chtrig)
+
+    return header_lab, channels_lab, chtrig
 
 
-def test_process_labchart(test_read_header_and_channels, no_time_file):
-    chtrig = 1
-    header_time = test_read_header_and_channels[2]
-    channels_time = test_read_header_and_channels[3]
-    header_no_time, channels_no_time = txt.read_header_and_channels(no_time_file, 0)
-    # test file with header and seconds as unit:
-    phys_obj = txt.process_labchart(channels_time, chtrig, header_time)
-    assert phys_obj.freq[0] == 1000
-    # test when units are min:
-    header_time[0][1] = '0.001 min'
-    phys_obj = txt.process_labchart(channels_time, chtrig, header_time)
-    assert phys_obj.freq[0] == 16.666666666666668
-    # test when units are hr:
-    header_time[0][1] = '0.001 hr'
-    phys_obj = txt.process_labchart(channels_time, chtrig, header_time)
-    assert phys_obj.freq[0] == 0.2777777777777778
-    # test when units are ms:
-    header_time[0][1] = '1 ms'
-    phys_obj = txt.process_labchart(channels_time, chtrig, header_time)
-    assert phys_obj.freq[0] == 1000
-    # test when units are µs:
-    header_time[0][1] = '1000 µs'
-    phys_obj = txt.process_labchart(channels_time, chtrig, header_time)
-    assert phys_obj.freq[0] == 1000
+def test_populate_phys_input(samefreq_short_txt_file, multifreq_lab_file):
+    # testing for AcqKnowledge files
+    txt.populate_phys_input(samefreq_short_txt_file, chtrig=2)
+    # testing for LabChart files
+    txt.populate_phys_input(multifreq_lab_file, chtrig=1)
+
+
+@pytest.mark.parametrize('units, expected', [
+    ('0.001 s', 1000),
+    ('0.001 min', 16.666666666666668),
+    ('0.001 hr', 0.2777777777777778),
+    ('1 ms', 1000),
+    ('1000 µs', 1000)
+])
+def test_process_labchart(loaded_lab_file, units, expected):
+    header, channels, chtrig = loaded_lab_file
+    header[0][1] = units
+    phys_obj = txt.process_labchart(channels, chtrig=chtrig, header=header)
+    assert math.isclose(phys_obj.freq[0], expected)
+
+
+def test_process_labchart_notime(notime_lab_file):
     chtrig = 0
-    phys_obj = txt.process_labchart(channels_no_time, chtrig, header_no_time)
-    assert len(phys_obj.timeseries) == len(channels_no_time[0]) + 1
+    header, channels = txt.read_header_and_channels(notime_lab_file, chtrig)
+    phys_obj = txt.process_labchart(channels, chtrig=chtrig, header=header)
+    assert len(phys_obj.timeseries) == len(channels[0]) + 1
 
 
-def test_process_acq(test_read_header_and_channels):
-    header = test_read_header_and_channels[0]
-    channels = test_read_header_and_channels[1]
-    chtrig = 2
+def test_process_labchart_errors(loaded_lab_file):
+    header, channels, chtrig = loaded_lab_file
+
     # test file without header
     with raises(AttributeError) as errorinfo:
-        txt.process_acq(channels, chtrig)
+        txt.process_labchart(channels, chtrig=chtrig)
     assert 'not supported' in str(errorinfo.value)
-    # test when units are msec:
-    phys_obj = txt.process_acq(channels, chtrig, header)
-    assert phys_obj.freq[0] == 10000
-    # test when units are msec:
-    header[1][0] = '0.01 sec/sample'
-    phys_obj = txt.process_acq(channels, chtrig, header)
-    assert phys_obj.freq[0] == 100
-    # test when units are in µsec:
-    header[1][0] = '1 µsec/sample'
-    phys_obj = txt.process_acq(channels, chtrig, header)
-    assert phys_obj.freq[0] == 1000000.0
-    # test when units are in Hz:
-    header[1][0] = '100 Hz'
-    phys_obj = txt.process_acq(channels, chtrig, header)
-    assert phys_obj.freq[0] == 100
-    # test when units are in kHz:
-    header[1][0] = '1 kHz'
-    phys_obj = txt.process_acq(channels, chtrig, header)
-    assert phys_obj.freq[0] == 1000
-    # test when units are in MHz:
-    header[1][0] = '1 MHz'
-    phys_obj = txt.process_acq(channels, chtrig, header)
-    assert phys_obj.freq[0] == 1000000
-    # test when units are not valid:
-    header[1][0] = '1 GHz'
-    with raises(AttributeError) as errorinfo:
-        phys_obj = txt.process_acq(channels, chtrig, header)
-    assert 'not in a valid AcqKnowledge' in str(errorinfo.value)
 
-
-def test_raises(test_read_header_and_channels):
-    # testing error for files without header for populate_phys_input
-    # url to the file Test_belt_pulse_samefreq_no_header.txt
-    url = 'https://osf.io/sre3h/download'
-    test_filename = 'Test_belt_pulse_samefreq_no_header.txt'
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_full_path = os.path.join(test_path, test_filename)
-    if not os.path.isfile(test_full_path):
-        wget.download(url, test_full_path)
-    chtrig = 2
-    with raises(AttributeError) as errorinfo:
-        txt.populate_phys_input(test_full_path, chtrig)
-    assert 'not supported' in str(errorinfo.value)
-    # test file without header for process_acq
-    header, channels = txt.read_header_and_channels(test_full_path, chtrig)
-    with raises(AttributeError) as errorinfo:
-        txt.process_acq(channels, chtrig)
-    assert 'not supported' in str(errorinfo.value)
-    os.remove(test_full_path)
-    # now for labchart read
-    # testing file already downloaded in the other tests
-    header = test_read_header_and_channels[2]
-    channels = test_read_header_and_channels[3]
-    chtrig = 1
-    with raises(AttributeError) as errorinfo:
-        txt.process_labchart(test_full_path, chtrig)
-    assert 'not supported' in str(errorinfo.value)
     # test when units are not valid for process_labchart
     header[0][1] = ' 1 gHz'
     with raises(AttributeError) as errorinfo:
-        txt.process_labchart(channels, chtrig, header)
+        txt.process_labchart(channels, chtrig=chtrig, header=header)
     assert 'not in a valid LabChart' in str(errorinfo.value)
 
 
-def test_multifreq(test_read_header_and_channels):
-    header = test_read_header_and_channels[2]
-    channels = test_read_header_and_channels[3]
-    chtrig = 1
-    phys_obj = txt.process_labchart(channels, chtrig, header)
+@pytest.mark.parametrize('units, expected', [
+    ('1 msec/sample', 1000),
+    ('0.01 sec/sample', 100),
+    ('1 µsec/sample', 1000000.0),
+    ('100 Hz', 100),
+    ('1 kHz', 1000),
+    ('1 MHz', 1000000)
+])
+def test_process_acq(loaded_acq_file, units, expected):
+    header, channels, chtrig = loaded_acq_file
+
+    # set units to test that expected frequency is generated correctly
+    header[1][0] = units
+    phys_obj = txt.process_acq(channels, chtrig=chtrig, header=header)
+    assert math.isclose(phys_obj.freq[0], expected)
+
+
+def test_process_acq_errors(loaded_acq_file):
+    header, channels, chtrig = loaded_acq_file
+
+    # test file without header
+    with raises(AttributeError) as errorinfo:
+        txt.process_acq(channels, chtrig=chtrig)
+    assert 'not supported' in str(errorinfo.value)
+
+    # test when units are not valid:
+    header[1][0] = '1 GHz'
+    with raises(AttributeError) as errorinfo:
+        txt.process_acq(channels, chtrig=chtrig, header=header)
+    assert 'not in a valid AcqKnowledge' in str(errorinfo.value)
+
+
+def test_noheader_acq_error(samefreq_noheader_txt_file):
+    chtrig = 2
+    with raises(AttributeError) as errorinfo:
+        txt.populate_phys_input(samefreq_noheader_txt_file, chtrig=chtrig)
+    assert 'not supported' in str(errorinfo.value)
+
+    # test file without header for process_acq
+    header, channels = txt.read_header_and_channels(samefreq_noheader_txt_file, chtrig)
+    with raises(AttributeError) as errorinfo:
+        txt.process_acq(channels, chtrig=chtrig)
+    assert 'not supported' in str(errorinfo.value)
+
+
+def test_multifreq(loaded_lab_file):
+    header, channels, chtrig = loaded_lab_file
+    phys_obj = txt.process_labchart(channels, chtrig=chtrig, header=header)
     new_freq = txt.check_multifreq(phys_obj.timeseries, [phys_obj.freq[0]] * len(phys_obj.freq))
-    assert new_freq[-3] == 40
-    assert new_freq[-2] == 500
-    assert new_freq[-4] == 100
+    assert new_freq[-4:-1] == [100, 40, 500]

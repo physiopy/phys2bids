@@ -22,8 +22,6 @@ def test_print_summary(tmpdir):
 
     assert os.path.isfile(str(test_outfile_log))
 
-    os.remove(str(test_outfile_log))
-
 
 def test_print_json(tmpdir):
     test_outfile = tmpdir.join('json_test')
@@ -43,8 +41,6 @@ def test_print_json(tmpdir):
         loaded_data = json.load(src)
 
     assert test_json_data == loaded_data
-
-    os.remove(str(test_outfile_json))
 
 
 def test_use_heuristic(tmpdir):
