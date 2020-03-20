@@ -66,7 +66,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     subplot.set_ylabel('Volts')
     subplot.plot(time, trigger, '-', time, thrline, 'r-.', time, block, '-')
     subplot.fill_between(time, block, where=block >= d, interpolate=True, color='#ffbb6e')
-    subplot.legend(["trigger", "input threshold", "time block"])
+    subplot.legend(["trigger", "input threshold", "time block"], loc='upper right')
     # plot the first spike according to the user threshold
     subplot = fig.add_subplot(223)
     subplot.set_xlim([-tr * 4, tr * 4])
