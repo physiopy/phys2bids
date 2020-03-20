@@ -76,9 +76,10 @@ def test_process_labchart_errors(loaded_lab_file):
 
 
 @pytest.mark.parametrize('units, expected', [
+    ('1 µsec/sample', 1000000),
     ('1 msec/sample', 1000),
     ('0.01 sec/sample', 100),
-    ('1 µsec/sample', 1000000.0),
+    ('0.001 min/sample', 100 / 6),
     ('100 Hz', 100),
     ('1 kHz', 1000),
     ('1 MHz', 1000000)
