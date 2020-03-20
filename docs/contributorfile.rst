@@ -20,9 +20,9 @@ Already know what you're looking for in this guide? Jump to the following sectio
    - `Contributing code through GitHub <#code>`_
 - `Issues and Milestones <#issuesmilestones>`_
 - `Labels <#labeltypes>`_
+   - `Issues & PRs labels <#issueprlabels>`_
    - `Issues labels <#issuelabel>`_
    - `PRs labels <#prlabel>`_
-   - `Issues & PRs labels <#issueprlabels>`_
    - `Good First Issues <#g1i>`_
 - `Contribution workflow <#workflow>`_
 - `Pull Requests <#pr>`_
@@ -116,28 +116,7 @@ At physiopy, we use Issues and Milestones to keep track of and organise our work
 Labels
 ------
 The current list of labels are `here <https://github.com/physiopy/phys2bids/labels>`_. They can be used for **Issues**, **PRs**, or both.
-
-.. _issuelabel:
-
-Issues labels
-~~~~~~~~~~~~~
--  Bug: Something isn’t working. It either breaks the code or has an unexpected outcome.
--  Discussion: Discussion of a concept or implementation. These Issues are prone to be open ad infinitum. Jump in the conversation if you want!
--  Good first issue: Good for newcomers. These issues calls for a **fairly** easy enhancement, or for a change that helps/requires getting to know the code better. They have educational value, and for this reason, unless urgent, experts in the topic should refrain from closing them - but help newcomers closing them.
--  Hacktoberfest: Dedicated to the hacktoberfest event, so that people can help and feel good about it (and show it with a T-shirt!). **Such commits will not be recognised in the all-contributor table, unless otherwise specified**.
--  Help wanted: Extra attention is needed here! It’s a good place to have a look!
--  Refactoring: Improve nonfunctional attributes. Which means rewriting the code or the documentation to improve performance or just because there’s a better way to express those lines. It might create a ``majormod`` PR.
--  Question: Further information is requested, from users to developers. Try to respond to this!
--  Wontfix: This will not be worked on, until further notice.
-
-.. _prlabel:
-
-PRs labels
-~~~~~~~~~~
--  BugFIX: These PRs close an issue labelled ``bug``. they also increase the semantic versioning for fixes (+0.0.1).
--  Invalid: These PRs don't seem right. They actually seem so not right that they won’t be further processed. This label invalidates an Hacktoberfest contribution. If you think this is wrong, start a discussion in the relevant issue (or open one if missing). Reviewers are asked to give an explanation for the use of this label.
--  Majormod: These PRs call for a new major release (+1.0.0). This means that the PR is breaking backward compatibility.
--  Minormod: These PRs call for a new minor release (0.+1.0). This means that the PR is **not** breaking backward compatibility.
+We use `auto <https://github.com/intuit/auto>`_ to automatise our semantic versioning and Pypi upload, so **it's extremely important to use the right PR labels**!
 
 .. _issueprlabels:
 
@@ -150,6 +129,40 @@ Issues & PRs labels
 -  Paused: Issue or PR should not be worked on until the resolution of other issues or PRs.
 -  Testing: This is for testing features, writing tests or producing testing code. Both user testing and CI testing!
 -  Urgent: If you don't know where to start, start here! This is probably related to a milestone due soon!
+
+.. _issuelabel:
+
+Issues only labels
+~~~~~~~~~~~~~~~~~~
+-  Bug: Something isn’t working. It either breaks the code or has an unexpected outcome.
+-  Community: This issue contains information about the `physiopy` community (e.g. the next developer call)
+-  Discussion: Discussion of a concept or implementation. These Issues are prone to be open ad infinitum. Jump in the conversation if you want!
+-  Good first issue: Good for newcomers. These issues calls for a **fairly** easy enhancement, or for a change that helps/requires getting to know the code better. They have educational value, and for this reason, unless urgent, experts in the topic should refrain from closing them - but help newcomers closing them.
+-  Hacktoberfest: Dedicated to the hacktoberfest event, so that people can help and feel good about it (and show it with a T-shirt!). **Such commits will not be recognised in the all-contributor table, unless otherwise specified**.
+-  Help wanted: Extra attention is needed here! It’s a good place to have a look!
+-  Refactoring: Improve nonfunctional attributes. Which means rewriting the code or the documentation to improve performance or just because there’s a better way to express those lines. It might create a ``majormod`` PR.
+-  Question: Further information is requested, from users to developers. Try to respond to this!
+-  Wontfix: This will not be worked on, until further notice.
+
+.. _prlabel:
+
+PRs only labels
+~~~~~~~~~~~~~~~
+
+Labels for semantic release and changelogs
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-  Majormod: These PRs call for a new major release (+1.0.0). This means that the PR is breaking backward compatibility.
+-  Minormod: These PRs call for a new minor release (0.+1.0). This means that the PR is **not** breaking backward compatibility.
+-  BugFIX: These PRs close an issue labelled ``bug``. they also increase the semantic versioning for fixes (+0.0.1).
+-  Internal: This PR contains changes to the internal API. It won't trigger a release, but it will be reported in the changelog.
+-  Documentation: See above. This PR won't trigger a release, but it will be reported in the changelog.
+-  Testing: See above. This PR won't trigger a release, but it will be reported in the changelog.
+-  Skip release: This PR will **not** trigger a release.
+-  Release: This PR will force the trigger of a release.
+
+Other labels
+^^^^^^^^^^^^
+-  Invalid: These PRs don't seem right. They actually seem so not right that they won’t be further processed. This label invalidates an Hacktoberfest contribution. If you think this is wrong, start a discussion in the relevant issue (or open one if missing). Reviewers are asked to give an explanation for the use of this label.
 
 .. _g1i:
 
