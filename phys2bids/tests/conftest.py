@@ -4,8 +4,28 @@ from urllib.request import urlretrieve
 import pytest
 
 
-def fetch_file(url, path, filename):
-    url = 'https://osf.io/{}/download'.format(url)
+def fetch_file(osf_id, path, filename):
+    """
+    Fetches file located on OSF and downloads to `path`/`filename`1
+
+    Parameters
+    ----------
+    osf_id : str
+        Unique OSF ID for file to be downloaded. Will be inserted into relevant
+        location in URL: https://osf.io/{osf_id}/download
+    path : str
+        Path to which `filename` should be downloaded. Ideally a temporary
+        directory
+    filename : str
+        Name of file to be downloaded (does not necessarily have to match name
+        of file on OSF)
+
+    Returns
+    -------
+    full_path : str
+        Full path to downloaded `filename`
+    """
+    url = 'https://osf.io/{}/download'.format(osf_id)
     full_path = os.path.join(path, filename)
     if not os.path.isfile(full_path):
         urlretrieve(url, full_path)
