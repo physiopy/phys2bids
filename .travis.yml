@@ -29,9 +29,27 @@ matrix:
       env:
         - INSTALL_TYPE=wheel
         - CHECK_TYPE=test
+    - language: node_js
+      node_js: 10
+      env:
+        - INSTALL_TYPE=auto-svl
+        - CHECK_TYPE=auto-svl
+        - GIT_NAME="Stefano Moia"
+        - GIT_EMAIL="s.moia@bcbl.eu"
+        - GH_USER="smoia"
 
 before_install:
-  - python -m pip install --upgrade pip
+  - if [ "${CHECK_TYPE}" == "auto-svl" ]; then
+      CHECK_BRANCH=$( git branch | grep \*);
+      if [ "${CHECK_BRANCH}" == "* master" ]; then
+        git config --local user.name "${GIT_NAME}";
+        git config --local user.email "${GIT_EMAIL}";
+      else
+        echo "Not on master branch, skipping auto-svl";
+      fi;
+    else
+      python -m pip install --upgrade pip;
+    fi
   - if [ "${CHECK_TYPE}" == "linting" ]; then
       pip install flake8;
     fi
