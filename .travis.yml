@@ -69,6 +69,13 @@ install:
     elif [ "${INSTALL_TYPE}" == "wheel" ]; then
       python setup.py bdist_wheel;
       pip install dist/*.whl;
+    elif [ "${INSTALL_TYPE}" == "auto-svl" ]; then
+      CHECK_BRANCH=$( git branch | grep \*);
+        if [ "${CHECK_BRANCH}" == "* master" ]; then
+          curl -vkL -o - https://github.com/intuit/auto/releases/download/v9.20.1/auto-linux.gz | gunzip > build/auto;
+        else
+          echo "Not on master branch, skipping auto-svl";
+      fi;
     else
       false;
     fi
