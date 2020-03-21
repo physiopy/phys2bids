@@ -94,6 +94,13 @@ script:
       cp ../setup.cfg ./;
       args="--doctest-modules --cov-report term-missing --cov=phys2bids --pyargs"
       python -m pytest ${args} phys2bids;
+    elif [ "${CHECK_TYPE}" == "auto-svl" ]; then
+      CHECK_BRANCH=$( git branch | grep \*);
+        if [ "${CHECK_BRANCH}" == "* master" ]; then
+          build/auto shipit;
+        else
+          echo "Not on master branch, skipping auto-svl";
+      fi;
     else
       false;
     fi

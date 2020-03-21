@@ -1,0 +1,68 @@
+{
+  "plugins": [
+    "git-tag",
+    "all-contributors",
+    "conventional-commits",
+    "first-time-contributor",
+    "released"
+  ],
+  "release": {
+    "prerelease": true
+  },
+  "prereleaseBranches": [
+    "master"
+  ],
+  "owner": "physiopy",
+  "repo": "phys2bids",
+  "name": "Stefano Moia",
+  "email": "s.moia@bcbl.eu",
+  "labels": [
+    {
+      "name": "Majormod",
+      "changelogTitle": "💥 Breaking Change",
+      "description": "Increment the major version when merged",
+      "releaseType": "major",
+      "overwrite": true
+    },
+    {
+      "name": "Minormod",
+      "changelogTitle": "🚀 Enhancement",
+      "description": "Increment the minor version when merged",
+      "releaseType": "minor",
+      "overwrite": true
+    },
+    {
+      "name": "BugFIX",
+      "changelogTitle": "🐛 Bug Fix",
+      "description": "Increment the patch version when merged",
+      "releaseType": "patch",
+      "overwrite": true
+    },
+    {
+      "name": "Skip release",
+      "description": "Preserve the current version when merged",
+      "releaseType": "skip",
+      "overwrite": true
+    },
+    {
+      "name": "Release",
+      "description": "Create a release when this pr is merged",
+      "releaseType": "release",
+      "overwrite": true
+    },
+    {
+      "name": "Internal",
+      "changelogTitle": "🏠 Internal",
+      "description": "Changes only affect the internal API",
+      "releaseType": "none",
+      "overwrite": true
+    },
+    {
+      "name": "Documentation",
+      "changelogTitle": "📝 Documentation",
+      "description": "Changes only affect the documentation",
+      "releaseType": "none",
+      "overwrite": true
+    }
+  ]
+}
