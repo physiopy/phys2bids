@@ -1,12 +1,10 @@
-import os
-import wget
 import glob
 import json
 import math
+import os
+from pkg_resources import resource_filename
 import re
 import subprocess
-
-from pkg_resources import resource_filename
 
 from phys2bids.phys2bids import phys2bids
 from phys2bids._version import get_versions
@@ -102,16 +100,12 @@ def test_integration_tutorial():
         os.remove(filename)
 
 
-def test_integration_acq():
+def test_integration_acq(samefreq_full_acq_file):
     """
     Does the integration test for an acq file
     """
 
-    url = 'https://osf.io/27gqb/download'
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'Test_belt_pulse_samefreq.acq'
-    test_full_path = os.path.join(test_path, test_filename)
-    wget.download(url, test_full_path)
+    test_path, test_filename = os.path.split(samefreq_full_acq_file)
     test_chtrig = 3
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
@@ -153,16 +147,12 @@ def test_integration_acq():
         os.remove(filename)
 
 
-def test_integration_multifreq():
+def test_integration_multifreq(multifreq_acq_file):
     """
     Does the integration test for a multi-frequency file
     """
 
-    url = 'https://osf.io/9a7yv/download'
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'Test_belt_pulse_multifreq.acq'
-    test_full_path = os.path.join(test_path, test_filename)
-    wget.download(url, test_full_path)
+    test_path, test_filename = os.path.split(multifreq_acq_file)
     test_chtrig = 3
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,

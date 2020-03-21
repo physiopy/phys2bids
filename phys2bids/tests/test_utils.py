@@ -2,11 +2,10 @@
     Runs unit tests on utils.py
 """
 
-import os
 import json
-import wget
+import os
+
 from phys2bids import utils
-from pkg_resources import resource_filename
 
 
 # Tests check_input_dir
@@ -28,14 +27,8 @@ def test_check_input_ext():
 
 
 # Tests check_input_type
-def test_check_input_type():
-    url = 'https://osf.io/27gqb/download'
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'Test_belt_pulse_samefreq.acq'
-    test_full_path = os.path.join(test_path, test_filename)
-    wget.download(url, test_full_path)
-    assert utils.check_input_type(test_filename, test_path)
-    os.remove(test_full_path)
+def test_check_input_type(testpath, samefreq_full_acq_file):
+    assert utils.check_input_type(samefreq_full_acq_file, testpath)
 
 
 # Tests path_exists_or_make_it
@@ -51,14 +44,8 @@ def test_path_exists_or_make_it(tmpdir):
 
 
 # Tests check_file_exists
-def test_check_file_exists():
-    url = 'https://osf.io/27gqb/download'
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'Test_belt_pulse_samefreq.acq'
-    test_full_path = os.path.join(test_path, test_filename)
-    wget.download(url, test_full_path)
-    utils.check_file_exists(test_full_path)
-    os.remove(test_full_path)
+def test_check_file_exists(samefreq_full_acq_file):
+    utils.check_file_exists(samefreq_full_acq_file)
 
 
 # Tests move_file
@@ -70,7 +57,6 @@ def test_move_file(tmpdir):
     test_old_path = str(test_old_path)[:-4]
     test_new_path = tmpdir.join('mrmeeseeks')
     utils.move_file(test_old_path, test_new_path, ext)
-    os.remove(f'{test_new_path}.txt')
 
 
 # Tests copy_file
@@ -80,8 +66,6 @@ def test_copy_file(tmpdir):
     test_new_path = tmpdir.join('mrmeeseeks')
     open(f'{test_old_path}.txt', 'a').close()
     utils.copy_file(test_old_path, test_new_path, ext)
-    os.remove(f'{test_old_path}.txt')
-    os.remove(f'{test_new_path}.txt')
 
 
 # Tests writefile
@@ -90,7 +74,6 @@ def test_writefile(tmpdir):
     test_old_path = tmpdir.join('foo.txt')
     test_text = 'Wubba lubba dub dub!'
     utils.writefile(test_old_path, ext, test_text)
-    os.remove(f'{test_old_path}.txt')
 
 
 # Tests writejson
@@ -105,8 +88,6 @@ def test_writejson(tmpdir):
     with open(test_json_filename, 'r') as src:
         loaded_data = json.load(src)
     assert test_json_data == loaded_data
-
-    os.remove(test_json_filename)
 
 
 # Tests load_heuristics

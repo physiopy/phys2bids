@@ -5,6 +5,7 @@
 phys2bids interface for acqknowledge files.
 """
 import logging
+import warnings
 
 from bioread import read_file
 
@@ -33,7 +34,9 @@ def populate_phys_input(filename, chtrig):
     physio_obj.BlueprintInput
     """
 
-    data = read_file(filename).channels
+    with warnings.catch_warnings():
+        warnings.filterwarnings('ignore', category=DeprecationWarning)
+        data = read_file(filename).channels
 
     freq = [data[chtrig].samples_per_second, ]
     timeseries = [data[chtrig].time_index, ]
