@@ -1,10 +1,12 @@
-language: python
+os: linux
+dist: bionic
 sudo: false
-dist: xenial
 services:
   - xvfb
 notifications:
   email: change
+
+language: python
 
 python:
   - 3.6
