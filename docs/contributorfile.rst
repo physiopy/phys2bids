@@ -162,7 +162,7 @@ Labels for semantic release and changelogs
 
 Other labels
 ^^^^^^^^^^^^
--  Invalid: These PRs don't seem right. They actually seem so not right that they won’t be further processed. This label invalidates an Hacktoberfest contribution. If you think this is wrong, start a discussion in the relevant issue (or open one if missing). Reviewers are asked to give an explanation for the use of this label.
+-  Invalid: These PRs don't seem right. They actually seem so not right that they won’t be further processed. This label invalidates a Hacktoberfest contribution. If you think this is wrong, start a discussion in the relevant issue (or open one if missing). Reviewers are asked to give an explanation for the use of this label.
 
 .. _g1i:
 
