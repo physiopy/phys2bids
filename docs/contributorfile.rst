@@ -153,7 +153,7 @@ Labels for semantic release and changelogs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 -  Majormod: These PRs call for a new major release (+1.0.0). This means that the PR is breaking backward compatibility.
 -  Minormod: These PRs call for a new minor release (0.+1.0). This means that the PR is **not** breaking backward compatibility.
--  BugFIX: These PRs close an issue labelled ``bug``. they also increase the semantic versioning for fixes (+0.0.1).
+-  BugFIX: These PRs close an issue labelled ``bug``. They also increase the semantic versioning for fixes (+0.0.1).
 -  Internal: This PR contains changes to the internal API. It won't trigger a release, but it will be reported in the changelog.
 -  Documentation: See above. This PR won't trigger a release, but it will be reported in the changelog.
 -  Testing: See above. This PR won't trigger a release, but it will be reported in the changelog.
