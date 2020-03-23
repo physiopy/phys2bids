@@ -376,7 +376,7 @@ class BlueprintInput():
                             '(try again with a more liberal thr)')
             elif num_timepoints_found < num_timepoints_expected:
                 timepoints_missing = (num_timepoints_expected
-                                        - num_timepoints_found)
+                                      - num_timepoints_found)
                 LGR.warning(f'Found {timepoints_missing} timepoints'
                             ' less than expected!')
                 if tr:
