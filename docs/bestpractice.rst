@@ -19,8 +19,8 @@ Another benefit of collecting physiological data is that it provides a method to
 **What are the different types of physiological data that can be collected?**
 
 - CO2 & O2 - specifically end-tidal pressures of CO2 and O2, which approximate the arterial levels of these gases
-- Cardiac pulsation - heart rate trace
-- Respiration - change in chest volume
+- Cardiac pulsation - pulse trace
+- Respiration - change in chest volume due to breathing
 
 **How to collect each type of physiological data?**
 
