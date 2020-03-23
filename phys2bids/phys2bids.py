@@ -176,7 +176,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
 
 def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=0,
-              tr=1, thr=2.5, ch_name=[], chplot='', debug=False, quiet=False):
+              tr=1, thr=2.5, ch_name=[], chplot='', debug=False, quiet=False, std_option=0):
     """
     Main workflow of phys2bids.
     Runs the parser, does some checks on input, then imports
@@ -261,7 +261,11 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     # Run analysis on trigger channel to get first timepoint and the time offset.
     # #!# Get option of no trigger! (which is wrong practice or Respiract)
-    phys_in.check_trigger_amount(chtrig, thr, num_timepoints_expected, tr)
+    if std_option == 1:
+        phys_in.check_trigger_amount_std(chtrig, num_timepoints_expected, tr)
+        thr = phys_in.thr_std
+    else:
+        phys_in.check_trigger_amount(chtrig, thr, num_timepoints_expected, tr)
 
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
