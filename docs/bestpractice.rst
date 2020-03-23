@@ -10,7 +10,7 @@ NOTE: This information is presented within the context of fMRI data collection.
 
 **Why collect physiological data?**
 
-Physiological monitoring is a key component of imaging analysis. In fMRI, physiological fluctuations can be identified as noise or as signals of interest, depending on the research question. These data can aid in characterizing different physiological states of the subject during a scan and account for noise components of the overall signal . CO2 is a known vasodilator and creating variability in blood flow can enhance the BOLD signal. Having this data allows one to more accurately model fMRI data by using physiological traces collected during the scan, and adding them as regressors. Each component of physiological data can add motion and variation to the signal of interest and can be accounted for in this way. More specifically, cardiac and respiratory effects are especially important as they can influence the BOLD signal. 
+Physiological monitoring is a key component of imaging analysis. In fMRI, physiological fluctuations can be identified as noise or as signals of interest, depending on the research question. These data can aid in characterizing different physiological states of the subject during a scan and account for noise components of the overall signal . CO2 is a known vasodilator and creating variability in blood flow can enhance the BOLD signal. Having this data allows one to more accurately model fMRI data by using physiological traces collected during the scan, and adding them as regressors. Each component of physiological data can add motion and variation to the signal of interest and can be accounted for in this way. More specifically, cardiac and respiratory effects are especially important as they can influence the BOLD signal.
 
 An important aspect of accounting for physiological fluctuations is RETROICOR, a method that retrospectively uses information about the cardiac and respiratory cycles to identify which phase of these cycles is represented in each time point of the fMRI time series. This can be particularly useful when imaging regions that are more susceptible to cardiac and respiratory noise, such as spinal cord or brainstem.
 
@@ -30,8 +30,6 @@ Another benefit of collecting physiological data is that it provides a method to
 
 **What to do with physiological data once it has been collected?**
 
-- Use Phys2bids to organize the data
-- Can also plot each channel from LabChart file to quickly view which kind of physiological data each channel represents
-- Use a peak detection algorithm to get end-tidal CO2 trace for breathing task BOLD fMRI and convolve with HRF
-- Use peak detection algorithm to get HR trace and convolve with CRF
-- Perform RETROICOR on the cardiac and respiratory cycles to include in GLM as regressors
+Phys2bids can be used to organize the various physiological data traces that you have collected. With this program, your data will have the appropriate BIDS labels to describe physiological information. As a sanity check, you should plot each trace to quickly view each trace and ensure that it matches the type of information you think you collected.
+
+A peak detection algorithm can be used on the stored traces to identify end-tidal values for O2 and CO2, and phases of the cardiac and respiratory cycles. The selected peaks traces can then be used as regressors in a general linear model to explain portions of your signal attributed to physiological effects.
