@@ -133,6 +133,12 @@ def _get_parser():
                           action='store_true',
                           help='Only print warnings to log file. Default is False.',
                           default=False)
+    optional.add_argument('-std_thr', '--std_threshold',
+                          dest='std_option',
+                          action='store_true',
+                          help='Activates automatic threshold and timepoint count'
+                               ' based on the standard deviation of the trigger',
+                          default=False)
     optional.add_argument('-v', '--version', action='version',
                           version=('%(prog)s ' + __version__))
 
