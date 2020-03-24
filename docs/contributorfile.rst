@@ -120,7 +120,7 @@ We use `auto <https://github.com/intuit/auto>`_ to automatise our semantic versi
 
 .. _issueprlabels:
 
-Issues & PRs labels
+Issue & PR labels
 ~~~~~~~~~~~~~~~~~~~
 -  Documentation: Improvements or additions to documentation. This category includes (but is not limited to) docs pages, docstrings, and code comments.
 -  Duplicate: Whatever this is, it exists already! Maybe it’s a closed Issue/PR, that should be reopened.
