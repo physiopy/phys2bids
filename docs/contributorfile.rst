@@ -132,7 +132,7 @@ Issue & PR labels
 
 .. _issuelabel:
 
-Issues only labels
+Issue-only labels
 ~~~~~~~~~~~~~~~~~~
 -  Bug: Something isn’t working. It either breaks the code or has an unexpected outcome.
 -  Community: This issue contains information about the `physiopy` community (e.g. the next developer call)
