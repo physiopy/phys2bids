@@ -146,7 +146,7 @@ Issues only labels
 
 .. _prlabel:
 
-PRs only labels
+PR-only labels
 ~~~~~~~~~~~~~~~
 
 Labels for semantic release and changelogs
