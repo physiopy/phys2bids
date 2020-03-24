@@ -110,8 +110,9 @@ def _get_parser():
                           dest='thr',
                           type=float,
                           help='Threshold to use for trigger detection. '
-                               'Default is 2.5.',
-                          default=2.5)
+                               'by default the rigger function calculates the needed threshold'
+                               'use this parameter only if the default threshold fails',
+                          default=0)
     optional.add_argument('-chnames', '--channel-names',
                           dest='ch_name',
                           nargs='*',
@@ -132,12 +133,6 @@ def _get_parser():
                           dest='quiet',
                           action='store_true',
                           help='Only print warnings to log file. Default is False.',
-                          default=False)
-    optional.add_argument('-std_thr', '--std_threshold',
-                          dest='std_option',
-                          action='store_true',
-                          help='Activates automatic threshold and timepoint count'
-                               ' based on the standard deviation of the trigger',
                           default=False)
     optional.add_argument('-v', '--version', action='version',
                           version=('%(prog)s ' + __version__))
