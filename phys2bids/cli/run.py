@@ -110,7 +110,7 @@ def _get_parser():
                           dest='thr',
                           type=float,
                           help='Threshold to use for trigger detection. '
-                               'by default the rigger function calculates the needed threshold'
+                               'By default the trigger function calculates the needed threshold'
                                'use this parameter only if the default threshold fails',
                           default=None)
     optional.add_argument('-chnames', '--channel-names',
