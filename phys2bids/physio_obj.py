@@ -233,7 +233,7 @@ class BlueprintInput():
         del self.ch_name[idx]
         del self.units[idx]
 
-    def check_trigger_amount(self, chtrig=1, thr=0, num_timepoints_expected=0, tr=0):
+    def check_trigger_amount(self, chtrig=1, thr=None, num_timepoints_expected=0, tr=0):
         """
         Counts trigger points and corrects time offset in
         the list representing time.
@@ -264,7 +264,7 @@ class BlueprintInput():
         LGR.info('Counting trigger points')
         # Use first derivative of the trigger channel to find the TRs,
         # comparing it to a given threshold.
-        if thr != 0:
+        if thr is not None:
             trigger_deriv = np.diff(self.timeseries[chtrig])
             timepoints = trigger_deriv > thr
             num_timepoints_found = timepoints.sum()
