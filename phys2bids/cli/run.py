@@ -110,7 +110,8 @@ def _get_parser():
                           dest='thr',
                           type=float,
                           help='Threshold to use for trigger detection. '
-                               'By default the trigger function calculates the needed threshold'
+                               'If "ntp" and "TR" are specified, phys2bids automatically computes a threshold '
+                               'to detect the triggers. Use this parameter to set it manually'
                                'use this parameter only if the default threshold fails',
                           default=None)
     optional.add_argument('-chnames', '--channel-names',
