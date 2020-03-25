@@ -262,20 +262,16 @@ class BlueprintInput():
             the time of first trigger.
         """
         LGR.info('Counting trigger points')
-        # Use first derivative of the trigger channel to find the TRs,
+        # Use the trigger channel to find the TRs,
         # comparing it to a given threshold.
-        if thr is not None:
-            trigger_deriv = np.diff(self.timeseries[chtrig])
-            timepoints = trigger_deriv > thr
-            num_timepoints_found = timepoints.sum()
-        else:
-            trigger = self.timeseries[chtrig]
+        trigger = self.timeseries[chtrig]
+        if thr is None:
             thr = np.mean(trigger) + 2 * np.std(trigger)
-            timepoints = trigger > thr
-            num_timepoints_found = len([is_true for is_true, _ in groupby(timepoints,
-                                        lambda x: x != 0) if is_true])
-            LGR.info(f'The number of expected timepoints according to the std method'
-                     f'is {num_timepoints_found} and the threshold is {thr}')
+        timepoints = trigger > thr
+        num_timepoints_found = len([is_true for is_true, _ in groupby(timepoints,
+                                    lambda x: x != 0) if is_true])
+        LGR.info(f'The number of expected timepoints according to the std method'
+                 f'is {num_timepoints_found} and the threshold is {thr}')
         time_offset = self.timeseries[0][timepoints.argmax()]
 
         if num_timepoints_expected:
