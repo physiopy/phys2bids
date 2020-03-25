@@ -274,8 +274,8 @@ class BlueprintInput():
             timepoints = trigger > thr
             num_timepoints_found = len([is_true for is_true, _ in groupby(timepoints,
                                         lambda x: x != 0) if is_true])
-            LGR.info(f'number of expected timepoints according to std method'
-                     f'is {num_timepoints_found} the threshold is {thr}')
+            LGR.info(f'The number of expected timepoints according to the std method'
+                     f'is {num_timepoints_found} and the threshold is {thr}')
         time_offset = self.timeseries[0][timepoints.argmax()]
 
         if num_timepoints_expected:
