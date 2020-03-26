@@ -105,6 +105,8 @@ class BlueprintInput():
     num_timepoints_found: int
         Amount of timepoints found in the automatic count.
         This is computed internally, *if* check_trigger_amount() is run
+    thr: float
+        Threshold used by the function to detect trigger points.
 
     Methods
     -------
@@ -251,7 +253,7 @@ class BlueprintInput():
         Notes
         -----
         Outcome:
-         self.thr:
+        self.thr: float
             Threshold used by the function to detect trigger points.
         self.num_timepoints_found: int
             Property of the `BlueprintInput` class.
