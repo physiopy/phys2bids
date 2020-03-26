@@ -102,7 +102,7 @@ class BlueprintInput():
         in the output files.
     units : (ch) list of strings
         List of the units of the channels.
-    num_timepoints_found: int
+    num_timepoints_found: int or None
         Amount of timepoints found in the automatic count.
         This is computed internally, *if* check_trigger_amount() is run
     thr: float
