@@ -265,7 +265,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         # Run analysis on trigger channel to get first timepoint and the time offset.
         # #!# Get option of no trigger! (which is wrong practice or Respiract)
         phys_in.check_trigger_amount(chtrig, thr, num_timepoints_expected, tr)
-        thr = phys_in.thr
         LGR.info('Plot trigger')
         plot_path = os.path.join(outdir,
                                  os.path.splitext(os.path.basename(filename))[0])
@@ -274,7 +273,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         if ses:
             plot_path += f'_ses-{ses}'
         viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
-                         plot_path, tr, thr, num_timepoints_expected, filename)
+                         plot_path, tr, phys_in.thr, num_timepoints_expected, filename)
     else:
         LGR.info('Not plotting trigger. If you want the trigger to be'
                  ' plotted enter -tr or -ntp, preferably both.')
