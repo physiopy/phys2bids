@@ -104,7 +104,8 @@ class BlueprintInput():
         List of the units of the channels.
     num_timepoints_found: int or None
         Amount of timepoints found in the automatic count.
-        This is computed internally, *if* check_trigger_amount() is run
+        This is initialised as "None" and then computed internally,
+        *if* check_trigger_amount() is run
     thr: float
         Threshold used by check_trigger_amount() to detect trigger points.
 
