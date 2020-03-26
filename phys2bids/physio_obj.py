@@ -147,6 +147,7 @@ class BlueprintInput():
                              self.ch_amount, 0.0)
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
+        self.num_timepoints_found = None
 
     @property
     def ch_amount(self):
