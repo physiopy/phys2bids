@@ -32,7 +32,7 @@ import logging
 import datetime
 
 from copy import deepcopy
-from numpy import savetxt, transpose
+from numpy import savetxt
 from pathlib import Path
 
 from phys2bids import utils, viz, _version
