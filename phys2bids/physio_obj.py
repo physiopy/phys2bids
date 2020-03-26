@@ -106,7 +106,7 @@ class BlueprintInput():
         Amount of timepoints found in the automatic count.
         This is computed internally, *if* check_trigger_amount() is run
     thr: float
-        Threshold used by the function to detect trigger points.
+        Threshold used by check_trigger_amount() to detect trigger points.
 
     Methods
     -------
@@ -273,7 +273,7 @@ class BlueprintInput():
         num_timepoints_found = len([is_true for is_true, _ in groupby(timepoints,
                                     lambda x: x != 0) if is_true])
         LGR.info(f'The number of timepoints according to the std_thr method '
-                 f'is {num_timepoints_found} and the threshold is {thr}')
+                 f'is {num_timepoints_found}. The computed threshold is {thr}')
         time_offset = self.timeseries[0][timepoints.argmax()]
 
         if num_timepoints_expected:
