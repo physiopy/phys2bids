@@ -348,7 +348,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                 outfile = f'{outfile}_{uniq_freq}'
 
         LGR.info(f'Exporting files for freq {uniq_freq}')
-        savetxt(outfile + '.tsv.gz', transpose(phys_out[uniq_freq].timeseries),
+        savetxt(outfile + '.tsv.gz', phys_out[uniq_freq].timeseries.T,
                 fmt='%.8e', delimiter='\t')
         print_json(outfile, phys_out[uniq_freq].freq,
                    phys_out[uniq_freq].start_time,
