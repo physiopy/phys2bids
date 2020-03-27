@@ -8,7 +8,7 @@ NOTE: This information is presented within the context of fMRI data collection.*
 
 **Best Practices for Collecting Physiological Data During fMRI**
 
-This document provides a succinct introduction to what physiological data are typically recorded during an fMRI experiment, how these signals are recorded, and how these signals can improve our modeling of fMRI timeseries data. This is an active field of research, and we encourage all users to get the latest recommendations prior to initiating a new study. For a more in-depth article on similar subject matter, please see `Bulte and Wartolowska (2017) Neuroimage 154:81-91 <https://www.sciencedirect.com/science/article/pii/S1053811916306929>`.
+This document provides a succinct introduction to what physiological data are typically recorded during an fMRI experiment, how these signals are recorded, and how these signals can improve our modeling of fMRI timeseries data. This is an active field of research, and we encourage all users to get the latest recommendations prior to initiating a new study. For a more in-depth article on similar subject matter, please see `Bulte and Wartolowska (2017) Neuroimage 154:81-91 <https://www.sciencedirect.com/science/article/pii/S1053811916306929>`_.
 
 
 Why collect physiological data?
