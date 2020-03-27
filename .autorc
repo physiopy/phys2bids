@@ -51,6 +51,13 @@
       "overwrite": true
     },
     {
+      "name": "Outreach",
+      "changelogTitle": "🖋️  Outreach",
+      "description": "Something that improves the package outreach happened!",
+      "releaseType": "none",
+      "overwrite": true
+    },
+    {
       "name": "Internal",
       "changelogTitle": "🏠 Internal",
       "description": "Changes only affect the internal API",
