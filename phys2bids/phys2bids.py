@@ -176,7 +176,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
 
 def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=0,
-              tr=1, thr=2.5, ch_name=[], chplot='', debug=False, quiet=False):
+              tr=1, thr=None, ch_name=[], chplot='', debug=False, quiet=False):
     """
     Main workflow of phys2bids.
     Runs the parser, does some checks on input, then imports
@@ -259,13 +259,12 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     if info:
         return
 
-    # Run analysis on trigger channel to get first timepoint and the time offset.
-    # #!# Get option of no trigger! (which is wrong practice or Respiract)
-    phys_in.check_trigger_amount(chtrig, thr, num_timepoints_expected, tr)
-
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
-    if tr != 0 or num_timepoints_expected != 0:
+    if tr != 0 and num_timepoints_expected != 0:
+        # Run analysis on trigger channel to get first timepoint and the time offset.
+        # #!# Get option of no trigger! (which is wrong practice or Respiract)
+        phys_in.check_trigger_amount(chtrig, thr, num_timepoints_expected, tr)
         LGR.info('Plot trigger')
         plot_path = os.path.join(outdir,
                                  os.path.splitext(os.path.basename(filename))[0])
@@ -274,7 +273,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         if ses:
             plot_path += f'_ses-{ses}'
         viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
-                         plot_path, tr, thr, num_timepoints_expected, filename)
+                         plot_path, tr, phys_in.thr, num_timepoints_expected, filename)
     else:
         LGR.info('Not plotting trigger. If you want the trigger to be'
                  ' plotted enter -tr or -ntp, preferably both.')

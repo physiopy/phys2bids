@@ -126,7 +126,7 @@ def test_integration_acq(samefreq_full_acq_file):
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '10000.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '10.425007798392297')
+    assert check_string(log_info, 'Sampling started', '10.425107798467103')
     # Check start time
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -136,7 +136,7 @@ def test_integration_acq(samefreq_full_acq_file):
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 10000.0)
-    assert math.isclose(json_data['StartTime'], 10.425007798392297)
+    assert math.isclose(json_data['StartTime'], 10.425107798467103)
     assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'PULSE - Custom, DA100C',
                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
@@ -208,7 +208,7 @@ def test_integration_multifreq(multifreq_acq_file):
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '10000.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '10.425007798392297')
+    assert check_string(log_info, 'Sampling started', '10.425107798467103')
     # Check start time
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -218,7 +218,7 @@ def test_integration_multifreq(multifreq_acq_file):
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 10000.0)
-    assert math.isclose(json_data['StartTime'], 10.425007798392297)
+    assert math.isclose(json_data['StartTime'], 10.425107798467103)
     assert json_data['Columns'] == ['time', 'RESP - RSP100C',
                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
