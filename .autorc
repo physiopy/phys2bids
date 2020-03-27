@@ -9,9 +9,6 @@
   "release": {
     "prerelease": true
   },
-  "prereleaseBranches": [
-    "master"
-  ],
   "owner": "physiopy",
   "repo": "phys2bids",
   "name": "Stefano Moia",
@@ -20,61 +17,68 @@
     {
       "name": "Majormod",
       "changelogTitle": "💥 Breaking Change",
-      "description": "Increment the major version when merged",
+      "description": "This PR breaks compatibility, and increments the major version (+1.0.0)",
       "releaseType": "major",
       "overwrite": true
     },
     {
       "name": "Minormod",
       "changelogTitle": "🚀 Enhancement",
-      "description": "Increment the minor version when merged",
+      "description": "This PR generally closes an `Enhancement` issue. It increments the minor version (0.+1.0)",
+      "releaseType": "minor",
+      "overwrite": true
+    },
+    {
+      "name": "Minormod-breaking",
+      "changelogTitle": "💥 Breaking Change during development",
+      "description": "For development only, this PR increments the minor version (0.+1.0) but breaks compatibility",
       "releaseType": "minor",
       "overwrite": true
     },
     {
       "name": "BugFIX",
       "changelogTitle": "🐛 Bug Fix",
-      "description": "Increment the patch version when merged",
+      "description": "This PR generally closes a `Bug` issue, and increments the patch version (0.0.+1)",
       "releaseType": "patch",
       "overwrite": true
     },
     {
       "name": "Documentation",
       "changelogTitle": "📝 Documentation",
-      "description": "Changes only affect the documentation",
+      "description": "This issue or PR is about the documentation ",
       "releaseType": "none",
       "overwrite": true
     },
     {
       "name": "Testing",
       "changelogTitle": "⚠️ Tests",
-      "description": "Changes only affect the tests",
+      "description": "This is for testing features, writing tests or producing testing code",
       "releaseType": "none",
       "overwrite": true
     },
     {
       "name": "Internal",
       "changelogTitle": "🏠 Internal",
-      "description": "Changes only affect the internal API",
+      "description": "Changes affect the internal API. It doesn't increase the version, but produces a changelog",
       "releaseType": "none",
       "overwrite": true
     },
     {
       "name": "Outreach",
       "changelogTitle": "🖋️  Outreach",
-      "description": "Something that improves the package outreach happened!",
+      "description": "Issue about outreaching of any form",
       "releaseType": "none",
       "overwrite": true
     },
     {
       "name": "Skip release",
-      "description": "Preserve the current version when merged",
+      "description": "This PR preserves the current version when merged, and doesn't appear in the changelog",
       "releaseType": "skip",
       "overwrite": true
     },
     {
       "name": "Release",
-      "description": "Create a release when this pr is merged",
+      "description": "For PR only, trigger a release at the merge",
       "releaseType": "release",
       "overwrite": true
     }
