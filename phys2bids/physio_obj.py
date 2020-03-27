@@ -6,6 +6,7 @@ I/O objects for phys2bids.
 """
 
 import logging
+from itertools import groupby
 
 import numpy as np
 
@@ -101,9 +102,12 @@ class BlueprintInput():
         in the output files.
     units : (ch) list of strings
         List of the units of the channels.
-    num_timepoints_found: int
+    num_timepoints_found: int or None
         Amount of timepoints found in the automatic count.
-        This is computed internally, *if* check_trigger_amount() is run
+        This is initialised as "None" and then computed internally,
+        *if* check_trigger_amount() is run
+    thr: float
+        Threshold used by check_trigger_amount() to detect trigger points.
 
     Methods
     -------
@@ -144,6 +148,7 @@ class BlueprintInput():
                              self.ch_amount, 0.0)
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
+        self.num_timepoints_found = None
 
     @property
     def ch_amount(self):
@@ -232,7 +237,7 @@ class BlueprintInput():
         del self.ch_name[idx]
         del self.units[idx]
 
-    def check_trigger_amount(self, chtrig=1, thr=2.5, num_timepoints_expected=0, tr=0):
+    def check_trigger_amount(self, chtrig=1, thr=None, num_timepoints_expected=0, tr=0):
         """
         Counts trigger points and corrects time offset in
         the list representing time.
@@ -250,6 +255,8 @@ class BlueprintInput():
         Notes
         -----
         Outcome:
+        self.thr: float
+            Threshold used by the function to detect trigger points.
         self.num_timepoints_found: int
             Property of the `BlueprintInput` class.
             Contains the number of timepoints found
@@ -259,11 +266,16 @@ class BlueprintInput():
             the time of first trigger.
         """
         LGR.info('Counting trigger points')
-        # Use first derivative of the trigger channel to find the TRs,
+        # Use the trigger channel to find the TRs,
         # comparing it to a given threshold.
-        trigger_deriv = np.diff(self.timeseries[chtrig])
-        timepoints = trigger_deriv > thr
-        num_timepoints_found = timepoints.sum()
+        trigger = self.timeseries[chtrig]
+        if thr is None:
+            thr = np.mean(trigger) + 2 * np.std(trigger)
+        timepoints = trigger > thr
+        num_timepoints_found = len([is_true for is_true, _ in groupby(timepoints,
+                                    lambda x: x != 0) if is_true])
+        LGR.info(f'The number of timepoints according to the std_thr method '
+                 f'is {num_timepoints_found}. The computed threshold is {thr}')
         time_offset = self.timeseries[0][timepoints.argmax()]
 
         if num_timepoints_expected:
@@ -296,7 +308,7 @@ class BlueprintInput():
         else:
             LGR.warning('The necessary options to find the amount of timepoints '
                         'were not provided.')
-
+        self.thr = thr
         self.timeseries[0] -= time_offset
         self.num_timepoints_found = num_timepoints_found
 
