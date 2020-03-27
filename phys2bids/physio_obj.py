@@ -391,7 +391,7 @@ class BlueprintOutput():
         int
             Number of channels
         """
-        return len(self.timeseries)
+        return self.timeseries.shape[1]
 
     def return_index(self, idx):
         """
@@ -409,7 +409,7 @@ class BlueprintOutput():
             Tuple containing the proper list entry of all the
             properties of the object with index `idx`
         """
-        return (self.timeseries[idx], self.ch_amount, self.freq,
+        return (self.timeseries[:, idx], self.ch_amount, self.freq,
                 self.ch_name[idx], self.units[idx], self.start_time)
 
     def delete_at_index(self, idx):
@@ -435,7 +435,7 @@ class BlueprintOutput():
             In all the property that are lists, the element correspondent to
             `idx` gets deleted
         """
-        self.timeseries = np.delete(self.timeseries, idx, axis=0)
+        self.timeseries = np.delete(self.timeseries, idx, axis=1)
         del self.ch_name[idx]
         del self.units[idx]
 
@@ -457,7 +457,7 @@ class BlueprintOutput():
         cls: :obj: `BlueprintOutput`
             Populated `BlueprintOutput` object.
         """
-        timeseries = np.asarray(blueprint.timeseries)
+        timeseries = np.asarray(blueprint.timeseries).T
         freq = blueprint.freq[0]
         ch_name = blueprint.ch_name
         units = blueprint.units

@@ -93,7 +93,7 @@ def test_BlueprintOutput():
     # Tests init_from_blueprint
     blueprint_out = po.BlueprintOutput.init_from_blueprint(blueprint_in)
     start_time = blueprint_out.start_time
-    assert (blueprint_out.timeseries == test_timeseries).all()
+    assert (blueprint_out.timeseries == np.asarray(test_timeseries).T).all()
     assert blueprint_out.freq == test_freq[0]
     assert blueprint_out.ch_name == test_chn_name
     assert blueprint_out.units == test_units
@@ -102,16 +102,16 @@ def test_BlueprintOutput():
     # Tests return_index
     test_timeseries = np.array([[0, 1, 1, 2, 3, 5, 8, 13],
                                 [0, 1, 0, 0, 0, 0, 0, 0],
-                                [1, 0, 0, 1, 0, 0, 1, 0]])
+                                [1, 0, 0, 1, 0, 0, 1, 0]]).T
     test_freq = 42.0
     test_chn_name = ['trigger', 'time', 'chocolate']
     test_units = ['s', 's', 'sweetness']
-    num_channnels = len(test_timeseries)
+    num_channnels = test_timeseries.shape[1]
     blueprint_out = po.BlueprintOutput(test_timeseries, test_freq, test_chn_name, test_units,
                                        start_time)
     test_index = blueprint_out.return_index(1)
     assert (test_index[0] == test_trigger).all()
-    assert test_index[1] == len(test_timeseries)
+    assert test_index[1] == test_timeseries.shape[1]
     assert test_index[3] == test_chn_name[1]
     assert test_index[4] == test_units[1]
 
@@ -119,5 +119,5 @@ def test_BlueprintOutput():
     blueprint_out.delete_at_index(1)
     assert len(blueprint_out.ch_name) == num_channnels - 1
     assert len(blueprint_out.units) == num_channnels - 1
-    assert blueprint_out.timeseries.shape[0] == num_channnels - 1
+    assert blueprint_out.timeseries.shape[1] == num_channnels - 1
     assert blueprint_out.ch_amount == num_channnels - 1
