@@ -157,17 +157,16 @@ The last command line output said "Counting trigger points" and "The necessary o
 
     phys2bids -in tutorial_file -chtrig 1 -outdir /home/arthurdent/physio -ntp 158 -tr 1.2
 
-The output still warns us about something:
+Now the output says:
 
 .. code-block:: shell
 
-    WARNING:phys2bids.physio_obj:Found 158 timepoints less than expected!
-    WARNING:phys2bids.physio_obj:Correcting time offset, assuming missing timepoints are at the beginning (try again with a more liberal thr)
+   INFO:phys2bids.physio_obj:The number of expected timepoints according to the std method is 158 and the threshold is 1.1523587407910223
+   INFO:phys2bids.physio_obj:Checking number of timepoints
+   INFO:phys2bids.physio_obj:Found just the right amount of timepoints!
 
-How come?!? We know there are exactly 158 timepoints! Don't Panic. In order to find the triggers, ``phys2bids`` gets the first derivative of the trigger channel, and uses a threshold (default 2.5) to get the peaks of the derivative, corresponding to the trigger event. If the threshold is too strict or is too liberal for the recorded trigger, it won't get all the trigger points.
-``phys2bids`` was created to deal with little sampling errors - such as distracted researchers that started sampling a bit too late than expected. For this reason, if it finds less timepoints than the amount specified, it will assume that the error was caused by a *distracted researcher*. 
-
-Therefore, we need to change the ``-thr`` input until ``phys2bids`` finds the correct number of timepoints. Looking at the tutorial_file_trigger_time.png file can help determine what threshold is most appropriate. For this tutorial file, a threshold of 0.735 finds the right number of time points.
+Phy2bids has an automatic way of Finding the threshold. It uses the trigger channel mean and standard deviation to calculate this threshold.
+Counts the blocks that are above this threshold and compares it with ``-ntp``. Therefore if this message appears everything should be working properly 
 
 .. code-block:: shell
 
@@ -220,6 +219,9 @@ In the first row, there's the whole trigger channel in blue, an orange block tha
 In the second row, we see the first and last trigger (or expected first and last).
 
 **Note**: It is *very* important to calibrate the threshold in a couple of files. This still *won't* necessarily mean that it's the right threshold for all the files, but there's a chance that it's ok(ish) for most of them.
+If for some reason -npt and the number of timepoints found by phys2bids is not the same there are two possible reasons:
+1. You didn't count properly the amount of timepoints. Check again, you can use the trigger figure.
+2. The automatic threshold is not working. If we look at the trigger figure there migth some spikes that are lower than the automatic threshold. You can use the ``-thr`` option to manually input the threshold and try until the founded tiempoints are the same as the expected timepoints.
 
 
 Generating outputs in BIDs format
