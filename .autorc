@@ -39,21 +39,16 @@
       "overwrite": true
     },
     {
-      "name": "Skip release",
-      "description": "Preserve the current version when merged",
-      "releaseType": "skip",
+      "name": "Documentation",
+      "changelogTitle": "📝 Documentation",
+      "description": "Changes only affect the documentation",
+      "releaseType": "none",
       "overwrite": true
     },
     {
-      "name": "Release",
-      "description": "Create a release when this pr is merged",
-      "releaseType": "release",
-      "overwrite": true
-    },
-    {
-      "name": "Outreach",
-      "changelogTitle": "🖋️  Outreach",
-      "description": "Something that improves the package outreach happened!",
+      "name": "Testing",
+      "changelogTitle": "⚠️ Tests",
+      "description": "Changes only affect the tests",
       "releaseType": "none",
       "overwrite": true
     },
@@ -65,10 +60,22 @@
       "overwrite": true
     },
     {
-      "name": "Documentation",
-      "changelogTitle": "📝 Documentation",
-      "description": "Changes only affect the documentation",
+      "name": "Outreach",
+      "changelogTitle": "🖋️  Outreach",
+      "description": "Something that improves the package outreach happened!",
       "releaseType": "none",
+      "overwrite": true
+    },
+    {
+      "name": "Skip release",
+      "description": "Preserve the current version when merged",
+      "releaseType": "skip",
+      "overwrite": true
+    },
+    {
+      "name": "Release",
+      "description": "Create a release when this pr is merged",
+      "releaseType": "release",
       "overwrite": true
     }
   ]
