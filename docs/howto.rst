@@ -184,7 +184,6 @@ Let's put an example where the number of timepoints found is not right. For that
     phys2bids -in ../tutorial_file_v2.txt -chtrig 1 -ntp 158 -tr 1.2
     WARNING 	Found 1 timepoints less than expected!
     WARNING 	Correcting time offset, assuming missing timepoints are at the beginning (try again with a more conservative thr)
-    ------------------------------------------------
     
 There is one trigger that phys2bids couldn't find automaticly, if we look at the figure:
 .. image:: _static/tutorial_file_v2_t_lost.png
