@@ -167,50 +167,6 @@ Now the output says:
 
 Phy2bids has an automatic way of Finding the threshold. It uses the trigger channel mean and standard deviation to calculate this threshold.
 Counts the blocks that are above this threshold and compares it with ``-ntp``. Therefore if this message appears everything should be working properly 
-
-.. code-block:: shell
-
-    phys2bids -in tutorial_file -chtrig 1 -outdir /home/arthurdent/physio -ntp 158 -tr 1.2 -thr 0.735
-
-    INFO:phys2bids.phys2bids:Currently running phys2bids version v1.3.0-beta+152.g1f98d16.dirty
-    INFO:phys2bids.phys2bids:Input file is tutorial_file.txt
-    INFO:phys2bids.utils:File extension is .txt
-    WARNING:phys2bids.utils:If both acq and txt files exist in the path, acq will be selected.
-    INFO:phys2bids.phys2bids:Reading the file ./tutorial_file.txt
-    INFO:phys2bids.interfaces.txt:phys2bids detected that your file is in Labchart format
-    INFO:phys2bids.phys2bids:Reading infos
-    INFO:phys2bids.physio_obj:
-    ------------------------------------------------
-    File tutorial_file.txt contains:
-    01. Trigger; sampled at 1000.0 Hz
-    02. CO2; sampled at 1000.0 Hz
-    03. O2; sampled at 1000.0 Hz
-    04. Pulse; sampled at 1000.0 Hz
-    ------------------------------------------------
-
-    INFO:phys2bids.viz:saving channel plot to tutorial_file.png
-    INFO:phys2bids.physio_obj:Counting trigger points
-    INFO:phys2bids.physio_obj:Checking number of timepoints
-    INFO:phys2bids.physio_obj:Found just the right amount of timepoints!
-    INFO:phys2bids.phys2bids:Plot trigger
-    INFO:phys2bids.phys2bids:Preparing 1 output files.
-    INFO:phys2bids.phys2bids:Exporting files for freq 1000.0
-    INFO:phys2bids.phys2bids:
-    ------------------------------------------------
-    Filename:            tutorial_file.txt
-
-    Timepoints expected: 158
-    Timepoints found:    158
-    Sampling Frequency:  1000.0 Hz
-    Sampling started at: 0.24499999999989086 s
-    Tip: Time 0 is the time of first trigger
-    ------------------------------------------------
-
-.. image:: _static/tutorial_file_trigger_time.png
-   :alt: tutorial_file_trigger_time
-   :align: center
-    
-
 Alright! Now we have some outputs that make sense.
 The main difference from the previous call is in **tutorial_file.log** and **tutorial_file_trigger_time.png**.
 The first one now reports 158 timepoints expected (as input) and found (as correctly estimated) and it also tells us that the sampling of the neuroimaging files started around 0.25 seconds later than the physiological sampling.
@@ -222,7 +178,25 @@ In the second row, we see the first and last trigger (or expected first and last
 If for some reason -npt and the number of timepoints found by phys2bids is not the same there are two possible reasons:
 1. You didn't count properly the amount of timepoints. Check again, you can use the trigger figure.
 2. The automatic threshold is not working. If we look at the trigger figure there migth some spikes that are lower than the automatic threshold. You can use the ``-thr`` option to manually input the threshold and try until the founded tiempoints are the same as the expected timepoints.
+Let's put an example where the number of timepoints found is not right. For that we have tutorial_file_v2.txt:
+.. code-block:: shell
 
+    phys2bids -in ../tutorial_file_v2.txt -chtrig 1 -ntp 158 -tr 1.2
+    WARNING 	Found 1 timepoints less than expected!
+    WARNING 	Correcting time offset, assuming missing timepoints are at the beginning (try again with a more conservative thr)
+    ------------------------------------------------
+    
+There is one trigger that phys2bids couldn't find automaticly, if we look at the figure:
+.. image:: _static/tutorial_file_v2_t_lost.png
+   :alt: tutorial_file_channels
+   :align: center
+
+We can check that we need a smaller threshold that is introduced with the option `-thr`:
+..  code-block:: shell
+    phys2bids -in ../tutorial_file_v2.txt -chtrig 1 -ntp 158 -tr 1.2 -thr 1.04
+    INFO:phys2bids.physio_obj:The number of expected timepoints according to the std method is 158 and the threshold is 1.1523587407910223
+    INFO:phys2bids.physio_obj:Checking number of timepoints
+    INFO:phys2bids.physio_obj:Found just the right amount of timepoints!
 
 Generating outputs in BIDs format
 #################################
