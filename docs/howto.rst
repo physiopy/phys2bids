@@ -179,6 +179,7 @@ If for some reason -npt and the number of timepoints found by phys2bids is not t
 1. You didn't count properly the amount of timepoints. Check again, you can use the trigger figure.
 2. The automatic threshold is not working. If we look at the trigger figure there migth some spikes that are lower than the automatic threshold. You can use the ``-thr`` option to manually input the threshold and try until the founded tiempoints are the same as the expected timepoints.
 Let's put an example where the number of timepoints found is not right. For that we have tutorial_file_v2.txt:
+
 .. code-block:: shell
 
     phys2bids -in ../tutorial_file_v2.txt -chtrig 1 -ntp 158 -tr 1.2
@@ -186,12 +187,15 @@ Let's put an example where the number of timepoints found is not right. For that
     WARNING 	Correcting time offset, assuming missing timepoints are at the beginning (try again with a more conservative thr)
     
 There is one trigger that phys2bids couldn't find automaticly, if we look at the figure:
+
 .. image:: _static/tutorial_file_v2_t_lost.png
    :alt: tutorial_file_channels
    :align: center
 
 We can check that we need a smaller threshold that is introduced with the option `-thr`:
+
 ..  code-block:: shell
+
     phys2bids -in ../tutorial_file_v2.txt -chtrig 1 -ntp 158 -tr 1.2 -thr 1.04
     INFO:phys2bids.physio_obj:The number of expected timepoints according to the std method is 158 and the threshold is 1.1523587407910223
     INFO:phys2bids.physio_obj:Checking number of timepoints
