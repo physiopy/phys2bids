@@ -33,6 +33,15 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     figsize: tuple
         Desired size of the figure (see `matplotlib`),
         Default is {FIGSIZE}
+    tr: float
+        Repetition time
+    thr:float
+        Threshold used to detect the amount of triggers
+    num_timepoints_expected: int
+        Number of timepoints expected by the user
+    figsize: integer tuple or list
+        Size of the figure X*Y
+        Default is {FIGSIZE}
     dpi: int
         Desired DPI of the figure (see `matplotlib`),
         Default is {SET_DPI}
