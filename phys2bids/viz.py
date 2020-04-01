@@ -36,7 +36,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     tr: float
         Repetition time
     thr:float
-        Threshold used to detect the amount of triggers
+        Threshold used to detect the number of triggers
     num_timepoints_expected: int
         Number of timepoints expected by the user
     figsize: integer tuple or list
