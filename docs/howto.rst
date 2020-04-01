@@ -209,6 +209,7 @@ Let's go through an example where the number of timepoints automatically found i
 The output:
 
 .. code-block:: shell
+
     ------------------------------------------------
     File tutorial_file_v2.txt contains:
     01. Trigger; sampled at 1000.0 Hz
@@ -218,7 +219,7 @@ The output:
     ------------------------------------------------
 
     INFO:phys2bids.physio_obj:Counting trigger points
-    INFO:phys2bids.physio_obj:The number of timepoints according to the std_thr method is 157. The computed threshold is 1.1506977594943586
+    INFO:phys2bids.physio_obj:The number of timepoints according to the std_thr method is 157. The computed threshold is 1.1506959325294588
     INFO:phys2bids.physio_obj:Checking number of timepoints
     WARNING:phys2bids.physio_obj:Found 1 timepoints less than expected!
     WARNING:phys2bids.physio_obj:Correcting time offset, assuming missing timepoints are at the beginning (try again with a more conservative thr)
@@ -232,11 +233,11 @@ The output:
     Timepoints expected: 158
     Timepoints found:    157
     Sampling Frequency:  1000.0 Hz
-    Sampling started at: 0.2459999999998672 s
+    Sampling started at: -0.9539999999999509 s
     Tip: Time 0 is the time of first trigger
     ------------------------------------------------
 
-There is one trigger that ``phys2bids`` couldn't find automatically. We can work out that this is the first trigger, if we look at the png file that has been outputted:
+There is one trigger that ``phys2bids`` couldn't find automatically. We can work out that this is a trigger in the middle of the file, if we look at the png file that has been outputted:
 
 .. image:: _static/tutorial_file_v2_trigger_time_Tmissing.png
    :alt: tutorial_file_channels
