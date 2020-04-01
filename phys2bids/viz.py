@@ -14,8 +14,11 @@ FIGSIZE = (18, 10)
 def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
                  filename, figsize=FIGSIZE, dpi=SET_DPI):
     """
-    Produces a textfile of the specified extension `ext`,
-    containing the given content `text`.
+    Produces a figure with three plots:
+    1. Plots the trigger in blue, a block in orange that indicates the start and end of the time,
+    red line for the threshold used for trigger detection
+    2. Same plot but this showing only the intial trigger
+    3. Same plot but this showing only the intial trigger
 
     Parameters
     ----------
@@ -123,19 +126,19 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     plt.close()
 
 
-def plot_all(phys_in, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
-    ch_num = len(phys_in.ch_name)  # get number of channels:
+def plot_all(ch_name, timeseries, units, freq, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
+    ch_num = len(ch_name)  # get number of channels:
     fig, ax = plt.subplots(ch_num - 1, 1, figsize=size, sharex=True)
-    time = phys_in.timeseries[0]  # assume time is first channel
+    time = timeseries[0]  # assume time is first channel
     fig.suptitle(os.path.basename(infile))
-    for row, timeser in enumerate(phys_in.timeseries[1:]):
+    for row, timeser in enumerate(timeseries[1:]):
         if timeser.shape != time.shape:
             time_old = np.linspace(0, time[-1], num=timeser.shape[0])
             timeser = np.interp(time, time_old, timeser)
         ax[row].plot(time, timeser)
-        ax[row].set_title(f' Channel {row + 1}: {phys_in.ch_name[row + 1]}')
-        ax[row].set_ylabel(phys_in.units[row + 1])
-        ax[row].xlim = 30 * 60 * phys_in.freq[0]  # maximum display of half an hour
+        ax[row].set_title(f' Channel {row + 1}: {ch_name[row + 1]}')
+        ax[row].set_ylabel(units[row + 1])
+        ax[row].xlim = 30 * 60 * freq[0]  # maximum display of half an hour
         ax[row].grid()
     ax[row].set_xlabel("seconds")
     if outfile == '':
