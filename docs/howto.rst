@@ -250,7 +250,7 @@ By looking at this figure, we can work out that we need a smaller threshold in o
     phys2bids -in tutorial_file_v2.txt -indir /home/arthurdent/git/phys2bids/phys2bids/tests/data/ -chtrig 1 -ntp 158 -tr 1.2 -thr 1.04 -outdir /home/arthurdent/physio_v2
 
     INFO:phys2bids.physio_obj:Counting trigger points
-    INFO:phys2bids.physio_obj:The number of timepoints according to the std_thr method is 158. The computed threshold is 1.04
+    INFO:phys2bids.physio_obj:The number of timepoints found with the manual threshold of 1.04 is 158.
     INFO:phys2bids.physio_obj:Checking number of timepoints
     INFO:phys2bids.physio_obj:Found just the right amount of timepoints!
     INFO:phys2bids.phys2bids:Plot trigger
