@@ -280,7 +280,7 @@ class BlueprintInput():
             LGR.info(f'The number of timepoints according to the std_thr method '
                      f'is {num_timepoints_found}. The computed threshold is {thr}')
         else:
-            LGR.info(f'The number of timepoints according to the user threshold is '
+            LGR.info(f'The number of timepoints found with the manual threshold of {thr} '
                      f'is {num_timepoints_found}')
         time_offset = self.timeseries[0][timepoints.argmax()]
 
