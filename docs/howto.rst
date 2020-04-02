@@ -199,6 +199,11 @@ If for some reason ``-ntp`` and the number of timepoints found by ``phys2bids`` 
 
 1. You didn't properly count the number of timepoints. Check this again; you can use the trigger png file to help you.
 2. The automatic threshold is not working. This may happen if the MRI trigger pulses vary in amplitude, and some are lower than the automatic threshold found. Don't Panic. We have a solution for that - you can use the ``-thr`` option to manually input a different threshold. Change the ``-thr`` until the number of  timepoints founds are the same as the expected timepoints (``-ntp``).
+3. The file doesn't have all the trigger pulses you expect because the recording started later than the MRI recording (e.g. by mistake).
+
+.. note::
+    ``phys2bids`` was created to deal with little sampling errors - such as distracted researchers that started sampling a bit too late than expected. For this reason, if it finds less trigger pulses than the amount specified, it will assume that the missing ones are at the beginning and anticipate the starting time consequently. 
+    
 
 Let's go through an example where the number of timepoints automatically found is not correct. For that, will we use tutorial_file_v2.txt (in the same location as tutorial_file.txt):
 
