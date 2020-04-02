@@ -275,8 +275,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
                          plot_path, tr, phys_in.thr, num_timepoints_expected, filename)
     else:
-        LGR.info('Not plotting trigger. If you want the trigger to be'
-                 ' plotted enter -tr or -ntp, preferably both.')
+        LGR.warning('Skipping trigger pulse count. If you want to run it, '
+                    'call phys2bids using "-ntp" and "-tr" arguments')
 
     # The next few lines remove the undesired channels from phys_in.
     if chsel:
