@@ -152,8 +152,8 @@ If you're just transforming files into ``tsv.gz``, **you can ignore this**. If y
 
 First, we need to ensure ``phys2bids`` knows where our trigger channel is, and for this we can use the argument ``-chtrig``. ``-chtrig`` has a default of 1.
 For the text file used in this example, the trigger information is the second column of the raw file; the first recorded channel. Remember, ``phys2bids`` treats time as a hidden channel, always in position 0.
-
-Look back at the last command line output, from the section above. It said "Not plotting trigger. If you want the trigger to be plotted enter -tr or -ntp, preferably both". Also, it told us 0 timepoints were expected and none were found. So, we need to give ``phys2bids`` some more information for it to correctly read the trigger information in the data. In this tutorial file, there are 158 time points (triggers) and the TR is 1.2 seconds. Using these arguments, we can call ``phys2bids`` again:
+the trigger to be plotted enter -tr and -ntp". Also, it told us 0 timepoints were expected and none were found. So, we need to give ``phys2bids`` some more information for it to correctly read the trigger information in the data. In this tutorial file, there are 158 time points (triggers) and the TR is 1.2 seconds. Using these arguments, we can call ``phys2bids`` ag
+Look back at the last command line output, from the section above. It said "Not plotting trigger. If you want ain:
 
 .. code-block:: shell
 
