@@ -117,7 +117,7 @@ This is outputted to the terminal:
     04. Pulse; sampled at 1000.0 Hz
     ------------------------------------------------
 
-    INFO:phys2bids.phys2bids:Not plotting trigger. If you want the trigger to be plotted enter -tr or -ntp, preferably both.
+    INFO:phys2bids.phys2bids:Not plotting trigger. If you want the trigger to be plotted enter -tr and -ntp
     INFO:phys2bids.phys2bids:Preparing 1 output files.
     INFO:phys2bids.phys2bids:Exporting files for freq 1000.0
     INFO:phys2bids.phys2bids:
