@@ -20,6 +20,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     the threshold used for trigger detection
     2. Same plot but showing only the intial trigger
     3. Same plot but showing only the intial trigger
+
     Parameters
     ----------
     time: numpy ndarray
@@ -37,11 +38,11 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
         Number of timepoints expected by the user
     filename: string
         name of the original file
-    figsize: tuple or list of int
-        Size of the figure X*Y
+    figsize: tuple or list of floats
+        Size of the figure expressed as (size_x, size_y),
         Default is {FIGSIZE}
     dpi: int
-        Desired DPI of the figure (see `matplotlib`),
+        Desired DPI of the figure,
         Default is {SET_DPI}
 
     Notes
@@ -49,10 +50,11 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     Outcome:
     fileprefix + _trigger_time.png:
         Creates new plot `fileprefix_trigger_time.png`.
+
     See Also
     --------
     https://phys2bids.readthedocs.io/en/latest/howto.html
-    https://matplotlib.org/
+    matplotlib.pyploy.figsize
     """
 
     def time2ntr(x):
@@ -128,6 +130,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
 def plot_all(ch_name, timeseries, units, freq, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
     """
     Plots all the channels for visualizations and saves them in outfile
+
     Parameters
     ----------
     ch_name: (ch) list of strings
@@ -147,18 +150,19 @@ def plot_all(ch_name, timeseries, units, freq, infile, outfile='', dpi=SET_DPI, 
     outfile: string
         path of the output plot
     dpi: int
-        Desired DPI of the figure (see `matplotlib`),
+        Desired DPI of the figure,
         Default is {SET_DPI}
-    figsize: integer tuple or list
-        Size of the figure X*Y
+    figsize: tuple or list of floats
+        Size of the figure expressed as (size_x, size_y),
         Default is {FIGSIZE}
     -----
-    outfile:
-        Creates new plot `fileprefix_trigger_time.png`.
+    outcome:
+        Creates new plot with path specified in outfile.
+
     See Also
     --------
     https://phys2bids.readthedocs.io/en/latest/howto.html
-    https://matplotlib.org/
+    matplotlib.pyploy.figsize
     """
     ch_num = len(ch_name)  # get number of channels:
     fig, ax = plt.subplots(ch_num - 1, 1, figsize=size, sharex=True)
