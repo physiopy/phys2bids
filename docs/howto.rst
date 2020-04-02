@@ -117,7 +117,7 @@ This is outputted to the terminal:
     04. Pulse; sampled at 1000.0 Hz
     ------------------------------------------------
 
-    INFO:phys2bids.phys2bids:Not plotting trigger. If you want the trigger to be plotted enter -tr and -ntp
+    WARNING:phys2bids.phys2bids:Skipping trigger pulse count. If you want to run it, call phys2bids using "-ntp" and "-tr" arguments
     INFO:phys2bids.phys2bids:Preparing 1 output files.
     INFO:phys2bids.phys2bids:Exporting files for freq 1000.0
     INFO:phys2bids.phys2bids:
@@ -152,8 +152,7 @@ If you're just transforming files into ``tsv.gz``, **you can ignore this**. If y
 
 First, we need to ensure ``phys2bids`` knows where our trigger channel is, and for this we can use the argument ``-chtrig``. ``-chtrig`` has a default of 1.
 For the text file used in this example, the trigger information is the second column of the raw file; the first recorded channel. Remember, ``phys2bids`` treats time as a hidden channel, always in position 0.
-the trigger to be plotted enter -tr and -ntp". Also, it told us 0 timepoints were expected and none were found. So, we need to give ``phys2bids`` some more information for it to correctly read the trigger information in the data. In this tutorial file, there are 158 time points (triggers) and the TR is 1.2 seconds. Using these arguments, we can call ``phys2bids`` ag
-Look back at the last command line output, from the section above. It said "Not plotting trigger. If you want ain:
+Look back at the last command line output, from the section above. It said "Skipping trigger pulse count. If you want to run it, call phys2bids using "-ntp" and "-tr" arguments". Also, it told us 0 timepoints were expected and none were found. So, we need to give ``phys2bids`` some more information for it to correctly read the trigger information in the data. In this tutorial file, there are 158 time points (triggers) and the TR is 1.2 seconds. Using these arguments, we can call ``phys2bids`` again:
 
 .. code-block:: shell
 
@@ -315,8 +314,10 @@ You will also see a folder for the specified subject, that (optionally) contains
                     - sub-006_ses-01_task-test_rec-labchart_run-00_physio.tsv.gz
                     - sub-006_ses-01_task-test_rec-labchart_run-00_physio.log
 
-**Note**: The main idea is that ``phys2bids`` should be called through a loop that can process all the files of your dataset. It's still a bit cranky, but we're looking to implement *smarter* solutions.
+.. note::
+    The main idea is that ``phys2bids`` should be called through a loop that can process all the files of your dataset. It's still a bit cranky, but we're looking to implement *smarter* solutions.
 
-**Important**: Do not edit the heuristic file under where it says 'Don't modify below this!'.
+.. warning::
+    Do not edit the heuristic file under where it says 'Don't modify below this!'.
 
 One last thing left to do: take these files, remove the logs, and share them in public platforms!
