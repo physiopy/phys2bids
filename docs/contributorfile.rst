@@ -18,6 +18,7 @@ Already know what you're looking for in this guide? Jump to the following sectio
    - `Contributing with test files <#testfile>`_
    - `Contributing documentation through GitHub <#documenting>`_
    - `Contributing code through GitHub <#code>`_
+   - `Contributing with Pull Requests Review <#reviews>`_
 - `Issues and Milestones <#issuesmilestones>`_
 - `Labels <#labeltypes>`_
    - `Issues labels <#issuelabel>`_
@@ -28,6 +29,7 @@ Already know what you're looking for in this guide? Jump to the following sectio
 - `Pull Requests <#pr>`_
 - `Style Guide <#styling>`_
 - `Automatic Testing <#testing>`_
+- `Reviewing PRs <#reviewing>`_
 - `Recognizing contributors <#recognising>`_
 
 .. _aims:
@@ -103,6 +105,14 @@ The best way to make this kind of contributions, in a nutshell, would be:
 4. Wait for a review, discuss it or comply, repeat until ready.
 Issues and PR chats are great to maintain track of the conversation on the contribution. They are based upon GitHub-flavoured `Markdown <https://daringfireball.net/projects/markdown>`_. GitHub has a helpful page on `getting started with writing and formatting Markdown on GitHub <https://help.github.com/articles/getting-started-with-writing-and-formatting-on-github>`_.
 
+.. _reviews:
+
+Contributing with Pull Requests Reviews
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+One big challenge in this kind of software development is merging code accurately but without waiting too much time.
+For this reason, Reviewers for PRs are more than welcome! It is a task that requires quite some experience, but it's very necessary!
+Read the `related section below <#reviewing>`_ to start!
+
 .. _issuesmilestones:
 
 Issues and Milestones
@@ -172,11 +182,25 @@ At physiopy, we follow a very similar workflow. The only two differences are:
 
 Pull Requests
 -------------
-To improve understanding pull requests "at a glance", we use the same labels used for issues. Multiple labels can be assigned - just think which ones suit your PR the most! 
+To improve understanding pull requests "at a glance", we use the labels listed above. Multiple labels can be assigned, but it's a good idea to keep different types of contributions separated, unless they are minimal - for instance, you might want to open a PR for code, one for documentation and one for testing.
+In general, if you're tempted to assign more than one label that would trigger a release, you might want to split your PR instead.
 When opening a pull request, assign it to at least one label.
 
 We encourage you to open a PR as soon as possible - even before you finish working on them. This is useful especially to you - so that you can receive comments and suggestions early on, rather than having to process a lot of comments in the final review step! 
 However, if it’s an incomplete PR, please open a **Draft PR**. That helps us process PRs by knowing which one to have a look first - and how picky to be when doing so.
+
+Reviewing PRs is a time consuming task, that can be stressful for both the reviewer and the author. Avoiding wasting time and the need of little fixes - such as fixing grammar mistakes and typos, styling code, or adopting conventions - is a good start for a successful (and quick) review. Before graduating a Draft PR to a PR ready for review, please check that:
+
+- You did all you wanted to include in your PR. If at a later stage you realise something is missing and it's not minor things, you will need to open a new PR
+- Your code is harmonious with the rest of the code - no repetitions of any sort!
+- Your code respects the `adopted Style <#styling>`_, especially:
+    - your code is lintered adequately and respects the `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ convention
+    - your docstrings follow the `numpydoc <https://numpydoc.readthedocs.io/en/latest/format.html>`_ convention
+    - there is no grammar mistake or typo and the text is fluid
+    - the code is sufficiently commented and the comments are clear
+    - your PR title is clear enough to be meaningful when appended to the version changelog
+- You have the correct labels
+
 To be merged, PRs have to:
 
 1. Pass all the Travis CI tests.
@@ -185,6 +209,8 @@ To be merged, PRs have to:
 
 As we’re trying to maintain at least a 90% code coverance, you’re strongly encouraged to write all the necessary tests not to drop below the threshold. If our coverance becomes too low, you might be asked to add more tests and/or your PR might be rejected.
 
+Remember that the project manager doesn't have to be a reviewer of your PR! 
+
 .. _styling:
 
 Style Guide
@@ -192,6 +218,7 @@ Style Guide
 Docstrings should follow `numpydoc <https://numpydoc.readthedocs.io/en/latest/format.html>`_ convention. We encourage extensive documentation.
 The python code itself should follow `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ convention whenever possible: there are continuous integration tests checking that!
 You can use linters to help you write your code following style conventions. Linters are add-ons that you can run on the written script file. We suggest the use of **flake8** for Python 3. Many editors (Atoms, VScode, Sublimetext, ...) support addons for online lintering, which means you’ll see warnings and errors while you write the code - check out if your does!
+Since we adopt `auto <https://intuit.github.io/auto/home.html>`_, the PR title will be automatically reported as part of the changelog when updating versions. Try to describe in one (short) sentence what your PR is about - possibly using the imperative and starting with a capital letter. For instance, a good PR title could be: ``Implement support for <randomtype> files`` or ``Reorder dictionary entries``, rather than ``<randomtype> support`` or ``reorders keys``.
 
 .. _testing:
 
@@ -211,6 +238,29 @@ The four main type of tests we use are:
     Integration tests check that the code has an expected output, being blind to its content. This means that if the program should output a new file, the file exists - even if it’s empty. This type of tests are normally run on real data and call the program itself. For instance, documentation PRs should check that the documentation page is produced!
 4. Functional tests
     If integration tests and unit tests could have babies, those would be functional tests. In practice, this kind of tests check that an output is produced, and *also* that it contains what it should contain. If a function should output a new file or an object, this test passes only if the file exists *and* it is like we expect it to be. They are run on real or mock data, and call the program itself or a function.
+
+.. _reviewing:
+
+Reviewing PRs
+-------------
+Reviewing PRs is an extremely important task in collaborative development. In fact, it is probably the task that requires the most time in the development, and it can be stressful for both the reviewer and the author. Remember that, as a PR Reviewer, you are granting that the codes works and integrates well with the rest of the repository, hence **you are responsible for the quality of the code and its next version release**. If it doesn't, later PR reviewers might have to ask for broader changes than expected.
+Due to its importance, there are some good rules of thumbs that we need to follow while reviewing PRs:
+
+- Be respectful to the PR authors - remember that, like you, they are contributing their spare time and doing their best job!
+- If there is a Draft PR, you can comment its development in the message board or making "Comment" reviews. Don't ask for changes, and especially, **don't approve the PR**
+- If the PR graduated from Draft to full PR, check that it follows the sections `Pull requests <#pr>`_ and `Style Guide <#styling>`_ of these guidelines. If not, invite the author to do so before starting a review.
+- Be clear in what you're asking or suggesting.
+- **Don't limit your review to the parts that are changed**. Look at the entire file, see if the changes fit well in it, and see if the changes are properly addressed everywhere in the code - in the documentation, in the tests, and in other functions. Sometimes the differences reported don't show enough surroundings!
+- Unless it's for typo fixes or similar, invite the author of the PR to make changes before actually doing them yourself.
+- If you're asking for changes, **don't approve the PR**. Approve it only after everything was sufficiently addressed. Someone else might merge the PR in taking your word for granted.
+- If you're the last reviewer required to approve the PR and there is no review taking place, merge it!
+
+Before approving and/or merging PRs, be sure that:
+
+- the title describes the content of the PR clearly enough to be meaningful on its own - remember that it will appear in the version changelog!
+- the PR has the appropriate labels to trigger the appropriate version release and update the contributors table.
+
+Remember that the project manager doesn't have to be a reviewer of the PR.
 
 .. _recognising:
 
