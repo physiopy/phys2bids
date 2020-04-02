@@ -194,7 +194,8 @@ Notice that an extra file has been generated, called "tutorial_file_trigger_time
 In the first row of this plot, the whole trigger channel is plotted in blue. The orange block shows where the time starts and ends (i.e. the start and end of your fMRI recording).
 In the second row, we see the first and last trigger (or expected first and last). The red dotted line represents the trigger detection threshold.
 
-**Note**: If you have another file that was collected in an identical way, the threshold is likely to be same. However, it is *very* important to calibrate the threshold in a couple of files before assuming this. This still *won't* necessarily mean that it's the right threshold for all the files, but there's a chance that it's ok(ish) for most of them.
+.. warning::
+    If you have another file that was collected in an identical way, the threshold is likely to be same. However, it is *very* important to calibrate the threshold in a couple of files before assuming this. This still *won't* necessarily mean that it's the right threshold for all the files, but there's a chance that it's ok(ish) for most of them.
 If for some reason ``-ntp`` and the number of timepoints found by ``phys2bids`` is not the same there are two possible reasons:
 
 1. You didn't properly count the number of timepoints. Check this again; you can use the trigger png file to help you.
