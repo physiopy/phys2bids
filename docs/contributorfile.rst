@@ -257,6 +257,8 @@ Due to its importance, there are some good rules of thumbs that we need to follo
 
 Before approving and/or merging PRs, be sure that:
 
+- all the tests in Travis CI pass without errors
+- prefereably, codecov checks pass as well - if they don't, pin the project manager. 
 - the title describes the content of the PR clearly enough to be meaningful on its own - remember that it will appear in the version changelog!
 - the PR has the appropriate labels to trigger the appropriate version release and update the contributors table.
 
