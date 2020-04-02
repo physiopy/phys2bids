@@ -35,17 +35,19 @@ The most common types of physiological data acquired in fMRI analysis are cardia
 What equipment is needed?
 ---------------------------------------------------
 Peripheral devices:
-* finger photoplethysmograph (pulse-oximeter)
-* respiratory belt
-* disposable nasal cannula (or face mask)
-* long sample line to connect from the scan room to the control room
+
+- finger photoplethysmograph (pulse-oximeter)
+- respiratory belt
+- disposable nasal cannula (or face mask)
+- long sample line to connect from the scan room to the control room
 
 Some peripheral devices can be passed through a void in the penetration panel from the control room to the scan room (e.g., gas sampling line); others must be plugged into the penetration panel for noise filtering (e.g., some pulse sensors). Devices native to the MRI scanner may communicate wirelessly with the scanner. When adding non-native peripheral devices to the scanner environment, we recommend that you check that you are not bringing any outside noise into the scan room or bringing too much scanner noise into the physiological recordings. It may be necessary to develop additional devices or mechanisms to shield these connections.
 
 Recording devices:
-* CO2 and O2 analyzer
-* analog-to-digital converter (ADC) or other data acquisition (DAQ) device
-* associated signal recording/analysis software
+
+- CO2 and O2 analyzer
+- analog-to-digital converter (ADC) or other data acquisition (DAQ) device
+- associated signal recording/analysis software
 
 For example, ADInstruments sells the Powerlab and uses LabChart software; Biopac sells the MP160 and uses AcqKnowledge software.
 It is also important to sync the physiological recordings with the fMRI scan triggers. To do this, it will be necessary to extract the trigger pulses from your MRI scanner, typically inputting these analog signals via BNC into the same ADC recording all of the physiological information.
