@@ -64,18 +64,33 @@ After this restructuring of the data, there are numerous tools available to proc
 References
 --------------------------------
 Bengtsson, J., Bake, B., Johansson, A., & Bengtson, J. P. (2001). End-tidal to arterial oxygen tension difference as an oxygenation index. Acta Anaesthesiologica Scandinavica, 45(3), 357–363. https://doi.org/10.1034/j.1399-6576.2001.045003357.x
+
 Birn, R. M., Diamond, J. B., Smith, M. A., & Bandettini, P. A. (2006). Separating respiratory-variation-related fluctuations from neuronal-activity-related fluctuations in fMRI. NeuroImage, 31(4), 1536–1548. https://doi.org/10.1016/j.neuroimage.2006.02.048
+
 Birn, R. M., Smith, M. A., Jones, T. B., & Bandettini, P. A. (2008). The respiration response function: The temporal dynamics of fMRI signal fluctuations related to changes in respiration. NeuroImage, 40(2), 644–654. https://doi.org/10.1016/j.neuroimage.2007.11.059
+
 Brosch, J. R., Talavage, T. M., Ulmer, J. L., & Nyenhuis, J. A. (2002). Simulation of human respiration in fMRI with a mechanical model. IEEE Transactions on Biomedical Engineering, 49(7), 700–707. https://doi.org/10.1109/TBME.2002.1010854
+
 Bulte, D. P., Chiarelli, P. A., Wise, R. G., & Jezzard, P. (2007). Cerebral perfusion response to hyperoxia. Journal of Cerebral Blood Flow and Metabolism : Official Journal of the International Society of Cerebral Blood Flow and Metabolism, 27(1), 69–75. https://doi.org/10.1038/sj.jcbfm.9600319
+
 Bulte, D., & Wartolowska, K. (2017). Monitoring cardiac and respiratory physiology during FMRI. NeuroImage, 154, 81–91. https://doi.org/10.1016/j.neuroimage.2016.12.001
+
 Caballero-Gaudes, C., & Reynolds, R. C. (2017). Methods for cleaning the BOLD fMRI signal. NeuroImage, 154(December 2016), 128–149. https://doi.org/10.1016/j.neuroimage.2016.12.018
+
 Chang, C., Cunningham, J. P., & Glover, G. H. (2009). Influence of heart rate on the BOLD signal: The cardiac response function. NeuroImage, 44(3), 857–869. https://doi.org/10.1016/j.neuroimage.2008.09.029
+
 Chang, C., & Glover, G. H. (2009). Relationship between respiration, end-tidal CO2, and BOLD signals in resting-state fMRI. NeuroImage, 47(4), 1381–1393. https://doi.org/10.1016/j.neuroimage.2009.04.048
+
 Dagli, M. S., Ingeholm, J. E., & Haxby, J. V. (1999). Localization of cardiac-induced signal change in fMRI. NeuroImage, 9(4), 407–415. https://doi.org/10.1006/nimg.1998.0424
+
 Floyd, T. F., Clark, J. M., Gelfand, R., Detre, J. A., Ratcliffe, S., Guvakov, D., … Eckenhoff, R. G. (2003). Independent cerebral vasoconstrictive effects of hyperoxia and accompanying arterial hypocapnia at 1 ATA. Journal of Applied Physiology, 95(6), 2453–2461. https://doi.org/10.1152/japplphysiol.00303.2003
+
 Glover, G. H., Li, T., & Ress, D. (2000). Image‐based method for retrospective correction of physiological motion effects in fMRI: RETROICOR. Magnetic Resonance in Medicine, 44(1), 162–167. https://doi.org/10.1002/1522-2594(200007)44:1<162::AID-MRM23>3.0.CO;2-E
+
 McSwain, S. D., Hamel, D. S., Smith, P. B., Gentile, M. A., Srinivasan, S., Meliones, J. N., & Cheifetz, I. M. (2010). End-tidal and arterial carbon dioxide measurements correlate across all levels of physiologic dead space. Respiratory Care, 55(3), 288–293.
+
 Raj, D., Anderson, A. W., & Gore, J. C. (2001). Respiratory effects in human functional magnetic resonance imaging due to bulk susceptibility changes. Phys. Med. Biol, 46, 3340.
+
 Shmueli, K., van Gelderen, P., de Zwart, J. A., Horovitz, S. G., Fukunaga, M., Jansma, J. M., & Duyn, J. H. (2007). Low-frequency fluctuations in the cardiac rate as a source of variance in the resting-state fMRI BOLD signal. NeuroImage, 38(2), 306–320. https://doi.org/10.1016/j.neuroimage.2007.07.037
+
 Wise, R. G., Ide, K., Poulin, M. J., & Tracey, I. (2004). Resting fluctuations in arterial carbon dioxide induce significant low frequency variations in BOLD signal. NeuroImage, 21(4), 1652–1664. https://doi.org/10.1016/j.neuroimage.2003.11.025
