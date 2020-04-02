@@ -28,8 +28,8 @@ Please scroll to bottom to read full license.
 """
 
 import os
-import logging
 import datetime
+import logging
 
 from copy import deepcopy
 from numpy import savetxt

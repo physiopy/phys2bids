@@ -1,7 +1,6 @@
 import os
-from urllib.request import urlretrieve
-
 import pytest
+from urllib.request import urlretrieve
 
 
 def fetch_file(osf_id, path, filename):

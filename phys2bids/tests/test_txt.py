@@ -1,6 +1,6 @@
 import math
-
 import pytest
+
 from pytest import raises
 
 from phys2bids.interfaces import txt

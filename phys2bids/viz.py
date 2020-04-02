@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 import logging
-
 import matplotlib.pyplot as plt
 import numpy as np
 

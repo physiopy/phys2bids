@@ -6,12 +6,13 @@ phys2bids interface for txt files.
 """
 
 import logging
-
 import numpy as np
 
-from phys2bids.physio_obj import BlueprintInput
-from operator import itemgetter
 from collections import Counter
+from operator import itemgetter
+
+from phys2bids.physio_obj import BlueprintInput
+
 
 LGR = logging.getLogger(__name__)
 

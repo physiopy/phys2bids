@@ -2,12 +2,13 @@ import glob
 import json
 import math
 import os
-from pkg_resources import resource_filename
 import re
 import subprocess
 
-from phys2bids.phys2bids import phys2bids
+from pkg_resources import resource_filename
+
 from phys2bids._version import get_versions
+from phys2bids.phys2bids import phys2bids
 
 
 def check_string(str_container, str_to_find, str_expected, is_num=True):
