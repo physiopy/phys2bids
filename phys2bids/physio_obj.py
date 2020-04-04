@@ -6,10 +6,9 @@ I/O objects for phys2bids.
 """
 
 import logging
-import numpy as np
-
 from itertools import groupby
 
+import numpy as np
 
 LGR = logging.getLogger(__name__)
 

@@ -4,7 +4,6 @@ import json
 import logging
 import os
 import sys
-
 from pathlib import Path
 
 LGR = logging.getLogger(__name__)
