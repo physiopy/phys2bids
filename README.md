@@ -36,6 +36,13 @@ Shortcuts:
 - [**Contributor guide**](https://phys2bids.readthedocs.io/en/latest/contributorfile.html)
 - [**Code of Conduct**](https://phys2bids.readthedocs.io/en/latest/conduct.html)
 
+## The BrainWeb
+BrainWeb participants, welcome!
+We have a milestone [here](https://github.com/physiopy/phys2bids/milestone/5) as a collection of issues you could work on with our help. 
+Check the issues with a `BrainWeb` label. Of course, they are only suggestions, so feel free to tackle any issue you want, even open new ones!
+You can also contact us on Gitter, in the BrainHack Mattermost (#physiopy), and don't hesitate to contact [Stefano](https://github.com/smoia) in other ways to jump in the development!
+
+
 **The project is currently under development**.
 Any suggestion/bug report is welcome! Feel free to open an issue.
 
