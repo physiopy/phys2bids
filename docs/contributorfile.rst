@@ -192,6 +192,8 @@ However, if it’s an incomplete PR, please open a **Draft PR**. That helps us p
 Reviewing PRs is a time consuming task, that can be stressful for both the reviewer and the author. Avoiding wasting time and the need of little fixes - such as fixing grammar mistakes and typos, styling code, or adopting conventions - is a good start for a successful (and quick) review. Before graduating a Draft PR to a PR ready for review, please check that:
 
 - You did all you wanted to include in your PR. If at a later stage you realise something is missing and it's not minor things, you will need to open a new PR
+- If your contribution contains code or tests, you run and passed all the tests locally with `pytest`
+- If you're writing documentation, you built it locally with `sphinx` and the format is what you intended
 - Your code is harmonious with the rest of the code - no repetitions of any sort!
 - Your code respects the `adopted Style <#styling>`_, especially:
     - your code is lintered adequately and respects the `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ convention
@@ -203,8 +205,10 @@ Reviewing PRs is a time consuming task, that can be stressful for both the revie
 
 To be merged, PRs have to:
 
-1. Pass all the Travis CI tests.
+1. Pass all the Travis CI tests, and possibly all the codecov checks.
 2. Have the necessary amount of approving reviews, even if you’re a long time contributor. You can ask one (or more) contributor to do that review, if you think they align more with the content of your PR. You need **one** review for documentation, tests, and small changes, and **two** reviews for bugs, refactoring and enhancements.
+3. Have at least a release-related label (or a `Skip release` label)
+4. Have a short title that clearly explains in one sentence the aim of the PR.
 3. Contain at least a unit test for your contribution, if the PR contains code (it would be better if it contains an integration or function test and all the breaking tests necessary). If you’re not confident about writing tests, it is possible to refer to an issue that asks for the test to be written, or another (Draft) PR that contains the tests required.
 
 As we’re trying to maintain at least a 90% code coverance, you’re strongly encouraged to write all the necessary tests not to drop below the threshold. If our coverance becomes too low, you might be asked to add more tests and/or your PR might be rejected.
@@ -243,14 +247,15 @@ The four main type of tests we use are:
 
 Reviewing PRs
 -------------
-Reviewing PRs is an extremely important task in collaborative development. In fact, it is probably the task that requires the most time in the development, and it can be stressful for both the reviewer and the author. Remember that, as a PR Reviewer, you are granting that the codes works and integrates well with the rest of the repository, hence **you are responsible for the quality of the code and its next version release**. If it doesn't, later PR reviewers might have to ask for broader changes than expected.
+Reviewing PRs is an extremely important task in collaborative development. In fact, it is probably the task that requires the most time in the development, and it can be stressful for both the reviewer and the author. Remember that, as a PR Reviewer, you are granting that the codes works and integrates well with the rest of the repository, hence **you are responsible for the quality of the code and its next version release**. If it doesn't integrate well, later PR reviewers might have to ask for broader changes than expected.
 Due to its importance, there are some good rules of thumbs that we need to follow while reviewing PRs:
 
 - Be respectful to the PR authors - remember that, like you, they are contributing their spare time and doing their best job!
 - If there is a Draft PR, you can comment its development in the message board or making "Comment" reviews. Don't ask for changes, and especially, **don't approve the PR**
 - If the PR graduated from Draft to full PR, check that it follows the sections `Pull requests <#pr>`_ and `Style Guide <#styling>`_ of these guidelines. If not, invite the author to do so before starting a review.
 - Be clear in what you're asking or suggesting.
-- **Don't limit your review to the parts that are changed**. Look at the entire file, see if the changes fit well in it, and see if the changes are properly addressed everywhere in the code - in the documentation, in the tests, and in other functions. Sometimes the differences reported don't show enough surroundings!
+- **Don't limit your review to the parts that are changed**. Look at the entire file, see if the changes fit well in it, and see if the changes are properly addressed everywhere in the code - in the documentation, in the tests, and in other functions. Sometimes the differences reported don't show the full impact of the PR in the repository!
+- If you're reviewing documentation, build it locally with `sphinx`.
 - Unless it's for typo fixes or similar, invite the author of the PR to make changes before actually doing them yourself.
 - If you're asking for changes, **don't approve the PR**. Approve it only after everything was sufficiently addressed. Someone else might merge the PR in taking your word for granted.
 - If you're the last reviewer required to approve the PR and there is no review taking place, merge it!
