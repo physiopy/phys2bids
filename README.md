@@ -1,3 +1,4 @@
+<!--(https://github.com/physiopy/phys2bids/blob/master/docs/_static/phys2bids_card.jpg)-->
 <a name="readme"></a>
 <img alt="Phys2BIDS" src="https://github.com/physiopy/phys2bids/blob/master/docs/_static/phys2bids_logo1280×640.png" height="150">
 
@@ -40,7 +41,7 @@ Shortcuts:
 BrainWeb participants, welcome!
 We have a milestone [here](https://github.com/physiopy/phys2bids/milestone/5) as a collection of issues you could work on with our help. 
 Check the issues with a `BrainWeb` label. Of course, they are only suggestions, so feel free to tackle any issue you want, even open new ones!
-You can also contact us on Gitter, in the BrainHack Mattermost (#physiopy), and don't hesitate to contact [Stefano](https://github.com/smoia) in other ways to jump in the development!
+You can also contact us on Gitter, in the BrainHack Mattermost (<a href="https://mattermost.brainhack.org/brainhack/channels/physiopy">#physiopy</a>), and don't hesitate to contact [Stefano](https://github.com/smoia) in other ways to jump in the development!
 
 
 **The project is currently under development**.
