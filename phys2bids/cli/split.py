@@ -31,6 +31,30 @@ def _get_parser():
                                'without extension.',
                           required=True)
 
+    optional.add_argument('-info', '--info',
+                          dest='info',
+                          action='store_true',
+                          help='Only output info about the file, don\'t process. '
+                               'Default is to process.',
+                          default=False)
+
+    optional.add_argument('-indir', '--input-dir',
+                          dest='indir',
+                          type=str,
+                          help='Folder containing input. '
+                               'Default is current folder.',
+                          default='.')
+
+    optional.add_argument('-outdir', '--output-dir',
+                          dest='outdir',
+                          type=str,
+                          help='Folder where output should be placed. '
+                               'Default is current folder. '
+                               'If \"-heur\" is used, it\'ll become '
+                               'the site folder. Requires \"-sub\". '
+                               'Optional to specify \"-ses\".',
+                          default='.')
+
     required.add_argument('-tr_ls', '--tr_list',
                           dest='tr_list',
                           type=list,
