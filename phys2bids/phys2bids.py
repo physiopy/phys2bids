@@ -44,7 +44,7 @@ LGR = logging.getLogger(__name__)
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
     """
-    Prints a summary onscreen and in file with informations on the files.
+    Print a summary onscreen and in file with informations on the files.
 
     Parameters
     ----------
