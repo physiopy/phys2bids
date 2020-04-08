@@ -13,7 +13,6 @@ import numpy as np
 
 from phys2bids.physio_obj import BlueprintInput
 
-
 LGR = logging.getLogger(__name__)
 
 
