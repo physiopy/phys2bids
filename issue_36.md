@@ -1,7 +1,7 @@
 # Segment recordings by runs
 
 #36
-Ideas for name : split4phys, obj2split, phys4bids, split4bids, rec2run, phys2runs, ses2run, 4run2split
+Ideas for name : split4phys, split4runs, obj2split,  split4bids, rec2run, phys2runs, ses2run, 4run2split
 
 **Ways to integrate PR**
 1. Another Repo : create a physiopy repo that is dedicated to splitting physiological recordings concurrent to neuroimaging ; least interesting option, aim is too specific.

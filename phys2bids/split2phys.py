@@ -95,22 +95,23 @@ def split2phys(filename, indir='.', outdir='.', ntp_list=[0], tr_list=[1], thr=N
     # Initialize dictionaries for which to define BlueprintInput
     run_Blueprint = {}
 
+    #
     for run_idx, run_tps in list_ntp:
         BlueprintInput.check_trigger_amount(ntp=run_tps, tr=list_tr[run_idx])
         start_index = 0
         # why are we playing with the object in time - wouldn't it be better to play in samples?
         end_index = {index of spike 0} + {run_tps*list_tr[run_idx]}
-        run_Blueprint[] = BlueprintInput.timeseries[0:end_index+padding, :]
+        run_Blueprint[run_idx] = BlueprintInput.timeseries[:end_index+padding, :]
+        padding =
 
         # if last value in the list "number of timepoints in run"
-        if i == len(list_ntp):
-            padding =
-            end_index+padding <= number of indexes
+        if run_idx == list_ntp.size[0]:
+            end_index + padding <= number of indexes
 
         # not sure how to define padding
         else:
-            padding = number of indexes-end_index
-            BlueprintInput = BlueprintInput.timeseries[end_index+padding; , :]
+            padding = number of indexes - end_index
+            BlueprintInput = BlueprintInput.timeseries[end_index + padding; , :]
 
     # make dict exportable
 
