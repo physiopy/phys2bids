@@ -4,7 +4,6 @@ import math
 import os
 import re
 import subprocess
-
 from pkg_resources import resource_filename
 
 from phys2bids._version import get_versions

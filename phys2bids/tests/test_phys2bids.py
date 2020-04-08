@@ -4,7 +4,6 @@ Tests phys2bids.py
 
 import json
 import os
-
 from pkg_resources import resource_filename
 
 from phys2bids import phys2bids
