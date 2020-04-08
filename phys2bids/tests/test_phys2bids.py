@@ -2,10 +2,11 @@
 Tests phys2bids.py
 """
 
-import os
 import json
-from phys2bids import phys2bids
+import os
 from pkg_resources import resource_filename
+
+from phys2bids import phys2bids
 
 
 def test_print_summary(tmpdir):

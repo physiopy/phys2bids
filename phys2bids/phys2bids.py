@@ -28,12 +28,12 @@ Please scroll to bottom to read full license.
 """
 
 import os
-import logging
 import datetime
-
+import logging
 from copy import deepcopy
-from numpy import savetxt
 from pathlib import Path
+
+from numpy import savetxt
 
 from phys2bids import utils, viz, _version
 from phys2bids.cli.run import _get_parser
