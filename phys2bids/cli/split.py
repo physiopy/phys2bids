@@ -68,7 +68,7 @@ def _get_parser():
                           help='A list containing the number of trigger time points in each run',
                           required=True)
 
-    optional.add_argument('-thr', '--threshold',
+    required.add_argument('-thr', '--threshold',
                           dest='thr',
                           type=float,
                           help='Threshold to use for trigger detection. '
