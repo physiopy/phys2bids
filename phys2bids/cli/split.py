@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Parser for split2phys
+Parser for split2phys.
+
+A parallel CLI script to segment multiple runs in physiological recording
 """
 
 import argparse
@@ -10,7 +12,8 @@ from phys2bids import __version__
 
 def _get_parser():
     """
-    Parses command line inputs for this function
+
+    Parse command line inputs for this function.
 
     Returns
     -------
@@ -58,7 +61,8 @@ def _get_parser():
     required.add_argument('-tr_ls', '--tr_list',
                           dest='tr_list',
                           type=list,
-                          help='A list containing the TR(s) of the sequences used in the different '
+                          help='A list containing the TR(s) of the sequences'
+                               ' used in the different '
                                'runs contained in the file',
                           required=True)
 

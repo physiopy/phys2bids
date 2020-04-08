@@ -1,6 +1,13 @@
 # Segment recordings by runs
 
 #36
+Ideas for name : split4phys, obj2split, phys4bids, split4bids, rec2run, phys2runs, ses2run, 4run2split
+
+**Ways to integrate PR**
+1. Another Repo : create a physiopy repo that is dedicated to splitting physiological recordings concurrent to neuroimaging ; least interesting option, aim is too specific.
+2. Integrate phys2bids in [name of fn]: workflow on its own that calls phys2bids at the end of script for each segments
+3. Independant utility : function gets called by phys2bids if list are detected as phys2bids arguments, no parser.
+4. Integrate [name of fn] in phys2bids: keep the parser, have parallel workflows for different outcomes - less easy to integrate but more convenient for users
 
 ## 1. Parser
 Create argument parser for new command ; based on `run.py`
@@ -39,4 +46,22 @@ Pad tr list so that it's equivalent to the number of runs contained in ntp_list
 BlueprintInput.check_trigger_amount(sum(list_ntp), tr=1)
 ```
 ### 2.2. Find start-end indexes for each run in list
-Initialize dictionaries from which to define start and end indexes of timeseries. Call phys2bids
+Initialize dictionaries from which to define start and end indexes of timeseries.
+
+```
+init dictionary for BlueprintInputs (dict)
+
+  for i, elem in list_ntp:
+    BlueprintInput.check_trigger_amount(ntp=elem, tr=list_tr[i])
+    start_index = 0
+    end_index = {index of spike 0} + {index of elem*list_tr[i]}
+    dict[‘0’] = BlueprintInput.timeseries[0:end_index+padding, :]
+    if i == len(list_ntp):
+        end_index+padding <= number of indexes
+        if it’s not:       padding= number of indexes-end_index
+     BlueprintInput = BlueprintInput.timeseries[end_index+padding; , :]
+
+make dict exportable
+```
+## 3. Call phys2bids
+Call phys2bids for each of them

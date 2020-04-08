@@ -32,9 +32,11 @@ def split2phys(filename, indir='.', outdir='.', ntp_list=[0], tr_list=[1], thr=N
     phys2bids to handle each dictionaries that have been created
     based on npt_list and tr_list
 
-    Arguments :
+    Arguments
+    ---------
 
-    Returns :
+    Returns
+    --------
         ...
     """
     outdir = utils.check_input_dir(outdir)
@@ -81,18 +83,40 @@ def split2phys(filename, indir='.', outdir='.', ntp_list=[0], tr_list=[1], thr=N
         # #!# We should add a logger here.
         raise NotImplementedError('Currently unsupported file type.')
 
-    # Check equivalence of list_ntp and list_tr
+    # Check equivalence of list_ntp and list_tr - NOT SURE TO GET THIS RIGHT
+    if len(tr_list) == 1:
+        tr_list = tr_list * ones(len(ntp_list))
 
-    if list_tr.size[0] == 1:
-        list_tr = list_tr * ones(list_ntp.size)
+    # Sum of values in ntp_list should be equivalent to num_timepoints_found
+    BlueprintInput.check_trigger_amount(thr=thr, num_timepoints_expected=sum(ntp_list), tr=tr_list)
 
-    # TODO : sum(ntp_list) is equivalent to num_timepoints_found
-    BlueprintInput.check_trigger_amount()
+    # TO DO : an error should be raised if aforementioned values are non-equivalent
 
-    # TODO : initialize dictionaries for which to call phys2bids()
+    # Initialize dictionaries for which to define BlueprintInput
+    run_Blueprint = {}
+
+    for run_idx, run_tps in list_ntp:
+        BlueprintInput.check_trigger_amount(ntp=run_tps, tr=list_tr[run_idx])
+        start_index = 0
+        # why are we playing with the object in time - wouldn't it be better to play in samples?
+        end_index = {index of spike 0} + {run_tps*list_tr[run_idx]}
+        run_Blueprint[] = BlueprintInput.timeseries[0:end_index+padding, :]
+
+        # if last value in the list "number of timepoints in run"
+        if i == len(list_ntp):
+            padding =
+            end_index+padding <= number of indexes
+
+        # not sure how to define padding
+        else:
+            padding = number of indexes-end_index
+            BlueprintInput = BlueprintInput.timeseries[end_index+padding; , :]
+
+    # make dict exportable
 
 
 def _main(argv=None):
+
     options = _get_parser().parse_args(argv)
     split2phys(**vars(options))
 
