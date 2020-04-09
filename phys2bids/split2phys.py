@@ -116,48 +116,42 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
     phys_in.check_trigger_amount(chtrig=chtrig, thr=thr,
                                  num_timepoints_expected=sum(ntp_list),
                                  tr=1)
-    
+
     # Check that sum(ntp_list) is equivalent to num_timepoints_found, else bye!
     # num_timepoints_found becomes an attribute of the object when you call check_trigger_amount
     if phys_in.num_timepoints_found != sum(ntp_list):
-        # Again, raise your exception
+        raise ValueError()  # not sure if it's the good one
 
     # Initialize dictionaries to save phys_in endpoints
     run_endpoints = {}
+
     # initialise start index as 0
     start_index = 0
-    
+
     for run_idx, run_tps in enumerate(list_ntp):
-        # ascertain run length
+        # ascertain run length and initialise Blueprint object
         phys_in.check_trigger_amount(ntp=run_tps, tr=list_tr[run_idx])
 
-        # I'M A BIT CONFUSED here. not sure if i get this right
-        # Almost. It's really not easy! LET'S START NOT SUPPORTING MULTIFREQ
+        # define padding - 20s * freq of trigger - padding is in nb of samples
+        padding = 20 * phys_in.freq[chtrig]
 
-        # end_index is run_tps * list_tr[run_idx] expressed in the channel frequency
-        # ASSUMING THE FREQUENCY IS EXPRESSED IN Hz AND NOT (SUB)MULTIPLES OF Hz
-        # plus the start_index, plus the index of the first trigger
-        # We're going to add it as an attribute in physio_obj
-        # Check it. It might be wrong.
+        # LET'S START NOT SUPPORTING MULTIFREQ - start_index is first elem of tuple
         end_index = run_tps * list_tr[run_idx] * phys_in.freq[chtrig] + \
-                    start_index + phys_in.trig_idx
+            start_index + phys_in.trig_idx
 
-        # # if last value in the list "number of timepoints in run"
-        # if run_idx == list_ntp.size[0]:
-        #     end_index + padding  # <= number of indexes  hmmm... don't remember our plan
         # if the padding is too much for the remaining timeseries length
-        # then the padding become less
+        # then the padding stops at the end of recording
         if phys_in.timeseries[chtrig].shape[0] < (end_index + padding):
             padding = phys_in.timeseries[chtrig].shape[0] - end_index
 
         # Save end_index in dictionary -> start_index is run_idx-1
         # While saving, add the padding
         run_endpoints[run_idx] = (end_index + padding)
+
         # set start_index for next run as end_index of this one
         start_index = end_index
 
     # make dict exportable
-    # delete at index ← not necessary anymore.
 
 
 def _main(argv=None):
