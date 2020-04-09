@@ -120,6 +120,7 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
     # num_timepoints_found becomes an attribute of the object when you call check_trigger_amount
     if phys_in.num_timepoints_found != sum(ntp_list):
         raise ValueError()  # not sure if it's the good one
+        # TODO : automatize tps correction
 
     # Initialize dictionaries to save phys_in endpoints
     run_endpoints = {}
@@ -134,7 +135,7 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
         # define padding - 20s * freq of trigger - padding is in nb of samples
         padding = 20 * phys_in.freq[chtrig]
 
-        # LET'S START NOT SUPPORTING MULTIFREQ - start_index is first elem of tuple
+        # LET'S START NOT SUPPORTING MULTIFREQ - end_index is start+first_trigger+nb_samples in run
         end_index = run_tps * list_tr[run_idx] * phys_in.freq[chtrig] + \
             start_index + phys_in.trig_idx
 
