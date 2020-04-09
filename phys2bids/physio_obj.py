@@ -108,6 +108,8 @@ class BlueprintInput():
         *if* check_trigger_amount() is run
     thr: float
         Threshold used by check_trigger_amount() to detect trigger points.
+    trig_idx: int
+        Index of first trigger, computed *if* check_trigger_amount() is run
 
     Methods
     -------
@@ -264,6 +266,9 @@ class BlueprintInput():
         self.timeseries:
             The property `timeseries` is shifted with the 0 being
             the time of first trigger.
+        self.trig_idx:
+            Property of the `BlueprintInput` class.
+            Contains index of first trigger
         """
         LGR.info('Counting trigger points')
         # Use the trigger channel to find the TRs,
@@ -283,6 +288,7 @@ class BlueprintInput():
             LGR.info(f'The number of timepoints found with the manual threshold of {thr} '
                      f'is {num_timepoints_found}')
         time_offset = self.timeseries[0][timepoints.argmax()]
+        self.
 
         if num_timepoints_expected:
             LGR.info('Checking number of timepoints')

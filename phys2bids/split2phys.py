@@ -9,13 +9,14 @@ with padding at start and end
 
 """
 
-import os
-import logging
 import datetime
-
+import logging
+import os
 # from copy import deepcopy
-from numpy import ones
 # from pathlib import Path
+
+from numpy import ones
+
 from phys2bids import utils
 from phys2bids.cli.split import _get_parser
 from phys2bids.physio_obj import BlueprintInput
@@ -23,7 +24,8 @@ from phys2bids.physio_obj import BlueprintInput
 LGR = logging.getLogger(__name__)
 
 
-def split2phys(filename, indir='.', outdir='.', ntp_list=[0], tr_list=[1], thr=None):
+def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
+               ntp_list=[0, ], tr_list=[1, ], thr=None, padding=0):
     """
 
     Parallel workflow of phys2bids.
@@ -62,7 +64,7 @@ def split2phys(filename, indir='.', outdir='.', ntp_list=[0], tr_list=[1], thr=N
                         handlers=[log_handler, sh])
 
     version_number = _version.get_versions()['version']
-    LGR.info(f'Currently running phys2bids version {version_number}')
+    LGR.info(f'Currently running split2phys version {version_number}')
     LGR.info(f'Input file is {filename}')
 
     # Check options to make them internally coherent pt. II
@@ -74,7 +76,18 @@ def split2phys(filename, indir='.', outdir='.', ntp_list=[0], tr_list=[1], thr=N
     infile = os.path.join(indir, filename)
     utils.check_file_exists(infile)
 
-    # Read file!
+    # Check that ntp_list is longer than 1 element
+    # If/when we set other parameters, we're going to change here
+    if len(ntp_list) == 1:
+        raise Exception('Only one run was specified. Don\'t run this workflow, '
+                        'or check input')
+
+    # Check equivalent length of list_ntp and list_tr
+    if len(tr_list) != 1 and len(ntp_list) != len(tr_list):
+        # Check out this page for all the builtin errors:
+        # https://docs.python.org/3/library/exceptions.html#bltin-exceptions
+
+    # Import right interface to read the file
     if ftype == 'acq':
         from phys2bids.interfaces.acq import populate_phys_input
     elif ftype == 'txt':
@@ -83,42 +96,68 @@ def split2phys(filename, indir='.', outdir='.', ntp_list=[0], tr_list=[1], thr=N
         # #!# We should add a logger here.
         raise NotImplementedError('Currently unsupported file type.')
 
-    # Check equivalence of list_ntp and list_tr - NOT SURE TO GET THIS RIGHT
+    # Actually read file!
+    LGR.info(f'Reading the file {infile}')
+    phys_in = populate_phys_input(infile, chtrig)  # phys_in is a BlueprintInput object
+    LGR.info('Reading infos')
+    phys_in.print_info(filename)
+
+    if chplot != '' or info:
+        viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
+                     phys_in.freq, infile, chplot)
+    # If only info were asked, end here.
+    if info:
+        return
+
     if len(tr_list) == 1:
         tr_list = tr_list * ones(len(ntp_list))
 
     # Sum of values in ntp_list should be equivalent to num_timepoints_found
-    BlueprintInput.check_trigger_amount(thr=thr, num_timepoints_expected=sum(ntp_list), tr=tr_list)
+    phys_in.check_trigger_amount(chtrig=chtrig, thr=thr,
+                                 num_timepoints_expected=sum(ntp_list),
+                                 tr=1)
+    
+    # Check that sum(ntp_list) is equivalent to num_timepoints_found, else bye!
+    # num_timepoints_found becomes an attribute of the object when you call check_trigger_amount
+    if phys_in.num_timepoints_found != sum(ntp_list):
+        # Again, raise your exception
 
-    # TO DO : an error should be raised if aforementioned values are non-equivalent
-
-    # Initialize dictionaries for which to define BlueprintInput
-    run_Blueprint = {}
-
-    #
-    for run_idx, run_tps in list_ntp:
+    # Initialize dictionaries to save phys_in endpoints
+    run_endpoints = {}
+    # initialise start index as 0
+    start_index = 0
+    
+    for run_idx, run_tps in enumerate(list_ntp):
         # ascertain run length
-        BlueprintInput.check_trigger_amount(ntp=run_tps, tr=list_tr[run_idx])
-        # define idx of first trigger and padding length
-        start_index = BlueprintInput.timeseries[0]
-        padding = arb_val
+        phys_in.check_trigger_amount(ntp=run_tps, tr=list_tr[run_idx])
 
         # I'M A BIT CONFUSED here. not sure if i get this right
-        end_index = start_index + (run_tps * list_tr[run_idx])
-        run_Blueprint[run_idx] = BlueprintInput.timeseries[start_index - padding:
-                                                           end_index + padding, :]
+        # Almost. It's really not easy! LET'S START NOT SUPPORTING MULTIFREQ
 
-        # if last value in the list "number of timepoints in run"
-        if run_idx == list_ntp.size[0]:
-            end_index + padding  # <= number of indexes  hmmm... don't remember our plan
+        # end_index is run_tps * list_tr[run_idx] expressed in the channel frequency
+        # ASSUMING THE FREQUENCY IS EXPRESSED IN Hz AND NOT (SUB)MULTIPLES OF Hz
+        # plus the start_index, plus the index of the first trigger
+        # We're going to add it as an attribute in physio_obj
+        # Check it. It might be wrong.
+        end_index = run_tps * list_tr[run_idx] * phys_in.freq[chtrig] + \
+                    start_index + phys_in.trig_idx
 
-        # not sure how and where to define padding
-        else:
-            padding = number of indexes - end_index
-            BlueprintInput = BlueprintInput.timeseries[end_index + padding; , :]
+        # # if last value in the list "number of timepoints in run"
+        # if run_idx == list_ntp.size[0]:
+        #     end_index + padding  # <= number of indexes  hmmm... don't remember our plan
+        # if the padding is too much for the remaining timeseries length
+        # then the padding become less
+        if phys_in.timeseries[chtrig].shape[0] < (end_index + padding):
+            padding = phys_in.timeseries[chtrig].shape[0] - end_index
+
+        # Save end_index in dictionary -> start_index is run_idx-1
+        # While saving, add the padding
+        run_endpoints[run_idx] = (end_index + padding)
+        # set start_index for next run as end_index of this one
+        start_index = end_index
 
     # make dict exportable
-    # delete at index
+    # delete at index ← not necessary anymore.
 
 
 def _main(argv=None):
