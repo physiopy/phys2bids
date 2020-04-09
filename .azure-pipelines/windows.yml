@@ -36,7 +36,7 @@ jobs:
         mkdir for_testing
         cd for_testing
         cp ../setup.cfg .
-        python -m pytest --doctest-modules --cov-report term-missing --cov=phys2bids --pyargsphys2bids
+        python -m pytest --doctest-modules --cov-report term-missing --cov=phys2bids --pyargs phys2bids
       displayName: 'Run tests'
       condition: and(succeeded(), eq(variables['CHECK_TYPE'], 'test'))
     - script: |
