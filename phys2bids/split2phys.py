@@ -17,15 +17,15 @@ import os
 
 from numpy import ones
 
-from phys2bids import utils
+from phys2bids import utils, viz, _version
 from phys2bids.cli.split import _get_parser
-from phys2bids.physio_obj import BlueprintInput
+# from phys2bids.physio_obj import
 
 LGR = logging.getLogger(__name__)
 
 
 def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
-               ntp_list=[0, ], tr_list=[1, ], thr=None, padding=0):
+               ntp_list=[0, ], tr_list=[1, ], chplot='', thr=None, padding=0):
     """
 
     Parallel workflow of phys2bids.
@@ -83,6 +83,7 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
 
     # Check equivalent length of list_ntp and list_tr
     if len(tr_list) != 1 and len(ntp_list) != len(tr_list):
+        raise Exception('')
         # Check out this page for all the builtin errors:
         # https://docs.python.org/3/library/exceptions.html#bltin-exceptions
 
@@ -128,15 +129,15 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
     # initialise start index as 0
     start_index = 0
 
-    for run_idx, run_tps in enumerate(list_ntp):
+    for run_idx, run_tps in enumerate(ntp_list):
         # ascertain run length and initialise Blueprint object
-        phys_in.check_trigger_amount(ntp=run_tps, tr=list_tr[run_idx])
+        phys_in.check_trigger_amount(ntp=run_tps, tr=tr_list[run_idx])
 
         # define padding - 20s * freq of trigger - padding is in nb of samples
         padding = 20 * phys_in.freq[chtrig]
 
         # LET'S START NOT SUPPORTING MULTIFREQ - end_index is start+first_trigger+nb_samples in run
-        end_index = run_tps * list_tr[run_idx] * phys_in.freq[chtrig] + \
+        end_index = run_tps * tr_list[run_idx] * phys_in.freq[chtrig] + \
             start_index + phys_in.trig_idx
 
         # if the padding is too much for the remaining timeseries length
