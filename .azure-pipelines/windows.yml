@@ -9,7 +9,8 @@ jobs:
   pool:
     vmImage: ${{ parameters.vmImage }}
   variables:
-    DEPENDS: bioread>=1.0.4 numpy>=1.9.3 matplotlib>=3.1.1
+    DEPENDS_FIRST: numpy>=1.9.3 matplotlib>=3.1.1
+    DEPENDS_SECOND: bioread>=1.0.4
     CHECK_TYPE: test
   strategy:
     matrix:
@@ -25,7 +26,8 @@ jobs:
         python -m pip install --upgrade pip setuptools>=30.3.0 wheel
       displayName: 'Update build tools'
     - script: |
-        python -m pip install %DEPENDS%
+        python -m pip install %DEPENDS_FIRST%
+        python -m pip install %DEPENDS_SECOND%
       displayName: 'Install dependencies'
     - script: |
         python -m pip install .[$(CHECK_TYPE)]
