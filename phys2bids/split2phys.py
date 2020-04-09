@@ -30,9 +30,8 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
 
     Parallel workflow of phys2bids.
 
-    Runs the split parser, does some check on inputs and calls
-    phys2bids to handle each dictionaries that have been created
-    based on npt_list and tr_list
+    Runs the split parser, does some check on inputs and exports
+    end indexes of each run based on npt_list and tr_list
 
     Arguments
     ---------
@@ -152,6 +151,10 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
         start_index = end_index
 
     # make dict exportable
+    # or call it from phys2bids
+    # or call phys2bids from here
+    # or integrate this bit of code in phys2bids and adapt main parser by accepting
+    # lists and adding -run argument
 
 
 def _main(argv=None):
