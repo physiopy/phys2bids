@@ -136,7 +136,7 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
         # define padding - 20s * freq of trigger - padding is in nb of samples
         padding = 20 * phys_in.freq[chtrig]
 
-        # LET'S START NOT SUPPORTING MULTIFREQ - end_index is start+first_trigger+nb_samples in run
+        # LET'S START NOT SUPPORTING MULTIFREQ - end_index is nb of samples in run+start+first_trig
         end_index = run_tps * tr_list[run_idx] * phys_in.freq[chtrig] + \
             start_index + phys_in.trig_idx
 

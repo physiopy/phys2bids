@@ -179,7 +179,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               tr=1, thr=None, ch_name=[], chplot='', debug=False, quiet=False):
     """
     Main workflow of phys2bids.
-    Runs the parser, does some checks on input, then imports
+    Run the parser, does some checks on input, then imports
     the right interface file to read the input. If only info is required,
     it returns a summary onscreen.
     Otherwise, it operates on the input to return a .tsv.gz file, possibily
