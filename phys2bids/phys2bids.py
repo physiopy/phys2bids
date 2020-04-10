@@ -154,13 +154,14 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     else:
         info['sub'] = sub
         fldr = os.path.join(outdir, f'sub-{sub}')
+
     if ses:
         if ses[:4] == 'ses-':
             info['ses'] = ses[4:]
-            fldr = os.path.join(outdir, ses)
+            fldr = os.path.join(fldr, ses)
         else:
             info['ses'] = ses
-            fldr = os.path.join(outdir, f'ses-{ses}')
+            fldr = os.path.join(fldr, f'ses-{ses}')
 
     # Load heuristic and use it to fill dictionary
     heur = utils.load_heuristic(heur_file)
@@ -181,7 +182,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     fldr = os.path.join(fldr, 'func')
     utils.path_exists_or_make_it(fldr)
 
-    heurpath = os.path.join(fldr, f'{name}_physio')
+    heurpath = os.path.join(fldr, f'{name}physio')
 
     return heurpath
 
