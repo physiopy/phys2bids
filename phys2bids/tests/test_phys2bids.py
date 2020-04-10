@@ -60,7 +60,7 @@ def test_use_heuristic(tmpdir):
                                         test_full_input_path, test_outdir, test_record_label)
 
     test_result = ('/sub-SBJ01/ses-S05/func/sub-SBJ01_ses-S05_task-test_rec'
-                   '-biopac_run-00_recording-test_physio')
+                   '-biopac_run-01_recording-test_physio')
     test_result = str(tmpdir) + test_result
 
     assert test_result == str(heur_path)
