@@ -18,7 +18,7 @@ def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
 
     if fnmatch.fnmatchcase(physinfo, '*samefreq*'):
         task = 'test'
-        run = '00'
+        run = '01'
         rec = 'biopac'
     elif physinfo == 'Example':
         task = 'rest'

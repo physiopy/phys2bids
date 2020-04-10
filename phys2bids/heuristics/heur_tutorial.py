@@ -18,7 +18,7 @@ def heur(physinfo, name, task='', acq='', direct='', rec='', run=''):
 
     if fnmatch.fnmatchcase(physinfo, '*tutorial*'):
         task = 'test'
-        run = '00'
+        run = '01'
         rec = 'labchart'
     elif physinfo == 'Example':
         task = 'rest'
