@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Phys2bids is a python3 library meant to set physiological files in BIDS
-standard.
+Phys2bids is a python3 library meant to set physiological files in BIDS standard.
 
 It was born for Acqknowledge files (BIOPAC), and at the moment it supports
 ``.acq`` files and ``.txt`` files obtained by labchart (ADInstruments).
@@ -44,7 +43,7 @@ LGR = logging.getLogger(__name__)
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
     """
-    Prints a summary onscreen and in file with informations on the files.
+    Print a summary onscreen and in file with informations on the files.
 
     Parameters
     ----------
@@ -85,7 +84,7 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
 
 def print_json(outfile, samp_freq, time_offset, ch_name):
     """
-    Prints the json required by BIDS format.
+    Print the json required by BIDS format.
 
     Parameters
     ----------
@@ -112,7 +111,6 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
 
 
 def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
-    utils.check_file_exists(heur_file)
     """
     Import the heuristic file specified by the user and uses its output
     to rename the file.
@@ -137,39 +135,53 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     -------
     heurpath: str or path
         Returned fullpath to tsv.gz new file (post BIDS formatting).
+
+    Raises
+    ------
+    KeyError
+        if `info['task']` is empty
     """
+    utils.check_file_exists(heur_file)
 
-    if sub[:4] != 'sub-':
-        name = f'sub-{sub}'
+    # Initialise a dictionary of info that has already "recording"
+    info = {'sub': '', 'ses': '', 'task': '', 'acq': '', 'ce': '',
+            'dir': '', 'rec': '', 'run': '', 'recording': record_label}
+
+    # Start filling info dictionary and path with subject and session
+    if sub[:4] == 'sub-':
+        info['sub'] = sub[4:]
+        fldr = os.path.join(outdir, sub)
     else:
-        name = sub
-
-    fldr = os.path.join(outdir, name)
-
+        info['sub'] = sub
+        fldr = os.path.join(outdir, f'sub-{sub}')
     if ses:
-        if ses[:4] != 'ses-':
-            ses = f'ses-{ses}'
+        if ses[:4] == 'ses-':
+            info['ses'] = ses[4:]
+            fldr = os.path.join(outdir, ses)
+        else:
+            info['ses'] = ses
+            fldr = os.path.join(outdir, f'ses-{ses}')
 
-        fldr = os.path.join(fldr, ses)
-        name = f'{name}_{ses}'
+    # Load heuristic and use it to fill dictionary
+    heur = utils.load_heuristic(heur_file)
+    info = heur.heur(Path(filename).stem, info)
 
+    # If info['task'] is still empty, stop the program
+    if not info['task']:
+        raise KeyError(f'No "task" attribute found')
+
+    # Compose name by looping in the info dictionary
+    # and adding nonempty keys
+    name = ''
+    for key in info:
+        if info[key]:
+            name = f'{name}{key}-{info[key]}_'
+
+    # Finish path, create it, add filename, export
     fldr = os.path.join(fldr, 'func')
     utils.path_exists_or_make_it(fldr)
 
-    cwd = os.getcwd()
-    os.chdir(outdir)
-
-    heur = utils.load_heuristic(heur_file)
-    name = heur.heur(Path(filename).stem, name)
-
-    recording = ''
-    if record_label:
-        recording = f'_recording-{record_label}'
-
-    heurpath = os.path.join(fldr, f'{name}{recording}_physio')
-    # for ext in ['.tsv.gz', '.json', '.log']:
-    #     move_file(outfile, heurpath, ext)
-    os.chdir(cwd)
+    heurpath = os.path.join(fldr, f'{name}_physio')
 
     return heurpath
 
@@ -179,6 +191,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               tr=1, thr=None, ch_name=[], chplot='', debug=False, quiet=False):
     """
     Main workflow of phys2bids.
+
     Runs the parser, does some checks on input, then imports
     the right interface file to read the input. If only info is required,
     it returns a summary onscreen.
