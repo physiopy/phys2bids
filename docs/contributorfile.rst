@@ -3,7 +3,7 @@
 =================================
 How to contribute to ``physiopy``
 =================================
-Welcome to the physiopy organisation! It’s great news you’re thinking about contributing!
+Welcome to the ``physiopy`` organisation! It’s great news you’re thinking about contributing!
 Working with many people from many different places is great, but sometimes this means the code can become messy due to the many different ways a contribution can be made. For this reason, we have set up some guidelines for contributions - to help you get along ASAP!
 Before you start you'll need to set up a free `GitHub <https://github.com/>`_ account and sign in. Here are some `instructions <https://help.github.com/articles/signing-up-for-a-new-github-account>`_.
 If you lack knowledge in python development / github use / physiological data handling, don’t be scared! Try to jump in anyway. Most of the original contributors learned these things exactly this way - jumping in and hoping to fall in the right way without breaking too many bones.
@@ -34,9 +34,9 @@ Already know what you're looking for in this guide? Jump to the following sectio
 
 .. _aims:
 
-Aims of physiopy
-----------------
-physiopy is a **very** young project developed by a bunch of researchers from the two different sides of the Atlantic Ocean (for now).
+Aims of ``physiopy``
+--------------------
+``physiopy`` is a **very** young project developed by a bunch of researchers from the two different sides of the Atlantic Ocean (for now).
 Our main goal is to help collect, analyse and share physiological data interfacing with (MRI) neuroimaging. We’re trying to do so by:
 
 1. Write packages to make a user-friendly pipeline to deal with physiological data.
@@ -70,7 +70,7 @@ Chances are those types of changes are easily doable with the online editor, whi
 
 Contributing with User testing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Another, non-coding friendly way to contribute to physiopy is by testing the packages.
+Another, non-coding friendly way to contribute to ``physiopy`` is by testing the packages.
 There are different kinds of tests, but to simplify things you can think mainly about automatic tests and user tests.
 To know more about **Automatic tests**, you can read the `testing section <#testing>`_.
 **User testing** are warm, human, emotional and opinionated tests that not only check that the code is doing what it needs to do, but also whether there’s a better way to do it - namely better reports, clearer screen outputs, warnings and exceptions, unexpected bugs that have to be corrected.
@@ -80,7 +80,7 @@ If you want to perform one, open an issue on GitHub or drop a comment in Gitter,
 
 Contributing with test files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-At physiopy we always try to imagine and support every possible setting out there. However, our imagination has a limit - but if you think our packages should process a specific format/setting that you have, we’re more than glad to do so!
+At ``physiopy`` we always try to imagine and support every possible setting out there. However, our imagination has a limit - but if you think our packages should process a specific format/setting that you have, we’re more than glad to do so!
 To make it happen, we need an example of the file we want to process, so you will have to share it with us (and the rest of the world)! The contribution can be a full file of data that you already acquired, a part of that file (pay attention to what is the minimum you need to share!), or mock data.
 The file contribution should come with a json file of the same name that contains the necessary information to run ``phys2bids`` on that file contribution. There is a `json blueprint in OSF <https://mfr.de-1.osf.io/render?url=https://osf.io/jrnxv/?direct%26mode=render%26action=download%26mode=render>`_, you can download it and adapt it. Note that the frequency list **has to be expressed in Hz** as an integer or float.
 To contribute with a test file, open an Issue in GitHub and label it with *Test*. We’ll help you add the file in our 
@@ -97,7 +97,7 @@ We use `readthedocs <https://readthedocs.org/>`_ to create our documentation. Ev
 
 Contributing code through GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This section covers 90% of the contributions a project like physiopy receives - code, documentation and tests.
+This section covers 90% of the contributions a project like ``physiopy`` receives - code, documentation and tests.
 The best way to make this kind of contributions, in a nutshell, would be:
 1. Open an issue with the intended modifications.
 2. Label it, discuss it, (self-)assign it.
@@ -117,7 +117,7 @@ Read the `related section below <#reviewing>`_ to start!
 
 Issues and Milestones
 ---------------------
-At physiopy, we use Issues and Milestones to keep track of and organise our workflow.
+At ``physiopy``, we use Issues and Milestones to keep track of and organise our workflow.
 - **Issues** describe pieces of work that need to be completed to move the project forwards. We try to keep them as simple and clear as possible: an issue should describe a unitary, possibly small piece of work (unless it’s about refactoring). Don’t be scared of opening many issues at once, if it makes sense! Just check that what you’re proposing is not listed in a previous issue (open or closed) yet - we don’t like doubles. Issues get labelled. That helps the contributors to know what they’re about. Check the label list to know what types are there, and use them accordingly! Issues can also be **assigned**. If you want to work on an assigned issue, ask permission first!
 - **Milestones** set the higher level workflow. They sketch deadlines and important releases. Issues are assigned to these milestones by the maintainers. If you feel that an issue should be assigned to a specific milestone but the maintainers have not done so, discuss it in the issue chat or in Gitter! We might have just missed it, or we might not (yet) see how it aligns with the overall project structure/milestone.
 
@@ -131,35 +131,35 @@ The current list of labels are `here <https://github.com/physiopy/phys2bids/labe
 
 Issues labels
 ~~~~~~~~~~~~~
--  Bug: Something isn’t working. It either breaks the code or has an unexpected outcome.
--  Discussion: Discussion of a concept or implementation. These Issues are prone to be open ad infinitum. Jump in the conversation if you want!
--  Good first issue: Good for newcomers. These issues calls for a **fairly** easy enhancement, or for a change that helps/requires getting to know the code better. They have educational value, and for this reason, unless urgent, experts in the topic should refrain from closing them - but help newcomers closing them.
--  Hacktoberfest: Dedicated to the hacktoberfest event, so that people can help and feel good about it (and show it with a T-shirt!). **Such commits will not be recognised in the all-contributor table, unless otherwise specified**.
--  Help wanted: Extra attention is needed here! It’s a good place to have a look!
--  Refactoring: Improve nonfunctional attributes. Which means rewriting the code or the documentation to improve performance or just because there’s a better way to express those lines. It might create a ``majormod`` PR.
--  Question: Further information is requested, from users to developers. Try to respond to this!
--  Wontfix: This will not be worked on, until further notice.
+- Bug: Something isn’t working. It either breaks the code or has an unexpected outcome.
+- Discussion: Discussion of a concept or implementation. These Issues are prone to be open ad infinitum. Jump in the conversation if you want!
+- Good first issue: Good for newcomers. These issues calls for a **fairly** easy enhancement, or for a change that helps/requires getting to know the code better. They have educational value, and for this reason, unless urgent, experts in the topic should refrain from closing them - but help newcomers closing them.
+- Hacktoberfest: Dedicated to the hacktoberfest event, so that people can help and feel good about it (and show it with a T-shirt!). **Such commits will not be recognised in the all-contributor table, unless otherwise specified**.
+- Help wanted: Extra attention is needed here! It’s a good place to have a look!
+- Refactoring: Improve nonfunctional attributes. Which means rewriting the code or the documentation to improve performance or just because there’s a better way to express those lines. It might create a ``majormod`` PR.
+- Question: Further information is requested, from users to developers. Try to respond to this!
+- Wontfix: This will not be worked on, until further notice.
 
 .. _prlabel:
 
 PRs labels
 ~~~~~~~~~~
--  BugFIX: These PRs close an issue labelled ``bug``. they also increase the semantic versioning for fixes (+0.0.1).
--  Invalid: These PRs don't seem right. They actually seem so not right that they won’t be further processed. This label invalidates an Hacktoberfest contribution. If you think this is wrong, start a discussion in the relevant issue (or open one if missing). Reviewers are asked to give an explanation for the use of this label.
--  Majormod: These PRs call for a new major release (+1.0.0). This means that the PR is breaking backward compatibility.
--  Minormod: These PRs call for a new minor release (0.+1.0). This means that the PR is **not** breaking backward compatibility.
+- BugFIX: These PRs close an issue labelled ``bug``. they also increase the semantic versioning for fixes (+0.0.1).
+- Invalid: These PRs don't seem right. They actually seem so not right that they won’t be further processed. This label invalidates an Hacktoberfest contribution. If you think this is wrong, start a discussion in the relevant issue (or open one if missing). Reviewers are asked to give an explanation for the use of this label.
+- Majormod: These PRs call for a new major release (+1.0.0). This means that the PR is breaking backward compatibility.
+- Minormod: These PRs call for a new minor release (0.+1.0). This means that the PR is **not** breaking backward compatibility.
 
 .. _issueprlabels:
 
 Issues & PRs labels
 ~~~~~~~~~~~~~~~~~~~
--  Documentation: Improvements or additions to documentation. This category includes (but is not limited to) docs pages, docstrings, and code comments.
--  Duplicate: Whatever this is, it exists already! Maybe it’s a closed Issue/PR, that should be reopened.
--  Enhancement: New features added or requested. This normally goes with a ``minormod`` label for PRs.
--  Outreach: As part of the scientific community, we care about outreach. Check the relevant section about it, but know that this Issue/PR contains information or tasks about abstracts, talks, demonstrations, papers.
--  Paused: Issue or PR should not be worked on until the resolution of other issues or PRs.
--  Testing: This is for testing features, writing tests or producing testing code. Both user testing and CI testing!
--  Urgent: If you don't know where to start, start here! This is probably related to a milestone due soon!
+- Documentation: Improvements or additions to documentation. This category includes (but is not limited to) docs pages, docstrings, and code comments.
+- Duplicate: Whatever this is, it exists already! Maybe it’s a closed Issue/PR, that should be reopened.
+- Enhancement: New features added or requested. This normally goes with a ``minormod`` label for PRs.
+- Outreach: As part of the scientific community, we care about outreach. Check the relevant section about it, but know that this Issue/PR contains information or tasks about abstracts, talks, demonstrations, papers.
+- Paused: Issue or PR should not be worked on until the resolution of other issues or PRs.
+- Testing: This is for testing features, writing tests or producing testing code. Both user testing and CI testing!
+- Urgent: If you don't know where to start, start here! This is probably related to a milestone due soon!
 
 .. _g1i:
 
@@ -173,10 +173,11 @@ We invite more expert contributors to avoid those issues, leave them to beginner
 Contribution workflow
 ---------------------
 There are many descriptions of a good contribution workflow out there. For instance, we suggest to have a look at `tedana's workflow <https://github.com/ME-ICA/tedana/blob/master/CONTRIBUTING.md#making-a-change>`_.
-At physiopy, we follow a very similar workflow. The only two differences are:
+At ``physiopy``, we follow a very similar workflow. The only three differences are:
 
--  We ask you to test the code locally before merging it, and then, if possible, write some automatic tests for the code to be run in our Continuous Integration! Check the testing section below to know more.
--  We suggest opening a draft PR as soon as you can - so it’s easier for us to help you!
+- If you see an open issue that you would like to work on, check if it is assigned. If it is, ask the assignee to 
+- We ask you to test the code locally before merging it, and then, if possible, write some automatic tests for the code to be run in our Continuous Integration! Check the testing section below to know more.
+- We suggest opening a draft PR as soon as you can - so it’s easier for us to help you!
 
 .. _pr:
 
@@ -191,25 +192,27 @@ However, if it’s an incomplete PR, please open a **Draft PR**. That helps us p
 
 Reviewing PRs is a time consuming task, that can be stressful for both the reviewer and the author. Avoiding wasting time and the need of little fixes - such as fixing grammar mistakes and typos, styling code, or adopting conventions - is a good start for a successful (and quick) review. Before graduating a Draft PR to a PR ready for review, please check that:
 
-- You did all you wanted to include in your PR. If at a later stage you realise something is missing and it's not minor things, you will need to open a new PR
-- If your contribution contains code or tests, you run and passed all the tests locally with `pytest`
-- If you're writing documentation, you built it locally with `sphinx` and the format is what you intended
+- You did all you wanted to include in your PR. If at a later stage you realise something is missing and it's not minor things, you will need to open a new PR.
+- If your contribution contains code or tests, you run and passed all the tests locally with `pytest`.
+- If you're writing documentation, you built it locally with `sphinx` and the format is what you intended.
 - Your code is harmonious with the rest of the code - no repetitions of any sort!
 - Your code respects the `adopted Style <#styling>`_, especially:
-    - your code is lintered adequately and respects the `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ convention
-    - your docstrings follow the `numpydoc <https://numpydoc.readthedocs.io/en/latest/format.html>`_ convention
-    - there is no grammar mistake or typo and the text is fluid
-    - the code is sufficiently commented and the comments are clear
-    - your PR title is clear enough to be meaningful when appended to the version changelog
-- You have the correct labels
+    - Your code is lintered adequately and respects the `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ convention.
+    - Your docstrings follow the `numpydoc <https://numpydoc.readthedocs.io/en/latest/format.html>`_ convention.
+    - There is no grammar mistake or typo and the text is fluid.
+    - The code is sufficiently commented and the comments are clear.
+    - Your PR title is clear enough to be meaningful when appended to the version changelog.
+- You have the correct labels.
 
 To be merged, PRs have to:
 
 1. Pass all the Travis CI tests, and possibly all the codecov checks.
 2. Have the necessary amount of approving reviews, even if you’re a long time contributor. You can ask one (or more) contributor to do that review, if you think they align more with the content of your PR. You need **one** review for documentation, tests, and small changes, and **two** reviews for bugs, refactoring and enhancements.
-3. Have at least a release-related label (or a `Skip release` label)
+3. Have at least a release-related label (or a `Skip release` label).
 4. Have a short title that clearly explains in one sentence the aim of the PR.
-3. Contain at least a unit test for your contribution, if the PR contains code (it would be better if it contains an integration or function test and all the breaking tests necessary). If you’re not confident about writing tests, it is possible to refer to an issue that asks for the test to be written, or another (Draft) PR that contains the tests required.
+5. Contain at least a unit test for your contribution, if the PR contains code (it would be better if it contains an integration or function test and all the breaking tests necessary). If you’re not confident about writing tests, it is possible to refer to an issue that asks for the test to be written, or another (Draft) PR that contains the tests required.
+
+Don't merge your own pull request! That's a task for the main reviewer of your PR or the project manager!
 
 As we’re trying to maintain at least a 90% code coverance, you’re strongly encouraged to write all the necessary tests not to drop below the threshold. If our coverance becomes too low, you might be asked to add more tests and/or your PR might be rejected.
 
@@ -229,7 +232,7 @@ Since we adopt `auto <https://intuit.github.io/auto/home.html>`_, the PR title w
 Automatic Testing
 -----------------
 physiopy uses Continuous Integration (CI) to make life easier. In particular, we use the `Travis CI <https://travis-ci.org/>`_ platform to run automatic testing!
-**Automatic tests** are cold, robotic, emotionless, and opinionless tests that check that the program is doing what it is expected to. They are written by the developers and run (by Travis CI) every time they send a Pull Request to physiopy repositories. They complement the warm, human, emotional and opinionated **user tests**, as they tell us if a piece of code is failing.
+**Automatic tests** are cold, robotic, emotionless, and opinionless tests that check that the program is doing what it is expected to. They are written by the developers and run (by Travis CI) every time they send a Pull Request to ``physiopy`` repositories. They complement the warm, human, emotional and opinionated **user tests**, as they tell us if a piece of code is failing.
 Travis CI uses `pytest <https://docs.pytest.org/en/latest/>`_ to run the tests. The great thing about it is that you can run it in advance on your local version of the code!
 We can measure the amount of code that is tested with [codecov]8https://docs.pytest.org/en/latest/), which is an indication of how reliable our packages are! We try to maintain a 90% code coverage, and for this reason, PR should contain tests!
 The four main type of tests we use are:
@@ -262,12 +265,29 @@ Due to its importance, there are some good rules of thumbs that we need to follo
 
 Before approving and/or merging PRs, be sure that:
 
-- all the tests in Travis CI pass without errors
-- prefereably, codecov checks pass as well - if they don't, pin the project manager. 
-- the title describes the content of the PR clearly enough to be meaningful on its own - remember that it will appear in the version changelog!
-- the PR has the appropriate labels to trigger the appropriate version release and update the contributors table.
+- All the tests in Travis CI pass without errors.
+- Prefereably, codecov checks pass as well - if they don't, pin the project manager. 
+- The title describes the content of the PR clearly enough to be meaningful on its own - remember that it will appear in the version changelog!
+- The PR has the appropriate labels to trigger the appropriate version release and update the contributors table.
 
 Remember that the project manager doesn't have to be a reviewer of the PR.
+
+.. _mainreviewer:
+
+Main reviewer
+~~~~~~~~~~~~~
+At `physiopy` we use the "Assignees" section of a PR to mark the **main reviewer** for that PR.
+The main reviewer:
+
+- Takes care of the reviewing process of the PR, in particular:
+    - Invites the reviewers to finish their review in a relatively short time.
+    - Checks that this document was respected in all its part, especially the part about `Pull Requests <#pr>`_.
+
+- Is the one that is going to merge the PR.
+- After the PR got merged and a new release was triggered, checks that:
+    - The documentation was updated correctly (if changed).
+    - The Pipy version of the repository coincides with the new release (if changed).
+    - New contributors or forms of contributions were correctly added in the README (if changed).
 
 .. _recognising:
 
