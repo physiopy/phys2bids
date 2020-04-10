@@ -17,22 +17,21 @@ import os
 
 from numpy import ones
 
-from phys2bids import utils
+from phys2bids import utils, viz, _version
 from phys2bids.cli.split import _get_parser
-from phys2bids.physio_obj import BlueprintInput
+# from phys2bids.physio_obj import
 
 LGR = logging.getLogger(__name__)
 
 
 def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
-               ntp_list=[0, ], tr_list=[1, ], thr=None, padding=0):
+               ntp_list=[0, ], tr_list=[1, ], chplot='', thr=None, padding=0):
     """
 
     Parallel workflow of phys2bids.
 
-    Runs the split parser, does some check on inputs and calls
-    phys2bids to handle each dictionaries that have been created
-    based on npt_list and tr_list
+    Runs the split parser, does some check on inputs and exports
+    end indexes of each run based on npt_list and tr_list
 
     Arguments
     ---------
@@ -84,6 +83,7 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
 
     # Check equivalent length of list_ntp and list_tr
     if len(tr_list) != 1 and len(ntp_list) != len(tr_list):
+        raise Exception('')
         # Check out this page for all the builtin errors:
         # https://docs.python.org/3/library/exceptions.html#bltin-exceptions
 
@@ -116,48 +116,47 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
     phys_in.check_trigger_amount(chtrig=chtrig, thr=thr,
                                  num_timepoints_expected=sum(ntp_list),
                                  tr=1)
-    
+
     # Check that sum(ntp_list) is equivalent to num_timepoints_found, else bye!
     # num_timepoints_found becomes an attribute of the object when you call check_trigger_amount
     if phys_in.num_timepoints_found != sum(ntp_list):
-        # Again, raise your exception
+        raise ValueError()  # not sure if it's the good one
+        # TODO : automatize tps correction
 
     # Initialize dictionaries to save phys_in endpoints
     run_endpoints = {}
+
     # initialise start index as 0
     start_index = 0
-    
-    for run_idx, run_tps in enumerate(list_ntp):
-        # ascertain run length
-        phys_in.check_trigger_amount(ntp=run_tps, tr=list_tr[run_idx])
 
-        # I'M A BIT CONFUSED here. not sure if i get this right
-        # Almost. It's really not easy! LET'S START NOT SUPPORTING MULTIFREQ
+    for run_idx, run_tps in enumerate(ntp_list):
+        # ascertain run length and initialise Blueprint object
+        phys_in.check_trigger_amount(ntp=run_tps, tr=tr_list[run_idx])
 
-        # end_index is run_tps * list_tr[run_idx] expressed in the channel frequency
-        # ASSUMING THE FREQUENCY IS EXPRESSED IN Hz AND NOT (SUB)MULTIPLES OF Hz
-        # plus the start_index, plus the index of the first trigger
-        # We're going to add it as an attribute in physio_obj
-        # Check it. It might be wrong.
-        end_index = run_tps * list_tr[run_idx] * phys_in.freq[chtrig] + \
-                    start_index + phys_in.trig_idx
+        # define padding - 20s * freq of trigger - padding is in nb of samples
+        padding = 20 * phys_in.freq[chtrig]
 
-        # # if last value in the list "number of timepoints in run"
-        # if run_idx == list_ntp.size[0]:
-        #     end_index + padding  # <= number of indexes  hmmm... don't remember our plan
+        # LET'S START NOT SUPPORTING MULTIFREQ - end_index is start+first_trigger+nb_samples in run
+        end_index = run_tps * tr_list[run_idx] * phys_in.freq[chtrig] + \
+            start_index + phys_in.trig_idx
+
         # if the padding is too much for the remaining timeseries length
-        # then the padding become less
+        # then the padding stops at the end of recording
         if phys_in.timeseries[chtrig].shape[0] < (end_index + padding):
             padding = phys_in.timeseries[chtrig].shape[0] - end_index
 
         # Save end_index in dictionary -> start_index is run_idx-1
         # While saving, add the padding
         run_endpoints[run_idx] = (end_index + padding)
+
         # set start_index for next run as end_index of this one
         start_index = end_index
 
     # make dict exportable
-    # delete at index ← not necessary anymore.
+    # or call it from phys2bids
+    # or call phys2bids from here
+    # or integrate this bit of code in phys2bids and adapt main parser by accepting
+    # lists and adding -run argument
 
 
 def _main(argv=None):
