@@ -15,8 +15,6 @@ import os
 # from copy import deepcopy
 # from pathlib import Path
 
-from numpy import ones
-
 from phys2bids import utils, viz, _version
 from phys2bids.cli.split import _get_parser
 # from phys2bids.physio_obj import
@@ -81,11 +79,21 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
         raise Exception('Only one run was specified. Don\'t run this workflow, '
                         'or check input')
 
-    # Check equivalent length of list_ntp and list_tr
-    if len(tr_list) != 1 and len(ntp_list) != len(tr_list):
-        raise Exception('')
-        # Check out this page for all the builtin errors:
-        # https://docs.python.org/3/library/exceptions.html#bltin-exceptions
+    # Check equivalency of length for list_ntp and list_tr
+    if len(tr_list) != 1 and len(ntp_list) < len(tr_list):
+        raise Exception('Multiple sequence types have been listed in tr,'
+                        'but the number of run is less than types of sequence')
+    # 2 sequence types, 3 runs ; which one is it??????
+    if len(tr_list) != 1 and len(tr_list) < len(ntp_list):
+        raise Exception('Multiple sequence types have been listed in tr,'
+                        'but the number of run doesn\'t match')
+
+    # Check out this page for all the builtin errors:
+    # https://docs.python.org/3/library/exceptions.html#bltin-exceptions
+
+    # if multiple runs of same sequence in recording - pad the list with same value
+    if len(tr_list) == 1:
+        tr_list = tr_list * len(ntp_list)
 
     # Import right interface to read the file
     if ftype == 'acq':
@@ -109,13 +117,10 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
     if info:
         return
 
-    if len(tr_list) == 1:
-        tr_list = tr_list * ones(len(ntp_list))
-
     # Sum of values in ntp_list should be equivalent to num_timepoints_found
     phys_in.check_trigger_amount(chtrig=chtrig, thr=thr,
                                  num_timepoints_expected=sum(ntp_list),
-                                 tr=1)
+                                 tr=1)  # TODO : define a non-hard-coded value
 
     # Check that sum(ntp_list) is equivalent to num_timepoints_found, else bye!
     # num_timepoints_found becomes an attribute of the object when you call check_trigger_amount
