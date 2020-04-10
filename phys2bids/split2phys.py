@@ -120,7 +120,7 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
     # Check that sum(ntp_list) is equivalent to num_timepoints_found, else bye!
     # num_timepoints_found becomes an attribute of the object when you call check_trigger_amount
     if phys_in.num_timepoints_found != sum(ntp_list):
-        raise ValueError()  # not sure if it's the good one
+        raise ValueError()  # not sure if it's the good one  ← you can use a general "Exception"
         # TODO : automatize tps correction
 
     # Initialize dictionaries to save phys_in endpoints
@@ -145,9 +145,9 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
         if phys_in.timeseries[chtrig].shape[0] < (end_index + padding):
             padding = phys_in.timeseries[chtrig].shape[0] - end_index
 
-        # Save end_index in dictionary -> start_index is run_idx-1
+        # Save start: and end_index in dictionary
         # While saving, add the padding
-        run_endpoints[run_idx] = (end_index + padding)
+        run_endpoints[run_idx] = (start_index, (end_index + padding))
 
         # set start_index for next run as end_index of this one
         start_index = end_index
