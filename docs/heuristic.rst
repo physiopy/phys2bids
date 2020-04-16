@@ -12,7 +12,7 @@ Anatomy of a heuristic file
 Let's have a look under the hood of the heuristic files used in the `tutorial <howto.html>`_.
 It's the file ``heur_tutorial.py`` in ``phys2bids/phy2bids/heuristics/``:
 
-.. _heuristic
+.. _heuristic:
 
 .. literalinclude:: ../phys2bids/heuristics/heur_tutorial.py
    :linenos:
