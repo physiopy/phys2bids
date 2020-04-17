@@ -40,9 +40,8 @@ jobs:
       displayName: 'Run tests'
       condition: and(succeeded(), eq(variables['CHECK_TYPE'], 'test'))
     - script: |
-        python -m pip install codecov
-        cd for_testing
-        codecov
+        cp for_testing/coverage.xml ./
+        bash <(curl -s https://codecov.io/bash)
       displayName: 'Upload To Codecov'
       env:
         CODECOV_TOKEN: $(CODECOV_TOKEN)
