@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 
-A parallel CLI utility to segment the physiological input files.
+A parallel to phys2bids.
 
 Cuts the physiological recording files into multiple runs
 with padding at start and end
@@ -22,7 +22,7 @@ from phys2bids.cli.split import _get_parser
 LGR = logging.getLogger(__name__)
 
 
-def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
+def ses2run(filename, info=False, indir='.', outdir='.', chtrig=1,
                ntp_list=[0, ], tr_list=[1, ], chplot='', thr=None, padding=0):
     """
 
@@ -31,12 +31,9 @@ def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
     Runs the split parser, does some check on inputs and exports
     end indexes of each run based on npt_list and tr_list
 
-    Arguments
-    ---------
+    It could be a function in phys
+    uses if it detects lists in tr and ntp arguments
 
-    Returns
-    --------
-        ...
     """
     outdir = utils.check_input_dir(outdir)
     utils.path_exists_or_make_it(outdir)
