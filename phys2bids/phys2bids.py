@@ -256,23 +256,36 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     if chplot != '' or info:
         viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
                      phys_in.freq, infile, chplot)
-    # If only info were asked, end here.
-    if info:
-        return
+
+    #  Multi-run section
+    #  Check list length, more than 1 means multi-run
+    if len(num_timepoints_expected) > 1:
+
+        # if multiple runs of same sequence in recording - pad the list with arbitrary value
+        # NOTE : we could also duplicate the item by multiplying with len(ntp)
+        if len(tr) == 1:
+            tr = ones() * len(num_timepoints_expected)
+        # Check equivalency of length
+        elif len(num_timepoints_expected) != len(tr):
+            raise Exception('Number of sequence types listed with TR doesn\'t '
+                            'match expected number of runs in the session')
+        # Sum of values in ntp_list should be equivalent to num_timepoints_found
+        phys_in.check_trigger_amount(chtrig=chtrig, thr=thr,
+                                     num_timepoints_expected=sum(num_timepoints_expected),
+                                     tr=1)  # TODO : define a non-hard-coded value
+
+        # Check that sum(ntp_list) is equivalent to num_timepoints_found, else call split2phys
+        if phys_in.num_timepoints_found != sum(num_timepoints_expected):
+            raise Exception()  # not sure if it's the good one  ← you can use a general "Exception"
+            # TODO : automatize tps correction
+
+        # CALL SPLIT2PHYS, give it BlueprintInput object and lists
+        # it will give a dictionary in the form {run_idx: (startpoint, endpoint), run_idx:...}
+        # ideally, we'd want to have a figure for each run
 
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
-    if len(ntp) > 1:
-        if len(tr) == 1:
-            # pad tr to have same length as ntp
-            # François check this statement. Maybe you need numpy.ones() (added in the import already)
-            tr = tr * len(ntp)
-        elif len(ntp) != len(tr):
-            raise exception
-
-        # call split2phys
-        # get dictionary in the form {run: (startpoint, endpoint), [...]}
-
+    # NOTE : and len(tr)<2 ?
     if tr != 0 and num_timepoints_expected != 0:
         # Run analysis on trigger channel to get first timepoint and the time offset.
         # #!# Get option of no trigger! (which is wrong practice or Respiract)

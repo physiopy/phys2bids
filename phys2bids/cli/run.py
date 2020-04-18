@@ -78,6 +78,11 @@ def _get_parser():
                           help='Specify alongside \"-heur\". Code of '
                                'session to process.',
                           default=None)
+    #  optional.add_argument('-run', '--multi-run',
+    #                        dest= run,
+    #                        help=''
+    #
+    #
     optional.add_argument('-chtrig', '--channel-trigger',
                           dest='chtrig',
                           type=int,
@@ -94,17 +99,18 @@ def _get_parser():
                           default=None)
     optional.add_argument('-ntp', '--numtps',
                           dest='num_timepoints_expected',
-                          type=int,
-                          help='Number of expected timepoints (TRs). '
-                               'Default is 0. Note: the estimation of when the '
-                               'neuroimaging acquisition started cannot take place '
-                               'with this default.',
+                          type=list,
+                          help='Number of expected trigger timepoints (TRs). '
+                               'Default is 0. Note: the estimation of beggining of '
+                               'neuroimaging acquisition cannot take place with this default.'
+                               'Give a list of each expected ntp for multi-run recordings.',
                           default=[0, ])
     optional.add_argument('-tr', '--tr',
                           dest='tr',
-                          type=float,
+                          type=list,
                           help='TR of sequence in seconds. '
-                               'Default is 0 second.',
+                               'Default is 0 second.'
+                               'You can list each TR used throughout the session',
                           default=[0, ])
     optional.add_argument('-thr', '--threshold',
                           dest='thr',
