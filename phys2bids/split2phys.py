@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 
-A parallel to phys2bids.
+A parallel CLI utility to segment the physiological input files.
 
 Cuts the physiological recording files into multiple runs
 with padding at start and end
@@ -22,7 +22,7 @@ from phys2bids.cli.split import _get_parser
 LGR = logging.getLogger(__name__)
 
 
-def ses2run(filename, info=False, indir='.', outdir='.', chtrig=1,
+def split2phys(filename, info=False, indir='.', outdir='.', chtrig=1,
                ntp_list=[0, ], tr_list=[1, ], chplot='', thr=None, padding=0):
     """
 
@@ -31,9 +31,12 @@ def ses2run(filename, info=False, indir='.', outdir='.', chtrig=1,
     Runs the split parser, does some check on inputs and exports
     end indexes of each run based on npt_list and tr_list
 
-    It could be a function in phys
-    uses if it detects lists in tr and ntp arguments
+    Arguments
+    ---------
 
+    Returns
+    --------
+        ...
     """
     outdir = utils.check_input_dir(outdir)
     utils.path_exists_or_make_it(outdir)
@@ -132,20 +135,15 @@ def ses2run(filename, info=False, indir='.', outdir='.', chtrig=1,
     start_index = 0
 
     for run_idx, run_tps in enumerate(ntp_list):
-        # ascertain run length and and (re)initialise Blueprint object
-        if run_idx == 0:
-            phys_in.check_trigger_amount(ntp=run_tps, tr=tr_list[run_idx])
-        else:
-            phys_in = phys_in.delete_at_index([start_index:end_index])
-            phys_in.check_trigger_amount(ntp=run_tps, tr=tr_list[run_idx])
+        # ascertain run length and initialise Blueprint object
+        phys_in.check_trigger_amount(ntp=run_tps, tr=tr_list[run_idx])
+
         # define padding - 20s * freq of trigger - padding is in nb of samples
         padding = 20 * phys_in.freq[chtrig]
 
         # LET'S START NOT SUPPORTING MULTIFREQ - end_index is nb of samples in run+start+first_trig
-        end_index = (run_tps * tr_list[run_idx]) * phys_in.freq[chtrig] + \
-            start_index + phys_in.trig_idx  # problem : it only goes for the first run
-        #  either we update phys_in wth delete_at_index and use this attribute and drop start_index
-        #  or we don't use this attribute and figure the index another way
+        end_index = run_tps * tr_list[run_idx] * phys_in.freq[chtrig] + \
+            start_index + phys_in.trig_idx
 
         # if the padding is too much for the remaining timeseries length
         # then the padding stops at the end of recording
@@ -153,11 +151,11 @@ def ses2run(filename, info=False, indir='.', outdir='.', chtrig=1,
             padding = phys_in.timeseries[chtrig].shape[0] - end_index
 
         # Save end_index in dictionary -> start_index is run_idx-1
-        # While saving, add the padding ; or not if we can feed it to phys2bids
+        # While saving, add the padding
         run_endpoints[run_idx] = (end_index + padding)
 
         # set start_index for next run as end_index of this one
-        # start_index = end_index
+        start_index = end_index
 
     # make dict exportable
     # or call it from phys2bids
