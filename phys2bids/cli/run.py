@@ -99,13 +99,13 @@ def _get_parser():
                                'Default is 0. Note: the estimation of when the '
                                'neuroimaging acquisition started cannot take place '
                                'with this default.',
-                          default=0)
+                          default=[0, ])
     optional.add_argument('-tr', '--tr',
                           dest='tr',
                           type=float,
                           help='TR of sequence in seconds. '
                                'Default is 0 second.',
-                          default=0)
+                          default=[0, ])
     optional.add_argument('-thr', '--threshold',
                           dest='thr',
                           type=float,

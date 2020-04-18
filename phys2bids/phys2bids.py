@@ -33,7 +33,7 @@ import logging
 from copy import deepcopy
 from pathlib import Path
 
-from numpy import savetxt
+from numpy import savetxt, ones
 
 from phys2bids import utils, viz, _version
 from phys2bids.cli.run import _get_parser
@@ -262,6 +262,17 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
+    if len(ntp) > 1:
+        if len(tr) == 1:
+            # pad tr to have same length as ntp
+            # François check this statement. Maybe you need numpy.ones() (added in the import already)
+            tr = tr * len(ntp)
+        elif len(ntp) != len(tr):
+            raise exception
+
+        # call split2phys
+        # get dictionary in the form {run: (startpoint, endpoint), [...]}
+
     if tr != 0 and num_timepoints_expected != 0:
         # Run analysis on trigger channel to get first timepoint and the time offset.
         # #!# Get option of no trigger! (which is wrong practice or Respiract)
