@@ -288,7 +288,6 @@ class BlueprintInput():
             LGR.info(f'The number of timepoints found with the manual threshold of {thr} '
                      f'is {num_timepoints_found}')
         time_offset = self.timeseries[0][timepoints.argmax()]
-        self.
 
         if num_timepoints_expected:
             LGR.info('Checking number of timepoints')
@@ -323,6 +322,7 @@ class BlueprintInput():
         self.thr = thr
         self.timeseries[0] -= time_offset
         self.num_timepoints_found = num_timepoints_found
+        self.trig_idx = timepoints.argmax()
 
     def print_info(self, filename):
         """
