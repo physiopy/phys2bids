@@ -139,44 +139,44 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     Raises
     ------
     KeyError
-        if `info['task']` is empty
+        if `bids_keys['task']` is empty
     """
     utils.check_file_exists(heur_file)
 
-    # Initialise a dictionary of info that has already "recording"
-    info = {'sub': '', 'ses': '', 'task': '', 'acq': '', 'ce': '',
-            'dir': '', 'rec': '', 'run': '', 'recording': record_label}
+    # Initialise a dictionary of bids_keys that has already "recording"
+    bids_keys = {'sub': '', 'ses': '', 'task': '', 'acq': '', 'ce': '',
+                 'dir': '', 'rec': '', 'run': '', 'recording': record_label}
 
-    # Start filling info dictionary and path with subject and session
+    # Start filling bids_keys dictionary and path with subject and session
     if sub[:4] == 'sub-':
-        info['sub'] = sub[4:]
+        bids_keys['sub'] = sub[4:]
         fldr = os.path.join(outdir, sub)
     else:
-        info['sub'] = sub
+        bids_keys['sub'] = sub
         fldr = os.path.join(outdir, f'sub-{sub}')
 
     if ses:
         if ses[:4] == 'ses-':
-            info['ses'] = ses[4:]
+            bids_keys['ses'] = ses[4:]
             fldr = os.path.join(fldr, ses)
         else:
-            info['ses'] = ses
+            bids_keys['ses'] = ses
             fldr = os.path.join(fldr, f'ses-{ses}')
 
     # Load heuristic and use it to fill dictionary
     heur = utils.load_heuristic(heur_file)
-    info = heur.heur(Path(filename).stem, info)
+    bids_keys = heur.heur(Path(filename).stem, bids_keys)
 
-    # If info['task'] is still empty, stop the program
-    if not info['task']:
+    # If bids_keys['task'] is still empty, stop the program
+    if not bids_keys['task']:
         raise KeyError(f'No "task" attribute found')
 
-    # Compose name by looping in the info dictionary
+    # Compose name by looping in the bids_keys dictionary
     # and adding nonempty keys
     name = ''
-    for key in info:
-        if info[key]:
-            name = f'{name}{key}-{info[key]}_'
+    for key in bids_keys:
+        if bids_keys[key]:
+            name = f'{name}{key}-{bids_keys[key]}_'
 
     # Finish path, create it, add filename, export
     fldr = os.path.join(fldr, 'func')
