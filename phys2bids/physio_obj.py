@@ -90,7 +90,7 @@ class BlueprintInput():
     ----------
     timeseries : (ch, [tps]) list
         List of numpy 1d arrays - one for channel, plus one for time.
-        Time channel has to be the first, trigger the second.
+        Time channel has to be the first.
         Contains all the timeseries recorded.
         Supports different frequencies!
     freq : (ch) list of floats
@@ -164,7 +164,7 @@ class BlueprintInput():
 
     def rename_channels(self, new_names):
         """
-        Renames the channels. If 'time' or 'trigger' were specified,
+        Renames the channels. If 'time' was specified,
         it makes sure that they're the first and second entry.
 
         Parameters
