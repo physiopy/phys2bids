@@ -82,6 +82,7 @@ def has_size(var, data_size, token):
 class BlueprintInput():
     """
     Main input object for phys2bids.
+
     Contains the blueprint to be populated.
     !!! Pay attention: there's rules on how to populate this object.
     See below ("Attention") !!!
@@ -102,6 +103,8 @@ class BlueprintInput():
         in the output files.
     units : (ch) list of strings
         List of the units of the channels.
+    trigger_idx : int
+        The trigger index. Optional. Default is 0.
     num_timepoints_found: int or None
         Amount of timepoints found in the automatic count.
         This is initialised as "None" and then computed internally,
@@ -141,19 +144,22 @@ class BlueprintInput():
     - units[0] = 's'
     - Actual number of channels +1 <= ch_amount
     """
-    def __init__(self, timeseries, freq, ch_name, units):
+
+    def __init__(self, timeseries, freq, ch_name, units, trigger_idx=0):
+        """Initialise BlueprintInput (see class docstring)."""
         self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
         self.freq = has_size(is_valid(freq, list,
                                       list_type=(int, float)),
                              self.ch_amount, 0.0)
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
+        self.trigger_idx = is_valid(trigger_idx, int)
         self.num_timepoints_found = None
 
     @property
     def ch_amount(self):
         """
-        Property. Returns number of channels (ch).
+        Property. Return number of channels (ch).
 
         Returns
         -------
@@ -162,10 +168,50 @@ class BlueprintInput():
         """
         return len(self.timeseries)
 
+    def __getitem__(self, idx):
+        """
+        Return a copy of the object with a sliced version of self.timeseries.
+
+        The slicing is based on the trigger. If necessary, computes a sort of
+        interpolation to get the right index in multifreq.
+
+        Parameters
+        ----------
+        idx: int, tuple of int or slicer
+            indexes to use to slice the timeseries.
+
+        Returns
+        -------
+        BlueprintInput object
+            a copy of the object with the part of timeseries expressed by idx.
+        """
+        sliced_timeseries = []
+
+        if isinstance(idx, int):
+            idx = slice(idx, idx+1)
+
+        if not self.trigger_idx:
+            self.trigger_idx = 0
+
+        for n, channel in enumerate(self.timeseries):
+            idx_dict = {'start': idx.start, 'stop': idx.stop, 'step': idx.step}
+            for i in ['start', 'stop', 'step']:
+                if idx_dict[i]:
+                    idx_dict[i] = int(np.floor(self.freq[n] /
+                                               self.freq[self.trigger_idx]
+                                               * idx_dict[i]))
+
+            new_idx = slice(idx_dict['start'], idx_dict['stop'], idx_dict['step'])
+            sliced_timeseries[n] = channel[new_idx]
+
+        return BlueprintInput(sliced_timeseries, self.freq, self.ch_name,
+                              self.units, self.trigger_idx)
+
     def rename_channels(self, new_names):
         """
-        Renames the channels. If 'time' was specified,
-        it makes sure that they're the first and second entry.
+        Rename the channels.
+
+        If 'time' was specified, it makes sure that it's the first entry.
 
         Parameters
         ----------
@@ -224,39 +270,22 @@ class BlueprintInput():
             Removes element at index idx
         self.units:
             Removes element at index idx
-        self.ch_amount:
-            In all the property that are lists, the element correspondent to
-            `idx` gets deleted
+        self.trigger_idx:
+            If the deleted index was the one of the trigger, set the trigger idx to 0.
         """
         del self.timeseries[idx]
         del self.freq[idx]
         del self.ch_name[idx]
         del self.units[idx]
 
-    def start_at_triggerpoint(self, idx, chtrig):
-        """
-        Returns the timeseries property, starting at the relative index
-        of the trigger channel. Doesn't support multifreq yet.
-
-        Parametes
-        ---------
-        idx: int
-            The index in the trigger to start from.
-        chtrig: int
-            The channel of the trigger
-
-        Notes
-        -----
-        Outcome:
-        self.timeseries:
-            Returns the timeseries from idx instead of from the beginning
-        """
-        self.timeseries = self.timeseries[:][idx]
+        if self.trigger_idx == idx:
+            LGR.warning('Removing trigger channel - are you sure you are doing'
+                        'the right thing?')
+            self.trigger_idx = 0
 
     def check_trigger_amount(self, chtrig=1, thr=None, num_timepoints_expected=0, tr=0):
         """
-        Counts trigger points and corrects time offset in
-        the list representing time.
+        Count trigger points and correct time offset in channel "time".
 
         Parameters
         ----------
