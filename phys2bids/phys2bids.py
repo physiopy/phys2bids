@@ -148,7 +148,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
                  'dir': '', 'rec': '', 'run': '', 'recording': record_label}
 
     # Start filling bids_keys dictionary and path with subject and session
-    if sub[:4] == 'sub-':
+    if sub.startswith('sub-'):
         bids_keys['sub'] = sub[4:]
         fldr = os.path.join(outdir, sub)
     else:
