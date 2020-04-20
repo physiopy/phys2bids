@@ -156,7 +156,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
         fldr = os.path.join(outdir, f'sub-{sub}')
 
     if ses:
-        if ses[:4] == 'ses-':
+        if ses.startswith('ses-'):
             bids_keys['ses'] = ses[4:]
             fldr = os.path.join(fldr, ses)
         else:
