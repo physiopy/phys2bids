@@ -50,7 +50,7 @@ def is_valid(var, var_type, list_type=None):
 
 def has_size(var, data_size, token):
     """
-    Checks that the var has the same dimension of the data
+    Check that the var has the same dimension of the data.
     If it's not the case, fill in the var or removes exceding var entry.
 
     Parameters
@@ -188,8 +188,7 @@ class BlueprintInput():
 
     def return_index(self, idx):
         """
-        Returns the proper list entry of all the
-        properties of the object, given an index.
+        Return the list entries of all the object properties, given an index.
 
         Parameters
         ----------
@@ -207,8 +206,7 @@ class BlueprintInput():
 
     def delete_at_index(self, idx):
         """
-        Deletes all the proper list entry of the
-        properties of the object, given an index.
+        Delete the list entries of the object properties, given their index.
 
         Parameters
         ----------
@@ -365,6 +363,7 @@ class BlueprintInput():
 class BlueprintOutput():
     """
     Main output object for phys2bids.
+
     Contains the blueprint to be exported.
 
     Attributes
@@ -398,7 +397,9 @@ class BlueprintOutput():
     init_from_blueprint:
         method to populate from input blueprint instead of init
     """
+
     def __init__(self, timeseries, freq, ch_name, units, start_time):
+        """Initialise BlueprintOutput (see class docstring)."""
         self.timeseries = is_valid(timeseries, np.ndarray)
         self.freq = is_valid(freq, (int, float))
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
@@ -419,8 +420,7 @@ class BlueprintOutput():
 
     def return_index(self, idx):
         """
-        Returns all the proper list entry of the
-        properties of the object, given an index.
+        Return the list entries of all the object properties, given an index.
 
         Parameters
         ----------
@@ -438,8 +438,7 @@ class BlueprintOutput():
 
     def delete_at_index(self, idx):
         """
-        Returns all the proper list entry of the
-        properties of the object, given an index.
+        Delete the list entries of the object properties, given their index.
 
         Parameters
         ----------
