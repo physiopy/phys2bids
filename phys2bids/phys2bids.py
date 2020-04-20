@@ -175,7 +175,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     # and adding nonempty keys
     name = ''
     for key in bids_keys:
-        if bids_keys[key]:
+        if bids_keys[key] != '':
             name = f'{name}{key}-{bids_keys[key]}_'
 
     # Finish path, create it, add filename, export
