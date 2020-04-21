@@ -188,7 +188,7 @@ class BlueprintInput():
         sliced_timeseries = []
 
         if isinstance(idx, int):
-            idx = slice(idx, idx+1)
+            idx = slice(idx, idx + 1)
 
         if not self.trigger_idx:
             self.trigger_idx = 0
@@ -197,8 +197,8 @@ class BlueprintInput():
             idx_dict = {'start': idx.start, 'stop': idx.stop, 'step': idx.step}
             for i in ['start', 'stop', 'step']:
                 if idx_dict[i]:
-                    idx_dict[i] = int(np.floor(self.freq[n] /
-                                               self.freq[self.trigger_idx]
+                    idx_dict[i] = int(np.floor(self.freq[n]
+                                               / self.freq[self.trigger_idx]
                                                * idx_dict[i]))
 
             new_idx = slice(idx_dict['start'], idx_dict['stop'], idx_dict['step'])
