@@ -5,7 +5,12 @@ def heur(physinfo):
     """
     Set of if .. elif statements to fill BIDS names.
 
-    Require the user (you!) to adjust it accordingly!
+    It requires the user (you!) to adjust it accordingly!
+    It needs an ``if`` or ``elif`` statement for each file that 
+    needs to be processed.
+    The statement will test if the ``physinfo``:
+        - is similar to a string (first case), or
+        - exactly matches a string (second case).
 
     Parameters
     ----------

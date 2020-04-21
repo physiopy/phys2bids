@@ -282,8 +282,8 @@ Alright, now the really interesting part! This section will explain how to use t
 
 .. literalinclude:: ../phys2bids/heuristics/heur_tutorial.py
    :linenos:
-   :lines: 41-63
-   :lineno-start: 41
+   :lines: 44-62
+   :lineno-start: 44
 
 The heuristic file has to be written accordingly, with a set of rules that could work for all the files in your dataset. You can learn more about it if you check the `guide on how to set it up <heuristic.html>`_.
 In this case, our heuristic file looks for a file that contains the name ``tutorial``. It corresponds to the task ``test`` and run ``00``. Note that **only the task is required**, all the other fields are optional - look them up in the BIDs documentation and see if you need them.

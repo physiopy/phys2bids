@@ -22,26 +22,27 @@ Initialisation
 
 .. literalinclude:: ../phys2bids/heuristics/heur_tutorial.py
    :linenos:
-   :lines: 1-40
+   :lines: 1-43
 
 It's important **not to modify this part of the file**. Instead, you can copy and paste it into your own heuristic file.
 
-This file looks like a python function, initialised by two mandatory parameters:
--``physinfo`` is the information used to label your file. **At the moment, it corresponds to the name of the input file itself**. This is what you need to build your heuristic.
--``info`` is a `python dictionary <https://www.w3schools.com/python/python_dictionaries.asp>`_ passed by the main script that contains the BIDS keys, such as `sub` and `ses`, as well as all the possible keys you can add to your heuristics. This is what you will work with in creating your heuristic
+This file looks like a python function, initialised by a mandatory parameter, ``physinfo``.
+| ``physinfo`` is the information used to label your file. **At the moment, it corresponds to the name of the input file itself**. This is what you need to build your heuristic.
 
-The scripts imports ``fnmatch``, a nice python module that lets you use bash-like wildcards, as well as ``logger``, a module that let us log what happens in the program execution.
+The function initialises ``info``, a `python dictionary <https://www.w3schools.com/python/python_dictionaries.asp>`_ that contains the BIDS keys, such as `sub` and `ses`, as well as all the possible keys you can add to your heuristics. This is what you will work with in creating your heuristic.
+
+The scripts also imports ``fnmatch``, a nice python module that lets you use bash-like wildcards.
 
 Dictionaries
 ^^^^^^^^^^^^
 
 .. literalinclude:: ../phys2bids/heuristics/heur_tutorial.py
    :linenos:
-   :lines: 41-63
-   :lineno-start: 41
+   :lines: 44-67
+   :lineno-start: 44
    :dedent: 4
 
-| This is the core of the function, and the part that should be adapted to process your files. In practice, it's the beginning of a |statement|_.
+| This is the core of the function, and the part that should be adapted to process your files. In practice, it's a |statement|_.
 | You need an ``if`` or ``elif`` statement for each file that you want to process, that will test if the ``physinfo`` is similar to a string (first case) or exactly matches a string (second case). The content of the statement is a set of `variable initialisations as a string <https://www.w3schools.com/python/python_strings.asp>`_, with the only difference that you're populating a dictionary here. This means that instead of declaring something like ``var = 'something'``, you will declare something like ``info['var'] = 'something'``
 | The list of possible keys is in the comment above, and corresponds to the list of possible entities of the `BIDs specification <https://bids-specification.readthedocs.io/en/stable/04-modality-specific-files/06-physiological-and-other-continuous-recordings.html>`_:
 
@@ -68,11 +69,11 @@ Functional code
 
 .. literalinclude:: ../phys2bids/heuristics/heur_tutorial.py
    :linenos:
-   :lines: 64-
-   :lineno-start: 64
+   :lines: 68-
+   :lineno-start: 68
    :dedent: 4
 
-This part contains a simple warning call that will be reported to the logger if the heuristic file doesn't contain actual references to your input files.
+This part is very simple: it returns the dictionary populated by the correct statement to the main program.
 It's important **not to modify this part of the file**. Instead, you can copy and paste it into your own heuristic file.
 
 Using the heuristic file
