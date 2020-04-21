@@ -112,8 +112,7 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
 
 def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     """
-    Import the heuristic file specified by the user and uses its output
-    to rename the file.
+    Import and use the heuristic specified by the user to rename the file.
 
     Parameters
     ----------
@@ -165,10 +164,12 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
 
     # Load heuristic and use it to fill dictionary
     heur = utils.load_heuristic(heur_file)
-    bids_keys = heur.heur(Path(filename).stem, bids_keys)
+    bids_keys.update(heur.heur(Path(filename).stem)
 
     # If bids_keys['task'] is still empty, stop the program
     if not bids_keys['task']:
+        LGR.warning(f'The heuristic {heur_file} could not deal with'
+                    f'{Path(filename).stem}')
         raise KeyError(f'No "task" attribute found')
 
     # Compose name by looping in the bids_keys dictionary
