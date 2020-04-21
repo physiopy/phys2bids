@@ -147,7 +147,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
                  'dir': '', 'rec': '', 'run': '', 'recording': record_label}
 
     # Start filling bids_keys dictionary and path with subject and session
-    if sub[:4] == 'sub-':
+    if sub.startswith('sub-'):
         bids_keys['sub'] = sub[4:]
         fldr = os.path.join(outdir, sub)
     else:
@@ -155,7 +155,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
         fldr = os.path.join(outdir, f'sub-{sub}')
 
     if ses:
-        if ses[:4] == 'ses-':
+        if ses.startswith('ses-'):
             bids_keys['ses'] = ses[4:]
             fldr = os.path.join(fldr, ses)
         else:
@@ -176,7 +176,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     # and adding nonempty keys
     name = ''
     for key in bids_keys:
-        if bids_keys[key]:
+        if bids_keys[key] != '':
             name = f'{name}{key}-{bids_keys[key]}_'
 
     # Finish path, create it, add filename, export
