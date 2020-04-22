@@ -285,7 +285,7 @@ class BlueprintInput():
                         'the right thing?')
             self.trigger_idx = 0
 
-    def check_trigger_amount(self, chtrig=1, thr=None, num_timepoints_expected=0, tr=0):
+    def check_trigger_amount(self, thr=None, num_timepoints_expected=0, tr=0):
         """
         Count trigger points and correct time offset in channel "time".
 

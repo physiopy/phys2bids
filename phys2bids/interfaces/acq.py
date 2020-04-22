@@ -50,4 +50,4 @@ def populate_phys_input(filename, chtrig):
         units.append(ch.units)
         names.append(ch.name)
 
-    return BlueprintInput(timeseries, freq, names, units)
+    return BlueprintInput(timeseries, freq, names, units, chtrig)
