@@ -197,7 +197,7 @@ def bidsify_units(unit):
     unless there is a weird way to multiply two dictionaries together.
     """
 
-    # Init dictionary of aliases. Entries are lowercases only
+    # Init dictionary of aliases for units. Entries are lowercases only
     unit_aliases = {
                     # second: time
                     's': 's', 'second': 's', 'seconds': 's', 'sec': 's',
@@ -221,6 +221,20 @@ def bidsify_units(unit):
                     'v': 'V', 'volt': 'V', 'volts': 'V',
                     # degree Celsius: temperature relative to 273.15 K
                     '°c': '°C', 'celsius': '°C', '°celsius': '°C',
+    }
+
+    # Init dictionary of aliases for multipliers. Entries are still lowercase
+    prefix_aliases = {
+                      # Multiples - skip "mega" and only up to "tera"
+                      'da': 'da', 'deca': 'da', 'h': 'h', 'hecto': 'h',
+                      'k': 'k', 'kilo': 'k', 'g': 'G', 'giga': 'G', 't': 'T',
+                      'tera': 'T',
+                      # Submultipliers
+                      'd': 'd', 'deci': 'd', 'c': 'c', 'centi': 'c',
+                      'm': 'm', 'milli': 'm', 'µ': 'µ', 'micro': 'µ',
+                      'n': 'n', 'nano': 'n', 'p': 'p', 'pico': 'p',
+                      'f': 'f', 'femto': 'f', 'a': 'a', 'atto': 'a',
+                      'z': 'z', 'zepto': 'z', 'y': 'y', 'yocto': 'y',
     }
 
     # Tries to de-alias the lowered unit if present in dictionary
