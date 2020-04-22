@@ -56,14 +56,31 @@ def heur(physinfo):
     # ##  See example below          ## #
     # ################################# #
 
-    if fnmatch.fnmatchcase(physinfo, '*samefreq*'):
-        info['task'] = 'test'
-        info['run'] = '01'
-        info['rec'] = 'biopac'
-    elif physinfo == 'Example':
+    if physinfo == 'origfilename1':
+        info['task'] = 'newname1'
+    elif physinfo == 'origfilename2':
+        info['task'] = 'newname2'
+        info['run'] = 'runnum'
+    elif physinfo == 'BH4':
+        info['task'] = 'breathhold'
+    elif fnmatch.fnmatchcase(physinfo, 'MOTOR?'):
+        info['task'] = 'motor'
+    elif fnmatch.fnmatchcase(physinfo, 'LOCALIZER?'):
+        info['task'] = 'pinel'
+    elif fnmatch.fnmatchcase(physinfo, 'SIMON?'):
+        info['task'] = 'simon'
+    elif physinfo == 'RS1':
         info['task'] = 'rest'
         info['run'] = '01'
-        info['acq'] = 'resp'
+    elif physinfo == 'RS2':
+        info['task'] = 'rest'
+        info['run'] = '02'
+    elif physinfo == 'RS3':
+        info['task'] = 'rest'
+        info['run'] = '03'
+    elif physinfo == 'RS4':
+        info['task'] = 'rest'
+        info['run'] = '04'
 
     # ############################## #
     # ## Don't modify below this! ## #
