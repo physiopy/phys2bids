@@ -15,7 +15,8 @@ LGR = logging.getLogger(__name__)
 
 def is_valid(var, var_type, list_type=None):
     """
-    Checks that the var is of a certain type.
+    Check that the var is of a certain type.
+
     If type is list and list_type is specified,
     checks that the list contains list_type.
 
@@ -51,6 +52,7 @@ def is_valid(var, var_type, list_type=None):
 def has_size(var, data_size, token):
     """
     Check that the var has the same dimension of the data.
+
     If it's not the case, fill in the var or removes exceding var entry.
 
     Parameters
