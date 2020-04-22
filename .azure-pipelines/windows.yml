@@ -37,11 +37,12 @@ jobs:
         cd for_testing
         cp ../setup.cfg .
         python -m pytest --doctest-modules --cov-report term-missing --cov=phys2bids --pyargs phys2bids
+        cp ./.coverage ../
       displayName: 'Run tests'
       condition: and(succeeded(), eq(variables['CHECK_TYPE'], 'test'))
     - script: |
-        cp for_testing/coverage.xml ./
-        bash <(curl -s https://codecov.io/bash)
+        python -m pip install codecov
+        codecov
       displayName: 'Upload To Codecov'
       env:
         CODECOV_TOKEN: $(CODECOV_TOKEN)
