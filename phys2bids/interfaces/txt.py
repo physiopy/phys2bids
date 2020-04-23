@@ -18,7 +18,7 @@ LGR = logging.getLogger(__name__)
 
 def check_multifreq(timeseries, freq, start=0, leftout=0):
     """
-    Checks if there are channels with different frequency than the maximum one
+    Check if there are channels with different frequency than the maximum one.
 
     Parameters
     ----------
