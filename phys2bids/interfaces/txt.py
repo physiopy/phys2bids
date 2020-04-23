@@ -31,6 +31,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
     leftout : integer
         number of samples at the end of the channel that are not considered
         This is done  so this process doesn't take forever
+
     Returns
     -------
     mfreq: list
@@ -70,8 +71,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
 
 def process_labchart(channel_list, chtrig, header=[]):
     """
-    Process labchart header and channel_list and puts it in
-    a physio_obj.BlueprintInput
+    Process labchart header and channel_list and make a physio_obj.BlueprintInput.
 
     Parameters
     ----------
@@ -156,8 +156,7 @@ def process_labchart(channel_list, chtrig, header=[]):
 
 def process_acq(channel_list, chtrig, header=[]):
     """
-    Process AcqKnowledge header and channel_list and puts it in
-    a physio_obj.BlueprintInput
+    Process AcqKnowledge header and channel_list to make a physio_obj.BlueprintInput.
 
     Parameters
     ----------
@@ -256,7 +255,7 @@ def process_acq(channel_list, chtrig, header=[]):
 
 def read_header_and_channels(filename, chtrig):
     """
-    Reads a txt file with a header and channels and separates them
+    Read a txt file with a header and channels and separate them.
 
     Parameters
     ----------
