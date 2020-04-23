@@ -1,0 +1,48 @@
+
+parameters:
+  name: ''
+  vmImage: ''
+  matrix: []
+
+jobs:
+- job: ${{ parameters.name }}
+  pool:
+    vmImage: ${{ parameters.vmImage }}
+  variables:
+    DEPENDS_FIRST: numpy>=1.9.3 matplotlib>=3.1.1
+    DEPENDS_SECOND: bioread>=1.0.4
+    CHECK_TYPE: test
+  strategy:
+    matrix:
+      ${{ insert }}: ${{ parameters.matrix }}
+
+  steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(PYTHON_VERSION)'
+        addToPath: true
+        architecture: '$(PYTHON_ARCH)'
+    - script: |
+        python -m pip install --upgrade pip setuptools>=30.3.0 wheel
+      displayName: 'Update build tools'
+    - script: |
+        python -m pip install %DEPENDS_FIRST%
+        python -m pip install %DEPENDS_SECOND%
+      displayName: 'Install dependencies'
+    - script: |
+        python -m pip install .[$(CHECK_TYPE)]
+      displayName: 'Install phys2bids'
+    - script: |
+        mkdir for_testing
+        cd for_testing
+        cp ../setup.cfg .
+        python -m pytest --doctest-modules --cov-report term-missing --cov=phys2bids --pyargs phys2bids
+        cp ./.coverage ../
+      displayName: 'Run tests'
+      condition: and(succeeded(), eq(variables['CHECK_TYPE'], 'test'))
+    - script: |
+        python -m pip install codecov
+        codecov
+      displayName: 'Upload To Codecov'
+      env:
+        CODECOV_TOKEN: $(CODECOV_TOKEN)

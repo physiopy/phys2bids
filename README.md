@@ -1,3 +1,4 @@
+<!--(https://raw.githubusercontent.com/physiopy/phys2bids/master/docs/_static/phys2bids_card.jpg)-->
 <a name="readme"></a>
 <img alt="Phys2BIDS" src="https://github.com/physiopy/phys2bids/blob/master/docs/_static/phys2bids_logo1280×640.png" height="150">
 
@@ -6,6 +7,7 @@ phys2bids
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3653153.svg)](https://doi.org/10.5281/zenodo.3653153)
 [![Build Status](https://travis-ci.org/physiopy/phys2bids.svg?branch=master)](https://travis-ci.org/physiopy/phys2bids)
+[![Build Status](https://dev.azure.com/physiopy/phys2bids/_apis/build/status/physiopy.phys2bids?branchName=master)](https://dev.azure.com/physiopy/phys2bids/_build/latest?definitionId=1&branchName=master)
 [![Join the chat at https://gitter.im/phys2bids/community](https://badges.gitter.im/phys2bids/community.svg)](https://gitter.im/phys2bids/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Documentation Status](https://readthedocs.org/projects/phys2bids/badge/?version=latest)](https://phys2bids.readthedocs.io/en/latest/?badge=latest)
 [![Requirements Status](https://requires.io/github/physiopy/phys2bids/requirements.svg?branch=master)](https://requires.io/github/physiopy/phys2bids/requirements/?branch=master)
@@ -35,6 +37,13 @@ Shortcuts:
 - [Developer installation](https://phys2bids.readthedocs.io/en/latest/contributing.html#linux-and-mac-developer-installation)
 - [**Contributor guide**](https://phys2bids.readthedocs.io/en/latest/contributorfile.html)
 - [**Code of Conduct**](https://phys2bids.readthedocs.io/en/latest/conduct.html)
+
+## The BrainWeb
+BrainWeb participants, welcome!
+We have a milestone [here](https://github.com/physiopy/phys2bids/milestone/5) as a collection of issues you could work on with our help. 
+Check the issues with a `BrainWeb` label. Of course, they are only suggestions, so feel free to tackle any issue you want, even open new ones!
+You can also contact us on Gitter, in the BrainHack Mattermost (<a href="https://mattermost.brainhack.org/brainhack/channels/physiopy">#physiopy</a>), and don't hesitate to contact [Stefano](https://github.com/smoia) in other ways to jump in the development!
+
 
 **The project is currently under development**.
 Any suggestion/bug report is welcome! Feel free to open an issue.

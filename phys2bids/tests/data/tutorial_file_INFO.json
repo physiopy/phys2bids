@@ -1,0 +1,31 @@
+{
+	"channels": [
+		"Trigger",
+		"CO2",
+		"O2",
+		"Pulse"
+	],
+	"frequencies": [
+		1000,
+		1000,
+		1000,
+		1000
+	],
+	"types": [
+		"txt"
+	],
+	"contains": {
+		"headers": "True",
+		"time_column": "True",
+		"comments": "False"
+	},
+	"acquisition": {
+		"instrument": "ADInstruments",
+		"software": "Labchart"
+	},
+	"neuroimaging": {
+		"TR": 1.2,
+		"num_tps": 158
+	},
+	"description": "3 breath-hold cycles"
+}

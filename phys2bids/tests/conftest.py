@@ -76,5 +76,5 @@ def multifreq_lab_file(testpath):
 
 @pytest.fixture
 def notime_lab_file(testpath):
-    return fetch_file('u5dq8', testpath,
+    return fetch_file('5829m', testpath,
                       'Test2_trigger_CO2_O2_pulse_1000Hz_534TRs_no_time.txt')

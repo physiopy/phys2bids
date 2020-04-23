@@ -9,7 +9,8 @@ def test_plot_all(samefreq_full_acq_file):
     test_path, test_filename = os.path.split(samefreq_full_acq_file)
     phys_obj = acq.populate_phys_input(samefreq_full_acq_file, chtrig)
     out = os.path.join(test_path, 'Test_belt_pulse_samefreq.png')
-    viz.plot_all(phys_obj, test_filename, outfile=out)
+    viz.plot_all(phys_obj.ch_name, phys_obj.timeseries, phys_obj.units,
+                 phys_obj.freq, test_filename, outfile=out)
     assert os.path.isfile(out)
 
 
