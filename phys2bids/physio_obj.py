@@ -315,7 +315,7 @@ class BlueprintInput():
         LGR.info('Counting trigger points')
         # Use the trigger channel to find the TRs,
         # comparing it to a given threshold.
-        trigger = self.timeseries[chtrig]
+        trigger = self.timeseries[self.trigger_idx]
         flag = 0
         if thr is None:
             thr = np.mean(trigger) + 2 * np.std(trigger)
