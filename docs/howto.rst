@@ -17,7 +17,12 @@ Setup
 
 In order to follow the tutorial, you need a very quick setup: download or clone the `github repository <https://github.com/physiopy/phys2bids>`_ and install either the latest stable or development release as described `here <installation.html#install-with-pip>`_.
 
-**Note**: for the tutorial, we will assume the repository was downloaded in ``/home/arthurdent/git``. Let's get there right now:
+.. warning::
+    Before starting using ``phy2bids``, check that you have installed all the extra modules that you need, depending on the files you will work with.
+
+    For instance, if you are planning to process AcqKnowledge files, install the interface dependencies as described `here <installation.html#>`_.
+
+For the tutorial, we will assume the repository was downloaded in ``/home/arthurdent/git``. Let's get there right now:
 
 .. code-block:: shell
 
@@ -32,7 +37,8 @@ The file can be found in ``phys2bids/phys2bids/tests/data/tutorial_file.txt``. T
    :linenos:
    :lines: 1-15
 
-**Note**: time is not a "real" channel recorded by LabChart or AcqKnowledge. For this reason, ``phys2bids`` treats it as a hidden channel, always in position 0. Channel 1 will be classed as the first channel recorded in either software.
+.. note::
+    time is not a "real" channel recorded by LabChart or AcqKnowledge. For this reason, ``phys2bids`` treats it as a hidden channel, always in position 0. Channel 1 will be classed as the first channel recorded in either software.
 
 Using the -info option
 ######################
@@ -251,7 +257,7 @@ There is one trigger that ``phys2bids`` couldn't find automatically. We can work
 
 By looking at this figure, we can work out that we need a smaller threshold in order to include the first time point. This can be implemented with the ``-thr`` argument:
 
-..  code-block:: shell
+.. code-block:: shell
 
     phys2bids -in tutorial_file_v2.txt -indir /home/arthurdent/git/phys2bids/phys2bids/tests/data/ -chtrig 1 -ntp 158 -tr 1.2 -thr 1.04 -outdir /home/arthurdent/physio_v2
 
@@ -296,7 +302,7 @@ As there might not be a link between the physiological file and the subject (and
 
 The output will look very similar to our previous calls, when we did not use the ``-heur``, ``-sub`` and ``-ses`` arguments. However, there is one extra line in command line output:
 
-..  code-block:: shell
+.. code-block:: shell
 
     INFO:phys2bids.phys2bids:Preparing BIDS output using /home/arthurdent/git/phys2bids/phys2bids/heuristics/heur_tutorial.py
 
