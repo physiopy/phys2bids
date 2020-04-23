@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Phys2bids is a python3 library meant to set physiological files in BIDS
-standard.
+Phys2bids is a python3 library meant to set physiological files in BIDS standard.
 
 It was born for Acqknowledge files (BIOPAC), and at the moment it supports
 ``.acq`` files and ``.txt`` files obtained by labchart (ADInstruments).
@@ -28,12 +27,12 @@ Please scroll to bottom to read full license.
 """
 
 import os
-import logging
 import datetime
-
+import logging
 from copy import deepcopy
-from numpy import savetxt
 from pathlib import Path
+
+from numpy import savetxt
 
 from phys2bids import utils, viz, _version
 from phys2bids.cli.run import _get_parser
@@ -44,7 +43,7 @@ LGR = logging.getLogger(__name__)
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
     """
-    Prints a summary onscreen and in file with informations on the files.
+    Print a summary onscreen and in file with informations on the files.
 
     Parameters
     ----------
@@ -85,7 +84,7 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
 
 def print_json(outfile, samp_freq, time_offset, ch_name):
     """
-    Prints the json required by BIDS format.
+    Print the json required by BIDS format.
 
     Parameters
     ----------
@@ -112,10 +111,8 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
 
 
 def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
-    utils.check_file_exists(heur_file)
     """
-    Import the heuristic file specified by the user and uses its output
-    to rename the file.
+    Import and use the heuristic specified by the user to rename the file.
 
     Parameters
     ----------
@@ -137,39 +134,56 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     -------
     heurpath: str or path
         Returned fullpath to tsv.gz new file (post BIDS formatting).
+
+    Raises
+    ------
+    KeyError
+        if `bids_keys['task']` is empty
     """
+    utils.check_file_exists(heur_file)
 
-    if sub[:4] != 'sub-':
-        name = f'sub-{sub}'
+    # Initialise a dictionary of bids_keys that has already "recording"
+    bids_keys = {'sub': '', 'ses': '', 'task': '', 'acq': '', 'ce': '',
+                 'dir': '', 'rec': '', 'run': '', 'recording': record_label}
+
+    # Start filling bids_keys dictionary and path with subject and session
+    if sub.startswith('sub-'):
+        bids_keys['sub'] = sub[4:]
+        fldr = os.path.join(outdir, sub)
     else:
-        name = sub
-
-    fldr = os.path.join(outdir, name)
+        bids_keys['sub'] = sub
+        fldr = os.path.join(outdir, f'sub-{sub}')
 
     if ses:
-        if ses[:4] != 'ses-':
-            ses = f'ses-{ses}'
+        if ses.startswith('ses-'):
+            bids_keys['ses'] = ses[4:]
+            fldr = os.path.join(fldr, ses)
+        else:
+            bids_keys['ses'] = ses
+            fldr = os.path.join(fldr, f'ses-{ses}')
 
-        fldr = os.path.join(fldr, ses)
-        name = f'{name}_{ses}'
+    # Load heuristic and use it to fill dictionary
+    heur = utils.load_heuristic(heur_file)
+    bids_keys.update(heur.heur(Path(filename).stem))
 
+    # If bids_keys['task'] is still empty, stop the program
+    if not bids_keys['task']:
+        LGR.warning(f'The heuristic {heur_file} could not deal with'
+                    f'{Path(filename).stem}')
+        raise KeyError(f'No "task" attribute found')
+
+    # Compose name by looping in the bids_keys dictionary
+    # and adding nonempty keys
+    name = ''
+    for key in bids_keys:
+        if bids_keys[key] != '':
+            name = f'{name}{key}-{bids_keys[key]}_'
+
+    # Finish path, create it, add filename, export
     fldr = os.path.join(fldr, 'func')
     utils.path_exists_or_make_it(fldr)
 
-    cwd = os.getcwd()
-    os.chdir(outdir)
-
-    heur = utils.load_heuristic(heur_file)
-    name = heur.heur(Path(filename).stem, name)
-
-    recording = ''
-    if record_label:
-        recording = f'_recording-{record_label}'
-
-    heurpath = os.path.join(fldr, f'{name}{recording}_physio')
-    # for ext in ['.tsv.gz', '.json', '.log']:
-    #     move_file(outfile, heurpath, ext)
-    os.chdir(cwd)
+    heurpath = os.path.join(fldr, f'{name}physio')
 
     return heurpath
 
@@ -179,6 +193,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               tr=1, thr=None, ch_name=[], chplot='', debug=False, quiet=False):
     """
     Main workflow of phys2bids.
+
     Runs the parser, does some checks on input, then imports
     the right interface file to read the input. If only info is required,
     it returns a summary onscreen.
@@ -254,7 +269,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     phys_in.print_info(filename)
     # #!# Here the function viz.plot_channel should be called
     if chplot != '' or info:
-        viz.plot_all(phys_in, infile, chplot)
+        viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
+                     phys_in.freq, infile, chplot)
     # If only info were asked, end here.
     if info:
         return
@@ -275,8 +291,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
                          plot_path, tr, phys_in.thr, num_timepoints_expected, filename)
     else:
-        LGR.info('Not plotting trigger. If you want the trigger to be'
-                 ' plotted enter -tr or -ntp, preferably both.')
+        LGR.warning('Skipping trigger pulse count. If you want to run it, '
+                    'call phys2bids using "-ntp" and "-tr" arguments')
 
     # The next few lines remove the undesired channels from phys_in.
     if chsel:

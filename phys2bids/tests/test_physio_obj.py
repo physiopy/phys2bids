@@ -3,8 +3,9 @@ Tests physio_obj.py
 """
 
 import numpy as np
-from phys2bids import physio_obj as po
 from pytest import raises
+
+from phys2bids import physio_obj as po
 
 
 # Tests is_valid
