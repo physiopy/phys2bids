@@ -147,7 +147,7 @@ class BlueprintInput():
     - Actual number of channels +1 <= ch_amount
     """
 
-    def __init__(self, timeseries, freq, ch_name, units, trigger_idx=0):
+    def __init__(self, timeseries, freq, ch_name, units, trigger_idx):
         """Initialise BlueprintInput (see class docstring)."""
         self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
         self.freq = has_size(is_valid(freq, list,
@@ -316,6 +316,7 @@ class BlueprintInput():
         # Use the trigger channel to find the TRs,
         # comparing it to a given threshold.
         trigger = self.timeseries[self.trigger_idx]
+        LGR.info(f'The trigger is in channel {self.trigger_idx}')
         flag = 0
         if thr is None:
             thr = np.mean(trigger) + 2 * np.std(trigger)

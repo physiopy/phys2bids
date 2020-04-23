@@ -53,9 +53,11 @@ def test_BlueprintInput():
     test_freq = [42.0, 3.14, 20.0]
     test_chn_name = ['time', 'trigger', 'chocolate']
     test_units = ['s', 's', 'sweetness']
+    test_chtrig = 1
     num_channnels = len(test_timeseries)
 
-    blueprint_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name, test_units)
+    blueprint_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                     test_units, test_chtrig)
 
     # Tests rename_channels
     new_names = ['trigger', 'time', 'lindt']
@@ -87,9 +89,11 @@ def test_BlueprintOutput():
     test_freq = [42.0, 3.14, 20.0]
     test_chn_name = ['trigger', 'time', 'chocolate']
     test_units = ['s', 's', 'sweetness']
+    test_chtrig = 1
     num_channnels = len(test_timeseries)
 
-    blueprint_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name, test_units)
+    blueprint_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                     test_units, test_chtrig)
 
     # Tests init_from_blueprint
     blueprint_out = po.BlueprintOutput.init_from_blueprint(blueprint_in)
