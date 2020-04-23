@@ -77,4 +77,4 @@ def test_use_heuristic(tmpdir, test_sub, test_ses):
     test_result = (f'{test_result_path}/func/{test_result_name}'
                    f'_task-test_rec-biopac_run-01_recording-test_physio')
 
-    assert test_result == str(heur_path)
+    assert os.path.normpath(test_result) == os.path.normpath(str(heur_path))
