@@ -28,7 +28,7 @@ Install with ``pip``
 ^^^^^^^^^^^^^^^^^^^^
 
 .. note::
-	The following instruction are provided assuming that python 3 is **not** your default version of python.
+	The following instructions are provided assuming that python 3 is **not** your default version of python.
 	If it is, remember to use ``pip`` instead of ``pip3``.
 	If you want to check, type ``python --version`` in a terminal.
 
