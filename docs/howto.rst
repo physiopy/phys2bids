@@ -18,7 +18,7 @@ Setup
 In order to follow the tutorial, you need a very quick setup: download or clone the `github repository <https://github.com/physiopy/phys2bids>`_ and install either the latest stable or development release as described `here <installation.html#install-with-pip>`_.
 
 .. warning::
-    Before starting using ``phy2bids``, check that you have installed all the extra modules that you need, depending on the files you will work with.
+    Before starting to use ``phy2bids``, check that you have installed all the extra modules that you need, depending on the files you will work with.
 
     For instance, if you are planning to process AcqKnowledge files, install the interface dependencies as described `here <installation.html#>`_.
 
@@ -209,8 +209,8 @@ If for some reason ``-ntp`` and the number of timepoints found by ``phys2bids`` 
 3. The file doesn't have all the trigger pulses you expect because the recording started later than the MRI recording (e.g. by mistake).
 
 .. note::
-    ``phys2bids`` was created to deal with little sampling errors - such as distracted researchers that started sampling a bit too late than expected. For this reason, if it finds less trigger pulses than the amount specified, it will assume that the missing ones are at the beginning and anticipate the starting time consequently. 
-    
+    ``phys2bids`` was created to deal with little sampling errors - such as distracted researchers that started sampling a bit too late than expected. For this reason, if it finds less trigger pulses than the amount specified, it will assume that the missing ones are at the beginning and anticipate the starting time consequently.
+
 
 Let's go through an example where the number of timepoints automatically found is not correct. For that, will we use tutorial_file_v2.txt (in the same location as tutorial_file.txt):
 

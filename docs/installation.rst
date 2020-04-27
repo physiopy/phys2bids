@@ -51,7 +51,7 @@ Open a terminal in the ``phy2bids`` folder and execute the command::
 Install extra modules
 ~~~~~~~~~~~~~~~~~~~~~
 
-If you are planning to use other file formats than plain ``txt``, you need to install extra modules to have the right interface.
+If you are planning to use file formats other than plain ``txt``, you need to install extra modules to have the right interface.
 Extra modules installation can be done with the sintax::
 
 	pip3 install <package>[<extra>]
@@ -62,6 +62,7 @@ Where ``<package>>`` is either ``phys2bids`` or ``.``, depending on how you inst
 	- ``interfaces``: for all the interfaces above.
 
 For instance, if you plan to install phys2bids and use all the interfaces, run::
+
     pip3 install phys2bids[interfaces]
 
 Install without ``pip``
