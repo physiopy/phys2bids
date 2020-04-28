@@ -9,12 +9,12 @@ First of all: thank you!
 Contributions can be made in different ways, not only code!
 As we follow the `all-contributors`_ specification, any contribution will be recognised accordingly.
 
-The first thing you might want to do, is having a look at the `contributor guide <contributorfile.html>`_ page as well as the `code of conduct <conduct.html>`_.
+The first thing you might want to do, is have a look at the `contributor guide <contributorfile.html>`_ page as well as the `code of conduct <conduct.html>`_.
 
-The second thing is to be sure you have ``git`` and ``pip`` installed in your system.
+The second thing is to check you have ``git`` and ``pip`` installed in your system.
 
 The third thing is to install ``phys2bids`` as a developer.
-This will let you run the program with the latest modification, without requiring to re-install it every time.
+This will let you run the program with the latest modification, without requiring you to re-install it every time.
 
 .. _`all-contributors`: https://github.com/all-contributors/all-contributors
 
@@ -32,7 +32,7 @@ Basic installation
 If you use python frequently, or you are a python developer, chances are that all the necessary dependencies
 are already installed in your system.
 
-Move in the ``phy2bids`` folder and execute the command::
+Move into the ``phys2bids`` folder and execute the command::
 
 	``pip3 install -e .``
 
@@ -44,10 +44,10 @@ Full developer installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If it's your first experience as a python developer, or you just want to be sure that you have everything you need
-to collaborate with us, you can install ``phy2bids`` and all the other packages that we frequently use during development
+to collaborate with us, you can install ``phy2bids`` with all the other packages that we frequently use during development
 in one step.
 
-Move in the ``phy2bids`` folder and execute the command::
+Move into the ``phys2bids`` folder and execute the command::
 
 	``pip3 install -e .[all]``
 
