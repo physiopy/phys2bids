@@ -44,7 +44,7 @@ Alternatively, if you have ``git``, use the command::
 
     git clone https://github.com/physiopy/phys2bids.git
 
-Open a terminal in the ``phy2bids`` folder and execute the command::
+Open a terminal in the ``phys2bids`` folder and execute the command::
 
     pip3 install .
 
@@ -73,7 +73,7 @@ Alternatively, if you have ``git`` installed, use the command::
 
     git clone https://github.com/physiopy/phys2bids.git
 
-Open a terminal in the ``phy2bids`` folder and execute the command::
+Open a terminal in the ``phys2bids`` folder and execute the command::
 
     python3 setup.py
 

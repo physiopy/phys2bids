@@ -18,7 +18,7 @@ Setup
 In order to follow the tutorial, you need a very quick setup: download or clone the `github repository <https://github.com/physiopy/phys2bids>`_ and install either the latest stable or development release as described `here <installation.html#install-with-pip>`_.
 
 .. warning::
-    Before starting to use ``phy2bids``, check that you have installed all the extra modules that you need, depending on the files you will work with.
+    Before starting to use ``phys2bids``, check that you have installed all the extra modules that you need, depending on the files you will work with.
 
     For instance, if you are planning to process AcqKnowledge files, install the interface dependencies as described `here <installation.html#>`_.
 
@@ -59,7 +59,7 @@ However, we’ll use one more argument to have a sneak peak into the content of 
 
     phys2bids -in tutorial_file.txt -info
 
-This ``-info`` argument means ``phy2bids`` does not process the file, but only outputs information it reads from the file, by printing to the terminal and outputting a png plot of the data in the current directory:
+This ``-info`` argument means ``phys2bids`` does not process the file, but only outputs information it reads from the file, by printing to the terminal and outputting a png plot of the data in the current directory:
 
 .. code-block:: shell
 

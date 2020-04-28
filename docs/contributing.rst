@@ -44,7 +44,7 @@ Full developer installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If it's your first experience as a python developer, or you just want to be sure that you have everything you need
-to collaborate with us, you can install ``phy2bids`` with all the other packages that we frequently use during development
+to collaborate with us, you can install ``phys2bids`` with all the other packages that we frequently use during development
 in one step.
 
 Move into the ``phys2bids`` folder and execute the command::
