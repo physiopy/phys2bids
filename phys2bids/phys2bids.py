@@ -34,7 +34,7 @@ from pathlib import Path
 
 from numpy import savetxt, ones
 
-from phys2bids import utils, viz, _version
+from phys2bids import utils, viz, _version, split2phys
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
 
@@ -294,7 +294,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # TODO : automatize tps correction
 
         # CALL SPLIT2PHYS, give it BlueprintInput object and lists
-        # it will give a dictionary in the form {run_idx: (startpoint, endpoint), run_idx:...}
+        run_idx = split2phys(phys_in, num_timepoints_expected, tr)
+        # returns a dictionary in the form {run_idx: (startpoint, endpoint), run_idx:...}
         # ideally, we'd want to have a figure for each run
 
     # Create trigger plot. If possible, to have multiple outputs in the same

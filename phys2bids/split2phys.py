@@ -16,8 +16,7 @@ def split2phys(phys_in=None, ntp_list=[0, ], tr_list=[1, ]):
     """
     Parallel workflow of phys2bids.
 
-    Runs the split parser, does some check on inputs and exports
-    end indexes of each run based on npt_list and tr_list
+
 
     Arguments
     ---------
@@ -30,37 +29,31 @@ def split2phys(phys_in=None, ntp_list=[0, ], tr_list=[1, ]):
     # Initialize dictionaries to save phys_in endpoints
     run_timestamps = {}
 
-    # initialise start index as 0
-    start_index = 0
-
     for run_idx, run_tps in enumerate(ntp_list):
-        # ascertain run length and initialise Blueprint object
+
+        # initialise Blueprint object with run info
         phys_in.check_trigger_amount(ntp=run_tps, tr=tr_list[run_idx])
 
         # define padding - 20s * freq of trigger - padding is in nb of samples
-        padding = 20 * phys_in.freq[chtrig]
+        padding = 20 * phys_in.freq[0]
 
-        # LET'S START NOT SUPPORTING MULTIFREQ - end_index is nb of samples in run+start+first_trig
-        end_index = run_tps * tr_list[run_idx] * phys_in.freq[chtrig] + \
-            start_index + phys_in.trig_idx
+        # initialise start of run as index of first trigger (after padd of last run if not first)
+        run_start = phys_in.trigger_idx
+
+        # LET'S START NOT SUPPORTING MULTIFREQ - end_index is nb of samples in run+first_trig
+        run_end = run_tps * tr_list[run_idx] * phys_in.freq[0] + phys_in.trigger_idx
 
         # if the padding is too much for the remaining timeseries length
         # then the padding stops at the end of recording
-        if phys_in.timeseries[chtrig].shape[0] < (end_index + padding):
-            padding = phys_in.timeseries[chtrig].shape[0] - end_index
+        if phys_in.timeseries[0].shape[0] < (run_end + padding):
+            padding = phys_in.timeseries[0].shape[0] - run_end
 
         # Save start: and end_index in dictionary
         # While saving, add the padding
-        run_timestamps[run_idx] = (start_index, (end_index + padding))
+        run_timestamps[run_idx] = ((run_start - padding), (run_end + padding))
 
-        # set start_index for next run as end_index of this one
-        start_index = end_index
+        # update obj - SHOULD IT BE THE NEW START IDX OR A TUPLE (new_start,same_end )
+        phys_in.__getitem__(run_end)
+        # NOTE :  how do we keep original timestamps ?
 
-        # phys_in.start_at_time(start_index)
-        # NOTE : if we aim for updating indexes, how do we keep original timestamps ?
-
-    # make dict exportable
-    # or call it from phys2bids
-    # or call phys2bids from here
-    # or integrate this bit of code in phys2bids and adapt main parser by accepting
-    # lists and adding -run argument
+    return(run_timestamps)
