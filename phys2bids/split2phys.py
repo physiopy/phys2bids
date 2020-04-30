@@ -1,59 +1,70 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-
-A parallel CLI utility to segment the physiological input files.
-
-Cuts the physiological recording files into multiple runs
-with padding at start and end
-
-"""
 
 from phys2bids.physio_obj.BlueprintInput import check_trigger_amount
 
 
-def split2phys(phys_in=None, ntp_list=[0, ], tr_list=[1, ]):
+def split4phys(phys_in=None, ntp_list=[0, ], tr_list=[1, ], padding=9):
     """
-    Parallel workflow of phys2bids.
+    Utility for phys2bids.
 
+    Returns a dictionary item for each run in BlueprintInput object based on user's entries
+    Each tuple expresses the timestamps of runs in nb of samples(based on trigger channel)
+    Timestamps are the index of first and last triggers of a run, adjusted with padding
+    run_start and run_end indexes refer to the samples contained in the whole session
 
-
-    Arguments
+    Parameters
     ---------
-
+    phys_in : object
+        BlueprintInput object returned by Class in `physio_obj.py`
+    ntp_list : list
+        a list of integers given by the user, defined by `num_timepoints_expected`
+        Default: [0, ]
+    tr_list : list
+        a list of float given by the user, defined by `tr`
+        Default: [1,]
     Returns
     --------
-        ...
+    run_timestamps : dictionary
+        Containing tuples of run start and end indexes for each run, based on trigger channels
+        In the form of run_timestamps{run_idx:(start, end), run_idx:...}
     """
 
     # Initialize dictionaries to save phys_in endpoints
     run_timestamps = {}
-
+    # run_start = 0
     for run_idx, run_tps in enumerate(ntp_list):
 
-        # initialise Blueprint object with run info
+        # (re)initialise Blueprint object with current run info - correct time offset
         phys_in.check_trigger_amount(ntp=run_tps, tr=tr_list[run_idx])
 
-        # define padding - 20s * freq of trigger - padding is in nb of samples
-        padding = 20 * phys_in.freq[0]
+        # define padding - 9s * freq of trigger - padding is in nb of samples
+        padding = padding * phys_in.freq[0]
 
-        # initialise start of run as index of first trigger (after padd of last run if not first)
-        run_start = phys_in.trigger_idx
+        # initialise start of run as index of first trigger minus the padding
+        run_start = phys_in.timeseries[0].index(0) - padding
 
-        # LET'S START NOT SUPPORTING MULTIFREQ - end_index is nb of samples in run+first_trig
-        run_end = run_tps * tr_list[run_idx] * phys_in.freq[0] + phys_in.trigger_idx
+        # run length in seconds
+        end_sec = (run_tps * tr_list[run_idx])
+
+        # define index of the run's last trigger
+        run_end = phys_in.timeseries[0].index(end_sec)
 
         # if the padding is too much for the remaining timeseries length
         # then the padding stops at the end of recording
         if phys_in.timeseries[0].shape[0] < (run_end + padding):
             padding = phys_in.timeseries[0].shape[0] - run_end
 
-        # Save start: and end_index in dictionary
-        # While saving, add the padding
-        run_timestamps[run_idx] = ((run_start - padding), (run_end + padding))
+        # update the object so that it will look for the first trigger after previous run end
+        phys_in = phys_in[(run_end + 1):]
 
-        # update obj - SHOULD IT BE THE NEW START IDX OR A TUPLE (new_start,same_end )
-        phys_in.__getitem__(run_end)
-        # NOTE :  how do we keep original timestamps ?
-
+        # Save start and end_index in dictionary
+        # While saving, add the padding for end index
+        # keeps original timestamps by adjusting the indexes with previous end_index
+        if run_idx > 0:
+            run_start = run_start + run_timestamps[run_idx - 1][1]
+            run_end = run_end + run_timestamps[run_idx - 1][1]
+            run_timestamps[run_idx] = (run_start, run_end + padding)
+        else:
+            run_timestamps[run_idx] = (run_start, run_end + padding)
     return(run_timestamps)

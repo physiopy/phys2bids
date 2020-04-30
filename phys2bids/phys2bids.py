@@ -290,13 +290,15 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
         # Check that sum(ntp_list) is equivalent to num_timepoints_found, else call split2phys
         if phys_in.num_timepoints_found != sum(num_timepoints_expected):
-            raise Exception()  # not sure if it's the good one  ← you can use a general "Exception"
+            raise Exception('The number of triggers found is different than expected')
             # TODO : automatize tps correction
 
-        # CALL SPLIT2PHYS, give it BlueprintInput object and lists
-        run_idx = split2phys(phys_in, num_timepoints_expected, tr)
+        # CALL run4phys, give it BlueprintInput object and lists
+        run_idx = split4phys(phys_in, num_timepoints_expected, tr)
         # returns a dictionary in the form {run_idx: (startpoint, endpoint), run_idx:...}
         # ideally, we'd want to have a figure for each run
+
+        # OK NOW, HOW DO WE DEAL WITH THIS DICT?
 
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
@@ -339,6 +341,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     LGR.info(f'Preparing {output_amount} output files.')
     phys_out = {}  # create phys_out dict that will have a
+
+    # BLUEPRINT OBJECTS PER RUN
+
     # blueprint object per frequency
     # for each different frequency
     for uniq_freq in uniq_freq_list:
