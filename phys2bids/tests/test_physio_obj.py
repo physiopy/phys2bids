@@ -80,6 +80,11 @@ def test_BlueprintInput():
     blueprint_in.check_trigger_amount(thr=0.9, num_timepoints_expected=1)
     assert blueprint_in.num_timepoints_found == 1
 
+    # Tests delete_at_index with trigger channel
+    blueprint_in.delete_at_index(test_chtrig)
+    assert blueprint_in.ch_amount == num_channnels - 2
+    assert blueprint_in.trigger_idx == 0
+
 
 def test_BlueprintOutput():
     test_time = np.array([0, 1, 1, 2, 3, 5, 8, 13])
