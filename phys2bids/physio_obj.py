@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-I/O objects for phys2bids.
-"""
+"""I/O objects for phys2bids."""
 
 import logging
 from itertools import groupby
