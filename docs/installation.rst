@@ -28,16 +28,16 @@ Install with ``pip``
 ^^^^^^^^^^^^^^^^^^^^
 
 .. note::
-	The following instructions are provided assuming that python 3 is **not** your default version of python.
-	If it is, remember to use ``pip`` instead of ``pip3``.
-	If you want to check, type ``python --version`` in a terminal.
+    The following instructions are provided assuming that python 3 is **not** your default version of python.
+    If it is, remember to use ``pip`` instead of ``pip3``.
+    If you want to check, type ``python --version`` in a terminal.
 
 Install main program
 ~~~~~~~~~~~~~~~~~~~~
 
 Pypi has the latest stable release of ``phys2bids`` as a package. Just run::
 
-	pip3 install phys2bids
+    pip3 install phys2bids
 
 If you want the latest development version of the program, download the package from `github <https://github.com/physiopy/phys2bids>`_ and uncompress it.
 Alternatively, if you have ``git``, use the command::
@@ -54,16 +54,20 @@ Install extra modules
 If you are planning to use file formats other than plain ``txt``, you need to install extra modules to have the right interface.
 Extra modules installation can be done with the sintax::
 
-	pip3 install <package>[<extra>]
+    pip3 install <package>[<extra>]
 
 Where ``<package>>`` is either ``phys2bids`` or ``.``, depending on how you installed it, and ``<extra>`` is one of the following:
 
-	- ``acq``: if you plan to use native AcqKnowledge files (``.acq`` extension)
-	- ``interfaces``: for all the interfaces above.
+    - ``acq``: if you plan to use native AcqKnowledge files (``.acq`` extension)
+    - ``interfaces``: for all the interfaces above.
 
 For instance, if you plan to install phys2bids and use all the interfaces, run::
 
+    pip3 install phys2bids
     pip3 install phys2bids[interfaces]
+
+.. note::
+    It's important to run ``pip3 install phys2bids`` first and then install the extra modules. Due to the module requirements, installing extra modules directly might result in a failed installation. 
 
 Install without ``pip``
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -80,7 +84,7 @@ Open a terminal in the ``phys2bids`` folder and execute the command::
 You might still need to install extra dependencies listed at the beginning of the page.
 
 .. note::
-	If python 3 is already your default, you might use ``python`` rather than ``python3``
+    If python 3 is already your default, you might use ``python`` rather than ``python3``
 
 Check your installation!
 ^^^^^^^^^^^^^^^^^^^^^^^^
