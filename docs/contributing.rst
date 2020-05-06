@@ -24,7 +24,7 @@ Linux and mac developer installation
 
 Be sure to have git installed, then open a terminal and run::
 
-	``git clone https://github.com/physiopy/phys2bids.git``
+	git clone https://github.com/physiopy/phys2bids.git
 
 Basic installation
 ^^^^^^^^^^^^^^^^^^
@@ -34,11 +34,11 @@ are already installed in your system.
 
 Move into the ``phys2bids`` folder and execute the command::
 
-	``pip3 install -e .``
+	pip3 install -e .
 
 If python 3 is already your default, you might use instead::
 
-	``pip install -e .``
+	pip install -e .
 
 Full developer installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -49,8 +49,8 @@ in two steps.
 
 Move into the ``phys2bids`` folder and execute the command::
 
-	``pip3 install -e .``
-	``pip3 install -e .[all]``
+	pip3 install -e .
+	pip3 install -e .[all]
 
 This will install:
 
