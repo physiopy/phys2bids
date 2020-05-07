@@ -78,6 +78,29 @@ def has_size(var, data_size, token):
 
     return var
 
+def are_equal(self, other):
+    """
+    Return test of equality between two objects.
+
+    Parameters
+    ----------
+    other:
+        comparable object.
+
+    Returns
+    -------
+    boolean
+    """
+    try:
+        return self.__dict__ == other.__dict__
+    except ValueError:
+        return False
+    except AttributeError:
+        try:
+            return self.__dict__ == other
+        except:
+            return False
+
 
 class BlueprintInput():
     """
@@ -253,15 +276,7 @@ class BlueprintInput():
         -------
         boolean
         """
-        try:
-            return self.__dict__ == other.__dict__
-        except ValueError:
-            return False
-        except AttributeError:
-            try:
-                return self.__dict__ == other
-            except:
-                return False
+        return are_equal(self, other)
 
     def rename_channels(self, new_names):
         """
@@ -517,15 +532,7 @@ class BlueprintOutput():
         -------
         boolean
         """
-        try:
-            return self.__dict__ == other.__dict__
-        except ValueError:
-            return False
-        except AttributeError:
-            try:
-                return self.__dict__ == other
-            except:
-                return False
+        return are_equal(self, other)
 
     def return_index(self, idx):
         """
