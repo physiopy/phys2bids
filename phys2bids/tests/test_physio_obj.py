@@ -107,6 +107,57 @@ def test_BlueprintInput():
     assert blueprint_in.ch_amount == num_channnels - 2
     assert blueprint_in.trigger_idx == 0
 
+    # Test __eq__
+    assert blueprint_in == blueprint_in
+
+
+def test_BlueprintInput_slice():
+    """Test BlueprintInput_slice.__getitem__ ."""
+    test_time = np.array([0, 1, 2, 3, 4])
+    test_trigger = np.array([0, 1, 2, 3, 4])
+    test_half = np.array([0, 1, 2])
+    test_twice = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    test_timeseries = [test_time, test_trigger, test_half, test_twice]
+    test_freq = [1, 1, 0.5, 2]
+    test_chn_name = ['time', 'trigger', 'half', 'twice']
+    test_units = ['s', 'V', 'V', 'V']
+    test_chtrig = 1
+
+    phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                test_units, test_chtrig)
+
+    phys_dict = {'timeseries': test_timeseries,
+                 'freq': test_freq,
+                 'ch_name': ['time', 'trigger', 'half', 'twice'],
+                 'units': ['s', 'V', 'V', 'V'],
+                 'trigger_idx': 1,
+                 'num_timepoints_found': None}
+
+    # Test all-comprehensive slice
+    assert phys_in[0:len(test_trigger)] == phys_dict
+
+    # Test instantaneous slice first and last
+    for idx in [0, -1]:
+        phys_dict['timeseries'] = [np.array(test_time[idx]),
+                                   np.array(test_trigger[idx]),
+                                   np.array(test_half[idx]),
+                                   np.array(test_twice[idx])]
+        assert phys_in[idx] == phys_dict
+
+    # Test slice in the middle
+    phys_dict['timeseries'] = [np.array(test_time[2:4]),
+                               np.array(test_trigger[2:4]),
+                               np.array(test_half[1:2]),
+                               np.array(test_twice[4:8])]
+    assert phys_in[2:4] == phys_dict
+
+    # Test slice in the middle with steps
+    phys_dict['timeseries'] = [np.array(test_time[1:4:2]),
+                               np.array(test_trigger[1:4:2]),
+                               np.array(test_half[0:2:1]),
+                               np.array(test_twice[4:8:4])]
+    assert phys_in[1:4:2] == phys_dict
+
 
 def test_BlueprintOutput():
     test_time = np.array([0, 1, 1, 2, 3, 5, 8, 13])
@@ -153,3 +204,6 @@ def test_BlueprintOutput():
     assert len(blueprint_out.units) == num_channnels - 1
     assert blueprint_out.timeseries.shape[1] == num_channnels - 1
     assert blueprint_out.ch_amount == num_channnels - 1
+
+    # Test __eq__
+    assert blueprint_out == blueprint_out
