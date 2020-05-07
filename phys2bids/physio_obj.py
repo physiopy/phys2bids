@@ -242,7 +242,7 @@ class BlueprintInput():
 
     def __eq__(self, other):
         """
-        Return assertion of equality between two objects.
+        Return test of equality between two objects.
 
         Parameters
         ----------
@@ -253,7 +253,10 @@ class BlueprintInput():
         -------
         boolean
         """
-        return self.__dict__ == other.__dict__
+        try:
+            return self.__dict__ == other.__dict__
+        except ValueError:
+            return False
 
     def rename_channels(self, new_names):
         """
@@ -498,7 +501,7 @@ class BlueprintOutput():
 
     def __eq__(self, other):
         """
-        Return assertion of equality between two objects.
+        Return test of equality between two objects.
 
         Parameters
         ----------
@@ -509,7 +512,10 @@ class BlueprintOutput():
         -------
         boolean
         """
-        return self.__dict__ == other.__dict__
+        try:
+            return self.__dict__ == other.__dict__
+        except ValueError:
+            return False
 
     def return_index(self, idx):
         """
