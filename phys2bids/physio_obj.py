@@ -97,7 +97,7 @@ def are_equal(self, other):
     boolean
     """
 
-    def _deal_with_dict_value_error(dict1, dict2):
+    def _deal_with_dict_value_error(self, other):
         if self.keys() == other.keys():
             alltrue_timeseries = [False] * len(self['timeseries'])
             alltrue_keys = [False] * len(self)
@@ -107,9 +107,8 @@ def are_equal(self, other):
                         alltrue_timeseries[i] = (self['timeseries'][i].all()
                                                  == other['timeseries'][i].all())
                     alltrue_keys[j] = all(alltrue_timeseries)
-
-                alltrue_keys[j] = (self[key]
-                                   == other[key])
+                else:
+                    alltrue_keys[j] = (self[key] == other[key])
             return all(alltrue_keys)
         else:
             return False
