@@ -78,6 +78,7 @@ def has_size(var, data_size, token):
 
     return var
 
+
 def are_equal(self, other):
     """
     Return test of equality between two objects.
@@ -98,8 +99,15 @@ def are_equal(self, other):
     except AttributeError:
         try:
             return self.__dict__ == other
-        except:
+        except ValueError:
             return False
+        except AttributeError:
+            try:
+                return self == other.__dict__
+            except ValueError:
+                return False
+            except AttributeError:
+                return self == other
 
 
 class BlueprintInput():
