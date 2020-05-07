@@ -96,22 +96,71 @@ def are_equal(self, other):
     -------
     boolean
     """
+
+    def _deal_with_dict_value_error(dict1, dict2):
+        if self.keys() == other.keys():
+            alltrue_timeseries = [False] * len(self['timeseries'])
+            alltrue_keys = [False] * len(self)
+            for j, key in enumerate(self.keys()):
+                if key == 'timeseries':
+                    for i in range(len(self['timeseries'])):
+                        alltrue_timeseries[i] = (self['timeseries'][i].all()
+                                                 == other['timeseries'][i].all())
+                    alltrue_keys[j] = all(alltrue_timeseries)
+
+                alltrue_keys[j] = (self[key]
+                                   == other[key])
+            return all(alltrue_keys)
+        else:
+            return False
+
     try:
         return self.__dict__ == other.__dict__
     except ValueError:
-        return False
+        try:
+            self.__dict__['timeseries']
+        except KeyError:
+            return False
+        except TypeError:
+            return False
+        else:
+            return _deal_with_dict_value_error(self.__dict__, other.__dict__)
     except AttributeError:
         try:
             return self.__dict__ == other
         except ValueError:
-            return False
+            try:
+                self.__dict__['timeseries']
+            except KeyError:
+                return False
+            except TypeError:
+                return False
+            else:
+                return _deal_with_dict_value_error(self.__dict__, other)
         except AttributeError:
             try:
                 return self == other.__dict__
             except ValueError:
-                return False
+                try:
+                    self['timeseries']
+                except KeyError:
+                    return False
+                except TypeError:
+                    return False
+                else:
+                    return _deal_with_dict_value_error(self, other.__dict__)
             except AttributeError:
-                return self == other
+                try:
+                    return self == other
+                except ValueError:
+                    try:
+                        self['timeseries']
+                    except KeyError:
+                        return False
+                    except TypeError:
+                        return False
+                    else:
+                        return _deal_with_dict_value_error(self, other)
 
 
 class BlueprintInput():
