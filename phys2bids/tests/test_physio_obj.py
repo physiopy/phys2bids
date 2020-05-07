@@ -1,6 +1,4 @@
-"""
-Tests physio_obj.py
-"""
+"""Test physio_obj.py ."""
 
 import numpy as np
 from pytest import raises
@@ -42,6 +40,30 @@ def test_has_size():
     size_output = po.has_size(test_list, test_length, 0)
     assert len(size_output) == test_length
     assert size_output == test_list
+
+
+def test_are_equal():
+    """Test are_equal ."""
+    test_string = 'So Long, and Thanks for All the Fish'
+    test_time = np.array([0, 1, 1, 2, 3, 5, 8, 13])
+    test_trigger = np.array([0, 1, 0, 0, 0, 0, 0, 0])
+
+    class C(object):
+        c = 'c'
+
+    c1 = C()
+    c1.ts = [test_time, test_trigger]
+
+    c2 = C()
+    c2.ts = [test_time]
+
+    assert po.are_equal(test_string, test_string)
+    assert po.are_equal(c1, c1)
+    assert po.are_equal(c1, c1.__dict__)
+    assert po.are_equal(c1.__dict__, c1)
+    assert not po.are_equal(c1, c2)
+    assert not po.are_equal(c1, c2.__dict__)
+    assert not po.are_equal(test_string, c1)
 
 
 # Tests BlueprintInput
