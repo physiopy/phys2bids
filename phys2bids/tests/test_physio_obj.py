@@ -57,11 +57,29 @@ def test_are_equal():
     c2 = C()
     c2.ts = [test_time]
 
+    test_half = np.array([0, 1, 2])
+    test_twice = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    test_timeseries = [test_time, test_trigger, test_half, test_twice]
+    test_freq = [1, 1, 0.5, 2]
+    test_chn_name = ['time', 'trigger', 'half', 'twice']
+    test_units = ['s', 'V', 'V', 'V']
+    test_chtrig = 1
+
+    phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                test_units, test_chtrig)
+    phys_out = po.BlueprintInput([test_trigger, test_half, test_twice],
+                                 test_freq, test_chn_name,
+                                 test_units, test_chtrig)
+
     assert po.are_equal(test_string, test_string)
     assert po.are_equal(c1, c1)
+    assert po.are_equal(phys_in, phys_in)
     assert po.are_equal(c1, c1.__dict__)
     assert po.are_equal(c1.__dict__, c1)
     assert not po.are_equal(c1, c2)
+    assert not po.are_equal(c1, phys_in)
+    assert not po.are_equal(phys_out, phys_in)
+    assert not po.are_equal(phys_in, c2)
     assert not po.are_equal(c1, c2.__dict__)
     assert not po.are_equal(test_string, c1)
 
