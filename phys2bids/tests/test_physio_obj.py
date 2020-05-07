@@ -137,12 +137,17 @@ def test_BlueprintInput_slice():
     assert phys_in[0:len(test_trigger)] == phys_dict
 
     # Test instantaneous slice first and last
-    for idx in [0, -1]:
-        phys_dict['timeseries'] = [np.array(test_time[idx]),
-                                   np.array(test_trigger[idx]),
-                                   np.array(test_half[idx]),
-                                   np.array(test_twice[idx])]
-        assert phys_in[idx] == phys_dict
+    phys_dict['timeseries'] = [np.array([test_time[0]]),
+                               np.array([test_trigger[0]]),
+                               np.array([test_half[0]]),
+                               np.array([test_twice[0]])]
+    assert phys_in[0] == phys_dict
+
+    phys_dict['timeseries'] = [np.array([test_time[-1]]),
+                               np.array([test_trigger[-1]]),
+                               np.array([test_half[-1]]),
+                               np.array([test_twice[-2]])]
+    assert phys_in[-1] == phys_dict
 
     # Test slice in the middle
     phys_dict['timeseries'] = [np.array(test_time[2:4]),
