@@ -174,6 +174,7 @@ class BlueprintInput():
 
         The slicing is based on the trigger. If necessary, computes a sort of
         interpolation to get the right index in multifreq.
+        If the trigger was not specified, the slicing is based on the time instead.
 
         Parameters
         ----------
@@ -184,22 +185,52 @@ class BlueprintInput():
         -------
         BlueprintInput object
             a copy of the object with the part of timeseries expressed by idx.
-        """
-        sliced_timeseries = []
 
-        if isinstance(idx, int):
-            idx = slice(idx, idx + 1)
+        Notes
+        -----
+        If idx is an integer, it returns an instantaneous moment for all channels.
+        If it's a slicing, it always return the full slice. This means that
+        potentially, depending on the frequencies, BlueprintInput[1] and
+        BlueprintInput[1:2] might return different results.
+        """
+        sliced_timeseries = [None] * self.ch_amount
+        return_instant = False
+        trigger_length = len(self.timeseries[self.trigger_idx])
 
         if not self.trigger_idx:
             self.trigger_idx = 0
 
+        # If idx is an integer, return an "instantaneous slice" and initialise slice
+        if isinstance(idx, int):
+            if idx > trigger_length:
+                raise IndexError(f'index {idx} is out of bounds for channel '
+                                 f'{self.trigger_idx} with size '
+                                 f'{trigger_length}')
+
+            return_instant = True
+            if idx < 0:
+                idx = trigger_length + idx
+
+            idx = slice(idx, idx + 1)
+        elif idx.stop > trigger_length:
+            raise IndexError(f'index {idx.stop} is out of bounds for channel '
+                             f'{self.trigger_idx} with size {trigger_length}')
+
+        # Operate on each channel on its own
         for n, channel in enumerate(self.timeseries):
             idx_dict = {'start': idx.start, 'stop': idx.stop, 'step': idx.step}
+            # Adapt the slicing indexes to the right requency
             for i in ['start', 'stop', 'step']:
                 if idx_dict[i]:
                     idx_dict[i] = int(np.floor(self.freq[n]
                                                / self.freq[self.trigger_idx]
                                                * idx_dict[i]))
+
+            # Correct the slicing stop if necessary
+            if idx_dict['start'] == idx_dict['stop'] or return_instant:
+                idx_dict['stop'] = idx_dict['start'] + 1
+            elif trigger_length == idx.stop:
+                idx_dict['stop'] = len(channel)
 
             new_idx = slice(idx_dict['start'], idx_dict['stop'], idx_dict['step'])
             sliced_timeseries[n] = channel[new_idx]
