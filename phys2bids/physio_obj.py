@@ -207,7 +207,6 @@ class BlueprintInput():
 
         # If idx is an integer, return an "instantaneous slice" and initialise slice
         if isinstance(idx, int):
-
             return_instant = True
             if idx < 0:
                 idx = trigger_length + idx
