@@ -240,6 +240,21 @@ class BlueprintInput():
         return BlueprintInput(sliced_timeseries, self.freq, self.ch_name,
                               self.units, self.trigger_idx)
 
+    def __eq__(self, other):
+        """
+        Return assertion of equality between two objects.
+
+        Parameters
+        ----------
+        other: BlueprintInput object
+            comparable object.
+
+        Returns
+        -------
+        boolean
+        """
+        return self.__dict__ == other.__dict__
+
     def rename_channels(self, new_names):
         """
         Rename the channels.
@@ -480,6 +495,21 @@ class BlueprintOutput():
             Number of channels
         """
         return self.timeseries.shape[1]
+
+    def __eq__(self, other):
+        """
+        Return assertion of equality between two objects.
+
+        Parameters
+        ----------
+        other: BlueprintInput object
+            comparable object.
+
+        Returns
+        -------
+        boolean
+        """
+        return self.__dict__ == other.__dict__
 
     def return_index(self, idx):
         """
