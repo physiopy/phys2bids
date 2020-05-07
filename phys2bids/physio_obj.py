@@ -246,7 +246,7 @@ class BlueprintInput():
 
         Parameters
         ----------
-        other: BlueprintInput object
+        other:
             comparable object.
 
         Returns
@@ -257,6 +257,11 @@ class BlueprintInput():
             return self.__dict__ == other.__dict__
         except ValueError:
             return False
+        except AttributeError:
+            try:
+                return self.__dict__ == other
+            except:
+                return False
 
     def rename_channels(self, new_names):
         """
@@ -505,7 +510,7 @@ class BlueprintOutput():
 
         Parameters
         ----------
-        other: BlueprintInput object
+        other:
             comparable object.
 
         Returns
@@ -516,6 +521,11 @@ class BlueprintOutput():
             return self.__dict__ == other.__dict__
         except ValueError:
             return False
+        except AttributeError:
+            try:
+                return self.__dict__ == other
+            except:
+                return False
 
     def return_index(self, idx):
         """
