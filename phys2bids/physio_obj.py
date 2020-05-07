@@ -83,6 +83,10 @@ def are_equal(self, other):
     """
     Return test of equality between two objects.
 
+    The equality is true if two objects are the same or
+    if one of the objects is equivalent to the dictionary
+    format of the other.
+
     Parameters
     ----------
     other:
