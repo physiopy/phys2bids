@@ -186,6 +186,11 @@ class BlueprintInput():
         BlueprintInput object
             a copy of the object with the part of timeseries expressed by idx.
 
+        Raises
+        ------
+        IndexError
+            If the idx, represented as a slice, is out of bounds.
+
         Notes
         -----
         If idx is an integer, it returns an instantaneous moment for all channels.
@@ -202,19 +207,17 @@ class BlueprintInput():
 
         # If idx is an integer, return an "instantaneous slice" and initialise slice
         if isinstance(idx, int):
-            if idx > trigger_length:
-                raise IndexError(f'index {idx} is out of bounds for channel '
-                                 f'{self.trigger_idx} with size '
-                                 f'{trigger_length}')
 
             return_instant = True
             if idx < 0:
                 idx = trigger_length + idx
 
             idx = slice(idx, idx + 1)
-        elif idx.stop > trigger_length:
-            raise IndexError(f'index {idx.stop} is out of bounds for channel '
-                             f'{self.trigger_idx} with size {trigger_length}')
+
+        if idx.start >= trigger_length or idx.stop > trigger_length:
+            raise IndexError(f'slice ({idx.start}, {idx.stop}) is out of '
+                             f'bounds for channel {self.trigger_idx} '
+                             f'with size {trigger_length}')
 
         # Operate on each channel on its own
         for n, channel in enumerate(self.timeseries):
