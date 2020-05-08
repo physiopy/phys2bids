@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from phys2bids.physio_obj.BlueprintInput import check_trigger_amount
-
 
 def split4phys(phys_in=None, ntp_list=[0, ], tr_list=[1, ], padding=9):
     """
-    Utility for phys2bids.
+    Split runs for phys2bids.
 
-    Returns dictionary keys for each run in BlueprintInput object based on user's entries
+    Returns dictionary key for each run in BlueprintInput object based on user's entries
     Each key has a tuple expressing the timestamps of run in nb of samples(based on trigger chan)
     Timestamps are the index of first and last triggers of a run, adjusted with padding
     run_start and run_end indexes refer to the samples contained in the whole session
@@ -29,7 +27,6 @@ def split4phys(phys_in=None, ntp_list=[0, ], tr_list=[1, ], padding=9):
         Containing tuples of run start and end indexes for each run, based on trigger channels
         In the form of run_timestamps{run_idx:(start, end), run_idx:...}
     """
-
     # Initialize dictionaries to save phys_in endpoints
     run_timestamps = {}
     # run_start = 0

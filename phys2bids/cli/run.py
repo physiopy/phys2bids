@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-Parser for phys2bids
-"""
+"""Parser for phys2bids."""
+
 
 import argparse
 
@@ -10,7 +9,7 @@ from phys2bids import __version__
 
 def _get_parser():
     """
-    Parses command line inputs for this function
+    Parse command line inputs for this function.
 
     Returns
     -------
