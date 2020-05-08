@@ -34,7 +34,7 @@ from pathlib import Path
 
 from numpy import savetxt, ones
 
-from phys2bids import utils, viz, _version, split2phys
+from phys2bids import utils, viz, _version, split4phys
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
 
@@ -193,7 +193,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               tr=1, thr=None, ch_name=[], chplot='', debug=False, quiet=False):
     """
     Main workflow of phys2bids.
-    Run the parser, does some checks on input, then imports
+
+    Runs the parser, does some checks on input, then imports
     the right interface file to read the input. If only info is required,
     it returns a summary onscreen.
     Otherwise, it operates on the input to return a .tsv.gz file, possibily
@@ -273,7 +274,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
-    # NOTE : and len(tr)<2 ?
     if tr != 0 and num_timepoints_expected != 0:
         # Run analysis on trigger channel to get first timepoint and the time offset.
         # #!# Get option of no trigger! (which is wrong practice or Respiract)
@@ -287,6 +287,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             plot_path += f'_ses-{ses}'
         viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
                          plot_path, tr, phys_in.thr, num_timepoints_expected, filename)
+
     #  Multi-run section
     #  Check list length, more than 1 means multi-run
     elif len(num_timepoints_expected) > 1:
@@ -312,10 +313,23 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         # CALL run4phys, give it BlueprintInput object and lists
         run_idx = split4phys(phys_in, num_timepoints_expected, tr)
         # returns a dictionary in the form {run_idx: (startpoint, endpoint), run_idx:...}
+
         # ideally, we'd want to have a figure for each run
+        for idx, times in enumerate(run_idx):
+            LGR.info('Plot trigger')
+            plot_path = os.path.join(outdir,
+                                     os.path.splitext(os.path.basename(filename))[0])
+            if sub:
+                plot_path += f'_sub-{sub}'
+            if ses:
+                plot_path += f'_ses-{ses}'
 
-        # OK NOW, HOW DO WE DEAL WITH THIS DICT?
+            # adjust filename to run indexes
 
+            viz.plot_trigger(phys_in[times[0]:times[1]].timeseries[0],
+                             phys_in[times[0]:times[1]].timeseries[chtrig],
+                             plot_path, tr[idx], phys_in.thr,
+                             num_timepoints_expected[idx], filename)
     else:
         LGR.warning('Skipping trigger pulse count. If you want to run it, '
                     'call phys2bids using "-ntp" and "-tr" arguments')
