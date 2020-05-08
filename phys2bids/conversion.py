@@ -22,7 +22,6 @@
    scans that weren't kept in the BIDS dataset.
 """
 from bids import BIDSLayout
-import json
 import pandas as pd
 import numpy as np
 
@@ -39,9 +38,12 @@ def extract_physio_onsets(f):
     samplerate = 1. / c.samples_per_second
     data = c.data
     scan_idx = np.where(data > 0)[0]
+    # Get groups of consecutive numbers in index
     groups = []
-    for k, g in groupby(enumerate(scan_idx), lambda x: x[0]-x[1]):
+    for k, g in groupby(enumerate(scan_idx), lambda x: x[0] - x[1]):
         groups.append(list(map(itemgetter(1), g)))
+
+    # Extract onsets
     onsets = np.array([g[0] for g in groups])
     onsets_in_sec = onsets * samplerate
     df = pd.DataFrame(
@@ -76,7 +78,8 @@ def synchronize_onsets(phys_df, scan_df):
         # difference between onset of scan and first physio
         # if the scan corresponds to the physio, then this difference
         # should be roughly equal for all corresponding scan/physio pairs
-        # TODO: Loop through physio onsets and combine findings across to account for dropped scans.
+        # TODO: Loop through physio onsets and combine findings across to
+        # account for dropped scans.
         val = diffs[i_scan, 5]  # if scan was dropped, this won't work.
 
         # find one row for each column
@@ -145,12 +148,14 @@ def determine_scan_durations(scan_df):
     pass
 
 
-def workflow(physio_file, scans_file):
+def workflow(dset, physio_file, sub, ses=None):
+    layout = BIDSLayout(dset)
+    scans_file = layout.get(extension='tsv', suffix='scans', sub=sub, ses=ses)
     scan_df = pd.read_table(scans_file)
     scan_df = determine_scan_durations(scan_df)
     physio_df = extract_physio_onsets(physio_file)
-    scan_df = synchronize_onsets(phys_df, scan_df)
+    scan_df = synchronize_onsets(physio_df, scan_df)
     # Extract timeseries associated with each scan. Key in dict is scan name or
     # physio filename and key is physio data in some format.
     physio_data_dict = split_physio(scan_df, physio_file)
-    save_physio(dset, physio_data_dict)
+    save_physio(layout, physio_data_dict)
