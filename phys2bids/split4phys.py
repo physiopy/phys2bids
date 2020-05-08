@@ -8,20 +8,20 @@ def split4phys(phys_in=None, ntp_list=[0, ], tr_list=[1, ], padding=9):
     """
     Utility for phys2bids.
 
-    Returns a dictionary item for each run in BlueprintInput object based on user's entries
-    Each tuple expresses the timestamps of runs in nb of samples(based on trigger channel)
+    Returns dictionary keys for each run in BlueprintInput object based on user's entries
+    Each key has a tuple expressing the timestamps of run in nb of samples(based on trigger chan)
     Timestamps are the index of first and last triggers of a run, adjusted with padding
     run_start and run_end indexes refer to the samples contained in the whole session
 
     Parameters
     ---------
     phys_in : object
-        BlueprintInput object returned by Class in `physio_obj.py`
+        Object returned by BlueprintInput class
     ntp_list : list
-        a list of integers given by the user, defined by `num_timepoints_expected`
+        a list of integers given by the user as `ntp` input
         Default: [0, ]
     tr_list : list
-        a list of float given by the user, defined by `tr`
+        a list of float given by the user as `tr` input
         Default: [1,]
     Returns
     --------

@@ -271,9 +271,25 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
                      phys_in.freq, infile, chplot)
 
+    # Create trigger plot. If possible, to have multiple outputs in the same
+    # place, adds sub and ses label.
+    # NOTE : and len(tr)<2 ?
+    if tr != 0 and num_timepoints_expected != 0:
+        # Run analysis on trigger channel to get first timepoint and the time offset.
+        # #!# Get option of no trigger! (which is wrong practice or Respiract)
+        phys_in.check_trigger_amount(chtrig, thr, num_timepoints_expected, tr)
+        LGR.info('Plot trigger')
+        plot_path = os.path.join(outdir,
+                                 os.path.splitext(os.path.basename(filename))[0])
+        if sub:
+            plot_path += f'_sub-{sub}'
+        if ses:
+            plot_path += f'_ses-{ses}'
+        viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
+                         plot_path, tr, phys_in.thr, num_timepoints_expected, filename)
     #  Multi-run section
     #  Check list length, more than 1 means multi-run
-    if len(num_timepoints_expected) > 1:
+    elif len(num_timepoints_expected) > 1:
 
         # if multiple runs of same sequence in recording - pad the list with arbitrary value
         # NOTE : we could also duplicate the item by multiplying with len(ntp)
@@ -300,22 +316,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
         # OK NOW, HOW DO WE DEAL WITH THIS DICT?
 
-    # Create trigger plot. If possible, to have multiple outputs in the same
-    # place, adds sub and ses label.
-    # NOTE : and len(tr)<2 ?
-    if tr != 0 and num_timepoints_expected != 0:
-        # Run analysis on trigger channel to get first timepoint and the time offset.
-        # #!# Get option of no trigger! (which is wrong practice or Respiract)
-        phys_in.check_trigger_amount(chtrig, thr, num_timepoints_expected, tr)
-        LGR.info('Plot trigger')
-        plot_path = os.path.join(outdir,
-                                 os.path.splitext(os.path.basename(filename))[0])
-        if sub:
-            plot_path += f'_sub-{sub}'
-        if ses:
-            plot_path += f'_ses-{ses}'
-        viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
-                         plot_path, tr, phys_in.thr, num_timepoints_expected, filename)
     else:
         LGR.warning('Skipping trigger pulse count. If you want to run it, '
                     'call phys2bids using "-ntp" and "-tr" arguments')
@@ -340,6 +340,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         LGR.warning(f'Found {output_amount} different frequencies in input!')
 
     LGR.info(f'Preparing {output_amount} output files.')
+
     phys_out = {}  # create phys_out dict that will have a
 
     # BLUEPRINT OBJECTS PER RUN

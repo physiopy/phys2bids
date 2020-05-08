@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-I/O objects for phys2bids.
-"""
+"""I/O objects for phys2bids."""
 
 import logging
 from itertools import groupby
@@ -79,6 +77,41 @@ def has_size(var, data_size, token):
         var = var + [token] * (data_size - len(var))
 
     return var
+
+
+def are_equal(self, other):
+    """
+    Return test of equality between two objects.
+
+    The equality is true if two objects are the same or
+    if one of the objects is equivalent to the dictionary
+    format of the other.
+
+    Parameters
+    ----------
+    other:
+        comparable object.
+
+    Returns
+    -------
+    boolean
+    """
+    try:
+        return self.__dict__ == other.__dict__
+    except ValueError:
+        return False
+    except AttributeError:
+        try:
+            return self.__dict__ == other
+        except ValueError:
+            return False
+        except AttributeError:
+            try:
+                return self == other.__dict__
+            except ValueError:
+                return False
+            except AttributeError:
+                return self == other
 
 
 class BlueprintInput():
@@ -176,6 +209,7 @@ class BlueprintInput():
 
         The slicing is based on the trigger. If necessary, computes a sort of
         interpolation to get the right index in multifreq.
+        If the trigger was not specified, the slicing is based on the time instead.
 
         Parameters
         ----------
@@ -186,28 +220,75 @@ class BlueprintInput():
         -------
         BlueprintInput object
             a copy of the object with the part of timeseries expressed by idx.
-        """
-        sliced_timeseries = []
 
-        if isinstance(idx, int):
-            idx = slice(idx, idx + 1)
+        Raises
+        ------
+        IndexError
+            If the idx, represented as a slice, is out of bounds.
+
+        Notes
+        -----
+        If idx is an integer, it returns an instantaneous moment for all channels.
+        If it's a slicing, it always return the full slice. This means that
+        potentially, depending on the frequencies, BlueprintInput[1] and
+        BlueprintInput[1:2] might return different results.
+        """
+        sliced_timeseries = [None] * self.ch_amount
+        return_instant = False
+        trigger_length = len(self.timeseries[self.trigger_idx])
 
         if not self.trigger_idx:
             self.trigger_idx = 0
 
+        # If idx is an integer, return an "instantaneous slice" and initialise slice
+        if isinstance(idx, int):
+            return_instant = True
+            if idx < 0:
+                idx = trigger_length + idx
+
+            idx = slice(idx, idx + 1)
+
+        if idx.start >= trigger_length or idx.stop > trigger_length:
+            raise IndexError(f'slice ({idx.start}, {idx.stop}) is out of '
+                             f'bounds for channel {self.trigger_idx} '
+                             f'with size {trigger_length}')
+
+        # Operate on each channel on its own
         for n, channel in enumerate(self.timeseries):
             idx_dict = {'start': idx.start, 'stop': idx.stop, 'step': idx.step}
+            # Adapt the slicing indexes to the right requency
             for i in ['start', 'stop', 'step']:
                 if idx_dict[i]:
                     idx_dict[i] = int(np.floor(self.freq[n]
                                                / self.freq[self.trigger_idx]
                                                * idx_dict[i]))
 
+            # Correct the slicing stop if necessary
+            if idx_dict['start'] == idx_dict['stop'] or return_instant:
+                idx_dict['stop'] = idx_dict['start'] + 1
+            elif trigger_length == idx.stop:
+                idx_dict['stop'] = len(channel)
+
             new_idx = slice(idx_dict['start'], idx_dict['stop'], idx_dict['step'])
             sliced_timeseries[n] = channel[new_idx]
 
         return BlueprintInput(sliced_timeseries, self.freq, self.ch_name,
                               self.units, self.trigger_idx)
+
+    def __eq__(self, other):
+        """
+        Return test of equality between two objects.
+
+        Parameters
+        ----------
+        other:
+            comparable object.
+
+        Returns
+        -------
+        boolean
+        """
+        return are_equal(self, other)
 
     def rename_channels(self, new_names):
         """
@@ -449,6 +530,21 @@ class BlueprintOutput():
             Number of channels
         """
         return self.timeseries.shape[1]
+
+    def __eq__(self, other):
+        """
+        Return test of equality between two objects.
+
+        Parameters
+        ----------
+        other:
+            comparable object.
+
+        Returns
+        -------
+        boolean
+        """
+        return are_equal(self, other)
 
     def return_index(self, idx):
         """
