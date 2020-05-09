@@ -21,9 +21,12 @@
    in cases where trigger failed, and ignore trigger periods associated with
    scans that weren't kept in the BIDS dataset.
 """
+import os.path as op
+
 from bids import BIDSLayout
 import pandas as pd
 import numpy as np
+from datetime import datetime
 
 
 def extract_physio_onsets(f):
@@ -71,7 +74,6 @@ def synchronize_onsets(phys_df, scan_df):
 
     # Find the delay that gives the smallest difference between scan onsets
     # and physio onsets
-    sel_rows = []
     selected = (None, None)
     thresh = 1000
     for i_scan in range(diffs.shape[0]):
@@ -106,7 +108,8 @@ def synchronize_onsets(phys_df, scan_df):
     scan_df['phys_onset'] = scan_df['onset'] + offset
     samplerate = ((phys_df.loc[1, 'index'] - phys_df.loc[0, 'index']) /
                   (phys_df.loc[1, 'onset'] - phys_df.loc[0, 'onset']))
-    scan_df['phys_index'] = (scan_df['phys_onset'] * samplerate).astype(int)
+    scan_df['index_onset'] = (scan_df['phys_onset'] * samplerate).astype(int)
+    scan_df['index_duration'] = (scan_df['duration'] * samplerate).astype(int)
     return scan_df
 
 
@@ -140,8 +143,8 @@ def stitch_segments(physio_file):
     time_diff = em_df['onset_time'].diff().dt.total_seconds()
 
     for i in range(em_df.shape[0] - 1):
-        time_pair_diff = time_diff.iloc[i+1]
-        idx_pair_diff = idx_diff.iloc[i+1] / d.samples_per_second
+        time_pair_diff = time_diff.iloc[i + 1]
+        idx_pair_diff = idx_diff.iloc[i + 1] / d.samples_per_second
         if abs(idx_pair_diff - time_pair_diff) > 2:
             diff_diff_sec = time_pair_diff - idx_pair_diff
             diff_diff_idx = diff_diff_sec * d.samples_per_second
@@ -164,19 +167,29 @@ def save_physio(physio_data_dict):
     pass
 
 
-def determine_scan_durations(scan_df):
+def determine_scan_durations(scan_df, layout):
     """Extract scan durations by loading fMRI files/metadata and
     multiplying TR by number of volumes. This can be used to determine the
     endpoints for the physio files.
     """
-    pass
+    func_files = layout.get(datatype='func', suffix='bold',
+                            extension=['nii.gz', 'nii'])
+    for func_file in func_files:
+        filename = op.join('func', func_file.filename)
+        n_vols = nib.load(func_file.path).shape[3]
+        tr = func_file.get_metadata()['RepetitionTime']
+        duration = n_vols * tr
+        scan_df.loc[scan_df['filename'] == filename, 'duration'] = duration
+    return scan_df
 
 
-def workflow(dset, physio_file, sub, ses=None):
-    layout = BIDSLayout(dset)
+def workflow(bids_dir, physio_file, sub, ses=None):
+    layout = BIDSLayout(bids_dir)
     scans_file = layout.get(extension='tsv', suffix='scans', sub=sub, ses=ses)
     scan_df = pd.read_table(scans_file)
-    scan_df = determine_scan_durations(scan_df)
+    scan_df = determine_scan_durations(scan_df, layout)
+    scan_df = scan_df.dropna(subset=['duration'])  # limit to relevant scans
+    scan_df = scan_df.drop_duplicates(subset=['acq_time'])  # for multi-contrast scans
     physio_df = extract_physio_onsets(physio_file)
     scan_df = synchronize_onsets(physio_df, scan_df)
     # Extract timeseries associated with each scan. Key in dict is scan name or
