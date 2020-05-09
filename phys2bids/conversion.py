@@ -62,57 +62,55 @@ def synchronize_onsets(phys_df, scan_df):
     ascending by "onset").
     Onsets are in seconds. The baseline doesn't matter.
     """
-    # Get difference between each scan onset and each physio trigger onset
+    # Get difference between each physio trigger onset and each scan onset
     diffs = np.zeros((scan_df.shape[0], phys_df.shape[0]))
-    for i, i_row in scan_df.iterrows():
-        for j, j_row in phys_df.iterrows():
-            onset_diff = i_row['onset'] - j_row['onset']
+    for i, i_scan in scan_df.iterrows():
+        for j, j_phys in phys_df.iterrows():
+            onset_diff = j_phys['onset'] - i_scan['onset']
             diffs[i, j] = onset_diff
 
-    # Find a scan onset for each physio onset where the time difference
-    # roughly matches up across as many physio onsets as possible
-    # Not necessarily *all* physio onsets, since sometimes scans are stopped
-    # early or re-run, and may not end up in the final BIDS dataset.
+    # Find the delay that gives the smallest difference between scan onsets
+    # and physio onsets
     sel_rows = []
+    selected = (None, None)
+    thresh = 1000
     for i_scan in range(diffs.shape[0]):
-        # difference between onset of scan and first physio
-        # if the scan corresponds to the physio, then this difference
-        # should be roughly equal for all corresponding scan/physio pairs
-        # TODO: Loop through physio onsets and combine findings across to
-        # account for dropped scans.
-        val = diffs[i_scan, 5]  # if scan was dropped, this won't work.
+        for j_phys in range(diffs.shape[1]):
+            test_offset = diffs[i_scan, j_phys]
+            diffs_from_phys_onset = diffs - test_offset
+            diffs_from_abs = np.abs(diffs_from_phys_onset)
+            min_diff_row_idx = np.argmin(diffs_from_abs, axis=0)
+            min_diff_col_idx = np.arange(len(min_diff_row_idx))
+            min_diffs = diffs_from_abs[min_diff_row_idx, min_diff_col_idx]
+            min_diff_sum = np.sum(min_diffs)
+            if min_diff_sum < thresh:
+                selected = (i_scan, j_phys)
+                thresh = min_diff_sum
+    print('Selected solution: {}'.format(selected))
+    offset = diffs[selected[0], selected[1]]
 
-        # find one row for each column
-        diffs_from_phys_onset = diffs - val
-        np.set_printoptions(suppress=True)
-        print(np.min(np.abs(diffs_from_phys_onset), axis=0))
-        # Here we see one row (i_scan) with very low values (0-1) across many
-        # columns, indicating that that scan onset corresponds to the physio
-        # onset indexed in "val"
-
-        diff_thresh = 5  # threshold for variability
-        idx = np.where(np.abs(diffs - val) < diff_thresh)[1]
-        print(idx)
-        if np.array_equal(idx, np.arange(diffs.shape[1])):
-            print('GOT IT: {} (row {})'.format(val, i_scan))
-            sel_rows.append(i_row)
-    if len(sel_rows) != 1:
-        # We hope for one solution: one time-shift applied to the scan onsets
-        # to synchronize them with the physio onsets.
-        raise Exception('Bad sel_rows: {}'.format(len(sel_rows)))
-    sel_row = sel_rows[0]
-    clock_diff = scan_df.loc[sel_row, 'onset'] - phys_df.loc[0, 'onset']
-    print('Scan onsets must be shifted {}s to match physio onsets'.format(clock_diff))
+    # Isolate close, but negative relative onsets, to ensure scan onsets are
+    # always before or at physio triggers.
+    close_thresh = 2  # threshold for "close" onsets
+    diffs_from_phys_onset = diffs - offset
+    min_diff_row_idx = np.argmin(np.abs(diffs_from_phys_onset), axis=0)
+    min_diff_col_idx = np.arange(len(min_diff_row_idx))
+    min_diffs = diffs_from_phys_onset[min_diff_row_idx, min_diff_col_idx]
+    min_diffs_tmp = min_diffs[abs(min_diffs) <= close_thresh]
+    min_val = min(min_diffs_tmp)
+    min_diffs += min_val
+    offset += min_val
+    print('Scan DF should be adjusted forward by {} seconds'.format(offset))
 
     # Get onset of each scan in terms of the physio time series
-    scan_df['phys_onset'] = scan_df['onset'] - clock_diff
+    scan_df['phys_onset'] = scan_df['onset'] + offset
     samplerate = ((phys_df.loc[1, 'index'] - phys_df.loc[0, 'index']) /
                   (phys_df.loc[1, 'onset'] - phys_df.loc[0, 'onset']))
     scan_df['phys_index'] = (scan_df['phys_onset'] * samplerate).astype(int)
     return scan_df
 
 
-def stitch_segments(physio_data):
+def stitch_segments(physio_file):
     """Merge segments in BioPac physio file. The segments must be named with
     timestamps, so that the actual time difference can be calculated and zeros
     can be inserted in the gaps.
@@ -121,7 +119,33 @@ def stitch_segments(physio_data):
     uncertainty to timing, which should be accounted for in the onset
     synchronization.
     """
-    pass
+    import bioread
+    d = bioread.read_file(physio_file)
+    em_df = pd.DataFrame()
+    c = 0
+    for em in d.event_markers:
+        print('{}: {}'.format(em.text, em.sample_index))
+        try:
+            em_dt = datetime.strptime(em.text, '%a %b %d %Y %H:%M:%S')
+        except:
+            continue
+        em_df.loc[c, 'segment'] = em.text
+        em_df.loc[c, 'start_idx'] = em.sample_index
+        em_df.loc[c, 'onset_time'] = em_dt
+        c += 1
+
+    # segment timestamp resolution is one second
+    # we need to incorporate possible variability into that
+    idx_diff = em_df['start_idx'].diff()
+    time_diff = em_df['onset_time'].diff().dt.total_seconds()
+
+    for i in range(em_df.shape[0] - 1):
+        time_pair_diff = time_diff.iloc[i+1]
+        idx_pair_diff = idx_diff.iloc[i+1] / d.samples_per_second
+        if abs(idx_pair_diff - time_pair_diff) > 2:
+            diff_diff_sec = time_pair_diff - idx_pair_diff
+            diff_diff_idx = diff_diff_sec * d.samples_per_second
+            # Now we have the sizes, we can load the data and insert zeros.
 
 
 def split_physio(scan_df, physio_file):
