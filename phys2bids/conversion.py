@@ -31,6 +31,9 @@ from datetime import datetime
 
 def extract_physio_onsets(f):
     """
+    Collect onsets from physio file, both in terms of seconds and time series
+    indices.
+    TODO: Replace file-loading with phys2bids physio_obj
     TODO: Stitch segments together before extracting onsets.
     """
     import bioread
@@ -61,25 +64,26 @@ def synchronize_onsets(phys_df, scan_df):
     """There can be fewer physios than scans (task failed to trigger physio)
     or fewer scans than physios (aborted scans are not retained in BIDS dataset).
 
-    Both phys_df and scan_df should be sorted in chronological order (i.e.,
-    ascending by "onset").
     Onsets are in seconds. The baseline doesn't matter.
     """
+    phys_df = phys_df.sort_values(by=['onset'])
+    scan_df = scan_df.sort_values(by=['onset'])
+
     # Get difference between each physio trigger onset and each scan onset
-    diffs = np.zeros((scan_df.shape[0], phys_df.shape[0]))
+    onset_diffs = np.zeros((scan_df.shape[0], phys_df.shape[0]))
     for i, i_scan in scan_df.iterrows():
         for j, j_phys in phys_df.iterrows():
             onset_diff = j_phys['onset'] - i_scan['onset']
-            diffs[i, j] = onset_diff
+            onset_diffs[i, j] = onset_diff
 
     # Find the delay that gives the smallest difference between scan onsets
     # and physio onsets
     selected = (None, None)
     thresh = 1000
-    for i_scan in range(diffs.shape[0]):
-        for j_phys in range(diffs.shape[1]):
-            test_offset = diffs[i_scan, j_phys]
-            diffs_from_phys_onset = diffs - test_offset
+    for i_scan in range(onset_diffs.shape[0]):
+        for j_phys in range(onset_diffs.shape[1]):
+            test_offset = onset_diffs[i_scan, j_phys]
+            diffs_from_phys_onset = onset_diffs - test_offset
             diffs_from_abs = np.abs(diffs_from_phys_onset)
             min_diff_row_idx = np.argmin(diffs_from_abs, axis=0)
             min_diff_col_idx = np.arange(len(min_diff_row_idx))
@@ -89,12 +93,12 @@ def synchronize_onsets(phys_df, scan_df):
                 selected = (i_scan, j_phys)
                 thresh = min_diff_sum
     print('Selected solution: {}'.format(selected))
-    offset = diffs[selected[0], selected[1]]
+    offset = onset_diffs[selected[0], selected[1]]
 
     # Isolate close, but negative relative onsets, to ensure scan onsets are
     # always before or at physio triggers.
     close_thresh = 2  # threshold for "close" onsets
-    diffs_from_phys_onset = diffs - offset
+    diffs_from_phys_onset = onset_diffs - offset
     min_diff_row_idx = np.argmin(np.abs(diffs_from_phys_onset), axis=0)
     min_diff_col_idx = np.arange(len(min_diff_row_idx))
     min_diffs = diffs_from_phys_onset[min_diff_row_idx, min_diff_col_idx]
