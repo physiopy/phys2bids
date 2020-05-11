@@ -18,11 +18,16 @@ This will let you run the program with the latest modification, without requirin
 
 .. _`all-contributors`: https://github.com/all-contributors/all-contributors
 
+.. note::
+    The following instructions are provided assuming that python 3 is **not** your default version of python.
+    If it is, you might need to use ``pip`` instead of ``pip3``, although some OSs do adopt ``pip3`` anyway.
+    If you want to check, type ``python --version`` in a terminal.
+
 
 Linux and mac developer installation
 ------------------------------------
 
-Be sure to have git installed, then open a terminal and run::
+Be sure to have ``git`` and ``pip`` installed, then open a terminal and run::
 
 	git clone https://github.com/physiopy/phys2bids.git
 
@@ -36,20 +41,15 @@ Move into the ``phys2bids`` folder and execute the command::
 
 	pip3 install -e .
 
-If python 3 is already your default, you might use instead::
-
-	pip install -e .
-
 Full developer installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If it's your first experience as a python developer, or you just want to be sure that you have everything you need
 to collaborate with us, you can install ``phys2bids`` with all the other packages that we frequently use during development
-in two steps.
+in one step!
 
 Move into the ``phys2bids`` folder and execute the command::
 
-	pip3 install -e .
 	pip3 install -e .[all]
 
 This will install:
@@ -60,6 +60,3 @@ This will install:
 	- All the **style** modules, such as ``flake8``, to help you linter the code!
 	- All the **documentation** modules, like ``sphinx``, so that you can build the docs locally before submitting them.
 	- All the **test** modules, like ``pytest``, in order for you to test your code locally before committing it!
-
-.. note::
-    It's important to run ``pip3 install -e .`` first and then install the extra modules. Due to the module requirements, installing extra modules directly might result in a failed installation. 

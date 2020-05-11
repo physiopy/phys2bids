@@ -29,11 +29,11 @@ Install with ``pip``
 
 .. note::
     The following instructions are provided assuming that python 3 is **not** your default version of python.
-    If it is, remember to use ``pip`` instead of ``pip3``.
+    If it is, you might need to use ``pip`` instead of ``pip3``, although some OSs do adopt ``pip3`` anyway.
     If you want to check, type ``python --version`` in a terminal.
 
-Install main program
-~~~~~~~~~~~~~~~~~~~~
+Install ``phys2bids`` alone
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Pypi has the latest stable release of ``phys2bids`` as a package. Just run::
 
@@ -52,22 +52,23 @@ Install extra modules
 ~~~~~~~~~~~~~~~~~~~~~
 
 If you are planning to use file formats other than plain ``txt``, you need to install extra modules to have the right interface.
-Extra modules installation can be done with the sintax::
+Extra modules installation can be done with the syntax::
 
     pip3 install <package>[<extra>]
 
-Where ``<package>>`` is either ``phys2bids`` or ``.``, depending on how you installed it, and ``<extra>`` is one of the following:
+Where ``<package>>`` is either ``phys2bids`` or ``.``, depending on whether you want to use ``pip`` or ``git`` for the installation, and ``<extra>`` is one of the following:
 
     - ``acq``: if you plan to use native AcqKnowledge files (``.acq`` extension)
     - ``interfaces``: for all the interfaces above.
 
-For instance, if you plan to install phys2bids and use all the interfaces, run::
+For instance, if you plan to install ``phys2bids`` and use all the interfaces, run::
 
-    pip3 install phys2bids
     pip3 install phys2bids[interfaces]
 
 .. note::
-    It's important to run ``pip3 install phys2bids`` first and then install the extra modules. Due to the module requirements, installing extra modules directly might result in a failed installation. 
+    If you "missed" or skipped this trick when you installed ``phys2bids`` the first time, don't worry!
+    You can always do it any time - this will update ``phys2bids`` and install all the extra modules you want. 
+
 
 Install without ``pip``
 ^^^^^^^^^^^^^^^^^^^^^^^
