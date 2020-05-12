@@ -29,7 +29,7 @@ import numpy as np
 from datetime import datetime
 
 
-def extract_physio_onsets(f):
+def extract_physio_onsets(physio_file):
     """
     Collect onsets from physio file, both in terms of seconds and time series
     indices.
@@ -39,11 +39,11 @@ def extract_physio_onsets(f):
     import bioread
     from operator import itemgetter
     from itertools import groupby
-    d = bioread.read_file(f)
-    c = d.channels[-1]
-    samplerate = 1. / c.samples_per_second
-    data = c.data
-    scan_idx = np.where(data > 0)[0]
+    physio_data = bioread.read_file(physio_file)
+    trigger_channel = physio_data.channels[-1]
+    samplerate = 1. / trigger_channel.samples_per_second
+    trigger_data = trigger_channel.data
+    scan_idx = np.where(trigger_data > 0)[0]
     # Get groups of consecutive numbers in index
     groups = []
     for k, g in groupby(enumerate(scan_idx), lambda x: x[0] - x[1]):
@@ -61,10 +61,30 @@ def extract_physio_onsets(f):
 
 
 def synchronize_onsets(phys_df, scan_df):
-    """There can be fewer physios than scans (task failed to trigger physio)
+    """Find matching scans and physio trigger periods from separate DataFrames.
+
+    There can be fewer physios than scans (task failed to trigger physio)
     or fewer scans than physios (aborted scans are not retained in BIDS dataset).
 
     Onsets are in seconds. The baseline doesn't matter.
+
+    Parameters
+    ----------
+    phys_df : pandas.DataFrame
+        DataFrame with onsets of physio trigger periods, in seconds. The
+        baseline does not matter, so it is reasonable for the onsets to start
+        with zero.
+    scan_df : pandas.DataFrame
+        DataFrame with onsets and names of functional scans from BIDS dataset,
+        in seconds. The baseline does not matter, so it is reasonable for the
+        onsets to start with zero.
+
+    Returns
+    -------
+    scan_df : pandas.DataFrame
+        Updated scan DataFrame, now with columns for predicted physio onsets in
+        seconds and in indices of the physio trigger channel, as well as scan
+        duration in units of the physio trigger channel.
     """
     phys_df = phys_df.sort_values(by=['onset'])
     scan_df = scan_df.sort_values(by=['onset'])
@@ -117,7 +137,7 @@ def synchronize_onsets(phys_df, scan_df):
     return scan_df
 
 
-def stitch_segments(physio_file):
+def merge_segments(physio_file):
     """Merge segments in BioPac physio file. The segments must be named with
     timestamps, so that the actual time difference can be calculated and zeros
     can be inserted in the gaps.
@@ -155,12 +175,25 @@ def stitch_segments(physio_file):
             # Now we have the sizes, we can load the data and insert zeros.
 
 
-def split_physio(scan_df, physio_file):
+def split_physio(scan_df, physio_file, time_before=6, time_after=6):
     """Extract timeseries associated with each scan.
     Key in dict is scan name or physio filename and value is physio data in
     some format.
     Uses the onsets, durations, and filenames from scan_df, and the time series
     data from physio_file.
+
+    Parameters
+    ----------
+    scan_df : pandas.DataFrame
+    physio_file : str
+    time_before : float
+    time_after : float
+
+    Returns
+    -------
+    physio_data_dict : dict
+        Dictionary containing physio run names as keys and associated segments
+        as values.
     """
     pass
 
@@ -175,6 +208,20 @@ def determine_scan_durations(scan_df, layout):
     """Extract scan durations by loading fMRI files/metadata and
     multiplying TR by number of volumes. This can be used to determine the
     endpoints for the physio files.
+
+    Parameters
+    ----------
+    scan_df : pandas.DataFrame
+        Scans DataFrame containing functional scan filenames and onset times.
+    layout : bids.layout.BIDSLayout
+        Dataset layout. Used to identify functional scans and load them to
+        determine scan durations.
+
+    Returns
+    -------
+    scan_df : pandas.DataFrame
+        Updated DataFrame with new "duration" column. Calculated durations are
+        in seconds.
     """
     func_files = layout.get(datatype='func', suffix='bold',
                             extension=['nii.gz', 'nii'])
@@ -188,6 +235,24 @@ def determine_scan_durations(scan_df, layout):
 
 
 def workflow(bids_dir, physio_file, sub, ses=None):
+    """A potential workflow for running physio/scan onset synchronization and
+    BIDSification. This workflow writes out physio files to a BIDS dataset.
+
+    Parameters
+    ----------
+    bids_dir : str
+        Path to BIDS dataset
+    physio_file : str or list of str
+        Either a single BioPac physio file or multiple physio files from the
+        same scanning session. Each file *must* contain multiple physio trigger
+        periods associated with scans. If multiple files are provided, they
+        must have timestamped segments.
+    sub : str
+        Subject ID. Used to search the BIDS dataset for relevant scans.
+    ses : str or None, optional
+        Session ID. Used to search the BIDS dataset for relevant scans in
+        longitudinal studies. Default is None.
+    """
     layout = BIDSLayout(bids_dir)
     scans_file = layout.get(extension='tsv', suffix='scans', sub=sub, ses=ses)
     scan_df = pd.read_table(scans_file)
