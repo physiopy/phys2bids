@@ -208,7 +208,7 @@ def save_physio(physio_data_dict):
     pass
 
 
-def determine_scan_durations(layout, scan_df):
+def determine_scan_durations(layout, scan_df, sub, ses):
     """Extract scan durations by loading fMRI files/metadata and
     multiplying TR by number of volumes. This can be used to determine the
     endpoints for the physio files.
@@ -230,10 +230,11 @@ def determine_scan_durations(layout, scan_df):
     # TODO: parse entities in func files for searches instead of larger search.
     func_files = layout.get(datatype='func', suffix='bold',
                             extension=['nii.gz', 'nii'],
-                            sub=sub, ses=ses)
+                            sub=sub, ses=ses, echo=1)
+    scan_df['duration'] = None
     for func_file in func_files:
         filename = op.join('func', func_file.filename)
-        if filename in scan_df['filename']:
+        if filename in scan_df['filename'].values:
             n_vols = nib.load(func_file.path).shape[3]
             tr = func_file.get_metadata()['RepetitionTime']
             duration = n_vols * tr
@@ -246,14 +247,18 @@ def determine_scan_durations(layout, scan_df):
 def load_scan_data(layout, sub, ses):
     """
     """
+    # This is the strategy we'll use in the future. Commented out for now.
     # scans_file = layout.get(extension='tsv', suffix='scans', sub=sub, ses=ses)
     # df = pd.read_table(scans_file)
 
     # Collect acquisition times
-    # Will be replaced with scans file if heudiconv makes the change
+    # NOTE: Will be replaced with scans file if heudiconv makes the change
+    # NOTE: Currently keeping echo in to work around bug. Basically echoes are
+    # acquired at slightly different times, so we need to get the min
+    # AcquisitionTime across multi-contrast scans like multi-echo at this step.
     img_files = layout.get(datatype='func', suffix='bold',
                            extension=['nii.gz', 'nii'],
-                           sub=sub, ses=ses)
+                           sub=sub, ses=ses, echo=1)
     df = pd.DataFrame(
         columns=['filename', 'acq_time'],
     )
@@ -262,13 +267,13 @@ def load_scan_data(layout, sub, ses):
         df.loc[i, 'acq_time'] = img_file.get_metadata()['AcquisitionTime']
 
     # Now back to general-purpose code
-    df = determine_scan_durations(layout, df)
+    df = determine_scan_durations(layout, df, sub=sub, ses=ses)
     df = df.dropna(subset=['duration'])  # limit to relevant scans
-    # TODO: Drop duplicates at second-level resolution. In case echoes are
+    # TODO: Drop duplicates at second-level resolution. Because echoes are
     # acquired at ever-so-slightly different times.
     df = df.drop_duplicates(subset=['acq_time'])  # for multi-contrast scans
 
-    # convert scan times to relative onsets (first scan is at 0 seconds)
+    # Convert scan times to relative onsets (first scan is at 0 seconds)
     df['acq_time'] = pd.to_datetime(df['acq_time'])
     df = df.sort_values(by='acq_time')
     df['onset'] = (df['acq_time'] - df['acq_time'].min())
