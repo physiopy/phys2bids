@@ -26,6 +26,7 @@ import os.path as op
 from bids import BIDSLayout
 import pandas as pd
 import numpy as np
+import nibabel as nib
 from datetime import datetime
 
 
@@ -52,11 +53,14 @@ def extract_physio_onsets(physio_file):
     # Extract onsets
     onsets = np.array([g[0] for g in groups])
     onsets_in_sec = onsets * samplerate
+    durations = np.array([g[-1] - g[0] for g in groups])
+    durations_in_sec = durations * samplerate
     df = pd.DataFrame(
         columns=['onset'],
         data=onsets_in_sec,
     )
     df['index'] = onsets
+    df['duration'] = durations_in_sec
     return df
 
 
@@ -204,18 +208,18 @@ def save_physio(physio_data_dict):
     pass
 
 
-def determine_scan_durations(scan_df, layout):
+def determine_scan_durations(layout, scan_df):
     """Extract scan durations by loading fMRI files/metadata and
     multiplying TR by number of volumes. This can be used to determine the
     endpoints for the physio files.
 
     Parameters
     ----------
-    scan_df : pandas.DataFrame
-        Scans DataFrame containing functional scan filenames and onset times.
     layout : bids.layout.BIDSLayout
         Dataset layout. Used to identify functional scans and load them to
         determine scan durations.
+    scan_df : pandas.DataFrame
+        Scans DataFrame containing functional scan filenames and onset times.
 
     Returns
     -------
@@ -223,15 +227,53 @@ def determine_scan_durations(scan_df, layout):
         Updated DataFrame with new "duration" column. Calculated durations are
         in seconds.
     """
+    # TODO: parse entities in func files for searches instead of larger search.
     func_files = layout.get(datatype='func', suffix='bold',
-                            extension=['nii.gz', 'nii'])
+                            extension=['nii.gz', 'nii'],
+                            sub=sub, ses=ses)
     for func_file in func_files:
         filename = op.join('func', func_file.filename)
-        n_vols = nib.load(func_file.path).shape[3]
-        tr = func_file.get_metadata()['RepetitionTime']
-        duration = n_vols * tr
-        scan_df.loc[scan_df['filename'] == filename, 'duration'] = duration
+        if filename in scan_df['filename']:
+            n_vols = nib.load(func_file.path).shape[3]
+            tr = func_file.get_metadata()['RepetitionTime']
+            duration = n_vols * tr
+            scan_df.loc[scan_df['filename'] == filename, 'duration'] = duration
+        else:
+            print('Skipping {}'.format(filename))
     return scan_df
+
+
+def load_scan_data(layout, sub, ses):
+    """
+    """
+    # scans_file = layout.get(extension='tsv', suffix='scans', sub=sub, ses=ses)
+    # df = pd.read_table(scans_file)
+
+    # Collect acquisition times
+    # Will be replaced with scans file if heudiconv makes the change
+    img_files = layout.get(datatype='func', suffix='bold',
+                           extension=['nii.gz', 'nii'],
+                           sub=sub, ses=ses)
+    df = pd.DataFrame(
+        columns=['filename', 'acq_time'],
+    )
+    for i, img_file in enumerate(img_files):
+        df.loc[i, 'filename'] = op.join('func', img_file.filename)
+        df.loc[i, 'acq_time'] = img_file.get_metadata()['AcquisitionTime']
+
+    # Now back to general-purpose code
+    df = determine_scan_durations(layout, df)
+    df = df.dropna(subset=['duration'])  # limit to relevant scans
+    # TODO: Drop duplicates at second-level resolution. In case echoes are
+    # acquired at ever-so-slightly different times.
+    df = df.drop_duplicates(subset=['acq_time'])  # for multi-contrast scans
+
+    # convert scan times to relative onsets (first scan is at 0 seconds)
+    df['acq_time'] = pd.to_datetime(df['acq_time'])
+    df = df.sort_values(by='acq_time')
+    df['onset'] = (df['acq_time'] - df['acq_time'].min())
+    df['onset'] = df['onset'].dt.total_seconds()
+    return df
 
 
 def workflow(bids_dir, physio_file, sub, ses=None):
@@ -254,11 +296,7 @@ def workflow(bids_dir, physio_file, sub, ses=None):
         longitudinal studies. Default is None.
     """
     layout = BIDSLayout(bids_dir)
-    scans_file = layout.get(extension='tsv', suffix='scans', sub=sub, ses=ses)
-    scan_df = pd.read_table(scans_file)
-    scan_df = determine_scan_durations(scan_df, layout)
-    scan_df = scan_df.dropna(subset=['duration'])  # limit to relevant scans
-    scan_df = scan_df.drop_duplicates(subset=['acq_time'])  # for multi-contrast scans
+    scan_df = load_scan_data(layout, sub=sub, ses=ses)
     physio_df = extract_physio_onsets(physio_file)
     scan_df = synchronize_onsets(physio_df, scan_df)
     # Extract timeseries associated with each scan. Key in dict is scan name or
