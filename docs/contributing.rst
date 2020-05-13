@@ -9,7 +9,7 @@ First of all: thank you!
 Contributions can be made in different ways, not only code!
 As we follow the `all-contributors`_ specification, any contribution will be recognised accordingly.
 
-The first thing you might want to do, is have a look at the `contributor guide <contributorfile.html>`_ page as well as the `code of conduct <conduct.html>`_.
+The first thing you might want to do, is to have a look at the `contributor guide <contributorfile.html>`_ page as well as the `code of conduct <conduct.html>`_.
 
 The second thing is to check you have ``git`` and ``pip`` installed in your system.
 
@@ -45,8 +45,7 @@ Full developer installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If it's your first experience as a python developer, or you just want to be sure that you have everything you need
-to collaborate with us, you can install ``phys2bids`` with all the other packages that we frequently use during development
-in one step!
+to collaborate with us, you can install ``phys2bids`` with all the other packages that we frequently use during development in one step!
 
 Move into the ``phys2bids`` folder and execute the command::
 
