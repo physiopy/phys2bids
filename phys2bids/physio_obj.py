@@ -86,6 +86,8 @@ def are_equal(self, other):
     The equality is true if two objects are the same or
     if one of the objects is equivalent to the dictionary
     format of the other.
+    It's particularly written for Blueprint type objects.
+    This function might not work with other classes.
 
     Parameters
     ----------
@@ -98,68 +100,57 @@ def are_equal(self, other):
     """
 
     def _deal_with_dict_value_error(self, other):
-        if self.keys() == other.keys():
-            alltrue_timeseries = [False] * len(self['timeseries'])
-            alltrue_keys = [False] * len(self)
-            for j, key in enumerate(self.keys()):
-                if key == 'timeseries':
-                    for i in range(len(self['timeseries'])):
-                        alltrue_timeseries[i] = (self['timeseries'][i].all()
-                                                 == other['timeseries'][i].all())
-                    alltrue_keys[j] = all(alltrue_timeseries)
-                else:
-                    alltrue_keys[j] = (self[key] == other[key])
-            return all(alltrue_keys)
-        else:
-            return False
-
-    try:
-        return self.__dict__ == other.__dict__
-    except ValueError:
+        # Check if "self" has a 'timeseries' key. If not, return False.
         try:
-            self.__dict__['timeseries']
+            self['timeseries']
         except KeyError:
             return False
         except TypeError:
             return False
         else:
-            return _deal_with_dict_value_error(self.__dict__, other.__dict__)
+            # Check that the two objects have the same keys.
+            # If not, return False, otherwise loop through the timeseries key.
+            if self.keys() == other.keys():
+                alltrue_timeseries = [False] * len(self['timeseries'])
+                alltrue_keys = [False] * len(self)
+                for j, key in enumerate(self.keys()):
+                    if key == 'timeseries':
+                        for i in range(len(self['timeseries'])):
+                            alltrue_timeseries[i] = (self['timeseries'][i].all()
+                                                     == other['timeseries'][i].all())
+                        alltrue_keys[j] = all(alltrue_timeseries)
+                    else:
+                        alltrue_keys[j] = (self[key] == other[key])
+                return all(alltrue_keys)
+            else:
+                return False
+
+    try:
+        # Try to compare the dictionary format of the two objects
+        return self.__dict__ == other.__dict__
+    except ValueError:
+        return _deal_with_dict_value_error(self.__dict__, other.__dict__)
     except AttributeError:
+        # If there's an AttributeError, the other object might not be a class.
+        # Try to compare the dictionary format of self with the other object.
         try:
             return self.__dict__ == other
         except ValueError:
-            try:
-                self.__dict__['timeseries']
-            except KeyError:
-                return False
-            except TypeError:
-                return False
-            else:
-                return _deal_with_dict_value_error(self.__dict__, other)
+            return _deal_with_dict_value_error(self.__dict__, other)
         except AttributeError:
+            # If there's an AttributeError, self is not a class.
+            # Try to compare self with the dictionary format of the other object.
             try:
                 return self == other.__dict__
             except ValueError:
-                try:
-                    self['timeseries']
-                except KeyError:
-                    return False
-                except TypeError:
-                    return False
-                else:
-                    return _deal_with_dict_value_error(self, other.__dict__)
+                return _deal_with_dict_value_error(self, other.__dict__)
             except AttributeError:
+                # If there's an AttributeError, both objects are not a class.
+                # Try to compare self with the two object.
                 try:
                     return self == other
                 except ValueError:
-                    try:
-                        self['timeseries']
-                    except KeyError:
-                        return False
-                    except TypeError:
-                        return False
-                    else:
-                        return _deal_with_dict_value_error(self, other)
+                    return _deal_with_dict_value_error(self, other)
 
 
 class BlueprintInput():
@@ -291,6 +282,8 @@ class BlueprintInput():
         # If idx is an integer, return an "instantaneous slice" and initialise slice
         if isinstance(idx, int):
             return_instant = True
+
+            # If idx is a negative integer, take the idx element from the end.
             if idx < 0:
                 idx = trigger_length + idx
 
