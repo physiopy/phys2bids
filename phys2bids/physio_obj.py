@@ -283,10 +283,10 @@ class BlueprintInput():
         """
         sliced_timeseries = [None] * self.ch_amount
         return_instant = False
-        trigger_length = len(self.timeseries[self.trigger_idx])
-
         if not self.trigger_idx:
             self.trigger_idx = 0
+        
+        trigger_length = len(self.timeseries[self.trigger_idx])
 
         # If idx is an integer, return an "instantaneous slice" and initialise slice
         if isinstance(idx, int):
