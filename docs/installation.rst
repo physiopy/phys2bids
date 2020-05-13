@@ -67,7 +67,7 @@ For instance, if you plan to install ``phys2bids`` and use all the interfaces, r
 
 .. note::
     If you "missed" or skipped this trick when you installed ``phys2bids`` the first time, don't worry!
-    You can always do it any time - this will update ``phys2bids`` and install all the extra modules you want. 
+    You can do it any time - this will update ``phys2bids`` and install all the extra modules you want. 
 
 
 Install without ``pip``
