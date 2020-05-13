@@ -9,7 +9,7 @@ First of all: thank you!
 Contributions can be made in different ways, not only code!
 As we follow the `all-contributors`_ specification, any contribution will be recognised accordingly.
 
-The first thing you might want to do, is have a look at the `contributor guide <contributorfile.html>`_ page as well as the `code of conduct <conduct.html>`_.
+The first thing you might want to do, is to have a look at the `contributor guide <contributorfile.html>`_ page as well as the `code of conduct <conduct.html>`_.
 
 The second thing is to check you have ``git`` and ``pip`` installed in your system.
 
