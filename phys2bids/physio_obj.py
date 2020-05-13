@@ -277,7 +277,7 @@ class BlueprintInput():
         Notes
         -----
         If idx is an integer, it returns an instantaneous moment for all channels.
-        If it's a slicing, it always return the full slice. This means that
+        If it's a slice, it always returns the full slice. This means that
         potentially, depending on the frequencies, BlueprintInput[1] and
         BlueprintInput[1:2] might return different results.
         """
