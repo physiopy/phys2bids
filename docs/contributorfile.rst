@@ -217,7 +217,7 @@ To be merged, PRs have to:
 4. Have a short title that clearly explains in one sentence the aim of the PR.
 5. Contain at least a unit test for your contribution, if the PR contains code (it would be better if it contains an integration or function test and all the breaking tests necessary). If you’re not confident about writing tests, it is possible to refer to an issue that asks for the test to be written, or another (Draft) PR that contains the tests required.
 
-Don't merge your own pull request! That's a task for the main reviewer of your PR or the project manager. Remember that the project manager doesn't have to be a reviewer of your PR! See .. _reviewing: for more details.
+Don't merge your own pull request! That's a task for the main reviewer of your PR or the project manager. Remember that the project manager doesn't have to be a reviewer of your PR! See the `Reviewing PRs <#reviewing:>` section.
 
 As we’re trying to maintain at least a 90% code coverance, you’re strongly encouraged to write all the necessary tests not to drop below the threshold. If our coverance becomes too low, you might be asked to add more tests and/or your PR might be rejected.
 
