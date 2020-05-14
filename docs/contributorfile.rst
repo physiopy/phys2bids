@@ -3,7 +3,7 @@
 =================================
 How to contribute to ``physiopy``
 =================================
-Welcome to the ``physiopy`` organisation! It’s great news you’re thinking about contributing!
+Welcome to the ``physiopy`` organisation! It’s great news that you’re thinking about contributing!
 
 Working with many people from many different places is great, but sometimes this means that code can become messy due to the many different ways a contribution can be made. For this reason, we have set up some guidelines for contributions - to help you get involved ASAP!
 If you lack knowledge in python development / github use / physiological data handling, don’t be scared! Try to jump in anyway. Most of the original contributors learned these things exactly this way - jumping in and hoping to fall in the right way without breaking too many bones.
@@ -30,14 +30,13 @@ Already know what you're looking for in this guide? Jump to the following sectio
 - `Style Guide <#styling>`_
 - `Automatic Testing <#testing>`_
 - `Reviewing PRs <#reviewing>`_
-- `Recognizing contributors <#recognising>`_
 
 .. _aims:
 
 Aims of ``physiopy``
 --------------------
 ``physiopy`` is a **very** young project developed by a bunch of researchers from the two different sides of the Atlantic Ocean (for now).
-Our main goal is to help collect, analyse and share physiological data interfacing with (MRI) neuroimaging. We’re trying to do so by:
+Our main goal is to help collect, analyse and share physiological data, interfacing with (MRI) neuroimaging. We’re trying to do so by:
 
 1. Writing packages to make a user-friendly pipeline to deal with physiological data.
 2. Writing packages that take into account the use of this physiological data in combination with neuroimaging (MRI) analysis.
@@ -49,7 +48,7 @@ Our main goal is to help collect, analyse and share physiological data interfaci
 
 Joining the conversation
 ------------------------
-We’re trying to keep all the conversation related to the project development in GitHub `issues <https://github.com/smoia/phys2bids/issues>`_.
+We’re trying to keep all the conversation related to the project development in GitHub `issues <https://github.com/physiopy/phys2bids/issues>`_.
 We maintain a `gitter chat room <https://gitter.im/phys2bids/community>`_ for more informal conversations and general project updates.
 We also have a dev call once a month - specifically the second Thursday of the month! If you want to participate, drop a line in gitter!
 When interacting in the common channels, please adhere to our `code of conduct <conduct.html>`_.
@@ -58,10 +57,7 @@ When interacting in the common channels, please adhere to our `code of conduct <
 
 Contributions
 -------------
-.. _recognising:
 
-Recognising Contributors
-~~~~~~~~~~~~~~~~~~~~~~~~
 We welcome and recognize `all contributions <https://allcontributors.org/docs/en/specification>`_ from documentation to testing to code development. You can see a list of current contributors in the README (kept up to date by the `all contributors bot <https://allcontributors.org/docs/en/bot/overview>`_).
 
 .. _smalldocs:
@@ -96,7 +92,7 @@ We’re extremely grateful for this type of contribution - so grateful that we a
 
 Contributing documentation through GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-We use `readthedocs <https://readthedocs.org/>`_ to create our documentation. Every contribution is welcome and it follows the same steps of a code contribution, explained below.
+We use `readthedocs <https://readthedocs.org/>`_ to create our documentation. Every contribution is welcome and it follows the same steps as a code contribution, explained below.
 
 .. _code:
 
@@ -217,7 +213,7 @@ To be merged, PRs have to:
 4. Have a short title that clearly explains in one sentence the aim of the PR.
 5. Contain at least a unit test for your contribution, if the PR contains code (it would be better if it contains an integration or function test and all the breaking tests necessary). If you’re not confident about writing tests, it is possible to refer to an issue that asks for the test to be written, or another (Draft) PR that contains the tests required.
 
-Don't merge your own pull request! That's a task for the main reviewer of your PR or the project manager. Remember that the project manager doesn't have to be a reviewer of your PR! See the `Reviewing PRs <#reviewing:>` section.
+Don't merge your own pull request! That's a task for the main reviewer of your PR or the project manager. Remember that the project manager doesn't have to be a reviewer of your PR! See the `Reviewing PRs <#reviewing:>`_ section.
 
 As we’re trying to maintain at least a 90% code coverance, you’re strongly encouraged to write all the necessary tests not to drop below the threshold. If our coverance becomes too low, you might be asked to add more tests and/or your PR might be rejected.
 
