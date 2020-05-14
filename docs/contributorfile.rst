@@ -4,8 +4,8 @@
 How to contribute to ``physiopy``
 =================================
 Welcome to the ``physiopy`` organisation! It’s great news you’re thinking about contributing!
-Working with many people from many different places is great, but sometimes this means the code can become messy due to the many different ways a contribution can be made. For this reason, we have set up some guidelines for contributions - to help you get along ASAP!
-Before you start you'll need to set up a free `GitHub <https://github.com/>`_ account and sign in. Here are some `instructions <https://help.github.com/articles/signing-up-for-a-new-github-account>`_.
+
+Working with many people from many different places is great, but sometimes this means that code can become messy due to the many different ways a contribution can be made. For this reason, we have set up some guidelines for contributions - to help you get involved ASAP!
 If you lack knowledge in python development / github use / physiological data handling, don’t be scared! Try to jump in anyway. Most of the original contributors learned these things exactly this way - jumping in and hoping to fall in the right way without breaking too many bones.
 Do you want to jump in but don’t exactly know where/how? You can drop a few lines in `gitter <https://gitter.im/phys2bids/community>`_, so we can help you find something that suits you!
 Already know what you're looking for in this guide? Jump to the following sections:
@@ -39,9 +39,9 @@ Aims of ``physiopy``
 ``physiopy`` is a **very** young project developed by a bunch of researchers from the two different sides of the Atlantic Ocean (for now).
 Our main goal is to help collect, analyse and share physiological data interfacing with (MRI) neuroimaging. We’re trying to do so by:
 
-1. Write packages to make a user-friendly pipeline to deal with physiological data.
-2. Organising a documentation containing tips and strategies on how to collect such data and use our packages.
-3. Write packages that take into account the use of such data in combination with neuroimaging (MRI) - by getting everything ready for that analysis.
+1. Writing packages to make a user-friendly pipeline to deal with physiological data.
+2. Writing packages that take into account the use of this physiological data in combination with neuroimaging (MRI) analysis.
+3. Providing documentation containing tips and strategies on how to collect such data and use our packages.
 4. Help set a standard for these data, albeit without forcing users to use it.
 5. Be an excuse for educational purposes on topics like Git/GitHub, Python3, physiology and related tools/topics.
 
@@ -58,13 +58,18 @@ When interacting in the common channels, please adhere to our `code of conduct <
 
 Contributions
 -------------
+.. _recognising:
+
+Recognising Contributors
+~~~~~~~~~~~~~~~~~~~~~~~~
+We welcome and recognize `all contributions <https://allcontributors.org/docs/en/specification>`_ from documentation to testing to code development. You can see a list of current contributors in the README (kept up to date by the `all contributors bot <https://allcontributors.org/docs/en/bot/overview>`_).
 
 .. _smalldocs:
 
 Contributing with small documentation changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 If you are new to GitHub and just have a small documentation change recommendation (such as: typos detection, small improvements in the content, ...), please open an issue in the relative project, and label it with the “Documentation” label.
-Chances are those types of changes are easily doable with the online editor, which means you can do them, or ask for help from the developers!
+Chances are those types of changes are easily doable with GitHub's online editor, which means you can do them, or ask for help from the developers!
 
 .. _usertests:
 
@@ -83,7 +88,7 @@ Contributing with test files
 At ``physiopy`` we always try to imagine and support every possible setting out there. However, our imagination has a limit - but if you think our packages should process a specific format/setting that you have, we’re more than glad to do so!
 To make it happen, we need an example of the file we want to process, so you will have to share it with us (and the rest of the world)! The contribution can be a full file of data that you already acquired, a part of that file (pay attention to what is the minimum you need to share!), or mock data.
 The file contribution should come with a json file of the same name that contains the necessary information to run ``phys2bids`` on that file contribution. There is a `json blueprint in OSF <https://mfr.de-1.osf.io/render?url=https://osf.io/jrnxv/?direct%26mode=render%26action=download%26mode=render>`_, you can download it and adapt it. Note that the frequency list **has to be expressed in Hz** as an integer or float.
-To contribute with a test file, open an Issue in GitHub and label it with *Test*. We’ll help you add the file in our 
+To contribute with a test file, open an Issue in GitHub and label it with *Test*. We’ll help you add the file in our
 `OSF <https://osf.io/3txqr/>`_ space.
 We’re extremely grateful for this type of contribution - so grateful that we asked allcontributors to add a dedicated category!
 
@@ -91,14 +96,14 @@ We’re extremely grateful for this type of contribution - so grateful that we a
 
 Contributing documentation through GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-We use `readthedocs <https://readthedocs.org/>`_ to create our documentation. Every contribution is welcome - and it follows the steps of a code contribution.
+We use `readthedocs <https://readthedocs.org/>`_ to create our documentation. Every contribution is welcome and it follows the same steps of a code contribution, explained below.
 
 .. _code:
 
 Contributing code through GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This section covers 90% of the contributions a project like ``physiopy`` receives - code, documentation and tests.
-The best way to make this kind of contributions, in a nutshell, would be:
+The best way to make this kind of contributions, in a nutshell, is to:
 1. Open an issue with the intended modifications.
 2. Label it, discuss it, (self-)assign it.
 3. Open a Pull Request (PR) to resolve the issue and label it.
@@ -110,7 +115,7 @@ Issues and PR chats are great to maintain track of the conversation on the contr
 Contributing with Pull Requests Reviews
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 One big challenge in this kind of software development is merging code accurately but without waiting too much time.
-For this reason, Reviewers for PRs are more than welcome! It is a task that requires quite some experience, but it's very necessary!
+For this reason, Reviewers for PRs are more than welcome! It is a task that requires some experience, but it's very necessary!
 Read the `related section below <#reviewing>`_ to start!
 
 .. _issuesmilestones:
@@ -133,7 +138,7 @@ Issues labels
 ~~~~~~~~~~~~~
 - Bug: Something isn’t working. It either breaks the code or has an unexpected outcome.
 - Discussion: Discussion of a concept or implementation. These Issues are prone to be open ad infinitum. Jump in the conversation if you want!
-- Good first issue: Good for newcomers. These issues calls for a **fairly** easy enhancement, or for a change that helps/requires getting to know the code better. They have educational value, and for this reason, unless urgent, experts in the topic should refrain from closing them - but help newcomers closing them.
+- Good first issue: Good for newcomers. These issues calls for a **fairly** easy enhancement, or for a change that helps/requires getting to know the code better. They have educational value, and for this reason, unless urgent, experts in the topic should refrain from closing them - but help newcomers in closing them.
 - Hacktoberfest: Dedicated to the hacktoberfest event, so that people can help and feel good about it (and show it with a T-shirt!). **Such commits will not be recognised in the all-contributor table, unless otherwise specified**.
 - Help wanted: Extra attention is needed here! It’s a good place to have a look!
 - Refactoring: Improve nonfunctional attributes. Which means rewriting the code or the documentation to improve performance or just because there’s a better way to express those lines. It might create a ``majormod`` PR.
@@ -165,7 +170,7 @@ Issues & PRs labels
 
 Good First Issues
 ~~~~~~~~~~~~~~~~~
-Good First Issues are issues that are either very simple, or that help knowing the programs or the language better. We use it to help contributors with less experience to learn and familiarise with Git, GitHub, Python3, and physiology.
+Good First Issues are issues that are either very simple, or that help the contributor get to know the programs or the languages better. We use it to help contributors with less experience to learn and familiarise with Git, GitHub, Python3, and physiology.
 We invite more expert contributors to avoid those issues, leave them to beginners and possibly help them out in the resolution of the issue. However, if the issue is left unassigned or unattended for long, and it’s considered important or urgent, anyone can tackle it.
 
 .. _workflow:
@@ -175,7 +180,7 @@ Contribution workflow
 There are many descriptions of a good contribution workflow out there. For instance, we suggest to have a look at `tedana's workflow <https://github.com/ME-ICA/tedana/blob/master/CONTRIBUTING.md#making-a-change>`_.
 At ``physiopy``, we follow a very similar workflow. The only three differences are:
 
-- If you see an open issue that you would like to work on, check if it is assigned. If it is, ask the assignee to 
+- If you see an open issue that you would like to work on, check if it is assigned. If it is, ask the assignee to
 - We ask you to test the code locally before merging it, and then, if possible, write some automatic tests for the code to be run in our Continuous Integration! Check the testing section below to know more.
 - We suggest opening a draft PR as soon as you can - so it’s easier for us to help you!
 
@@ -185,14 +190,14 @@ Pull Requests
 -------------
 To improve understanding pull requests "at a glance", we use the labels listed above. Multiple labels can be assigned, but it's a good idea to keep different types of contributions separated, unless they are minimal - for instance, you might want to open a PR for code, one for documentation and one for testing.
 In general, if you're tempted to assign more than one label that would trigger a release, you might want to split your PR instead.
-When opening a pull request, assign it to at least one label.
+When opening a pull request, assign it at least one label.
 
-We encourage you to open a PR as soon as possible - even before you finish working on them. This is useful especially to you - so that you can receive comments and suggestions early on, rather than having to process a lot of comments in the final review step! 
+We encourage you to open a PR as soon as possible - even before you finish working on them. This is useful especially to you - so that you can receive comments and suggestions early on, rather than having to process a lot of comments in the final review step!
 However, if it’s an incomplete PR, please open a **Draft PR**. That helps us process PRs by knowing which one to have a look first - and how picky to be when doing so.
 
 Reviewing PRs is a time consuming task, that can be stressful for both the reviewer and the author. Avoiding wasting time and the need of little fixes - such as fixing grammar mistakes and typos, styling code, or adopting conventions - is a good start for a successful (and quick) review. Before graduating a Draft PR to a PR ready for review, please check that:
 
-- You did all you wanted to include in your PR. If at a later stage you realise something is missing and it's not minor things, you will need to open a new PR.
+- You did all you wanted to include in your PR. If at a later stage you realise something is missing and it's not a minor thing, you will need to open a new PR.
 - If your contribution contains code or tests, you run and passed all the tests locally with `pytest`.
 - If you're writing documentation, you built it locally with `sphinx` and the format is what you intended.
 - Your code is harmonious with the rest of the code - no repetitions of any sort!
@@ -212,11 +217,9 @@ To be merged, PRs have to:
 4. Have a short title that clearly explains in one sentence the aim of the PR.
 5. Contain at least a unit test for your contribution, if the PR contains code (it would be better if it contains an integration or function test and all the breaking tests necessary). If you’re not confident about writing tests, it is possible to refer to an issue that asks for the test to be written, or another (Draft) PR that contains the tests required.
 
-Don't merge your own pull request! That's a task for the main reviewer of your PR or the project manager!
+Don't merge your own pull request! That's a task for the main reviewer of your PR or the project manager. Remember that the project manager doesn't have to be a reviewer of your PR! See .. _reviewing: for more details.
 
 As we’re trying to maintain at least a 90% code coverance, you’re strongly encouraged to write all the necessary tests not to drop below the threshold. If our coverance becomes too low, you might be asked to add more tests and/or your PR might be rejected.
-
-Remember that the project manager doesn't have to be a reviewer of your PR! 
 
 .. _styling:
 
@@ -261,12 +264,12 @@ Due to its importance, there are some good rules of thumbs that we need to follo
 - If you're reviewing documentation, build it locally with `sphinx`.
 - Unless it's for typo fixes or similar, invite the author of the PR to make changes before actually doing them yourself.
 - If you're asking for changes, **don't approve the PR**. Approve it only after everything was sufficiently addressed. Someone else might merge the PR in taking your word for granted.
-- If you're the last reviewer required to approve the PR and there is no review taking place, merge it!
+- If you are the main reviewer, and the last reviewer required to approve the PR, merge the PR!
 
 Before approving and/or merging PRs, be sure that:
 
 - All the tests in Travis CI pass without errors.
-- Prefereably, codecov checks pass as well - if they don't, pin the project manager. 
+- Prefereably, codecov checks pass as well - if they don't, pin the project manager.
 - The title describes the content of the PR clearly enough to be meaningful on its own - remember that it will appear in the version changelog!
 - The PR has the appropriate labels to trigger the appropriate version release and update the contributors table.
 
@@ -289,12 +292,6 @@ The main reviewer:
     - The Pipy version of the repository coincides with the new release (if changed).
     - New contributors or forms of contributions were correctly added in the README (if changed).
 
-.. _recognising:
-
-Recognising contributors
-------------------------
-We welcome and recognize `all contributions <https://allcontributors.org/docs/en/specification>`_ from documentation to testing to code development. You can see a list of current contributors in the README (kept up to date by the `all contributors bot <https://allcontributors.org/docs/en/bot/overview>`_).
-
 **Thank you!**
 
-*— Based on contributing guidelines from the `STEMMRoleModels <https://github.com/KirstieJane/STEMMRoleModels>`_ project.* 
+*— Based on contributing guidelines from the `STEMMRoleModels <https://github.com/KirstieJane/STEMMRoleModels>`_ project.*
