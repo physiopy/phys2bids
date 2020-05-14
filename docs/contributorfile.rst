@@ -213,7 +213,7 @@ To be merged, PRs have to:
 4. Have a short title that clearly explains in one sentence the aim of the PR.
 5. Contain at least a unit test for your contribution, if the PR contains code (it would be better if it contains an integration or function test and all the breaking tests necessary). If you’re not confident about writing tests, it is possible to refer to an issue that asks for the test to be written, or another (Draft) PR that contains the tests required.
 
-Don't merge your own pull request! That's a task for the main reviewer of your PR or the project manager. Remember that the project manager doesn't have to be a reviewer of your PR! See the `Reviewing PRs <#reviewing:>`_ section.
+Don't merge your own pull request! That's a task for the main reviewer of your PR or the project manager. Remember that the project manager doesn't have to be a reviewer of your PR! See the `Reviewing PRs <#reviewing>`_ section.
 
 As we’re trying to maintain at least a 90% code coverance, you’re strongly encouraged to write all the necessary tests not to drop below the threshold. If our coverance becomes too low, you might be asked to add more tests and/or your PR might be rejected.
 
@@ -230,7 +230,7 @@ Since we adopt `auto <https://intuit.github.io/auto/home.html>`_, the PR title w
 
 Automatic Testing
 -----------------
-physiopy uses Continuous Integration (CI) to make life easier. In particular, we use the `Travis CI <https://travis-ci.org/>`_ platform to run automatic testing!
+``physiopy`` uses Continuous Integration (CI) to make life easier. In particular, we use the `Travis CI <https://travis-ci.org/>`_ platform to run automatic testing!
 **Automatic tests** are cold, robotic, emotionless, and opinionless tests that check that the program is doing what it is expected to. They are written by the developers and run (by Travis CI) every time they send a Pull Request to ``physiopy`` repositories. They complement the warm, human, emotional and opinionated **user tests**, as they tell us if a piece of code is failing.
 Travis CI uses `pytest <https://docs.pytest.org/en/latest/>`_ to run the tests. The great thing about it is that you can run it in advance on your local version of the code!
 We can measure the amount of code that is tested with [codecov]8https://docs.pytest.org/en/latest/), which is an indication of how reliable our packages are! We try to maintain a 90% code coverage, and for this reason, PR should contain tests!
@@ -275,7 +275,7 @@ Remember that the project manager doesn't have to be a reviewer of the PR.
 
 Main reviewer
 ~~~~~~~~~~~~~
-At `physiopy` we use the "Assignees" section of a PR to mark the **main reviewer** for that PR.
+At ``physiopy`` we use the "Assignees" section of a PR to mark the **main reviewer** for that PR.
 The main reviewer:
 
 - Takes care of the reviewing process of the PR, in particular:
