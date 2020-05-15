@@ -269,13 +269,19 @@ class BlueprintInput():
         # Use the trigger channel to find the TRs,
         # comparing it to a given threshold.
         trigger = self.timeseries[chtrig]
+        flag = 0
         if thr is None:
             thr = np.mean(trigger) + 2 * np.std(trigger)
+            flag = 1
         timepoints = trigger > thr
         num_timepoints_found = len([is_true for is_true, _ in groupby(timepoints,
                                     lambda x: x != 0) if is_true])
-        LGR.info(f'The number of timepoints according to the std_thr method '
-                 f'is {num_timepoints_found}. The computed threshold is {thr}')
+        if flag == 1:
+            LGR.info(f'The number of timepoints according to the std_thr method '
+                     f'is {num_timepoints_found}. The computed threshold is {thr}')
+        else:
+            LGR.info(f'The number of timepoints found with the manual threshold of {thr} '
+                     f'is {num_timepoints_found}')
         time_offset = self.timeseries[0][timepoints.argmax()]
 
         if num_timepoints_expected:
@@ -333,7 +339,7 @@ class BlueprintInput():
         for ch in range(1, self.ch_amount):
             info = info + (f'{ch:02d}. {self.ch_name[ch]};'
                            f' sampled at {self.freq[ch]} Hz\n')
-        info = info + f'------------------------------------------------\n'
+        info = info + '------------------------------------------------\n'
 
         LGR.info(info)
 

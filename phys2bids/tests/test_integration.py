@@ -2,12 +2,12 @@ import glob
 import json
 import math
 import os
-from pkg_resources import resource_filename
 import re
 import subprocess
+from pkg_resources import resource_filename
 
-from phys2bids.phys2bids import phys2bids
 from phys2bids._version import get_versions
+from phys2bids.phys2bids import phys2bids
 
 
 def check_string(str_container, str_to_find, str_expected, is_num=True):
@@ -250,12 +250,12 @@ def test_integration_heuristic():
     test_path_output = os.path.join(test_path, 'sub-006/ses-01/func')
 
     # Check that files are generated
-    base_filename = 'sub-006_ses-01_task-test_rec-labchart_run-00_physio'
+    base_filename = 'sub-006_ses-01_task-test_rec-labchart_run-01_physio'
     for suffix in ['.log', '.json', '.tsv.gz']:
         assert os.path.isfile(os.path.join(test_path_output, base_filename + suffix))
 
     # Read log file (note that this file is not the logger file)
-    log_filename = 'sub-006_ses-01_task-test_rec-labchart_run-00_physio.log'
+    log_filename = 'sub-006_ses-01_task-test_rec-labchart_run-01_physio.log'
     with open(os.path.join(test_path_output, log_filename)) as log_info:
         log_info = log_info.readlines()
 
@@ -271,7 +271,7 @@ def test_integration_heuristic():
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
     # Checks json file
-    json_filename = 'sub-006_ses-01_task-test_rec-labchart_run-00_physio.json'
+    json_filename = 'sub-006_ses-01_task-test_rec-labchart_run-01_physio.json'
     with open(os.path.join(test_path_output, json_filename)) as json_file:
         json_data = json.load(json_file)
 
