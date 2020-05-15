@@ -27,9 +27,9 @@ Already know what you're looking for in this guide? Jump to the following sectio
    - `Good First Issues <#g1i>`_
 - `Contribution workflow <#workflow>`_
 - `Pull Requests <#pr>`_
+- `Reviewing PRs <#reviewing>`_
 - `Style Guide <#styling>`_
 - `Automatic Testing <#testing>`_
-- `Reviewing PRs <#reviewing>`_
 
 .. _aims:
 
@@ -176,7 +176,7 @@ Contribution workflow
 There are many descriptions of a good contribution workflow out there. For instance, we suggest to have a look at `tedana's workflow <https://github.com/ME-ICA/tedana/blob/master/CONTRIBUTING.md#making-a-change>`_.
 At ``physiopy``, we follow a very similar workflow. The only three differences are:
 
-- If you see an open issue that you would like to work on, check if it is assigned. If it is, ask the assignee to
+- If you see an open issue that you would like to work on, check if it is assigned. If it is, ask the assignee if they need help before starting to work on it.
 - We ask you to test the code locally before merging it, and then, if possible, write some automatic tests for the code to be run in our Continuous Integration! Check the testing section below to know more.
 - We suggest opening a draft PR as soon as you can - so it’s easier for us to help you!
 
@@ -213,9 +213,49 @@ To be merged, PRs have to:
 4. Have a short title that clearly explains in one sentence the aim of the PR.
 5. Contain at least a unit test for your contribution, if the PR contains code (it would be better if it contains an integration or function test and all the breaking tests necessary). If you’re not confident about writing tests, it is possible to refer to an issue that asks for the test to be written, or another (Draft) PR that contains the tests required.
 
-Don't merge your own pull request! That's a task for the main reviewer of your PR or the project manager. Remember that the project manager doesn't have to be a reviewer of your PR! See the `Reviewing PRs <#reviewing>`_ section.
+As we’re trying to maintain at least a 90% code coverage, you’re strongly encouraged to write all the necessary tests not to drop below the threshold. If our coverage becomes too low, you might be asked to add more tests and/or your PR might be rejected. See the `Automatic Testing <#testing>`_ section.
 
-As we’re trying to maintain at least a 90% code coverance, you’re strongly encouraged to write all the necessary tests not to drop below the threshold. If our coverance becomes too low, you might be asked to add more tests and/or your PR might be rejected.
+Don't merge your own pull request! That's a task for the main reviewer of your PR or the project manager. Remember that the project manager doesn't have to be a reviewer of your PR!
+
+.. _reviewing:
+
+Reviewing PRs
+-------------
+Reviewing PRs is an extremely important task in collaborative development. In fact, it is probably the task that requires the most time in the development, and it can be stressful for both the reviewer and the author. Remember that, as a PR Reviewer, you are granting that the codes works and integrates well with the rest of the repository, hence **you are responsible for the quality of the code and its next version release**. If it doesn't integrate well, later PR reviewers might have to ask for broader changes than expected.
+Due to its importance, there are some good rules of thumbs that we need to follow while reviewing PRs:
+
+- Be respectful to the PR authors and be clear in what you are asking/suggesting - remember that, like you, they are contributing their spare time and doing their best job!
+- If there is a Draft PR, you can comment on its development in the message board or making "Comment" reviews. Don't ask for changes, and especially, **don't approve the PR**
+- If the PR graduated from Draft to full PR, check that it follows the sections `Pull requests <#pr>`_ and `Style Guide <#styling>`_ of these guidelines. If not, invite the author to do so before starting a review.
+- **Don't limit your review to the parts that are changed**. Look at the entire file, see if the changes fit well in it, and see if the changes are properly addressed everywhere in the code - in the documentation, in the tests, and in other functions. Sometimes the differences reported don't show the full impact of the PR in the repository!
+- Unless it's for typo fixes or similar, invite the author of the PR to make changes before actually doing them yourself. Request changes via comments or in the message board or by checking out the PR locally, making changes and then submitting a PR to the author's branch.
+- If you're reviewing documentation, build it locally with `sphinx`.
+- If you're asking for changes, **don't approve the PR**. Approve it only after everything was sufficiently addressed. Someone else might merge the PR in taking your word for granted.
+- If you are the main reviewer, and the last reviewer required to approve the PR, merge the PR!
+
+Before approving and/or merging PRs, be sure that:
+
+- All the tests in Travis CI pass without errors.
+- Prefereably, codecov checks pass as well - if they don't, pin the project manager.
+- The title describes the content of the PR clearly enough to be meaningful on its own - remember that it will appear in the version changelog!
+- The PR has the appropriate labels to trigger the appropriate version release and update the contributors table.
+
+.. _mainreviewer:
+
+Main reviewer
+~~~~~~~~~~~~~
+At ``physiopy`` we use the "Assignees" section of a PR to mark the **main reviewer** for that PR.
+The main reviewer:
+
+- Takes care of the reviewing process of the PR, in particular:
+    - Invites the reviewers to finish their review in a relatively short time.
+    - Checks that this document was respected in all its part, especially the part about `Pull Requests <#pr>`_.
+
+- Is the one that is going to merge the PR.
+- After the PR got merged and a new release was triggered, checks that:
+    - The documentation was updated correctly (if changed).
+    - The Pipy version of the repository coincides with the new release (if changed).
+    - New contributors or forms of contributions were correctly added in the README (if changed).
 
 .. _styling:
 
@@ -244,49 +284,6 @@ The four main type of tests we use are:
     Integration tests check that the code has an expected output, being blind to its content. This means that if the program should output a new file, the file exists - even if it’s empty. This type of tests are normally run on real data and call the program itself. For instance, documentation PRs should check that the documentation page is produced!
 4. Functional tests
     If integration tests and unit tests could have babies, those would be functional tests. In practice, this kind of tests check that an output is produced, and *also* that it contains what it should contain. If a function should output a new file or an object, this test passes only if the file exists *and* it is like we expect it to be. They are run on real or mock data, and call the program itself or a function.
-
-.. _reviewing:
-
-Reviewing PRs
--------------
-Reviewing PRs is an extremely important task in collaborative development. In fact, it is probably the task that requires the most time in the development, and it can be stressful for both the reviewer and the author. Remember that, as a PR Reviewer, you are granting that the codes works and integrates well with the rest of the repository, hence **you are responsible for the quality of the code and its next version release**. If it doesn't integrate well, later PR reviewers might have to ask for broader changes than expected.
-Due to its importance, there are some good rules of thumbs that we need to follow while reviewing PRs:
-
-- Be respectful to the PR authors - remember that, like you, they are contributing their spare time and doing their best job!
-- If there is a Draft PR, you can comment its development in the message board or making "Comment" reviews. Don't ask for changes, and especially, **don't approve the PR**
-- If the PR graduated from Draft to full PR, check that it follows the sections `Pull requests <#pr>`_ and `Style Guide <#styling>`_ of these guidelines. If not, invite the author to do so before starting a review.
-- Be clear in what you're asking or suggesting.
-- **Don't limit your review to the parts that are changed**. Look at the entire file, see if the changes fit well in it, and see if the changes are properly addressed everywhere in the code - in the documentation, in the tests, and in other functions. Sometimes the differences reported don't show the full impact of the PR in the repository!
-- If you're reviewing documentation, build it locally with `sphinx`.
-- Unless it's for typo fixes or similar, invite the author of the PR to make changes before actually doing them yourself.
-- If you're asking for changes, **don't approve the PR**. Approve it only after everything was sufficiently addressed. Someone else might merge the PR in taking your word for granted.
-- If you are the main reviewer, and the last reviewer required to approve the PR, merge the PR!
-
-Before approving and/or merging PRs, be sure that:
-
-- All the tests in Travis CI pass without errors.
-- Prefereably, codecov checks pass as well - if they don't, pin the project manager.
-- The title describes the content of the PR clearly enough to be meaningful on its own - remember that it will appear in the version changelog!
-- The PR has the appropriate labels to trigger the appropriate version release and update the contributors table.
-
-Remember that the project manager doesn't have to be a reviewer of the PR.
-
-.. _mainreviewer:
-
-Main reviewer
-~~~~~~~~~~~~~
-At ``physiopy`` we use the "Assignees" section of a PR to mark the **main reviewer** for that PR.
-The main reviewer:
-
-- Takes care of the reviewing process of the PR, in particular:
-    - Invites the reviewers to finish their review in a relatively short time.
-    - Checks that this document was respected in all its part, especially the part about `Pull Requests <#pr>`_.
-
-- Is the one that is going to merge the PR.
-- After the PR got merged and a new release was triggered, checks that:
-    - The documentation was updated correctly (if changed).
-    - The Pipy version of the repository coincides with the new release (if changed).
-    - New contributors or forms of contributions were correctly added in the README (if changed).
 
 **Thank you!**
 
