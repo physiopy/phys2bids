@@ -13,8 +13,7 @@ Follow these steps to get started:
 
 1. Have a look at the `contributor guide <contributorfile.html>`_ page as well as the `code of conduct <conduct.html>`_.
 2. Make sure that you have a GitHub account. You can set up a `free GitHub account <https://github.com/>`_; here are some `instructions <https://help.github.com/articles/signing-up-for-a-new-github-account>`_.
-3. If you intend to contribute code and/or use the ``physiopy`` packages in any way, check that you have ``git`` and ``pip`` installed on your system.
-4. Install ``phys2bids`` as a developer. This will let you run the program with the latest modification, without requiring to re-install it every time.
+3. If you intend to contribute code and/or use the ``physiopy`` packages in any way, check that you have ``git`` and ``pip`` installed on your system. Then install ``phys2bids`` as a developer. This will let you run the program with the latest modification, without requiring to re-install it every time.
 
 .. _`all-contributors`: https://github.com/all-contributors/all-contributors
 
@@ -22,7 +21,7 @@ Follow these steps to get started:
     The following instructions are provided assuming that python 3 is **not** your default version of python.
     If it is, you might need to use ``pip`` instead of ``pip3``, although some OSs do adopt ``pip3`` anyway.
     If you want to check, type ``python --version`` in a terminal.
-    
+
 Linux and mac developer installation
 ------------------------------------
 
