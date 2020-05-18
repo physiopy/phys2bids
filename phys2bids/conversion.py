@@ -41,7 +41,10 @@ def extract_physio_onsets(physio_file):
     from operator import itemgetter
     from itertools import groupby
     physio_data = bioread.read_file(physio_file)
-    trigger_channel = physio_data.channels[-1]
+    is_trigger = ['trig' in c.name.lower() for c in physio_data.channels]
+    trigger_idx = np.where(is_trigger)[0]
+    trigger_idx = trigger_idx[0] if len(trigger_idx) else -1
+    trigger_channel = physio_data.channels[trigger_idx]
     samplerate = 1. / trigger_channel.samples_per_second
     trigger_data = trigger_channel.data
     scan_idx = np.where(trigger_data > 0)[0]
