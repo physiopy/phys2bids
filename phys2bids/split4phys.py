@@ -27,7 +27,7 @@ def split4phys(phys_in=None, ntp_list=[0, ], tr_list=[1, ], padding=9):
         Containing tuples of run start and end indexes for each run, based on trigger channels
         In the form of run_timestamps{run_idx:(start, end), run_idx:...}
     """
-    # Initialize dictionaries to save phys_in endpoints
+    # Initialize dictionaries to save phys_in slices
     run_timestamps = {}
     # run_start = 0
     for run_idx, run_tps in enumerate(ntp_list):
@@ -38,7 +38,7 @@ def split4phys(phys_in=None, ntp_list=[0, ], tr_list=[1, ], padding=9):
         # define padding - 9s * freq of trigger - padding is in nb of samples
         padding = padding * phys_in.freq[0]
 
-        # initialise start of run as index of first trigger minus the padding
+        # initialise start of run as index of first trigger (starts at 0 sec) minus the padding
         run_start = phys_in.timeseries[0].index(0) - padding
 
         # run length in seconds
