@@ -24,7 +24,7 @@ unit_aliases = {
                 # second: time
                 'second': 's', 'seconds': 's', 'sec': 's',
                 'secs': 's',
-                '1/hz': 's', '1/hertz': 's','s': 's'
+                '1/hz': 's', '1/hertz': 's', 's': 's'
 }
 
 # Init dictionary of aliases for multipliers. Entries are still lowercase
