@@ -272,7 +272,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
                      phys_in.freq, infile, chplot)
 
-    
+    # If only info were asked, end here.
+    if info:
+        return
 
     # The next few lines remove the undesired channels from phys_in.
     if chsel:
