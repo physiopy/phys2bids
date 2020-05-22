@@ -320,7 +320,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # returns a dictionary in the form {run_idx: (startpoint, endpoint), run_idx:...}
 
             # ideally, we'd want to have a figure for each run
-            for idx in run_idx.keys():
+            for idx, key in enumerate(run_idx.keys()):
                 # The following 14 lines should become a function
                 LGR.info('Plot trigger')
                 plot_path = os.path.join(outdir,
@@ -330,7 +330,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                 if ses:
                     plot_path += f'_ses-{ses}'
 
-                times = run_idx[idx]
+                times = run_idx[key]
                 # adjust filename to run indexes
                 viz.plot_trigger(phys_in[times[0]:times[1]].timeseries[0],
                                  phys_in[times[0]:times[1]].timeseries[chtrig],
