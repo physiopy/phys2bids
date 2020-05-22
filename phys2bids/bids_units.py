@@ -35,7 +35,7 @@ prefix_aliases = {
                     'tera': 'T',
                     # Submultipliers
                     'd': 'd', 'deci': 'd', 'c': 'c', 'centi': 'c',
-                    'm': 'm', 'milli': 'm', 'µ': 'µ', 'micro': 'µ',
+                    'milli': 'm', 'm': 'm', 'µ': 'µ', 'micro': 'µ',
                     'n': 'n', 'nano': 'n', 'p': 'p', 'pico': 'p',
                     'f': 'f', 'femto': 'f', 'a': 'a', 'atto': 'a',
                     'z': 'z', 'zepto': 'z', 'y': 'y', 'yocto': 'y',
