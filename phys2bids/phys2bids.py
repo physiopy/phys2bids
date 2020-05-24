@@ -32,9 +32,9 @@ import logging
 from copy import deepcopy
 from pathlib import Path
 
-from numpy import savetxt, ones
+from numpy import savetxt
 
-from phys2bids import utils, viz, _version, split4phys
+from phys2bids import utils, viz, _version
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
 
@@ -192,7 +192,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=0,
               tr=1, thr=None, ch_name=[], chplot='', debug=False, quiet=False):
     """
-    Run main workflow of phys2bids.
+    Main workflow of phys2bids.
 
     Runs the parser, does some checks on input, then imports
     the right interface file to read the input. If only info is required,
@@ -271,13 +271,16 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     if chplot != '' or info:
         viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
                      phys_in.freq, infile, chplot)
+    # If only info were asked, end here.
+    if info:
+        return
 
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
     if tr != 0 and num_timepoints_expected != 0:
         # Run analysis on trigger channel to get first timepoint and the time offset.
         # #!# Get option of no trigger! (which is wrong practice or Respiract)
-        phys_in.check_trigger_amount(chtrig, thr, num_timepoints_expected, tr)
+        phys_in.check_trigger_amount(thr, num_timepoints_expected, tr)
         LGR.info('Plot trigger')
         plot_path = os.path.join(outdir,
                                  os.path.splitext(os.path.basename(filename))[0])
@@ -287,49 +290,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             plot_path += f'_ses-{ses}'
         viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
                          plot_path, tr, phys_in.thr, num_timepoints_expected, filename)
-
-    #  Multi-run section
-    #  Check list length, more than 1 means multi-run
-    elif len(num_timepoints_expected) > 1:
-
-        # if multiple runs of same sequence in recording - pad the list with arbitrary value
-        # NOTE : we could also duplicate the item by multiplying with len(ntp)
-        if len(tr) == 1:
-            tr = ones() * len(num_timepoints_expected)
-        # Check equivalency of length
-        elif len(num_timepoints_expected) != len(tr):
-            raise Exception('Number of sequence types listed with TR doesn\'t '
-                            'match expected number of runs in the session')
-        # Sum of values in ntp_list should be equivalent to num_timepoints_found
-        phys_in.check_trigger_amount(chtrig=chtrig, thr=thr,
-                                     num_timepoints_expected=sum(num_timepoints_expected),
-                                     tr=1)  # TODO : define a non-hard-coded value
-
-        # Check that sum(ntp_list) is equivalent to num_timepoints_found, else call split2phys
-        if phys_in.num_timepoints_found != sum(num_timepoints_expected):
-            raise Exception('The number of triggers found is different than expected')
-            # TODO : automatize tps correction
-
-        # CALL run4phys, give it BlueprintInput object and lists
-        run_idx = split4phys(phys_in, num_timepoints_expected, tr)
-        # returns a dictionary in the form {run_idx: (startpoint, endpoint), run_idx:...}
-
-        # ideally, we'd want to have a figure for each run
-        for idx, times in enumerate(run_idx):
-            LGR.info('Plot trigger')
-            plot_path = os.path.join(outdir,
-                                     os.path.splitext(os.path.basename(filename))[0])
-            if sub:
-                plot_path += f'_sub-{sub}'
-            if ses:
-                plot_path += f'_ses-{ses}'
-
-            # adjust filename to run indexes
-
-            viz.plot_trigger(phys_in[times[0]:times[1]].timeseries[0],
-                             phys_in[times[0]:times[1]].timeseries[chtrig],
-                             plot_path, tr[idx], phys_in.thr,
-                             num_timepoints_expected[idx], filename)
     else:
         LGR.warning('Skipping trigger pulse count. If you want to run it, '
                     'call phys2bids using "-ntp" and "-tr" arguments')
@@ -354,11 +314,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         LGR.warning(f'Found {output_amount} different frequencies in input!')
 
     LGR.info(f'Preparing {output_amount} output files.')
-
     phys_out = {}  # create phys_out dict that will have a
-
-    # BLUEPRINT OBJECTS PER RUN
-
     # blueprint object per frequency
     # for each different frequency
     for uniq_freq in uniq_freq_list:
