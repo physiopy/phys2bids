@@ -51,7 +51,7 @@ def bidsify_units(orig_unit):
     Parameters
     ----------
     unit: string
-        Unit of measure, might o might not be BIDS compliant.
+        Unit of measure, might or might not be BIDS compliant.
 
     Returns
     -------
