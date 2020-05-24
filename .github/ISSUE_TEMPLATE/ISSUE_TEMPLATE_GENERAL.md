@@ -7,7 +7,7 @@ assignees: ''
 ---
 
 <!--- Provide a general summary of the issue in the Title above -->
-<!--- Please label the issue with one of the following: Discussion, Documentation, Outreach or Question -->
+<!--- Please label the issue with one of the following: Documentation, Outreach or Question -->
 
 ## Summary
 <!--- Describe the motivation behind the issue -->

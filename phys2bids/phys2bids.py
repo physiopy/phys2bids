@@ -170,7 +170,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     if not bids_keys['task']:
         LGR.warning(f'The heuristic {heur_file} could not deal with'
                     f'{Path(filename).stem}')
-        raise KeyError(f'No "task" attribute found')
+        raise KeyError('No "task" attribute found')
 
     # Compose name by looping in the bids_keys dictionary
     # and adding nonempty keys
@@ -398,8 +398,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     if heur_file and sub:
         LGR.info(f'Preparing BIDS output using {heur_file}')
     elif heur_file and not sub:
-        LGR.warning(f'While "-heur" was specified, option "-sub" was not.\n'
-                    f'Skipping BIDS formatting.')
+        LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
+                    'Skipping BIDS formatting.')
 
     # Preparing output parameters: name and folder.
     for uniq_freq in uniq_freq_list:
