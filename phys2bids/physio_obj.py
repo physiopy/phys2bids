@@ -182,9 +182,15 @@ class BlueprintInput():
     num_timepoints_found: int or None
         Amount of timepoints found in the automatic count.
         This is initialised as "None" and then computed internally,
-        *if* check_trigger_amount() is run
-    thr: float
+        *if* check_trigger_amount() is run.
+    thr: float or None
         Threshold used by check_trigger_amount() to detect trigger points.
+        This is initialised as "None" and then computed internally,
+        *if* check_trigger_amount() is run.
+    time_offset: float or None
+        Time offset found by check_trigger_amount().
+        This is initialised as "None" and then computed internally,
+        *if* check_trigger_amount() is run.
 
     Methods
     -------
@@ -219,7 +225,8 @@ class BlueprintInput():
     - Actual number of channels +1 <= ch_amount
     """
 
-    def __init__(self, timeseries, freq, ch_name, units, trigger_idx):
+    def __init__(self, timeseries, freq, ch_name, units, trigger_idx,
+                 num_timepoints_found=None, thr=None, time_offset=None):
         """Initialise BlueprintInput (see class docstring)."""
         self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
         self.freq = has_size(is_valid(freq, list,
@@ -228,7 +235,9 @@ class BlueprintInput():
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
         self.trigger_idx = is_valid(trigger_idx, int)
-        self.num_timepoints_found = None
+        self.num_timepoints_found = num_timepoints_found
+        self.thr = thr
+        self.time_offset = time_offset
 
     @property
     def ch_amount(self):
@@ -276,7 +285,7 @@ class BlueprintInput():
         return_instant = False
         if not self.trigger_idx:
             self.trigger_idx = 0
-        
+
         trigger_length = len(self.timeseries[self.trigger_idx])
 
         # If idx is an integer, return an "instantaneous slice" and initialise slice
@@ -314,7 +323,9 @@ class BlueprintInput():
             sliced_timeseries[n] = channel[new_idx]
 
         return BlueprintInput(sliced_timeseries, self.freq, self.ch_name,
-                              self.units, self.trigger_idx)
+                              self.units, self.trigger_idx,
+                              self.num_timepoints_found, self.thr,
+                              self.time_offset)
 
     def __eq__(self, other):
         """
@@ -485,6 +496,7 @@ class BlueprintInput():
             LGR.warning('The necessary options to find the amount of timepoints '
                         'were not provided.')
         self.thr = thr
+        self.time_offset = time_offset
         self.timeseries[0] -= time_offset
         self.num_timepoints_found = num_timepoints_found
 
@@ -634,7 +646,7 @@ class BlueprintOutput():
     @classmethod
     def init_from_blueprint(cls, blueprint):
         """
-        Method to populate the output blueprint using BlueprintInput.
+        Populate the output blueprint using BlueprintInput.
 
         Parameters
         ----------
@@ -653,5 +665,5 @@ class BlueprintOutput():
         freq = blueprint.freq[0]
         ch_name = blueprint.ch_name
         units = blueprint.units
-        start_time = timeseries[0, 0]
+        start_time = -blueprint.time_offset
         return cls(timeseries, freq, ch_name, units, start_time)
