@@ -44,7 +44,7 @@ def split4phys(phys_in=None, ntp_list=[0, ], tr_list=[1, ], padding=9):
         # run length in seconds
         end_sec = (run_tps * tr_list[run_idx])
 
-        # define index of the run's last trigger
+        # define index of the run's last trigger with user input
         run_end = phys_in.timeseries[0].index(end_sec)
 
         # if the padding is too much for the remaining timeseries length
