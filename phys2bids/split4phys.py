@@ -42,11 +42,8 @@ def split4phys(phys_in, ntp_list, tr_list, padding=9):
         phys_in.check_trigger_amount(ntp=run_tps, tr=tr_list[run_idx])
 
         # initialise start of run as index of first trigger minus the padding
-        if run_idx == 0:
-            run_start = 0
-        else:
-            # the first trigger is always at 0 seconds
-            run_start = where(phys_in.timeseries[0] == 0) - padding
+        # the first trigger is always at 0 seconds
+        run_start = where(phys_in.timeseries[0] == 0) - padding
 
         # run length in seconds
         end_sec = (run_tps * tr_list[run_idx])
