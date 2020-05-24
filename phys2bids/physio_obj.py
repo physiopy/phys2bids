@@ -665,5 +665,7 @@ class BlueprintOutput():
         freq = blueprint.freq[0]
         ch_name = blueprint.ch_name
         units = blueprint.units
-        start_time = -blueprint.time_offset
+        start_time = blueprint.time_offset
+        if start_time:
+            start_time *= -1
         return cls(timeseries, freq, ch_name, units, start_time)
