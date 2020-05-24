@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from numpy import where
 
-def split4phys(phys_in=None, ntp_list=[0, ], tr_list=[1, ], padding=9):
+
+def split4phys(phys_in, ntp_list, tr_list, padding=9):
     """
     Split runs for phys2bids.
 
@@ -30,22 +32,28 @@ def split4phys(phys_in=None, ntp_list=[0, ], tr_list=[1, ], padding=9):
     # Initialize dictionaries to save phys_in slices
     run_timestamps = {}
     # run_start = 0
+
+    # define padding - 9s * freq of trigger - padding is in nb of samples
+    padding = padding * phys_in.freq[0]
+
     for run_idx, run_tps in enumerate(ntp_list):
 
         # (re)initialise Blueprint object with current run info - correct time offset
         phys_in.check_trigger_amount(ntp=run_tps, tr=tr_list[run_idx])
 
-        # define padding - 9s * freq of trigger - padding is in nb of samples
-        padding = padding * phys_in.freq[0]
-
-        # initialise start of run as index of first trigger (starts at 0 sec) minus the padding
-        run_start = phys_in.timeseries[0].index(0) - padding
+        # initialise start of run as index of first trigger minus the padding
+        if run_idx == 0:
+            run_start = 0
+        else:
+            # the first trigger is always at 0 seconds
+            run_start = where(phys_in.timeseries[0] == 0) - padding
 
         # run length in seconds
         end_sec = (run_tps * tr_list[run_idx])
 
-        # define index of the run's last trigger with user input
-        run_end = phys_in.timeseries[0].index(end_sec)
+        # define index of the run's last trigger
+        # run_end = find index of phys_in.timeseries[0] > end_sec
+        run_end = where(phys_in.timeseries[0] > end_sec)
 
         # if the padding is too much for the remaining timeseries length
         # then the padding stops at the end of recording
@@ -56,12 +64,13 @@ def split4phys(phys_in=None, ntp_list=[0, ], tr_list=[1, ], padding=9):
         phys_in = phys_in[(run_end + 1):]
 
         # Save start and end_index in dictionary
+        # keep original timestamps by adjusting the indexes with previous end_index
         # While saving, add the padding for end index
-        # keeps original timestamps by adjusting the indexes with previous end_index
         if run_idx > 0:
-            run_start = run_start + run_timestamps[run_idx - 1][1]
-            run_end = run_end + run_timestamps[run_idx - 1][1]
-            run_timestamps[run_idx] = (run_start, run_end + padding)
-        else:
-            run_timestamps[run_idx] = (run_start, run_end + padding)
-    return(run_timestamps)
+            previous_end_index = run_timestamps[run_idx - 1][1]
+            run_start = run_start + previous_end_index
+            run_end = run_end + previous_end_index
+
+        run_timestamps[run_idx] = (run_start, run_end + padding)
+
+    return run_timestamps
