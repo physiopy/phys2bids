@@ -187,9 +187,9 @@ class BlueprintInput():
         Threshold used by check_trigger_amount() to detect trigger points.
         This is initialised as "None" and then computed internally,
         *if* check_trigger_amount() is run.
-    time_offset: float or None
+    time_offset: float
         Time offset found by check_trigger_amount().
-        This is initialised as "None" and then computed internally,
+        This is initialised as 0 and then computed internally,
         *if* check_trigger_amount() is run.
 
     Methods
@@ -226,7 +226,7 @@ class BlueprintInput():
     """
 
     def __init__(self, timeseries, freq, ch_name, units, trigger_idx,
-                 num_timepoints_found=None, thr=None, time_offset=None):
+                 num_timepoints_found=None, thr=None, time_offset=0):
         """Initialise BlueprintInput (see class docstring)."""
         self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
         self.freq = has_size(is_valid(freq, list,
