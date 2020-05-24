@@ -149,7 +149,9 @@ def test_BlueprintInput_slice():
                  'ch_name': ['time', 'trigger', 'half', 'twice'],
                  'units': ['s', 'V', 'V', 'V'],
                  'trigger_idx': 1,
-                 'num_timepoints_found': None}
+                 'num_timepoints_found': None,
+                 'thr': None,
+                 'time_offset': None}
 
     # Test all-comprehensive slice
     assert phys_in[0:len(test_trigger)] == phys_dict
@@ -203,7 +205,7 @@ def test_BlueprintOutput():
     assert blueprint_out.freq == test_freq[0]
     assert blueprint_out.ch_name == test_chn_name
     assert blueprint_out.units == test_units
-    assert blueprint_out.start_time == 0
+    assert blueprint_out.start_time == None
 
     # Tests return_index
     test_timeseries = np.array([[0, 1, 1, 2, 3, 5, 8, 13],
