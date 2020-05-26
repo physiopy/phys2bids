@@ -28,6 +28,7 @@ def split4phys(phys_in, ntp_list, tr_list, padding=9):
     run_timestamps : dictionary
         Containing tuples of run start and end indexes for each run, based on trigger channels
         In the form of run_timestamps{run_idx:(start, end), run_idx:...}
+    call an internal function and feed it the dictionary instead
     """
     # Initialize dictionaries to save phys_in slices
     run_timestamps = {}
