@@ -3,10 +3,10 @@ from phys2bids.bids_units import bidsify_units
 
 def test_bidsify_units():
     # test normal unit
-    bidsify_units("V")
+    assert bidsify_units("V") == "v"
     # test unit with standard prefix
-    bidsify_units("centik")
+    assert bidsify_units("centik") == "ck"
     # test unit with not standard prefix
-    bidsify_units("matV")
+    assert bidsify_units("matV") == "matv"
     # test unit that's not bids standard
-    bidsify_units("mmlie")
+    assert bidsify_units("mmlie") == "mmlie"
