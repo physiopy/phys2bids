@@ -87,7 +87,7 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
 def slice4phys(phys_in, ntp_list, tr_list, padding=9):
     """
     """
-    sliced_phys_in = {}
+    phys_in_slices = {}
 
     # Find the timestamps
     run_timestamps = find_runs(phys_in, ntp_list, tr_list, padding=9)
@@ -103,7 +103,7 @@ def slice4phys(phys_in, ntp_list, tr_list, padding=9):
 
         # add item to multiphys_in that contains a slice of phys_in accordingly
         # The key of the item is "run"
-        sliced_phys_in[run] =
+        phys_in_slices[run] =
 
         # Overwrite attributes phys_in.time_offset and phys_in.num_timepoints_found with the ones in the tuple (item 2 and 3)
 

@@ -317,7 +317,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                 'something.')
 
             # CALL run4phys, give it BlueprintInput object and lists
-            run_idx = split4phys(phys_in, num_timepoints_expected, tr)
+            phys_in_slices = slice4phys(phys_in, num_timepoints_expected, tr)
             # returns a dictionary in the form {run_idx: (startpoint, endpoint), run_idx:...}
 
             # ideally, we'd want to have a figure for each run
