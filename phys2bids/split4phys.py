@@ -81,7 +81,6 @@ def find_run_timestamps(phys_in, ntp_list, tr_list, padding=9):
         # update the object so that it will look for the first trigger after previous run end
         phys_in = phys_in[(run_end + 1):]
 
-<<<<<<< HEAD
     return run_timestamps
 
 
@@ -104,7 +103,3 @@ def split4phys(phys_in, ntp_list, tr_list, padding=9):
     # return a dictionary that contains the sliced object
     # the key will be the internal run
     return multiphys_in
-
-=======
-    return multiphys_in
->>>>>>> sangfrois/split_utility
