@@ -58,7 +58,7 @@ When interacting in the common channels, please adhere to our `code of conduct <
 Contributions
 -------------
 
-We welcome and recognize `all contributions <https://allcontributors.org/docs/en/specification>`_ from documentation to testing to code development. You can see a list of current contributors in the README (kept up to date by the `all contributors bot <https://allcontributors.org/docs/en/bot/overview>`_).
+We welcome and recognize `all contributions <https://allcontributors.org/docs/en/specification>`_ from documentation to testing and code development. You can see a list of current contributors in the README (kept up to date by the `all contributors bot <https://allcontributors.org/docs/en/bot/overview>`_).
 
 .. _smalldocs:
 
@@ -270,7 +270,7 @@ Since we adopt `auto <https://intuit.github.io/auto/home.html>`_, the PR title w
 
 Automatic Testing
 -----------------
-``physiopy`` uses Continuous Integration (CI) to make life easier. In particular, we use the `Travis CI <https://travis-ci.org/>`_ platform to run automatic testing!
+``physiopy`` uses Continuous Integration (CI) to make life easier. In particular, we use `Travis CI <https://travis-ci.org/>`_ and `Azure <https://azure.microsoft.com/en-us/services/devops/?nav=min>`_ to run automatic testing!
 **Automatic tests** are cold, robotic, emotionless, and opinionless tests that check that the program is doing what it is expected to. They are written by the developers and run (by Travis CI) every time they send a Pull Request to ``physiopy`` repositories. They complement the warm, human, emotional and opinionated **user tests**, as they tell us if a piece of code is failing.
 Travis CI uses `pytest <https://docs.pytest.org/en/latest/>`_ to run the tests. The great thing about it is that you can run it in advance on your local version of the code!
 We can measure the amount of code that is tested with [codecov]8https://docs.pytest.org/en/latest/), which is an indication of how reliable our packages are! We try to maintain a 90% code coverage, and for this reason, PR should contain tests!
