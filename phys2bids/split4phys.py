@@ -4,7 +4,7 @@
 from numpy import where
 
 
-def split4phys(phys_in, ntp_list, tr_list, padding=9):
+def find_run_timestamps(phys_in, ntp_list, tr_list, padding=9):
     """
     Split runs for phys2bids.
 
@@ -38,12 +38,17 @@ def split4phys(phys_in, ntp_list, tr_list, padding=9):
     padding = padding * phys_in.freq[0]
 
     for run_idx, run_tps in enumerate(ntp_list):
+        # Make run_idx human friendly :)
+        run_idx += 1
 
         # (re)initialise Blueprint object with current run info - correct time offset
         phys_in.check_trigger_amount(ntp=run_tps, tr=tr_list[run_idx])
 
         # initialise start of run as index of first trigger minus the padding
         # the first trigger is always at 0 seconds
+
+        ### CHECK THAT YOU HAVE ENOUGH PADDING AT THE BEGINNING
+        ### REMEMBER NOT TO OVERWRITE padding
         run_start = where(phys_in.timeseries[0] == 0) - padding
 
         # run length in seconds
@@ -55,31 +60,47 @@ def split4phys(phys_in, ntp_list, tr_list, padding=9):
 
         # if the padding is too much for the remaining timeseries length
         # then the padding stops at the end of recording
+        ### NOW THIS IS NOT OPTIMAL ANYMORE SINCE IT OVERWRITES padding
+        ### BETTER TO CHANGE run_end HERE!!!
         if phys_in.timeseries[0].shape[0] < (run_end + padding):
             padding = phys_in.timeseries[0].shape[0] - run_end
+
+        # Save start and end_index in dictionary
+        # keep original timestamps by adjusting the indexes with previous end_index
+        # Except if it's the first run
+        # While saving, add the padding for end index
+        if run_idx > 1:
+            previous_end_index = run_timestamps[run_idx - 1][1]
+            phys_in.time_offset = phys_in.time_offset + run_timestamps[run_idx - 1][2]
+            run_start = run_start + previous_end_index
+            run_end = run_end + previous_end_index
+
+        ### TUPLE BECOMES FOUR ITEMS, THE LAST ARE related to check_trigger_amount
+        run_timestamps[run_idx] = (run_start, run_end, phys_in.time_offset, phys_in.num_timepoints_found)
 
         # update the object so that it will look for the first trigger after previous run end
         phys_in = phys_in[(run_end + 1):]
 
-        # Save start and end_index in dictionary
-        # keep original timestamps by adjusting the indexes with previous end_index
-        # While saving, add the padding for end index
-        if run_idx > 0:
-            previous_end_index = run_timestamps[run_idx - 1][1]
-            run_start = run_start + previous_end_index
-            run_end = run_end + previous_end_index
+    return run_timestamps
 
-        run_timestamps[run_idx] = (run_start, run_end + padding)
 
-    multiphys_in = _split_obj(run_timestamps)
+def split4phys(phys_in, ntp_list, tr_list, padding=9):
+    """
+    """
+    multiphys_in = {}
 
+    # Find the timestamps
+    run_timestamps = find_run_timestamps(phys_in, ntp_list, tr_list, padding=9)
+
+    for run in run_timestamps.keys():
+        # Read the run_timestamps[run]
+
+        # add item to multiphys_in that contains a slice of phys_in accordingly
+        # The key of the item is "run"
+
+        # Overwrite attributes phys_in.time_offset and phys_in.num_timepoints_found with the ones in the tuple (item 2 and 3)
+
+    # return a dictionary that contains the sliced object
+    # the key will be the internal run
     return multiphys_in
 
-
-def obj2split(run_timestamps):
-    """
-    Internal to split4phys.
-
-    run_timestamps: dictionary
-        key is index of runs and elements are run start and end index as tuple
-    """
