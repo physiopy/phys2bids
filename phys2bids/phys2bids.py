@@ -320,7 +320,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
             # ideally, we'd want to have a figure for each run
             for idx, key in enumerate(run_idx.keys()):
-                # The following 14 lines should become a function
+                ### The following 14 lines should become a function
                 LGR.info('Plot trigger')
                 plot_path = os.path.join(outdir,
                                          os.path.splitext(os.path.basename(filename))[0])
@@ -342,7 +342,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             phys_in.check_trigger_amount(chtrig, thr, num_timepoints_expected[0],
                                          tr[0])
 
-            # The following 9 lines should become a function (same as previous block)
+            ### The following 9 lines should become a function (same as previous block)
             LGR.info('Plot trigger')
             plot_path = os.path.join(outdir,
                                      os.path.splitext(os.path.basename(filename))[0])
