@@ -4,9 +4,9 @@
 from numpy import where
 
 
-def split4phys(phys_in, ntp_list, tr_list, padding=9):
+def find_run_timestamps(phys_in, ntp_list, tr_list, padding=9):
     """
-    Split runs for phys2bids.
+    Find beginning and ending of each "run" in a multirun recording.
 
     Returns dictionary key for each run in BlueprintInput object based on user's entries
     Each key has a tuple expressing the timestamps of run in nb of samples(based on trigger chan)
@@ -25,7 +25,7 @@ def split4phys(phys_in, ntp_list, tr_list, padding=9):
         Default: [1,]
     Returns
     --------
-    run_timestamps : dictionary
+    run_timestamps : dictionary of tuples
         Containing tuples of run start and end indexes for each run, based on trigger channels
         In the form of run_timestamps{run_idx:(start, end), run_idx:...}
     """
@@ -71,3 +71,33 @@ def split4phys(phys_in, ntp_list, tr_list, padding=9):
         run_timestamps[run_idx] = (run_start, run_end + padding)
 
     return run_timestamps
+
+
+def split4phys(phys_in, ntp_list, tr_list, padding=9):
+    """
+    Split runs for phys2bids.
+
+    Returns a dictionary containing one BlueprintInput per run.
+
+    Parameters
+    ---------
+    phys_in : object
+        Object returned by BlueprintInput class
+    ntp_list : list
+        a list of integers given by the user as `ntp` input
+        Default: [0, ]
+    tr_list : list
+        a list of float given by the user as `tr` input
+        Default: [1,]
+    Returns
+    --------
+    phys_in: dictionary of BlueprintInput objects
+        Containing tuples of run start and end indexes for each run, based on trigger channels
+        In the form of run_timestamps{run_idx:(start, end), run_idx:...}
+
+    """
+    run_timestamps = find_run_timestamps(phys_in, ntp_list, tr_list, padding=9)
+
+    # do stuff
+
+    return phys_in
