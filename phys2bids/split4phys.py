@@ -32,52 +32,53 @@ def find_run_timestamps(phys_in, ntp_list, tr_list, padding=9):
     """
     # Initialize dictionaries to save phys_in slices
     run_timestamps = {}
-    # run_start = 0
 
-    # define padding - 9s * freq of trigger - padding is in nb of samples
+    # define padding - default : 9s * freq of trigger
     padding = padding * phys_in.freq[0]
 
+    # enumerate user input  num_timepoints_expected
     for run_idx, run_tps in enumerate(ntp_list):
 
         # (re)initialise Blueprint object with current run info - correct time offset
         phys_in.check_trigger_amount(ntp=run_tps, tr=tr_list[run_idx])
 
-        # initialise start of run as index of first trigger minus the padding
-        # the first trigger is always at 0 seconds
+        # Defining beginning of acquisition
+        # if -9 s' index doesn't exist, start at beginning
+        if where(phys_in.timeseries[0] == -9)[0].size < 1:  # where returns a tuple
+            # the first trigger is always at 0 s
+            run_start = where(phys_in.timeseries[0] == 0)
+        else:
+            # initialise start of run as index of first trigger minus the padding
+            run_start = where(phys_in.timeseries[0] == 0) - padding
 
-        ### CHECK THAT YOU HAVE ENOUGH PADDING AT THE BEGINNING
-        ### REMEMBER NOT TO OVERWRITE padding
-        run_start = where(phys_in.timeseries[0] == 0) - padding
-
+        # Defining end of acquisition
         # run length in seconds
         end_sec = (run_tps * tr_list[run_idx])
 
-        # define index of the run's last trigger
-        # run_end = find index of phys_in.timeseries[0] > end_sec
-        run_end = where(phys_in.timeseries[0] > end_sec)
+        # define index of the run's last trigger + padding
+        run_end = where(phys_in.timeseries[0] > end_sec) + padding
 
         # if the padding is too much for the remaining timeseries length
         # then the padding stops at the end of recording
-        ### NOW THIS IS NOT OPTIMAL ANYMORE SINCE IT OVERWRITES padding
-        ### BETTER TO CHANGE run_end HERE!!!
-        if phys_in.timeseries[0].shape[0] < (run_end + padding):
-            padding = phys_in.timeseries[0].shape[0] - run_end
+        if phys_in.timeseries[0].shape[0] < run_end:
+            run_end = phys_in.timeseries[0].shape[0]
 
         # Save start and end_index in dictionary
         # keep original timestamps by adjusting the indexes with previous end_index
         # Except if it's the first run
-        # While saving, add the padding for end index
         if run_idx > 1:
             previous_end_index = run_timestamps[run_idx - 1][1]
+            # adjust time_offset to keep original timing information
             phys_in.time_offset = phys_in.time_offset + run_timestamps[run_idx - 1][2]
             run_start = run_start + previous_end_index
             run_end = run_end + previous_end_index
 
         ### TUPLE BECOMES FOUR ITEMS, THE LAST ARE related to check_trigger_amount
-        run_timestamps[run_idx+1)] = (run_start, run_end, phys_in.time_offset, phys_in.num_timepoints_found)
+        run_timestamps[run_idx+1)] = (run_start, run_end,
+                                      phys_in.time_offset, phys_in.num_timepoints_found)
 
         # update the object so that it will look for the first trigger after previous run end
-        phys_in = phys_in[(run_end + 1):]
+        phys_in = phys_in[(run_end):]
 
     return run_timestamps
 
