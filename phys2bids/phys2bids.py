@@ -32,11 +32,12 @@ import logging
 from copy import deepcopy
 from pathlib import Path
 
-from numpy import savetxt
+from numpy import savetxt, ones
 
 from phys2bids import utils, viz, _version
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
+from phys2bids.split4phys import split4phys
 
 LGR = logging.getLogger(__name__)
 
