@@ -30,7 +30,7 @@ def find_run_timestamps(phys_in, ntp_list, tr_list, padding=9):
         In the form of run_timestamps{run_idx:(start, end), run_idx:...}
     call an internal function and feed it the dictionary instead
     """
-    # Initialize dictionaries to save phys_in slices
+    # Initialize dictionaries to save  run timestamps and phys_in's attributes
     run_timestamps = {}
 
     # define padding - default : 9s * freq of trigger
@@ -63,8 +63,7 @@ def find_run_timestamps(phys_in, ntp_list, tr_list, padding=9):
         if phys_in.timeseries[0].shape[0] < run_end:
             run_end = phys_in.timeseries[0].shape[0]
 
-        # Save start and end_index in dictionary
-        # keep original timestamps by adjusting the indexes with previous end_index
+        # Adjust timestamps with previous end_index
         # Except if it's the first run
         if run_idx > 1:
             previous_end_index = run_timestamps[run_idx - 1][1]
@@ -73,9 +72,11 @@ def find_run_timestamps(phys_in, ntp_list, tr_list, padding=9):
             run_start = run_start + previous_end_index
             run_end = run_end + previous_end_index
 
-        ### TUPLE BECOMES FOUR ITEMS, THE LAST ARE related to check_trigger_amount
-        run_timestamps[run_idx+1)] = (run_start, run_end,
-                                      phys_in.time_offset, phys_in.num_timepoints_found)
+        # Save *start* and *end_index* in dictionary along with *time_offset* and *ntp found*
+        # dict key must be readable
+        run_timestamps["Run {}".format(run_idx + 1)] = (run_start, run_end,
+                                                        phys_in.time_offset,
+                                                        phys_in.num_timepoints_found)
 
         # update the object so that it will look for the first trigger after previous run end
         phys_in = phys_in[(run_end):]
