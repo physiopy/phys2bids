@@ -71,4 +71,15 @@ def split4phys(phys_in, ntp_list, tr_list, padding=9):
 
         run_timestamps[run_idx] = (run_start, run_end + padding)
 
-    return run_timestamps
+    multiphys_in = _split_obj(run_timestamps)
+
+    return multiphys_in
+
+
+def obj2split(run_timestamps):
+    """
+    Internal to split4phys.
+
+    run_timestamps: dictionary
+        key is index of runs and elements are run start and end index as tuple
+    """
