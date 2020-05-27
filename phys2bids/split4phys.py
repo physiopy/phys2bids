@@ -38,8 +38,6 @@ def find_run_timestamps(phys_in, ntp_list, tr_list, padding=9):
     padding = padding * phys_in.freq[0]
 
     for run_idx, run_tps in enumerate(ntp_list):
-        # Make run_idx human friendly :)
-        run_idx += 1
 
         # (re)initialise Blueprint object with current run info - correct time offset
         phys_in.check_trigger_amount(ntp=run_tps, tr=tr_list[run_idx])
@@ -76,7 +74,7 @@ def find_run_timestamps(phys_in, ntp_list, tr_list, padding=9):
             run_end = run_end + previous_end_index
 
         ### TUPLE BECOMES FOUR ITEMS, THE LAST ARE related to check_trigger_amount
-        run_timestamps[run_idx] = (run_start, run_end, phys_in.time_offset, phys_in.num_timepoints_found)
+        run_timestamps[run_idx+1)] = (run_start, run_end, phys_in.time_offset, phys_in.num_timepoints_found)
 
         # update the object so that it will look for the first trigger after previous run end
         phys_in = phys_in[(run_end + 1):]

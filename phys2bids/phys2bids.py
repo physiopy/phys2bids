@@ -288,8 +288,10 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         LGR.info('Renaming channels with given names')
         phys_in.rename_channels(ch_name)
 
+    # Checking acquisition type via user's input
     if tr != [0, ] and num_timepoints_expected != [0, ]:
-        #  Multi-run section
+
+        #  Multi-run acquisition type section
         #  Check list length, more than 1 means multi-run
         if len(num_timepoints_expected) > 1:
             # if multi-run of same sequence type, pad list with ones
@@ -307,8 +309,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                          num_timepoints_expected=sum(num_timepoints_expected),
                                          tr=1)
 
-            # Check that sum(ntp_list) is equivalent to num_timepoints_found,
-            # else call split2phys
+            # Check that sum of tp expected is equivalent to num_timepoints_found,
+            # else call split4phys
             if phys_in.num_timepoints_found != sum(num_timepoints_expected):
                 raise Exception('The number of triggers found is different '
                                 'than expected. Better stop now than breaking '
@@ -336,6 +338,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                  plot_path, tr[idx], phys_in.thr,
                                  num_timepoints_expected[idx], filename)
 
+        # Single run acquisition type, or : nothing to split workflow
         else:
             # Run analysis on trigger channel to get first timepoint
             # and the time offset.
