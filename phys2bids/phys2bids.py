@@ -32,11 +32,12 @@ import logging
 from copy import deepcopy
 from pathlib import Path
 
-from numpy import savetxt
+from numpy import savetxt, ones
 
 from phys2bids import utils, viz, _version
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
+from phys2bids.split4phys import split4phys
 
 LGR = logging.getLogger(__name__)
 
@@ -275,10 +276,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     if info:
         return
 
-    # If only info were asked, end here.
-    if info:
-        return
-
     # The next few lines remove the undesired channels from phys_in.
     if chsel:
         LGR.info('Dropping unselected channels')
@@ -291,8 +288,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         LGR.info('Renaming channels with given names')
         phys_in.rename_channels(ch_name)
 
-    # Create trigger plot. If possible, to have multiple outputs in the same
-    # place, adds sub and ses label.
     if tr != [0, ] and num_timepoints_expected != [0, ]:
         #  Multi-run section
         #  Check list length, more than 1 means multi-run
@@ -351,6 +346,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             LGR.info('Plot trigger')
             plot_path = os.path.join(outdir,
                                      os.path.splitext(os.path.basename(filename))[0])
+
+            # Create trigger plot. If possible, to have multiple outputs in the same
+            # place, adds sub and ses label.
             if sub:
                 plot_path += f'_sub-{sub}'
             if ses:
@@ -371,9 +369,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         LGR.warning(f'Found {output_amount} different frequencies in input!')
 
     LGR.info(f'Preparing {output_amount} output files.')
-    phys_out = {}  # create phys_out dict that will have a
-    # blueprint object per frequency
-    # for each different frequency
+    # create phys_out dict that will have a blueprint object for each different frequency
+    phys_out = {}
+
     for uniq_freq in uniq_freq_list:
         # copy the phys_in object to the new dict entry
         phys_out[uniq_freq] = deepcopy(phys_in)
