@@ -4,7 +4,7 @@
 from numpy import where
 
 
-def find_run_timestamps(phys_in, ntp_list, tr_list, padding=9):
+def find_runs(phys_in, ntp_list, tr_list, padding=9):
     """
     Split runs for phys2bids.
 
@@ -84,19 +84,26 @@ def find_run_timestamps(phys_in, ntp_list, tr_list, padding=9):
     return run_timestamps
 
 
-def split4phys(phys_in, ntp_list, tr_list, padding=9):
+def slice4phys(phys_in, ntp_list, tr_list, padding=9):
     """
     """
-    multiphys_in = {}
+    sliced_phys_in = {}
 
     # Find the timestamps
-    run_timestamps = find_run_timestamps(phys_in, ntp_list, tr_list, padding=9)
+    run_timestamps = find_runs(phys_in, ntp_list, tr_list, padding=9)
 
     for run in run_timestamps.keys():
-        # Read the run_timestamps[run]
+
+        # tmp variable to collect run's info
+        run_attributes = run_timestamps[run]
+
+        run_obj = phys_in[run_attributes[0]:run_attributes[1]]
+
+        run_
 
         # add item to multiphys_in that contains a slice of phys_in accordingly
         # The key of the item is "run"
+        sliced_phys_in[run] =
 
         # Overwrite attributes phys_in.time_offset and phys_in.num_timepoints_found with the ones in the tuple (item 2 and 3)
 
