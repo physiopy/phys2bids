@@ -99,14 +99,13 @@ def slice4phys(phys_in, ntp_list, tr_list, padding=9):
 
         run_obj = phys_in[run_attributes[0]:run_attributes[1]]
 
-        run_
+        # Overwrite current run phys_in attributes
+        # 3rd item of run_attributes is adjusted time offset
+        run_obj.time_offset = run_attributes[2]
+        # 4th item of run_attributes is the nb of tp found by check_trigger_amount
+        run_obj.num_timepoints_found = run_attributes[3]
 
-        # add item to multiphys_in that contains a slice of phys_in accordingly
-        # The key of the item is "run"
-        phys_in_slices[run] =
+        # save the phys_in slice in dictionary
+        phys_in_slices[run] = run_obj
 
-        # Overwrite attributes phys_in.time_offset and phys_in.num_timepoints_found with the ones in the tuple (item 2 and 3)
-
-    # return a dictionary that contains the sliced object
-    # the key will be the internal run
-    return multiphys_in
+    return phys_in_slices
