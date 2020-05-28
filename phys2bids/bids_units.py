@@ -70,7 +70,7 @@ def bidsify_units(orig_unit):
     for u_key in unit_aliases.keys():
         unit = orig_unit.lower()
         # check that u_key is part of unit
-        if u_key in unit:
+        if unit.endswith(u_key):
             new_unit = unit[-len(u_key):]
             # check that it is at the end
             if new_unit == u_key:
