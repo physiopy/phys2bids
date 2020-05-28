@@ -75,10 +75,10 @@ def bidsify_units(orig_unit):
             # check that it is at the end
             if new_unit == u_key:
                 # leave only the prefix
-                unit = unit.replace(u_key, "")
-                # check prefix in not null
-                if unit != "":
+                if unit != u_key:
+                    unit = unit[:-len(u_key)]
                     # for every prefix alias
+                    print(unit)
                     prefix = prefix_aliases.get(unit, '')
                     if prefix == '':
                         LGR.warning(f'The given unit prefix {unit} does not have aliases, '
