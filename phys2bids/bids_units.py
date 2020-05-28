@@ -65,7 +65,7 @@ def bidsify_units(orig_unit):
     unless there is a weird way to multiply two dictionaries together.
     """
     # call prefix and unit dicts
-    new_unit = ""
+    new_unit = ''
     # for every unit alias in the dict
     for u_key in unit_aliases.keys():
         unit = orig_unit.lower()
