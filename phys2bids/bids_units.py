@@ -44,7 +44,7 @@ def bidsify_units(orig_unit):
     """
     Read the input unit of measure and use the dictionary of aliases
     to bidsify its value.
-    It is possible to make simple conversions
+    It is possible to make simple conversions.
 
     Parameters
     ----------
@@ -62,13 +62,13 @@ def bidsify_units(orig_unit):
     the other for prefixes (e.g. "milli"). However, that is going to be tricky,
     unless there is a weird way to multiply two dictionaries together.
     """
-    # call prefix and unit dicts
     # for every unit alias in the dict
-    orig_unit = orig_unit.lower()
+    unit = orig_unit.lower()
     for u_key in unit_aliases.keys():
-        if orig_unit.endswith(u_key):
+        # check that u_key is part of unit
+        if unit.endswith(u_key):
             new_unit = unit_aliases[u_key]
-            unit = orig_unit[:-len(u_key)]
+            unit = unit[:-len(u_key)]
             if unit != '':
                 # for every prefix alias
                 prefix = prefix_aliases.get(unit, '')
@@ -76,9 +76,12 @@ def bidsify_units(orig_unit):
                     LGR.warning(f'The given unit prefix {unit} does not have aliases, '
                                 f'passing it as is')
                     prefix = orig_unit[:len(unit)]
+
                 return prefix + new_unit
             else:
                 return new_unit
+
+    # If we conclude the loop without returning, it means the unit doesn't have aliases
     LGR.warning(f'The given unit {orig_unit} does not have aliases, '
                 f'passing it as is')
     return orig_unit
