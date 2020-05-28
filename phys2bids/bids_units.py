@@ -4,25 +4,27 @@ LGR = logging.getLogger(__name__)
 
 unit_aliases = {
                 # kelvin: thermodynamic temperature
-                'k': 'K', 'kelvin': 'K', 'kelvins': 'K',
+                'kelvin': 'K', 'kelvins': 'K',
                 # mole: amount of substance
                 'mol': 'mol', 'mole': 'mol',
                 # newton: force, weight
-                'newton': 'N', 'newtons': 'N', 'n': 'N',
+                'newton': 'N', 'newtons': 'N',
                 # pascal: pressure, stress
                 'pascal': 'Pa', 'pascals': 'Pa', 'pa': 'Pa',
                 # volt: voltage (electrical potential), emf
-                'v': 'V', 'volt': 'V', 'volts': 'V',
+                'volt': 'V', 'volts': 'V',
                 # degree Celsius: temperature relative to 273.15 K
                 '°c': '°C', '°celsius': '°C', 'celsius': '°C',
                 # ampere: electric current
-                'a': 'A', 'ampere': 'A', 'amp': 'A', 'amps': 'A',
-                # second: time and hertzs
+                'ampere': 'A', 'amp': 'A', 'amps': 'A',
+                # second: time and hertzs: frequency
                 '1/hz': 's', '1/hertz': 's', 'hz': 'Hz',
                 '1/s': 'Hz', '1/second': 'Hz', '1/seconds': 'Hz',
                 '1/sec': 'Hz', '1/secs': 'Hz', 'hertz': 'Hz',
                 'second': 's', 'seconds': 's', 'sec': 's',
-                'secs': 's', 's': 's',
+                'secs': 's',
+                # All the aliases with one letter (to avoid issues)
+                'k': 'K',  'n': 'N', 'v': 'V', 'c': '°C', 'a': 'A', 's': 's',
 }
 
 # Init dictionary of aliases for multipliers. Entries are still lowercase
@@ -73,8 +75,8 @@ def bidsify_units(orig_unit):
                 # for every prefix alias
                 prefix = prefix_aliases.get(unit, '')
                 if prefix == '':
-                    LGR.warning(f'The given unit prefix {unit} does not have aliases, '
-                                f'passing it as is')
+                    LGR.warning(f'The given unit prefix {unit} does not '
+                                'have aliases, passing it as is')
                     prefix = orig_unit[:len(unit)]
 
                 return prefix + new_unit
