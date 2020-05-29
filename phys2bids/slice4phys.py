@@ -32,7 +32,10 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
     --------
     run_timestamps : dictionary
         Containing tuples of run start and end indexes for each run, based on trigger channels
-        In the form of run_timestamps{Run 1:(start, end, time offset, nb of triggers), Run 2:()}
+        It also contains run attributes: time offset from session beggining, and nb of triggers
+        In the form of run_timestamps{"Run 01":(start, end, time offset, nb of triggers),
+                                      "Run 02":(...),
+                                      }
     Notes
     -----
      find_runs is an internal function to slice4phys
