@@ -37,7 +37,7 @@ from numpy import savetxt, ones
 from phys2bids import utils, viz, _version
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
-from phys2bids.split4phys import split4phys
+from phys2bids.slice4phys import slice4phys
 
 LGR = logging.getLogger(__name__)
 
@@ -310,13 +310,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                          tr=1)
 
             # Check that sum of tp expected is equivalent to num_timepoints_found,
-            # else call split4phys
+            # else call slice4phys
             if phys_in.num_timepoints_found != sum(num_timepoints_expected):
                 raise Exception('The number of triggers found is different '
                                 'than expected. Better stop now than breaking '
                                 'something.')
 
-            # CALL run4phys, give it BlueprintInput object and lists
+            # CALL slice4phys, give it BlueprintInput object and lists
             phys_in_slices = slice4phys(phys_in, num_timepoints_expected, tr)
             # returns a dictionary in the form {run_idx: (startpoint, endpoint), run_idx:...}
 
