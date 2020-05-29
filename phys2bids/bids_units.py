@@ -78,9 +78,9 @@ def bidsify_units(orig_unit):
                 if prefix == '':
                     LGR.warning(f'The given unit prefix {unit} does not have aliases, '
                                 f'passing it as is')
-                    return unit + new_unit
-                else:
-                    return prefix + new_unit
+                    prefix = orig_unit[:len(unit)]
+                return prefix + new_unit
+            else:
                 return new_unit
     LGR.warning(f'The given unit {orig_unit} does not have aliases, '
                 f'passing it as is')
