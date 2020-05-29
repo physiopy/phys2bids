@@ -320,7 +320,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             phys_in_slices = slice4phys(phys_in, num_timepoints_expected, tr)
             # returns a dictionary in the form {run_idx: (startpoint, endpoint), run_idx:...}
 
-            # save a figure for each run | give the right acquisition
+            # save a figure for each run | give the right acquisition parameters for runs
             for (key, sequence, nb_trigger) in (phys_in_slices.keys(),
                                                 tr, num_timepoints_expected):
                 viz.save_plot(phys_in[key], num_timepoints_expected[nb_trigger],

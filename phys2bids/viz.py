@@ -16,7 +16,28 @@ def save_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, filename, su
     Save a trigger plot.
 
     Used in main workflow (`phys2bids`), this function minimizes repetition in code for parallel
-    workflow (multi-run workflow and default workflow).
+    workflow (multi-run workflow and default workflow) and maintains readability of code
+    Parameters
+    ---------
+    phys_in : object
+        Object returned by BlueprintInput class
+        For multi-run acquisitions, phys_in is a slice of the whole object
+    num_timepoints_expected : list
+        a list of integers given by the user as `ntp` input
+    tr : list
+        a list of float given by the user as `tr` input
+    chtrig : int
+        trigger channel
+        integer representing the index of the trigger on phys_in.timeseries
+    outdir : str
+        directory to save output.
+        if ses and sub are specified, it can be understood as root directory of dataset
+    filename : str
+        name of the input file given by user's entry
+    sub: str or int
+        Name of subject.
+    ses: str or int or None
+        Name of session.
     """
     LGR.info('Plot trigger')
     plot_path = os.path.join(outdir,
