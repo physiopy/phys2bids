@@ -4,14 +4,9 @@
 from numpy import where
 
 
-def find_runs(phys_in, ntp_list, tr_list, padding=9):
+def slice4phys(phys_in, ntp_list, tr_list, padding=9):
     """
-    Split runs for phys2bids.
-
-    Returns dictionary key for each run in BlueprintInput object based on user's entries
-    Each key has a tuple expressing the timestamps of run in nb of samples(based on trigger chan)
-    Timestamps are the index of first and last triggers of a run, adjusted with padding
-    run_start and run_end indexes refer to the samples contained in the whole session
+    Slice runs for phys2bids.
 
     Parameters
     ---------
@@ -23,11 +18,55 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
     tr_list : list
         a list of float given by the user as `tr` input
         Default: [1,]
+    padding : int
+        extra time at beginning and end of timeseries, expressed in seconds (s)
+        Default: 9
+    Returns
+    --------
+    phys_in_slices : dict
+        keys start by `run 1` until last (`run n`).
+        items are slices of BlueprintInput objects based on timestamps returned by
+        internal function (`find_runs` takes the same arguments as `slice4phys`)
+    """
+    phys_in_slices = {}
+
+    # Find the timestamps
+    run_timestamps = find_runs(phys_in, ntp_list, tr_list, padding=9)
+
+    for run in run_timestamps.keys():
+
+        # tmp variable to collect run's info
+        run_attributes = run_timestamps[run]
+
+        run_obj = phys_in[run_attributes[0]:run_attributes[1]]
+
+        # Overwrite current run phys_in attributes
+        # 3rd item of run_attributes is adjusted time offset
+        run_obj.time_offset = run_attributes[2]
+        # 4th item of run_attributes is the nb of tp found by check_trigger_amount
+        run_obj.num_timepoints_found = run_attributes[3]
+
+        # save the phys_in slice in dictionary
+        phys_in_slices[run] = run_obj
+
+    return phys_in_slices
+
+
+def find_runs(phys_in, ntp_list, tr_list, padding=9):
+    """
+    Split runs for phys2bids.
+
+    Returns dictionary key for each run in BlueprintInput object based on user's entries
+    Each key has a tuple of 4 elements expressing the timestamps of run in nb of samples
+    Timestamps are the index of first and last triggers of a run, adjusted with padding
+    run_start and run_end indexes refer to the samples contained in the whole session
+    time offset and nb of triggers in a run are also indicated
+
     Returns
     --------
     run_timestamps : dictionary
         Containing tuples of run start and end indexes for each run, based on trigger channels
-        In the form of run_timestamps{run_idx:(start, end), run_idx:...}
+        In the form of run_timestamps{Run 1:(start, end, time offset, nb of triggers), Run 2:()}
     call an internal function and feed it the dictionary instead
     """
     # Initialize dictionaries to save  run timestamps and phys_in's attributes
@@ -73,7 +112,7 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
             run_end = run_end + previous_end_index
 
         # Save *start* and *end_index* in dictionary along with *time_offset* and *ntp found*
-        # dict key must be readable
+        # dict key must be readable by human
         run_timestamps["Run {}".format(run_idx + 1)] = (run_start, run_end,
                                                         phys_in.time_offset,
                                                         phys_in.num_timepoints_found)
@@ -82,30 +121,3 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
         phys_in = phys_in[(run_end):]
 
     return run_timestamps
-
-
-def slice4phys(phys_in, ntp_list, tr_list, padding=9):
-    """
-    """
-    phys_in_slices = {}
-
-    # Find the timestamps
-    run_timestamps = find_runs(phys_in, ntp_list, tr_list, padding=9)
-
-    for run in run_timestamps.keys():
-
-        # tmp variable to collect run's info
-        run_attributes = run_timestamps[run]
-
-        run_obj = phys_in[run_attributes[0]:run_attributes[1]]
-
-        # Overwrite current run phys_in attributes
-        # 3rd item of run_attributes is adjusted time offset
-        run_obj.time_offset = run_attributes[2]
-        # 4th item of run_attributes is the nb of tp found by check_trigger_amount
-        run_obj.num_timepoints_found = run_attributes[3]
-
-        # save the phys_in slice in dictionary
-        phys_in_slices[run] = run_obj
-
-    return phys_in_slices
