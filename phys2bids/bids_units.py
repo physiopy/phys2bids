@@ -70,20 +70,17 @@ def bidsify_units(orig_unit):
         unit = orig_unit.lower()
         # check that u_key is part of unit
         if unit.endswith(u_key):
-            new_unit = unit[-len(u_key):]
-            # check that it is at the end
-            if new_unit == u_key:
-                # leave only the prefix
-                if unit != u_key:
-                    unit = unit[:-len(u_key)]
-                    # for every prefix alias
-                    prefix = prefix_aliases.get(unit, '')
-                    if prefix == '':
-                        LGR.warning(f'The given unit prefix {unit} does not have aliases, '
-                                    f'passing it as is')
-                        return unit + new_unit
-                    else:
-                        return prefix + new_unit
+            new_unit = unit_aliases[u_key]
+            unit = unit[:-len(u_key)]
+            if unit != '':
+                # for every prefix alias
+                prefix = prefix_aliases.get(unit, '')
+                if prefix == '':
+                    LGR.warning(f'The given unit prefix {unit} does not have aliases, '
+                                f'passing it as is')
+                    return unit + new_unit
+                else:
+                    return prefix + new_unit
                 return new_unit
     LGR.warning(f'The given unit {orig_unit} does not have aliases, '
                 f'passing it as is')
