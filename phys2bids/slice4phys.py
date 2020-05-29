@@ -9,10 +9,10 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
     Split runs for phys2bids.
 
     Returns dictionary key for each run in BlueprintInput object based on user's entries
-    Each key has a tuple of 4 elements expressing the timestamps of run in nb of samples
+    Each key has a tuple of 4 elements. 2 expressing the timestamps of run in nb of samples
     Timestamps are the index of first and last triggers of a run, adjusted with padding
     run_start and run_end indexes refer to the samples contained in the whole session
-    time offset and nb of triggers in a run are also indicated
+    first trigger time offset and nb of triggers contained in the run are also indicated
 
     Parameters
     ---------
