@@ -18,7 +18,7 @@ LGR = logging.getLogger(__name__)
 
 def check_multifreq(timeseries, freq, start=0, leftout=0):
     """
-    Checks if there are channels with different frequency than the maximum one
+    Check if there are channels with different frequency than the maximum one.
 
     Parameters
     ----------
@@ -31,6 +31,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
     leftout : integer
         number of samples at the end of the channel that are not considered
         This is done  so this process doesn't take forever
+
     Returns
     -------
     mfreq: list
@@ -70,8 +71,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
 
 def process_labchart(channel_list, chtrig, header=[]):
     """
-    Process labchart header and channel_list and puts it in
-    a physio_obj.BlueprintInput
+    Process labchart header and channel_list and make a physio_obj.BlueprintInput.
 
     Parameters
     ----------
@@ -151,13 +151,12 @@ def process_labchart(channel_list, chtrig, header=[]):
     units = units + orig_units
     freq = [1 / interval[0]] * len(timeseries)
     freq = check_multifreq(timeseries, freq)
-    return BlueprintInput(timeseries, freq, names, units, chtrig)
+    return BlueprintInput(timeseries, freq, names, units, chtrig + 1)
 
 
 def process_acq(channel_list, chtrig, header=[]):
     """
-    Process AcqKnowledge header and channel_list and puts it in
-    a physio_obj.BlueprintInput
+    Process AcqKnowledge header and channel_list to make a physio_obj.BlueprintInput.
 
     Parameters
     ----------
@@ -251,12 +250,16 @@ def process_acq(channel_list, chtrig, header=[]):
     t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
     timeseries = [t_ch, ] + timeseries
     freq = check_multifreq(timeseries, freq)
+<<<<<<< HEAD
     return BlueprintInput(timeseries, freq, names, units, chtrig)
+=======
+    return BlueprintInput(timeseries, freq, names, units, chtrig + 1)
+>>>>>>> 4dadc7e9a0a3d050635ab4e6ff569e235cceebdb
 
 
 def read_header_and_channels(filename, chtrig):
     """
-    Reads a txt file with a header and channels and separates them
+    Read a txt file with a header and channels and separate them.
 
     Parameters
     ----------

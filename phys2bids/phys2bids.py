@@ -37,7 +37,7 @@ from numpy import savetxt, ones
 from phys2bids import utils, viz, _version
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
-from phys2bids.slice4phys import slice4phys
+from phys2bids import slice4phys
 
 LGR = logging.getLogger(__name__)
 
@@ -310,33 +310,21 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                          tr=1)
 
             # Check that sum of tp expected is equivalent to num_timepoints_found,
-            # else call slice4phys
+            # if it passes call slice4phys
             if phys_in.num_timepoints_found != sum(num_timepoints_expected):
                 raise Exception('The number of triggers found is different '
                                 'than expected. Better stop now than breaking '
                                 'something.')
 
-            # CALL slice4phys, give it BlueprintInput object and lists
+            # slice the recording based on user's entries
             phys_in_slices = slice4phys(phys_in, num_timepoints_expected, tr)
             # returns a dictionary in the form {run_idx: (startpoint, endpoint), run_idx:...}
 
-            # ideally, we'd want to have a figure for each run
-            for idx, key in enumerate(run_idx.keys()):
-                ### The following 14 lines should become a function
-                LGR.info('Plot trigger')
-                plot_path = os.path.join(outdir,
-                                         os.path.splitext(os.path.basename(filename))[0])
-                if sub:
-                    plot_path += f'_sub-{sub}'
-                if ses:
-                    plot_path += f'_ses-{ses}'
-
-                times = run_idx[key]
-                # adjust filename to run indexes
-                viz.plot_trigger(phys_in[times[0]:times[1]].timeseries[0],
-                                 phys_in[times[0]:times[1]].timeseries[chtrig],
-                                 plot_path, tr[idx], phys_in.thr,
-                                 num_timepoints_expected[idx], filename)
+            # save a figure for each run | give the right acquisition
+            for (key, sequence, nb_trigger) in (phys_in_slices.keys(),
+                                                tr, num_timepoints_expected):
+                viz.save_plot(phys_in[key], num_timepoints_expected[nb_trigger],
+                              tr[sequence], chtrig, outdir, filename, sub, ses)
 
         # Single run acquisition type, or : nothing to split workflow
         else:
@@ -344,21 +332,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # and the time offset.
             phys_in.check_trigger_amount(chtrig, thr, num_timepoints_expected[0],
                                          tr[0])
+            # save a figure of the trigger
+            viz.save_plot(phys_in, num_timepoints_expected, outdir, filename, sub, ses)
 
-            ### The following 9 lines should become a function (same as previous block)
-            LGR.info('Plot trigger')
-            plot_path = os.path.join(outdir,
-                                     os.path.splitext(os.path.basename(filename))[0])
-
-            # Create trigger plot. If possible, to have multiple outputs in the same
-            # place, adds sub and ses label.
-            if sub:
-                plot_path += f'_sub-{sub}'
-            if ses:
-                plot_path += f'_ses-{ses}'
-            viz.plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
-                             plot_path, tr, phys_in.thr, num_timepoints_expected,
-                             filename)
 
     else:
         LGR.warning('Skipping trigger pulse count. If you want to run it, '

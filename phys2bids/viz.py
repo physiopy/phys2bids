@@ -153,7 +153,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
 
 def plot_all(ch_name, timeseries, units, freq, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
     """
-    Plots all the channels for visualizations and saves them in outfile
+    Plot all the channels for visualizations and saves them in outfile.
 
     Parameters
     ----------

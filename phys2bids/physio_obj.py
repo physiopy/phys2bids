@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-I/O objects for phys2bids.
-"""
+"""I/O objects for phys2bids."""
 
 import logging
 from itertools import groupby
@@ -81,6 +79,80 @@ def has_size(var, data_size, token):
     return var
 
 
+def are_equal(self, other):
+    """
+    Return test of equality between two objects.
+
+    The equality is true if two objects are the same or
+    if one of the objects is equivalent to the dictionary
+    format of the other.
+    It's particularly written for Blueprint type objects.
+    This function might not work with other classes.
+
+    Parameters
+    ----------
+    other:
+        comparable object.
+
+    Returns
+    -------
+    boolean
+    """
+
+    def _deal_with_dict_value_error(self, other):
+        # Check if "self" has a 'timeseries' key. If not, return False.
+        try:
+            self['timeseries']
+        except KeyError:
+            return False
+        except TypeError:
+            return False
+        else:
+            # Check that the two objects have the same keys.
+            # If not, return False, otherwise loop through the timeseries key.
+            if self.keys() == other.keys():
+                alltrue_timeseries = [False] * len(self['timeseries'])
+                alltrue_keys = [False] * len(self)
+                for j, key in enumerate(self.keys()):
+                    if key == 'timeseries':
+                        for i in range(len(self['timeseries'])):
+                            alltrue_timeseries[i] = (self['timeseries'][i].all()
+                                                     == other['timeseries'][i].all())
+                        alltrue_keys[j] = all(alltrue_timeseries)
+                    else:
+                        alltrue_keys[j] = (self[key] == other[key])
+                return all(alltrue_keys)
+            else:
+                return False
+
+    try:
+        # Try to compare the dictionary format of the two objects
+        return self.__dict__ == other.__dict__
+    except ValueError:
+        return _deal_with_dict_value_error(self.__dict__, other.__dict__)
+    except AttributeError:
+        # If there's an AttributeError, the other object might not be a class.
+        # Try to compare the dictionary format of self with the other object.
+        try:
+            return self.__dict__ == other
+        except ValueError:
+            return _deal_with_dict_value_error(self.__dict__, other)
+        except AttributeError:
+            # If there's an AttributeError, self is not a class.
+            # Try to compare self with the dictionary format of the other object.
+            try:
+                return self == other.__dict__
+            except ValueError:
+                return _deal_with_dict_value_error(self, other.__dict__)
+            except AttributeError:
+                # If there's an AttributeError, both objects are not a class.
+                # Try to compare self with the two object.
+                try:
+                    return self == other
+                except ValueError:
+                    return _deal_with_dict_value_error(self, other)
+
+
 class BlueprintInput():
     """
     Main input object for phys2bids.
@@ -110,9 +182,15 @@ class BlueprintInput():
     num_timepoints_found: int or None
         Amount of timepoints found in the automatic count.
         This is initialised as "None" and then computed internally,
-        *if* check_trigger_amount() is run
-    thr: float
+        *if* check_trigger_amount() is run.
+    thr: float or None
         Threshold used by check_trigger_amount() to detect trigger points.
+        This is initialised as "None" and then computed internally,
+        *if* check_trigger_amount() is run.
+    time_offset: float
+        Time offset found by check_trigger_amount().
+        This is initialised as 0 and then computed internally,
+        *if* check_trigger_amount() is run.
 
     Methods
     -------
@@ -147,7 +225,8 @@ class BlueprintInput():
     - Actual number of channels +1 <= ch_amount
     """
 
-    def __init__(self, timeseries, freq, ch_name, units, trigger_idx):
+    def __init__(self, timeseries, freq, ch_name, units, trigger_idx,
+                 num_timepoints_found=None, thr=None, time_offset=0):
         """Initialise BlueprintInput (see class docstring)."""
         self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
         self.freq = has_size(is_valid(freq, list,
@@ -156,7 +235,9 @@ class BlueprintInput():
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
         self.trigger_idx = is_valid(trigger_idx, int)
-        self.num_timepoints_found = None
+        self.num_timepoints_found = num_timepoints_found
+        self.thr = thr
+        self.time_offset = time_offset
 
     @property
     def ch_amount(self):
@@ -176,6 +257,7 @@ class BlueprintInput():
 
         The slicing is based on the trigger. If necessary, computes a sort of
         interpolation to get the right index in multifreq.
+        If the trigger was not specified, the slicing is based on the time instead.
 
         Parameters
         ----------
@@ -186,28 +268,79 @@ class BlueprintInput():
         -------
         BlueprintInput object
             a copy of the object with the part of timeseries expressed by idx.
+
+        Raises
+        ------
+        IndexError
+            If the idx, represented as a slice, is out of bounds.
+
+        Notes
+        -----
+        If idx is an integer, it returns an instantaneous moment for all channels.
+        If it's a slice, it always returns the full slice. This means that
+        potentially, depending on the frequencies, BlueprintInput[1] and
+        BlueprintInput[1:2] might return different results.
         """
-        sliced_timeseries = []
-
-        if isinstance(idx, int):
-            idx = slice(idx, idx + 1)
-
+        sliced_timeseries = [None] * self.ch_amount
+        return_instant = False
         if not self.trigger_idx:
             self.trigger_idx = 0
 
+        trigger_length = len(self.timeseries[self.trigger_idx])
+
+        # If idx is an integer, return an "instantaneous slice" and initialise slice
+        if isinstance(idx, int):
+            return_instant = True
+
+            # If idx is a negative integer, take the idx element from the end.
+            if idx < 0:
+                idx = trigger_length + idx
+
+            idx = slice(idx, idx + 1)
+
+        if idx.start >= trigger_length or idx.stop > trigger_length:
+            raise IndexError(f'slice ({idx.start}, {idx.stop}) is out of '
+                             f'bounds for channel {self.trigger_idx} '
+                             f'with size {trigger_length}')
+
+        # Operate on each channel on its own
         for n, channel in enumerate(self.timeseries):
             idx_dict = {'start': idx.start, 'stop': idx.stop, 'step': idx.step}
+            # Adapt the slicing indexes to the right requency
             for i in ['start', 'stop', 'step']:
                 if idx_dict[i]:
                     idx_dict[i] = int(np.floor(self.freq[n]
                                                / self.freq[self.trigger_idx]
                                                * idx_dict[i]))
 
+            # Correct the slicing stop if necessary
+            if idx_dict['start'] == idx_dict['stop'] or return_instant:
+                idx_dict['stop'] = idx_dict['start'] + 1
+            elif trigger_length == idx.stop:
+                idx_dict['stop'] = len(channel)
+
             new_idx = slice(idx_dict['start'], idx_dict['stop'], idx_dict['step'])
             sliced_timeseries[n] = channel[new_idx]
 
         return BlueprintInput(sliced_timeseries, self.freq, self.ch_name,
-                              self.units, self.trigger_idx)
+                              self.units, self.trigger_idx,
+                              self.num_timepoints_found, self.thr,
+                              self.time_offset)
+
+    def __eq__(self, other):
+        """
+        Return test of equality between two objects.
+
+        Parameters
+        ----------
+        other:
+            comparable object.
+
+        Returns
+        -------
+        boolean
+        """
+        return are_equal(self, other)
 
     def rename_channels(self, new_names):
         """
@@ -363,6 +496,7 @@ class BlueprintInput():
             LGR.warning('The necessary options to find the amount of timepoints '
                         'were not provided.')
         self.thr = thr
+        self.time_offset = time_offset
         self.timeseries[0] -= time_offset
         self.num_timepoints_found = num_timepoints_found
 
@@ -450,6 +584,21 @@ class BlueprintOutput():
         """
         return self.timeseries.shape[1]
 
+    def __eq__(self, other):
+        """
+        Return test of equality between two objects.
+
+        Parameters
+        ----------
+        other:
+            comparable object.
+
+        Returns
+        -------
+        boolean
+        """
+        return are_equal(self, other)
+
     def return_index(self, idx):
         """
         Return the list entries of all the object properties, given an index.
@@ -497,7 +646,7 @@ class BlueprintOutput():
     @classmethod
     def init_from_blueprint(cls, blueprint):
         """
-        Method to populate the output blueprint using BlueprintInput.
+        Populate the output blueprint using BlueprintInput.
 
         Parameters
         ----------
