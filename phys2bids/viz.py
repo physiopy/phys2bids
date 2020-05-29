@@ -11,10 +11,34 @@ SET_DPI = 100
 FIGSIZE = (18, 10)
 
 
+def save_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, filename, sub, ses):
+    """
+    Save a trigger plot.
+
+    Used in main workflow (`phys2bids`), this function minimizes repetition in code for parallel
+    workflow (multi-run workflow and default workflow).
+    """
+    LGR.info('Plot trigger')
+    plot_path = os.path.join(outdir,
+                             os.path.splitext(os.path.basename(filename))[0])
+    # Create trigger plot. If possible, to have multiple outputs in the same
+    # place, adds sub and ses label.
+    if sub:
+        plot_path += f'_sub-{sub}'
+    if ses:
+        plot_path += f'_ses-{ses}'
+
+    # adjust for multi run arguments, iterate through acquisition attributes
+    plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
+                 plot_path, tr, phys_in.thr,
+                 num_timepoints_expected, filename)
+
+
 def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
                  filename, figsize=FIGSIZE, dpi=SET_DPI):
     """
-    Produces a figure with three plots:
+    Produce a figure with three plots.
+
     1. Plots the triggers in blue, a block in orange that indicates
     the time from the first trigger to the last, and a red line showing
     the threshold used for trigger detection
