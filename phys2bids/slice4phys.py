@@ -13,6 +13,7 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
     Timestamps are the index of first and last triggers of a run, adjusted with padding
     run_start and run_end indexes refer to the samples contained in the whole session
     time offset and nb of triggers in a run are also indicated
+
     Parameters
     ---------
     phys_in : object
@@ -96,7 +97,7 @@ def slice4phys(phys_in, ntp_list, tr_list, padding=9):
     phys_in_slices : dict
         keys start by `run 1` until last (`run n`).
         items are slices of BlueprintInput objects based on timestamps returned by
-        internal function (`find_runs` takes the same arguments as `slice4phys`)
+        internal function (`slice4phys` takes the same arguments as `find_runs`)
     """
     phys_in_slices = {}
 

@@ -335,7 +335,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # save a figure of the trigger
             viz.save_plot(phys_in, num_timepoints_expected, outdir, filename, sub, ses)
 
-
     else:
         LGR.warning('Skipping trigger pulse count. If you want to run it, '
                     'call phys2bids using both "-ntp" and "-tr" arguments')
