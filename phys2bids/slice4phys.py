@@ -33,7 +33,10 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
     run_timestamps : dictionary
         Containing tuples of run start and end indexes for each run, based on trigger channels
         In the form of run_timestamps{Run 1:(start, end, time offset, nb of triggers), Run 2:()}
-    call an internal function and feed it the dictionary instead
+    Notes
+    -----
+     find_runs is an internal function to slice4phys
+     it feeds it dictionary in order to slice BlueprintInput
     """
     # Initialize dictionaries to save  run timestamps and phys_in's attributes
     run_timestamps = {}
