@@ -77,7 +77,6 @@ def bidsify_units(orig_unit):
                 if unit != u_key:
                     unit = unit[:-len(u_key)]
                     # for every prefix alias
-                    print(unit)
                     prefix = prefix_aliases.get(unit, '')
                     if prefix == '':
                         LGR.warning(f'The given unit prefix {unit} does not have aliases, '
