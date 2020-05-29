@@ -16,7 +16,7 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
 
     Parameters
     ---------
-    phys_in : object
+    phys_in : BlueprintInput object
         Object returned by BlueprintInput class
     ntp_list : list
         a list of integers given by the user as `ntp` input
