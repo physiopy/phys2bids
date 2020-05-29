@@ -6,7 +6,7 @@ from numpy import where
 
 def find_runs(phys_in, ntp_list, tr_list, padding=9):
     """
-    Split runs for phys2bids.
+    find runs slicing index.
 
     Returns dictionary key for each run in BlueprintInput object based on user's entries
     Each key has a tuple of 4 elements. 2 expressing the timestamps of run in nb of samples
@@ -91,6 +91,20 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
 def slice4phys(phys_in, ntp_list, tr_list, padding=9):
     """
     Slice runs for phys2bids.
+
+    Parameters
+    ---------
+    phys_in : BlueprintInput object
+        Object returned by BlueprintInput class
+    ntp_list : list
+        a list of integers given by the user as `ntp` input
+        Default: [0, ]
+    tr_list : list
+        a list of float given by the user as `tr` input
+        Default: [1,]
+    padding : int
+        extra time at beginning and end of timeseries, expressed in seconds (s)
+        Default: 9
 
     Returns
     --------
