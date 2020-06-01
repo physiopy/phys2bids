@@ -42,5 +42,3 @@ jobs:
     - bash: |
         bash <(curl -s https://codecov.io/bash) -Z -C $BUILD_SOURCEVERSION
       displayName: 'Upload To Codecov'
-      env:
-        CODECOV_TOKEN: $(CODECOV_TOKEN)
