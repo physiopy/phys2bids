@@ -163,21 +163,21 @@ class BlueprintInput():
 
     Attributes
     ----------
-    timeseries : (ch, [tps]) list
+    timeseries: (ch, [tps]) list
         List of numpy 1d arrays - one for channel, plus one for time.
         Time channel has to be the first.
         Contains all the timeseries recorded.
         Supports different frequencies!
-    freq : (ch) list of floats
+    freq: (ch) list of floats
         List of floats - one per channel.
         Contains all the frequencies of the recorded channel.
         Support different frequencies!
-    ch_name : (ch) list of strings
+    ch_name: (ch) list of strings
         List of names of the channels - can be the header of the columns
         in the output files.
-    units : (ch) list of strings
+    units: (ch) list of strings
         List of the units of the channels.
-    trigger_idx : int
+    trigger_idx: int
         The trigger index. Optional. Default is 0.
     num_timepoints_found: int or None
         Amount of timepoints found in the automatic count.
@@ -534,21 +534,23 @@ class BlueprintOutput():
 
     Attributes
     ----------
-    timeseries : (ch x tps) :obj:`numpy.ndarray`
+    timeseries: (ch x tps) :obj:`numpy.ndarray`
         Numpy 2d array of timeseries
         Contains all the timeseries recorded.
         Impose same frequency!
-    freq : float
+    freq: float
         Shared frequency of the object.
             Properties
-    ch_name : (ch) list of strings
+    ch_name: (ch) list of strings
         List of names of the channels - can be the header of the columns
         in the output files.
-    units : (ch) list of strings
+    units: (ch) list of strings
         List of the units of the channels.
-    start_time : float
+    start_time: float
         Starting time of acquisition (equivalent to first TR,
         or to the opposite sign of the time offset).
+    filename: string
+        Filename the object will be saved with. Init as empty string
 
     Methods
     -------
@@ -564,13 +566,14 @@ class BlueprintOutput():
         method to populate from input blueprint instead of init
     """
 
-    def __init__(self, timeseries, freq, ch_name, units, start_time):
+    def __init__(self, timeseries, freq, ch_name, units, start_time, filename=''):
         """Initialise BlueprintOutput (see class docstring)."""
         self.timeseries = is_valid(timeseries, np.ndarray)
         self.freq = is_valid(freq, (int, float))
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
         self.start_time = start_time
+        self.filename = is_valid(filename, str)
 
     @property
     def ch_amount(self):
