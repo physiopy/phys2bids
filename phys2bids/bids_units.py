@@ -17,6 +17,8 @@ unit_aliases = {
                 '°c': '°C', '°celsius': '°C', 'celsius': '°C',
                 # ampere: electric current
                 'a': 'A', 'ampere': 'A', 'amp': 'A', 'amps': 'A',
+                # siemens: electric conductance (e.g. EDA)
+                'siemens': 'S',
                 # second: time and hertzs
                 '1/hz': 's', '1/hertz': 's', 'hz': 'Hz',
                 '1/s': 'Hz', '1/second': 'Hz', '1/seconds': 'Hz',
