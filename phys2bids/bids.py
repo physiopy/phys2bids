@@ -1,4 +1,8 @@
 import logging
+import os
+from pathlib import Path
+
+from phys2bids import utils
 
 LGR = logging.getLogger(__name__)
 
@@ -91,3 +95,81 @@ def bidsify_units(orig_unit):
     LGR.warning(f'The given unit {orig_unit} does not have aliases, '
                 f'passing it as is')
     return orig_unit
+
+
+def use_heuristic(heur_file, sub, ses, filename, outdir, run='', record_label=''):
+    """
+    Import and use the heuristic specified by the user to rename the file.
+
+    Parameters
+    ----------
+    heur_file: path
+        Fullpath to heuristic file.
+    sub: str or int
+        Name of subject.
+    ses: str or int or None
+        Name of session.
+    filename: path
+        Name of the input of phys2bids.
+    outdir: str or path
+        Path to the directory that will become the "site" folder
+        ("root" folder of BIDS database).
+    record_label: str
+        Optional label for the "record" entry of BIDS.
+
+    Returns
+    -------
+    heurpath: str or path
+        Returned fullpath to tsv.gz new file (post BIDS formatting).
+
+    Raises
+    ------
+    KeyError
+        if `bids_keys['task']` is empty
+    """
+    utils.check_file_exists(heur_file)
+
+    # Initialise a dictionary of bids_keys that has already "recording"
+    bids_keys = {'sub': '', 'ses': '', 'task': '', 'acq': '', 'ce': '',
+                 'dir': '', 'rec': '', 'run': run, 'recording': record_label}
+
+    # Start filling bids_keys dictionary and path with subject and session
+    if sub.startswith('sub-'):
+        bids_keys['sub'] = sub[4:]
+        fldr = os.path.join(outdir, sub)
+    else:
+        bids_keys['sub'] = sub
+        fldr = os.path.join(outdir, f'sub-{sub}')
+
+    if ses:
+        if ses.startswith('ses-'):
+            bids_keys['ses'] = ses[4:]
+            fldr = os.path.join(fldr, ses)
+        else:
+            bids_keys['ses'] = ses
+            fldr = os.path.join(fldr, f'ses-{ses}')
+
+    # Load heuristic and use it to fill dictionary
+    heur = utils.load_heuristic(heur_file)
+    bids_keys.update(heur.heur(Path(filename).stem))
+
+    # If bids_keys['task'] is still empty, stop the program
+    if not bids_keys['task']:
+        LGR.warning(f'The heuristic {heur_file} could not deal with'
+                    f'{Path(filename).stem}')
+        raise KeyError('No "task" attribute found')
+
+    # Compose name by looping in the bids_keys dictionary
+    # and adding nonempty keys
+    name = ''
+    for key in bids_keys:
+        if bids_keys[key] != '':
+            name = f'{name}{key}-{bids_keys[key]}_'
+
+    # Finish path, create it, add filename, export
+    fldr = os.path.join(fldr, 'func')
+    utils.path_exists_or_make_it(fldr)
+
+    heurpath = os.path.join(fldr, f'{name}physio')
+
+    return heurpath
