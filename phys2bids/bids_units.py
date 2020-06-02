@@ -24,7 +24,7 @@ UNIT_ALIASES = {
                 'second': 's', 'seconds': 's', 'sec': 's',
                 'secs': 's',
                 # All the aliases with one letter (to avoid issues)
-                'k': 'K',  'n': 'N', 'v': 'V', 'c': '°C', 'a': 'A', 's': 's',
+                'k': 'K', 'n': 'N', 'v': 'V', 'c': '°C', 'a': 'A', 's': 's',
 }
 
 # Init dictionary of aliases for multipliers. Entries are still lowercase
