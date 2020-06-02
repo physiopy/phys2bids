@@ -98,7 +98,8 @@ def _get_parser():
                           default=None)
     optional.add_argument('-ntp', '--numtps',
                           dest='num_timepoints_expected',
-                          type=list,
+                          nargs='*',
+                          type=int,
                           help='Number of expected trigger timepoints (TRs). '
                                'Default is 0. Note: the estimation of beggining of '
                                'neuroimaging acquisition cannot take place with this default.'
@@ -106,9 +107,9 @@ def _get_parser():
                           default=[0, ])
     optional.add_argument('-tr', '--tr',
                           dest='tr',
-                          type=list,
+                          nargs='*',
+                          type=float,
                           help='TR of sequence in seconds. '
-                               'Default is 0 second.'
                                'You can list each TR used throughout the session',
                           default=[0, ])
     optional.add_argument('-thr', '--threshold',
