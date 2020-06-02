@@ -4,7 +4,7 @@
 from numpy import where
 
 
-def find_runs(phys_in, ntp_list, tr_list, padding=9):
+def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
     """
     find runs slicing index.
 
@@ -24,6 +24,8 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
     tr_list : list
         a list of float given by the user as `tr` input
         Default: [1,]
+    thr : int
+        inherit threshold for detection of trigger given by user
     padding : int
         extra time at beginning and end of timeseries, expressed in seconds (s)
         Default: 9
@@ -52,7 +54,7 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
     for run_idx, run_tps in enumerate(ntp_list):
 
         # correct time offset for this iteration's object
-        phys_in.check_trigger_amount(ntp=run_tps, tr=tr_list[run_idx])
+        phys_in.check_trigger_amount(thr=thr, num_timepoints_expected=run_tps, tr=tr_list[run_idx])
 
         # If it's the very first run, start the run at sample 0,
         # otherwise "add" the padding
@@ -66,7 +68,7 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
         end_sec = (run_tps * tr_list[run_idx])
 
         # define index of the run's last trigger + padding
-        run_end = where(phys_in.timeseries[0] > end_sec)[0] + padding
+        run_end = where(phys_in.timeseries[0] == end_sec)[0] + padding
 
         # if the padding is too much for the remaining timeseries length
         # then the padding stops at the end of recording
@@ -85,7 +87,7 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
         # Save *start* and *end_index* in dictionary along with *time_offset* and *ntp found*
         # dict key must be readable by human
         run_timestamps[f"Run {run_idx+1:02}"] = (run_start, run_end,
-                                                 phys_in.tim_offset,
+                                                 phys_in.time_offset,
                                                  phys_in.num_timepoints_found)
 
         # update the object so that it will look for the first trigger

@@ -37,8 +37,8 @@ from numpy import savetxt, ones
 from phys2bids import utils, viz, _version
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
+from phys2bids.slice4phys import slice4phys
 from phys2bids.bids_units import bidsify_units
-from phys2bids import slice4phys
 
 LGR = logging.getLogger(__name__)
 
@@ -308,7 +308,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                 'the session')
 
             # Sum of values in ntp_list should be equivalent to num_timepoints_found
-            phys_in.check_trigger_amount(chtrig=chtrig, thr=thr,
+            phys_in.check_trigger_amount(thr=thr,
                                          num_timepoints_expected=sum(num_timepoints_expected),
                                          tr=1)
 
@@ -320,7 +320,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                 'something.')
 
             # slice the recording based on user's entries
-            phys_in_slices = slice4phys(phys_in, num_timepoints_expected, tr)
+            phys_in_slices = slice4phys(phys_in, num_timepoints_expected, tr, thr)
             # returns a dictionary in the form {run_idx: (startpoint, endpoint), run_idx:...}
 
             # save a figure for each run | give the right acquisition parameters for runs
