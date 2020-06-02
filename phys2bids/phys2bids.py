@@ -350,16 +350,16 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                     'call phys2bids using both "-ntp" and "-tr" arguments')
 
     # The next few lines create a dictionary of different BlueprintInput
-    # objects, one for each unique frequency in phys_in
+    # objects, one for each unique frequency for each run in phys_in
     uniq_freq_list = set(phys_in[1].freq)
-    output_amount = len(uniq_freq_list)
-    if output_amount > 1:
-        LGR.warning(f'Found {output_amount} different frequencies in input!')
+    freq_amount = len(uniq_freq_list)
+    run_amount = len(phys_in)
+    if freq_amount > 1:
+        LGR.warning(f'Found {freq_amount} different frequencies in input!')
 
-    LGR.info(f'Preparing {output_amount} output files.')
+    LGR.info(f'Preparing {freq_amount*run_amount} output files.')
     # create phys_out dict that will have a blueprint object for each different frequency
     phys_out = {}
-    # Also initialise a string to have a 
 
     # Export a (set of) phys_out for each element in phys_in
     for run in phys_in.keys():
@@ -396,29 +396,34 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         for uniq_freq in uniq_freq_list:
             # If possible, prepare bids renaming.
             if heur_file and sub:
-                if output_amount > 1:
+                if freq_amount > 1:
                     # Add "recording-freq" to filename if more than one freq
-                    outfile = use_heuristic(heur_file, sub, ses, filename,
-                                            outdir, uniq_freq)
+                    phys_out[key].filename = use_heuristic(heur_file, sub, ses,
+                                                           filename, outdir,
+                                                           uniq_freq)
                 else:
-                    outfile = use_heuristic(heur_file, sub, ses, filename, outdir)
+                    phys_out[key].filename = use_heuristic(heur_file, sub, ses,
+                                                           filename, outdir)
 
             else:
-                outfile = os.path.join(outdir,
-                                       os.path.splitext(os.path.basename(filename))[0])
-                if output_amount > 1:
-                    # Append "freq" to filename if more than one freq
-                    outfile = f'{outfile}_{uniq_freq}'
+                phys_out[key].filename = os.path.join(outdir,
+                                                      os.path.splitext(os.path.basename(filename))[0])
+                # Append "run" to filename if more than one run
+                if run_amount > 1:
+                    phys_out[key].filename = f'{phys_out[key].filename}_{run:02d}'
+                # Append "freq" to filename if more than one freq
+                if freq_amount > 1:
+                    phys_out[key].filename = f'{phys_out[key].filename}_{uniq_freq}'
 
-            LGR.info(f'Exporting files for freq {uniq_freq}')
-            savetxt(outfile + '.tsv.gz', phys_out[key].timeseries,
+            LGR.info(f'Exporting files for run {run} freq {uniq_freq}')
+            savetxt(phys_out[key].filename + '.tsv.gz', phys_out[key].timeseries,
                     fmt='%.8e', delimiter='\t')
-            print_json(outfile, phys_out[key].freq,
+            print_json(phys_out[key].filename, phys_out[key].freq,
                        phys_out[key].start_time,
                        phys_out[key].ch_name)
             print_summary(filename, num_timepoints_expected,
                           phys_in[run].num_timepoints_found, uniq_freq,
-                          phys_out[key].start_time, outfile)
+                          phys_out[key].start_time, phys_out[key].filename)
 
 
 def _main(argv=None):
