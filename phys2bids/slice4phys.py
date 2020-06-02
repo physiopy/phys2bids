@@ -86,9 +86,9 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
 
         # Save *start* and *end_index* in dictionary along with *time_offset* and *ntp found*
         # dict key must be readable by human
-        run_timestamps[f'Run {run_idx+1:02}'] = (run_start, run_end,
-                                                 phys_in.time_offset,
-                                                 phys_in.num_timepoints_found)
+        run_timestamps[run_idx+1] = (run_start, run_end,
+                                     phys_in.time_offset,
+                                     phys_in.num_timepoints_found)
 
         # update the object so that it will look for the first trigger
         # after previous run's last trigger. maybe padding extends to next run
