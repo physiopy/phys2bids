@@ -64,12 +64,11 @@ def bidsify_units(orig_unit):
     """
     # call prefix and unit dicts
     # for every unit alias in the dict
+    orig_unit = orig_unit.lower()
     for u_key in unit_aliases.keys():
-        unit = orig_unit.lower()
-        # check that u_key is part of unit
-        if unit.endswith(u_key):
+        if orig_unit.endswith(u_key):
             new_unit = unit_aliases[u_key]
-            unit = unit[:-len(u_key)]
+            unit = orig_unit[:-len(u_key)]
             if unit != '':
                 # for every prefix alias
                 prefix = prefix_aliases.get(unit, '')
