@@ -38,6 +38,7 @@ from phys2bids import utils, viz, _version
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
 from phys2bids import slice4phys
+from phys2bids.bids_units import bidsify_units
 
 LGR = logging.getLogger(__name__)
 
@@ -266,6 +267,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     LGR.info(f'Reading the file {infile}')
     phys_in = populate_phys_input(infile, chtrig)
+    for index, unit in enumerate(phys_in.units):
+        phys_in.units[index] = bidsify_units(unit)
     LGR.info('Reading infos')
     phys_in.print_info(filename)
     # #!# Here the function viz.plot_channel should be called
