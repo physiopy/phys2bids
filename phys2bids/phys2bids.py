@@ -112,7 +112,7 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
     utils.writejson(outfile, summary, indent=4, sort_keys=False)
 
 
-def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
+def use_heuristic(heur_file, sub, ses, filename, outdir, run='', record_label=''):
     """
     Import and use the heuristic specified by the user to rename the file.
 
@@ -146,7 +146,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
 
     # Initialise a dictionary of bids_keys that has already "recording"
     bids_keys = {'sub': '', 'ses': '', 'task': '', 'acq': '', 'ce': '',
-                 'dir': '', 'rec': '', 'run': '', 'recording': record_label}
+                 'dir': '', 'rec': '', 'run': run, 'recording': record_label}
 
     # Start filling bids_keys dictionary and path with subject and session
     if sub.startswith('sub-'):
@@ -400,7 +400,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                     # Add "recording-freq" to filename if more than one freq
                     phys_out[key].filename = use_heuristic(heur_file, sub, ses,
                                                            filename, outdir,
-                                                           uniq_freq)
+                                                           record_label=uniq_freq)
                 else:
                     phys_out[key].filename = use_heuristic(heur_file, sub, ses,
                                                            filename, outdir)
