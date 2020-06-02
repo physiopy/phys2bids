@@ -38,8 +38,9 @@ def find_runs(phys_in, ntp_list, tr_list, padding=9):
                                       }
     Notes
     -----
-     find_runs is an internal function to slice4phys
-     it feeds it dictionary in order to slice BlueprintInput
+    find_runs is an internal function to slice4phys
+    it feeds it dictionary in order to slice BlueprintInput
+    See also:
     """
     # Initialize dictionaries to save  run timestamps and phys_in's attributes
     run_timestamps = {}
