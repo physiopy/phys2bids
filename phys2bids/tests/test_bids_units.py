@@ -1,5 +1,5 @@
 from phys2bids.bids_units import bidsify_units
-from phys2bids.bids_units import unit_aliases
+from phys2bids.bids_units import UNIT_ALIASES
 
 
 def test_bidsify_units():
@@ -16,5 +16,5 @@ def test_bidsify_units():
     for unit_key in unit_tests.keys():
         assert bidsify_units(unit_key) == unit_tests[unit_key]
     # test there is not problem with every unit in the dict
-    for unit_key in unit_aliases.keys():
-        assert bidsify_units(unit_key) == unit_aliases[unit_key]
+    for unit_key in UNIT_ALIASES.keys():
+        assert bidsify_units(unit_key) == UNIT_ALIASES[unit_key]

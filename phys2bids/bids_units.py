@@ -2,7 +2,7 @@ import logging
 
 LGR = logging.getLogger(__name__)
 
-unit_aliases = {
+UNIT_ALIASES = {
                 # kelvin: thermodynamic temperature
                 'kelvin': 'K', 'kelvins': 'K',
                 # mole: amount of substance
@@ -28,7 +28,7 @@ unit_aliases = {
 }
 
 # Init dictionary of aliases for multipliers. Entries are still lowercase
-prefix_aliases = {
+PREFIX_ALIASES = {
                     # Multiples - skip "mega" and only up to "tera"
                     'da': 'da', 'deca': 'da', 'h': 'h', 'hecto': 'h',
                     'k': 'k', 'kilo': 'k', 'g': 'G', 'giga': 'G', 't': 'T',
@@ -66,14 +66,14 @@ def bidsify_units(orig_unit):
     """
     # for every unit alias in the dict
     unit = orig_unit.lower()
-    for u_key in unit_aliases.keys():
+    for u_key in UNIT_ALIASES.keys():
         # check that u_key is part of unit
         if unit.endswith(u_key):
-            new_unit = unit_aliases[u_key]
+            new_unit = UNIT_ALIASES[u_key]
             unit = unit[:-len(u_key)]
             if unit != '':
                 # for every prefix alias
-                prefix = prefix_aliases.get(unit, '')
+                prefix = PREFIX_ALIASES.get(unit, '')
                 if prefix == '':
                     LGR.warning(f'The given unit prefix {unit} does not '
                                 'have aliases, passing it as is')
