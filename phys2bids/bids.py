@@ -151,7 +151,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, run='', record_label=''
 
     # Load heuristic and use it to fill dictionary
     heur = utils.load_heuristic(heur_file)
-    bids_keys.update(heur.heur(Path(filename).stem))
+    bids_keys.update(heur.heur(Path(filename).stem, run))
 
     # If bids_keys['task'] is still empty, stop the program
     if not bids_keys['task']:

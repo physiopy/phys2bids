@@ -38,7 +38,8 @@ def test_use_heuristic(tmpdir, test_sub, test_ses):
     test_record_label = 'test'
 
     heur_path = use_heuristic(test_full_heur_path, test_sub, test_ses,
-                              test_full_input_path, test_outdir, test_record_label)
+                              test_full_input_path, test_outdir,
+                              record_label=test_record_label)
 
     if test_sub[:4] == 'sub-':
         test_sub = test_sub[4:]
