@@ -124,7 +124,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     subplot.set_ylabel('Volts')
     subplot.plot(time, trigger, '-', time, thrline, 'r-.', time, block, '-')
     subplot.fill_between(time, block, where=block >= d, interpolate=True, color='#ffbb6e')
-    subplot.legend(["trigger", "Trigger detection threshold", "time block"], loc='upper right')
+    subplot.legend(['trigger', 'Trigger detection threshold', 'time block'], loc='upper right')
     # plot the first spike according to the user threshold
     subplot = fig.add_subplot(223)
     subplot.set_xlim([-tr * 4, tr * 4])
@@ -222,7 +222,7 @@ def plot_all(ch_name, timeseries, units, freq, infile, outfile='', dpi=SET_DPI, 
         ax[row].set_ylabel(units[row + 1])
         ax[row].xlim = 30 * 60 * freq[0]  # maximum display of half an hour
         ax[row].grid()
-    ax[row].set_xlabel("seconds")
+    ax[row].set_xlabel('seconds')
     if outfile == '':
         outfile = os.path.splitext(os.path.basename(infile))[0] + '.png'
     LGR.info(f'saving channel plot to {outfile}')
