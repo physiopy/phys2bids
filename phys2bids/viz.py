@@ -11,9 +11,10 @@ SET_DPI = 100
 FIGSIZE = (18, 10)
 
 ### This definition needs a more intuitive name ('export_trigger_plot' for instance?)
-### Since it depends on the one after, please put it after it.
+### Since it depends on the one after, please put it second. It might be old school, but the rest of phys2bids is like that.
 ### Think also about reordering the inputs, either by importance or by order of use.
-def save_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, filename, sub, ses):
+def save_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, filename,
+              sub=None, ses=None, run=None, figsize=FIGSIZE, dpi=SET_DPI):
     """
     Save a trigger plot.
 
@@ -37,9 +38,17 @@ def save_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, filename, su
     filename : str
         name of the input file given by user's entry
     sub: str or int
-        Name of subject.
+        Name of subject. Default is None
     ses: str or int or None
-        Name of session.
+        Name of session. Default is None
+    run: int or None
+        Run number. Default is None
+    figsize: tuple or list of floats
+        Size of the figure expressed as (size_x, size_y),
+        Default is {FIGSIZE}
+    dpi: int
+        Desired DPI of the figure,
+        Default is {SET_DPI}
     """
     LGR.info('Plot trigger')
     plot_path = os.path.join(outdir,
@@ -50,11 +59,13 @@ def save_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, filename, su
         plot_path += f'_sub-{sub}'
     if ses:
         plot_path += f'_ses-{ses}'
+    if run:
+        plot_path += f'_run-{run:02d}'
 
     # adjust for multi run arguments, iterate through acquisition attributes
     plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
                  plot_path, tr, phys_in.thr,
-                 num_timepoints_expected, filename)
+                 num_timepoints_expected, filename, figsize, dpi)
 
 
 def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
