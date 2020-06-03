@@ -11,7 +11,8 @@ SET_DPI = 100
 FIGSIZE = (18, 10)
 
 ### This definition needs a more intuitive name ('export_trigger_plot' for instance?)
-### AS it depends on the one after, please put it after it.
+### Since it depends on the one after, please put it after it.
+### Think also about reordering the inputs, either by importance or by order of use.
 def save_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, filename, sub, ses):
     """
     Save a trigger plot.
