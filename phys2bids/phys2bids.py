@@ -342,7 +342,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                         phys_out[key].filename = (f'{phys_out[key].filename}'
                                                   '_take-{run}')
                         LGR.warning('Identified multiple outputs with the same name.\n'
-                                    'Adding a fake label to avoid overwriting.\n'
+                                    'Appending fake label to avoid overwriting.\n'
                                     '!!! ATTENTION !!! the output is not BIDS compliant.\n'
                                     'Please check heuristics to solve the problem.')
 
