@@ -249,9 +249,14 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # returns a dictionary in the form {run_idx: (startpoint, endpoint), run_idx:...}
 
             # save a figure for each run | give the right acquisition parameters for runs
-            for key, sequence, nb_trigger in zip(phys_in.keys(), tr, num_timepoints_expected):
-                viz.save_plot(phys_in[key], nb_trigger, sequence,
-                              chtrig, outdir, f'{filename}-Run{key+1:02}', sub, ses)
+            ### If I understand, you're basically getting key, sequence, nb_trigger from each element in 
+            ### phys_in.keys(), tr, num_timepoints_expected.
+            ### If it's not the case let me know, otherwise I'm sorry to remove the cool implementation,
+            ### but readability favours enumerate.
+            ### Also moving the run at the end of the filename (sub_ses_run)
+            for i, run in enumerate(phys_in.keys()):
+                viz.save_plot(phys_in[run], num_timepoints_expected[i], tr[i],
+                              chtrig, outdir, filename, sub, ses, run)
 
         # Single run acquisition type, or : nothing to split workflow
         else:
