@@ -3,7 +3,9 @@
 
 from numpy import where
 
-
+### If you mean this function *not* to be used outside of slice4phys, then you can prefix it with '_'.
+### However, I don't see the reason why this shouldn't be used elsewhere if necessary!
+### Think about removing the Notes if you agree. Also, if you don't need the see also, remove it please.
 def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
     """
     Find runs slicing index.
@@ -21,10 +23,8 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
         Object returned by BlueprintInput class
     ntp_list: list
         a list of integers given by the user as `ntp` input
-        Default: [0, ]
     tr_list: list
         a list of float given by the user as `tr` input
-        Default: [1,]
     thr: int
         inherit threshold for detection of trigger given by user
     padding: int
@@ -45,7 +45,7 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
     it feeds it dictionary in order to slice BlueprintInput
     See also:
     """
-    # Initialize dictionaries to save  run timestamps and phys_in's attributes
+    # Initialize dictionaries to save  run timestamps and phys_in attributes
     run_timestamps = {}
 
     # Express the padding in samples equivalent
