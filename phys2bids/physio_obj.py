@@ -287,8 +287,10 @@ class BlueprintInput():
             self.trigger_idx = 0
 
         trigger_length = len(self.timeseries[self.trigger_idx])
-
+        # LGRinfo instead of print
+        print(idx, trigger_length)
         # If idx is an integer, return an "instantaneous slice" and initialise slice
+        # we have to deal with phys_in[idx:], cause idx is already slice(idx, None, None)
         if isinstance(idx, int):
             return_instant = True
 
@@ -297,7 +299,7 @@ class BlueprintInput():
                 idx = trigger_length + idx
 
             idx = slice(idx, idx + 1)
-
+        # #### this statement cannot be interpreted if idx is None
         if idx.start >= trigger_length or idx.stop > trigger_length:
             raise IndexError(f'slice ({idx.start}, {idx.stop}) is out of '
                              f'bounds for channel {self.trigger_idx} '

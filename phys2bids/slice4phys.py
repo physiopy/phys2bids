@@ -61,14 +61,17 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
         if run_idx == 0:
             run_start = 0
         else:
-            run_start = where(phys_in.timeseries[0] >= 0)[0] - padding
+            run_start = where(phys_in.timeseries[0] <= 0)[0][0] - padding
 
         # Defining end of acquisition
         # run length in seconds
-        end_sec = (run_tps * tr_list[run_idx])
+        end_sec = run_tps * tr_list[run_idx]
 
-        # define index of the run's last trigger + padding
-        run_end = where(phys_in.timeseries[0] == end_sec)[0] + padding
+        # define index of the run's last trigger + padding (HAS TO BE INT type)
+        # pick first value of time array that is over specified run length
+        # where returns list of values over end_sec and its dtype, choose [list][first value]
+        run_end = int(where(phys_in.timeseries[0] > end_sec)[0][0] + padding)
+        update = int(run_end - padding + 1)
 
         # if the padding is too much for the remaining timeseries length
         # then the padding stops at the end of recording
@@ -86,13 +89,15 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
 
         # Save *start* and *end_index* in dictionary along with *time_offset* and *ntp found*
         # dict key must be readable by human
-        run_timestamps[run_idx+1] = (run_start, run_end,
-                                     phys_in.time_offset,
-                                     phys_in.num_timepoints_found)
+        # LGRinfo
+        print(run_idx)
+        run_timestamps[run_idx] = (run_start, run_end,
+                                   phys_in.time_offset,
+                                   phys_in.num_timepoints_found)
 
-        # update the object so that it will look for the first trigger
+        # update the object so that next iteration will look for the first trigger
         # after previous run's last trigger. maybe padding extends to next run
-        phys_in = phys_in[(run_end - padding + 1):]
+        phys_in = phys_in[update:-1]
 
     return run_timestamps
 
