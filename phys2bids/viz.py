@@ -10,7 +10,8 @@ LGR = logging.getLogger(__name__)
 SET_DPI = 100
 FIGSIZE = (18, 10)
 
-
+### This definition needs a more intuitive name ('export_trigger_plot' for instance?)
+### AS it depends on the one after, please put it after it.
 def save_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, filename, sub, ses):
     """
     Save a trigger plot.
