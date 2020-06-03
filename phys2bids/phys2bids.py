@@ -324,15 +324,27 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         for uniq_freq in uniq_freq_list:
             # If possible, prepare bids renaming.
             if heur_file and sub:
-                # Dictionary heur_args was initialised before the for loops
                 # Add run info to heur_args if more than one run is present
                 if run_amount > 1:
                     heur_args['run'] = f'{run:02d}'
-                # Add "recording-freq" to filename if more than one freq
+
+                # Append "recording-freq" to filename if more than one freq
                 if freq_amount > 1:
                     heur_args['record_label'] = f'freq{uniq_freq}'
 
                 phys_out[key].filename = use_heuristic(**heur_args)
+
+                # If any filename exists already because of multirun, append labels
+                # But warn about the non-validity of this BIDS-like name.
+                if run_amount > 1:
+                    if any([phys.filename == phys_out[key].filename
+                           for phys in phys_out.values()]):
+                        phys_out[key].filename = (f'{phys_out[key].filename}'
+                                                  '_take-{run}')
+                        LGR.warning('Identified multiple outputs with the same name.\n'
+                                    'Adding a fake label to avoid overwriting.\n'
+                                    '!!! ATTENTION !!! the output is not BIDS compliant.\n'
+                                    'Please check heuristics to solve the problem.')
 
             else:
                 phys_out[key].filename = os.path.join(outdir,
