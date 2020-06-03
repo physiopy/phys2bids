@@ -6,38 +6,39 @@ from numpy import where
 
 def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
     """
-    find runs slicing index.
+    Find runs slicing index.
 
-    Returns dictionary key for each run in BlueprintInput object based on user's entries
-    Each key has a tuple of 4 elements. 2 expressing the timestamps of run in nb of samples
-    Timestamps are the index of first and last triggers of a run, adjusted with padding
-    run_start and run_end indexes refer to the samples contained in the whole session
-    first trigger time offset and nb of triggers contained in the run are also indicated
+    Returns dictionary key for each run in BlueprintInput object based on
+    user's entries. Each key has a tuple of 4 elements, 2 expressing the
+    timestamps of run in nb of samples. Timestamps are the index of first and
+    last triggers of a run, adjusted with padding. run_start and run_end
+    indexes refer to the samples contained in the whole session.
+    First trigger time offset and nb of triggers contained in the run are also indicated.
 
     Parameters
     ---------
-    phys_in : BlueprintInput object
+    phys_in: BlueprintInput object
         Object returned by BlueprintInput class
-    ntp_list : list
+    ntp_list: list
         a list of integers given by the user as `ntp` input
         Default: [0, ]
-    tr_list : list
+    tr_list: list
         a list of float given by the user as `tr` input
         Default: [1,]
-    thr : int
+    thr: int
         inherit threshold for detection of trigger given by user
-    padding : int
+    padding: int
         extra time at beginning and end of timeseries, expressed in seconds (s)
         Default: 9
 
     Returns
     --------
-    run_timestamps : dictionary
-        Containing tuples of run start and end indexes for each run, based on trigger channels
-        It also contains run attributes: time offset from session beggining, and nb of triggers
-        In the form of run_timestamps{"Run 01":(start, end, time offset, nb of triggers),
-                                      "Run 02":(...),
-                                      }
+    run_timestamps: dictionary
+        Containing tuples of run start and end indexes for each run, based on
+        trigger channels. It also contains run attributes: time offset from
+        session beggining, and nb of triggers in the form of
+        run_timestamps{1:(start, end, time offset, nb of triggers),
+                       2:(...), ... }
     Notes
     -----
     find_runs is an internal function to slice4phys
@@ -90,10 +91,15 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
         # Save *start* and *end_index* in dictionary along with *time_offset* and *ntp found*
         # dict key must be readable by human
         # LGRinfo
-        print(run_idx)
-        run_timestamps[run_idx] = (run_start, run_end,
-                                   phys_in.time_offset,
-                                   phys_in.num_timepoints_found)
+        ### Indeed, you need to import logging and add LGR = logging.getLogger(__name__)
+        ### at the beginning of the script, to be able to log with the rest of phys2bids,
+        ### then ALL THE PRINTS should either become LGR.info or LGR.warnings.
+        ### Also, please consider to make the run_idx human readable (start from 1),
+        ### Also, please make the message more informative.
+        print(run_idx + 1)
+        run_timestamps[run_idx + 1] = (run_start, run_end,
+                                       phys_in.time_offset,
+                                       phys_in.num_timepoints_found)
 
         # update the object so that next iteration will look for the first trigger
         # after previous run's last trigger. maybe padding extends to next run
@@ -108,21 +114,21 @@ def slice4phys(phys_in, ntp_list, tr_list, padding=9):
 
     Parameters
     ---------
-    phys_in : BlueprintInput object
+    phys_in: BlueprintInput object
         Object returned by BlueprintInput class
-    ntp_list : list
+    ntp_list: list
         a list of integers given by the user as `ntp` input
         Default: [0, ]
-    tr_list : list
+    tr_list: list
         a list of float given by the user as `tr` input
         Default: [1,]
-    padding : int
+    padding: int
         extra time at beginning and end of timeseries, expressed in seconds (s)
         Default: 9
 
     Returns
     --------
-    phys_in_slices : dict
+    phys_in_slices: dict
         keys start by `run 1` until last (`run n`).
         items are slices of BlueprintInput objects based on timestamps returned by
         internal function (`slice4phys` takes the same arguments as `find_runs`)
