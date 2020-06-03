@@ -249,10 +249,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # returns a dictionary in the form {run_idx: (startpoint, endpoint), run_idx:...}
 
             # save a figure for each run | give the right acquisition parameters for runs
-            for (key, sequence, nb_trigger) in (phys_in.keys(),
-                                                tr, num_timepoints_expected):
-                viz.save_plot(phys_in[key], num_timepoints_expected[nb_trigger],
-                              tr[sequence], chtrig, outdir, filename, sub, ses)
+            for key, sequence, nb_trigger in zip(phys_in.keys(), tr, num_timepoints_expected):
+                viz.save_plot(phys_in[key], nb_trigger, sequence,
+                              chtrig, outdir, f'{filename}-Run{key+1:02}', sub, ses)
 
         # Single run acquisition type, or : nothing to split workflow
         else:
@@ -290,6 +289,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     phys_out = {}
 
     # Export a (set of) phys_out for each element in phys_in
+    # what's the run key ??? 1 or 0
     for run in phys_in.keys():
         for uniq_freq in uniq_freq_list:
             # Initialise the key for the (possibly huge amount of) dictionary entries
