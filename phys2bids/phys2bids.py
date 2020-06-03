@@ -272,14 +272,21 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     # The next few lines create a dictionary of different BlueprintInput
     # objects, one for each unique frequency for each run in phys_in
+    # they also save the amount of runs and unique frequencies
     uniq_freq_list = set(phys_in[1].freq)
     freq_amount = len(uniq_freq_list)
     run_amount = len(phys_in)
     if freq_amount > 1:
         LGR.warning(f'Found {freq_amount} different frequencies in input!')
 
+    # If heuristics are used, init a dict of arguments to pass to use_heuristic
+    if heur_file and sub:
+        heur_args = {'heur_file': heur_file, 'sub': sub, 'ses': ses,
+                     'filename': filename, 'outdir': outdir, 'run': '',
+                     'record_label': ''}
+
     LGR.info(f'Preparing {freq_amount*run_amount} output files.')
-    # create phys_out dict that will have a blueprint object for each different frequency
+    # Create phys_out dict that will have a blueprint object for each different frequency
     phys_out = {}
 
     # Export a (set of) phys_out for each element in phys_in
@@ -317,14 +324,15 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         for uniq_freq in uniq_freq_list:
             # If possible, prepare bids renaming.
             if heur_file and sub:
+                # Dictionary heur_args was initialised before the for loops
+                # Add run info to heur_args if more than one run is present
+                if run_amount > 1:
+                    heur_args['run'] = f'{run:02d}'
+                # Add "recording-freq" to filename if more than one freq
                 if freq_amount > 1:
-                    # Add "recording-freq" to filename if more than one freq
-                    phys_out[key].filename = use_heuristic(heur_file, sub, ses,
-                                                           filename, outdir,
-                                                           record_label=uniq_freq)
-                else:
-                    phys_out[key].filename = use_heuristic(heur_file, sub, ses,
-                                                           filename, outdir)
+                    heur_args['record_label'] = f'freq{uniq_freq}'
+
+                phys_out[key].filename = use_heuristic(**heur_args)
 
             else:
                 phys_out[key].filename = os.path.join(outdir,
