@@ -76,7 +76,7 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
                f'Timepoints expected: {ntp_expected}\n'
                f'Timepoints found:    {ntp_found}\n'
                f'Sampling Frequency:  {samp_freq} Hz\n'
-               f'Sampling started at: {start_time} s\n'
+               f'Sampling started at: {start_time:.4f} s\n'
                f'Tip: Time 0 is the time of first trigger\n'
                f'------------------------------------------------\n')
     LGR.info(summary)
@@ -106,7 +106,7 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
     """
     start_time = -time_offset
     summary = dict(SamplingFrequency=samp_freq,
-                   StartTime=start_time,
+                   StartTime=round(start_time, 4),
                    Columns=ch_name)
     utils.writejson(outfile, summary, indent=4, sort_keys=False)
 
