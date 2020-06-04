@@ -45,12 +45,6 @@ def samefreq_full_acq_file(testpath):
 
 
 @pytest.fixture
-def samefreq_full_txt_file(testpath):
-    return fetch_file('sdz4n', testpath,
-                      'Test_belt_pulse_samefreq.txt')
-
-
-@pytest.fixture
 def samefreq_short_txt_file(testpath):
     return fetch_file('4yudk', testpath,
                       'Test_belt_pulse_samefreq_short.txt')
