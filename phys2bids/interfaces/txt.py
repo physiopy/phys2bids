@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-phys2bids interface for txt files.
-"""
+"""phys2bids interface for txt files."""
 
 import logging
 from collections import Counter
@@ -250,11 +248,7 @@ def process_acq(channel_list, chtrig, header=[]):
     t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
     timeseries = [t_ch, ] + timeseries
     freq = check_multifreq(timeseries, freq)
-<<<<<<< HEAD
-    return BlueprintInput(timeseries, freq, names, units, chtrig)
-=======
     return BlueprintInput(timeseries, freq, names, units, chtrig + 1)
->>>>>>> 4dadc7e9a0a3d050635ab4e6ff569e235cceebdb
 
 
 def read_header_and_channels(filename, chtrig):

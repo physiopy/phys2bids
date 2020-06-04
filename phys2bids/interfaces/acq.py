@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-phys2bids interface for acqknowledge files.
-"""
+"""phys2bids interface for acqknowledge files."""
 import logging
 import warnings
 
