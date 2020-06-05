@@ -279,6 +279,58 @@ By looking at this figure, we can work out that we need a smaller threshold in o
     Tip: Time 0 is the time of first trigger
     ------------------------------------------------
 
+Splitting your input file into multiple run output files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+If your file contains more than one (f)MRI acquisition (or runs), you can give multiple values to ``-ntp`` and ``tr`` arguments in order to get multiple ``.tsv.gz`` outputs.
+
+By specifying the number of timepoints in each acquisition, ``phys2bids`` will recursively cut the input file by detecting the first trigger of the entire session and the ones after the cutting point you specified.
+
+.. code-block:: shell
+     phys2bids -in two_scans_samefreq_all.txt -chtrig 2 -ntp 536 398 -tr 1.2 -thr 2
+
+Now, instead of counting the trigger timepoints once, ``physbids`` will check the trigger channel recursively with all the values listed in ``-ntp``. The logger will inform you about the number of timepoints left at each iteration.
+
+.. code-block:: shell
+    INFO:phys2bids.physio_obj:Counting trigger points
+    INFO:phys2bids.physio_obj:The trigger is in channel 2
+    INFO:phys2bids.physio_obj:The number of timepoints found with the manual threshold of 2.0000 is 934
+    INFO:phys2bids.physio_obj:Checking number of timepoints
+    INFO:phys2bids.physio_obj:Found just the right amount of timepoints!
+    WARNING:phys2bids.slice4phys:
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    phys2bids will split the input file according to the given -tr and -ntp arguments
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    INFO:phys2bids.physio_obj:Counting trigger points
+    INFO:phys2bids.physio_obj:The trigger is in channel 2
+    INFO:phys2bids.physio_obj:The number of timepoints found with the manual threshold of 2.0000 is 934
+    INFO:phys2bids.physio_obj:Checking number of timepoints
+    WARNING:phys2bids.physio_obj:Found 398 timepoints more than expected!
+    Assuming extra timepoints are at the end (try again with a more liberal thr)
+    INFO:phys2bids.slice4phys:
+    --------------------------------------------------------------
+    Slicing between 0.0 seconds and 961.381 seconds
+    --------------------------------------------------------------
+    INFO:phys2bids.physio_obj:Counting trigger points
+    INFO:phys2bids.physio_obj:The trigger is in channel 2
+    INFO:phys2bids.physio_obj:The number of timepoints found with the manual threshold of 2.0000 is 400
+    INFO:phys2bids.physio_obj:Checking number of timepoints
+    WARNING:phys2bids.physio_obj:Found 2 timepoints more than expected!
+    Assuming extra timepoints are at the end (try again with a more liberal thr)
+    INFO:phys2bids.slice4phys:
+    --------------------------------------------------------------
+    Slicing between 952.381 seconds and 1817.96 seconds
+    --------------------------------------------------------------
+    INFO:phys2bids.viz:Plot trigger
+    INFO:phys2bids.viz:Plot trigger
+    INFO:phys2bids.phys2bids:Preparing 2 output files.
+    INFO:phys2bids.phys2bids:Exporting files for run 1 freq 1000.0
+
+The logger also notifies the user about the slicing points (the first always being at the beginning of session, or at 0 s). The user can also check the resulting slice by looking at the plot of the trigger channel for each run.
+
+What if I have multiple acquisition types ?
+*****************************************
+The user can also benefit from this utility when dealing with multiple ***acquisition types*** such as structural and functional (i.e. different TR). Like ``-ntp``, ``-tr`` takes multiple values. **Though, they have to be of the same length**. The idea is simple : if you only have one acquisition type, the one ``-tr`` input you gave will be broadcasted through all runs, but if there are different acquisition types, you have to list them all in order.
+
 Generating outputs in BIDs format
 #################################
 
