@@ -10,63 +10,6 @@ LGR = logging.getLogger(__name__)
 SET_DPI = 100
 FIGSIZE = (18, 10)
 
-### This definition needs a more intuitive name ('export_trigger_plot' for instance?)
-### Since it depends on the one after, please put it second. It might be old school, but the rest of phys2bids is like that.
-### Think also about reordering the inputs, either by importance or by order of use.
-def save_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, filename,
-              sub=None, ses=None, run=None, figsize=FIGSIZE, dpi=SET_DPI):
-    """
-    Save a trigger plot.
-
-    Used in main workflow (`phys2bids`), this function minimizes repetition in code for parallel
-    workflow (multi-run workflow and default workflow) and maintains readability of code
-    Parameters
-    ---------
-    phys_in : object
-        Object returned by BlueprintInput class
-        For multi-run acquisitions, phys_in is a slice of the whole object
-    num_timepoints_expected : list
-        a list of integers given by the user as `ntp` input
-    tr : list
-        a list of float given by the user as `tr` input
-    chtrig : int
-        trigger channel
-        integer representing the index of the trigger on phys_in.timeseries
-    outdir : str
-        directory to save output.
-        if ses and sub are specified, it can be understood as root directory of dataset
-    filename : str
-        name of the input file given by user's entry
-    sub: str or int
-        Name of subject. Default is None
-    ses: str or int or None
-        Name of session. Default is None
-    run: int or None
-        Run number. Default is None
-    figsize: tuple or list of floats
-        Size of the figure expressed as (size_x, size_y),
-        Default is {FIGSIZE}
-    dpi: int
-        Desired DPI of the figure,
-        Default is {SET_DPI}
-    """
-    LGR.info('Plot trigger')
-    plot_path = os.path.join(outdir,
-                             os.path.splitext(os.path.basename(filename))[0])
-    # Create trigger plot. If possible, to have multiple outputs in the same
-    # place, adds sub and ses label.
-    if sub:
-        plot_path += f'_sub-{sub}'
-    if ses:
-        plot_path += f'_ses-{ses}'
-    if run:
-        plot_path += f'_run-{run:02d}'
-
-    # adjust for multi run arguments, iterate through acquisition attributes
-    plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
-                 plot_path, tr, phys_in.thr,
-                 num_timepoints_expected, filename, figsize, dpi)
-
 
 def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
                  filename, figsize=FIGSIZE, dpi=SET_DPI):
@@ -183,6 +126,62 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     subplot.fill_between(time, block, where=block >= d, interpolate=True, color='#ffbb6e')
     plt.savefig(fileprefix + filename + '_trigger_time.png', dpi=dpi)
     plt.close()
+
+
+def export_trigger_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, filename,
+                        sub=None, ses=None, run=None, figsize=FIGSIZE, dpi=SET_DPI):
+    """
+    Save a trigger plot.
+
+    Used in main workflow (`phys2bids`), this function minimizes repetition in code for parallel
+    workflow (multi-run workflow and default workflow) and maintains readability of code
+    Parameters
+    ---------
+    phys_in : object
+        Object returned by BlueprintInput class
+        For multi-run acquisitions, phys_in is a slice of the whole object
+    num_timepoints_expected : list
+        a list of integers given by the user as `ntp` input
+    tr : list
+        a list of float given by the user as `tr` input
+    chtrig : int
+        trigger channel
+        integer representing the index of the trigger on phys_in.timeseries
+    outdir : str
+        directory to save output.
+        if ses and sub are specified, it can be understood as root directory of dataset
+    filename : str
+        name of the input file given by user's entry
+    sub: str or int
+        Name of subject. Default is None
+    ses: str or int or None
+        Name of session. Default is None
+    run: int or None
+        Run number. Default is None
+    figsize: tuple or list of floats
+        Size of the figure expressed as (size_x, size_y),
+        Default is {FIGSIZE}
+    dpi: int
+        Desired DPI of the figure,
+        Default is {SET_DPI}
+    """
+    LGR.info('Plot trigger')
+    plot_path = os.path.join(outdir,
+                             os.path.splitext(os.path.basename(filename))[0])
+    # Create trigger plot. If possible, to have multiple outputs in the same
+    # place, adds sub and ses label.
+    if sub:
+        plot_path += f'_sub-{sub}'
+    if ses:
+        plot_path += f'_ses-{ses}'
+    # add run to filename
+    if run:
+        filename += f'_run-{run:02d}'
+
+    # adjust for multi run arguments, iterate through acquisition attributes
+    plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
+                 plot_path, tr, phys_in.thr, num_timepoints_expected,
+                 filename, figsize, dpi)
 
 
 def plot_all(ch_name, timeseries, units, freq, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
