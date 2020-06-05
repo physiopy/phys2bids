@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from numpy import where
+import logging
+
+LGR = logging.getLogger(__name__)
 
 ### If you mean this function *not* to be used outside of slice4phys, then you can prefix it with '_'.
 ### However, I don't see the reason why this shouldn't be used elsewhere if necessary!
@@ -82,21 +85,20 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
         # Adjust timestamps with previous end_index
         # Except if it's the first run
         if run_idx > 0:
-            previous_end_index = run_timestamps[run_idx - 1][1]
+            previous_end_index = run_timestamps[run_idx][1]
             # adjust time_offset to keep original timing information
-            phys_in.time_offset = phys_in.time_offset + run_timestamps[run_idx - 1][2]
-            run_start = run_start + previous_end_index
-            run_end = run_end + previous_end_index
+            phys_in.time_offset = phys_in.time_offset + run_timestamps[run_idx][2]
+            run_start = int(run_start + previous_end_index)
+            run_end = int(run_end + previous_end_index)
 
         # Save *start* and *end_index* in dictionary along with *time_offset* and *ntp found*
         # dict key must be readable by human
         # LGRinfo
-        ### Indeed, you need to import logging and add LGR = logging.getLogger(__name__)
-        ### at the beginning of the script, to be able to log with the rest of phys2bids,
-        ### then ALL THE PRINTS should either become LGR.info or LGR.warnings.
-        ### Also, please consider to make the run_idx human readable (start from 1),
-        ### Also, please make the message more informative.
-        print(run_idx + 1)
+        LGR.info("\n--------------------------------------------------------------\n"
+                 f"Slicing between {(run_start/phys_in.freq[phys_in.trigger_idx])} seconds and "
+                 f"{run_end/phys_in.freq[phys_in.trigger_idx]} seconds\n"
+                 "--------------------------------------------------------------")
+
         run_timestamps[run_idx + 1] = (run_start, run_end,
                                        phys_in.time_offset,
                                        phys_in.num_timepoints_found)
@@ -134,7 +136,11 @@ def slice4phys(phys_in, ntp_list, tr_list, padding=9):
         internal function (`slice4phys` takes the same arguments as `find_runs`)
     """
     phys_in_slices = {}
-
+    # inform the user
+    LGR.warning("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+                "\nphys2bids will split the input file according to the given -tr and -ntp"
+                " arguments"
+                "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     # Find the timestamps
     run_timestamps = find_runs(phys_in, ntp_list, tr_list, padding)
 
