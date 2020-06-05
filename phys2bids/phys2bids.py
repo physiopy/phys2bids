@@ -250,8 +250,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
             # save a figure for each run | give the right acquisition parameters for runs
             for i, run in enumerate(phys_in.keys()):
-                viz.save_plot(phys_in[run], num_timepoints_expected[i], tr[i],
-                              chtrig, outdir, filename, sub, ses, run)
+                viz.export_trigger_plot(phys_in[run], num_timepoints_expected[i], tr[i],
+                                        chtrig, outdir, filename, sub, ses, run)
 
         # Single run acquisition type, or : nothing to split workflow
         else:
@@ -260,7 +260,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             phys_in.check_trigger_amount(chtrig, thr, num_timepoints_expected[0],
                                          tr[0])
             # save a figure of the trigger
-            viz.save_plot(phys_in, num_timepoints_expected, outdir, filename, sub, ses)
+            viz.export_trigger_plot(phys_in, num_timepoints_expected, outdir, filename, sub, ses)
 
             # Reassign phys_in as dictionary
             # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY

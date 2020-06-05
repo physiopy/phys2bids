@@ -287,11 +287,6 @@ class BlueprintInput():
             self.trigger_idx = 0
 
         trigger_length = len(self.timeseries[self.trigger_idx])
-        # LGRinfo instead of print
-        ### I don't think this print is necessary HERE.
-        ### It would be more interesting to report the TIME the different runs start and end
-        ### That can be done in slice4phys.py in a LGR.info. Please remove this print.
-        print(idx, trigger_length)
 
         # If idx is an integer, return an "instantaneous slice" and initialise slice
         if isinstance(idx, int):
@@ -304,8 +299,8 @@ class BlueprintInput():
             idx = slice(idx, idx + 1)
 
         # If idx.start or stop are None, make them 0 or trigger length.
-        if not idx.start:
-            idx.start = 0
+        #if not idx.start:
+        #    idx.start = 0
         if not idx.stop:
             idx.stop = trigger_length
 
