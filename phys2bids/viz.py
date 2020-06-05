@@ -174,6 +174,9 @@ def export_trigger_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, fi
         plot_path += f'_sub-{sub}'
     if ses:
         plot_path += f'_ses-{ses}'
+    # add run to filename
+    if run:
+        filename = f'{filename}_run-{run:02d}'
 
     # adjust for multi run arguments, iterate through acquisition attributes
     plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
