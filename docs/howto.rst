@@ -28,28 +28,17 @@ For the tutorial, we will assume the repository was downloaded in ``/home/arthur
 
     cd /home/arthurdent/git/
 
-What is in the tutorial files?
+What is in the tutorial text file?
 ##################################
-Text file
------------
+
 The file can be found in ``phys2bids/phys2bids/tests/data/tutorial_file.txt``. This file has header information (first 9 lines) which phys2bids will use to process this file, alongside information directly inputted by the user. Following this header information, the data in the file is stored in a column format. In this example, we have time (column 1), MRI volume trigger pulse (column 2), CO2 (column 3), O2 (column 4) and cardiac pulse (column 5) recordings. Each column was sampled at 1000Hz (Interval = 0.001 s).
 
 .. literalinclude:: ../phys2bids/tests/data/tutorial_file.txt
    :linenos:
    :lines: 1-15
 
-
-Acknowledge file
------------------
-The file can be found under ``phys2bids/phys2bids/tests/data/tutorial_multirun.acq``
-
-.. literalinclude:: ../phys2bids/tests/data/tutorial_file.txt
-   :linenos:
-   :lines: 1-15
-
 .. note::
-   time is not a "real" channel recorded by LabChart or AcqKnowledge. For this reason, ``phys2bids`` treats it as a hidden channel, always in position 0. Channel 1 will be classed as the first channel recorded in either software.
-
+    time is not a "real" channel recorded by LabChart or AcqKnowledge. For this reason, ``phys2bids`` treats it as a hidden channel, always in position 0. Channel 1 will be classed as the first channel recorded in either software.
 
 Using the -info option
 ######################

@@ -221,12 +221,8 @@ def plot_all(ch_name, timeseries, units, freq, infile, outfile='', dpi=SET_DPI, 
     https://phys2bids.readthedocs.io/en/latest/howto.html
     matplotlib.pyploy.figsize
     """
-    # if there's only one channel ch_num 0 will give TypeError for subplot
-    if len(ch_name) > 1:
-        ch_num = len(ch_name) - 1  # get number of channels
-    else:
-        ch_num = len(ch_name)
-    fig, ax = plt.subplots(ch_num, 1, figsize=size, sharex=True)
+    ch_num = len(ch_name)  # get number of channels:
+    fig, ax = plt.subplots(ch_num - 1, 1, figsize=size, sharex=True)
     time = timeseries[0]  # assume time is first channel
     fig.suptitle(os.path.basename(infile))
     for row, timeser in enumerate(timeseries[1:]):
