@@ -156,7 +156,7 @@ def test_integration_multifreq(multifreq_acq_file):
     test_chtrig = 3
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
-              chtrig=test_chtrig, num_timepoints_expected=1)
+              chtrig=test_chtrig, num_timepoints_expected=[1, ])
 
     # Check that files are generated
     for suffix in ['.log', '.json', '.tsv.gz']:
