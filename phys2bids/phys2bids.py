@@ -252,6 +252,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             for i, run in enumerate(phys_in.keys()):
                 viz.export_trigger_plot(phys_in[run], num_timepoints_expected[i], tr[i],
                                         chtrig, outdir, filename, sub, ses, run)
+            # define run amount
+            run_amount = len(phys_in)
 
         # Single run acquisition type, or : nothing to split workflow
         else:
@@ -264,6 +266,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # Reassign phys_in as dictionary
             # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY
             phys_in = {1: phys_in}
+            # define run amount
+            run_amount = 1
+
     else:
         LGR.warning('Skipping trigger pulse count. If you want to run it, '
                     'call phys2bids using both "-ntp" and "-tr" arguments')
@@ -273,7 +278,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # they also save the amount of runs and unique frequencies
     uniq_freq_list = set(phys_in[1].freq)
     freq_amount = len(uniq_freq_list)
-    run_amount = len(phys_in)
     if freq_amount > 1:
         LGR.warning(f'Found {freq_amount} different frequencies in input!')
 
