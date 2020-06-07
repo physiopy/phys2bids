@@ -65,7 +65,7 @@ def test_integration_tutorial():
     test_tr = [1.2, ]
     test_thr = 0.735
     phys2bids(filename=test_full_path, chtrig=test_chtrig, outdir=test_outdir,
-              num_timepoints_expected=test_ntp[0], tr=test_tr[0], thr=test_thr)
+              num_timepoints_expected=test_ntp, tr=test_tr, thr=test_thr)
 
     # Check that files are generated
     for suffix in ['.log', '.json', '.tsv.gz', '_trigger_time.png']:
@@ -109,7 +109,7 @@ def test_integration_acq(samefreq_full_acq_file):
     test_chtrig = 3
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
-              chtrig=test_chtrig, num_timepoints_expected=1)
+              chtrig=test_chtrig, num_timepoints_expected=[1, ])
 
     # Check that files are generated
     for suffix in ['.log', '.json', '.tsv.gz', '_trigger_time.png']:
@@ -156,7 +156,7 @@ def test_integration_multifreq(multifreq_acq_file):
     test_chtrig = 3
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
-              chtrig=test_chtrig, num_timepoints_expected=1)
+              chtrig=test_chtrig, num_timepoints_expected=[1, ])
 
     # Check that files are generated
     for suffix in ['.log', '.json', '.tsv.gz']:
@@ -244,7 +244,7 @@ def test_integration_heuristic():
     heur_path = resource_filename('phys2bids', 'heuristics')
     test_heur = os.path.join(heur_path, 'heur_tutorial.py')
     phys2bids(filename=test_full_path, chtrig=test_chtrig, outdir=test_outdir,
-              num_timepoints_expected=test_ntp[0], tr=test_tr[0], thr=test_thr, sub='006',
+              num_timepoints_expected=test_ntp, tr=test_tr, thr=test_thr, sub='006',
               ses='01', heur_file=test_heur)
 
     test_path_output = os.path.join(test_path, 'sub-006/ses-01/func')
