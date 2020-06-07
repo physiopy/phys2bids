@@ -6,9 +6,7 @@ import logging
 
 LGR = logging.getLogger(__name__)
 
-### If you mean this function *not* to be used outside of slice4phys, then you can prefix it with '_'.
-### However, I don't see the reason why this shouldn't be used elsewhere if necessary!
-### Think about removing the Notes if you agree. Also, if you don't need the see also, remove it please.
+
 def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
     """
     Find runs slicing index.
@@ -42,11 +40,6 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
         session beggining, and nb of triggers in the form of
         run_timestamps{1:(start, end, time offset, nb of triggers),
                        2:(...), ... }
-    Notes
-    -----
-    find_runs is an internal function to slice4phys
-    it feeds it dictionary in order to slice BlueprintInput
-    See also:
     """
     # Initialize dictionaries to save  run timestamps and phys_in attributes
     run_timestamps = {}
@@ -132,15 +125,15 @@ def slice4phys(phys_in, ntp_list, tr_list, padding=9):
     --------
     phys_in_slices: dict
         keys start by `run 1` until last (`run n`).
-        items are slices of BlueprintInput objects based on timestamps returned by
+        items are slices of BlueprintInput objects based on run attributes returned by
         internal function (`slice4phys` takes the same arguments as `find_runs`)
     """
     phys_in_slices = {}
     # inform the user
-    LGR.warning("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    LGR.warning("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
                 "\nphys2bids will split the input file according to the given -tr and -ntp"
                 " arguments"
-                "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     # Find the timestamps
     run_timestamps = find_runs(phys_in, ntp_list, tr_list, padding)
 
