@@ -64,8 +64,8 @@ def multifreq_acq_file(testpath):
 
 @pytest.fixture
 def multifreq_lab_file(testpath):
-    return fetch_file('q4x2f', testpath,
-                      'Test_2minRest_trig_multifreq_header_comment.txt')
+    return fetch_file('7se4t', testpath,
+                      'Test1_multifreq_onescan.txt')
 
 
 @pytest.fixture

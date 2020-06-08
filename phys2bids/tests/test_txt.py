@@ -26,7 +26,6 @@ def loaded_lab_file(multifreq_lab_file):
     header_lab, channels_lab = txt.read_header_and_channels(multifreq_lab_file, chtrig)
 
     # just a few quick checks to make sure the data loaded correctly
-    assert len(channels_lab[152109 - 9]) == 6  # check the comment has been eliminated
     assert 'Interval=' in header_lab[0]
 
     return header_lab, channels_lab, chtrig
@@ -125,4 +124,4 @@ def test_multifreq(loaded_lab_file):
     header, channels, chtrig = loaded_lab_file
     phys_obj = txt.process_labchart(channels, chtrig=chtrig, header=header)
     new_freq = txt.check_multifreq(phys_obj.timeseries, [phys_obj.freq[0]] * len(phys_obj.freq))
-    assert new_freq[-4:-1] == [100, 40, 500]
+    assert new_freq[-3:] == [100, 40, 500]
