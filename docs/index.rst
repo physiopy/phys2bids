@@ -54,6 +54,7 @@ Contents
    howto
    heuristic
    bestpractice
+   bids
    cli
    contributing
    contributorfile
