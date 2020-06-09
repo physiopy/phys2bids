@@ -216,7 +216,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         phys_in.rename_channels(ch_name)
 
     # Checking acquisition type via user's input
-    if tr != [0, ] and num_timepoints_expected != [0, ]:
+    if tr is not None and num_timepoints_expected is not None:
 
         #  Multi-run acquisition type section
         #  Check list length, more than 1 means multi-run
