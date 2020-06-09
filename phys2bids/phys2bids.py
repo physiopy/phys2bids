@@ -317,7 +317,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # in the dictionary.
             phys_out[key] = BlueprintOutput.init_from_blueprint(phys_out[key])
 
-        if heur_file and sub:
+        if heur_file is not None and sub is not None:
             LGR.info(f'Preparing BIDS output using {heur_file}')
         elif heur_file and not sub:
             LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
