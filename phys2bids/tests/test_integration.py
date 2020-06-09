@@ -61,7 +61,7 @@ def test_integration_tutorial():
     test_full_path = os.path.join(test_path, test_filename)
     test_chtrig = 1
     test_outdir = test_path
-    test_ntp = [158, ]
+    test_ntp = [158]
     test_tr = [1.2, ]
     test_thr = 0.735
     phys2bids(filename=test_full_path, chtrig=test_chtrig, outdir=test_outdir,
