@@ -172,7 +172,7 @@ def export_trigger_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, fi
     # place, adds sub and ses label.
     if sub is not None:
         plot_path += f'_sub-{sub}'
-    if ses:
+    if ses is not None:
         plot_path += f'_ses-{ses}'
     # add run to filename
     if run:
