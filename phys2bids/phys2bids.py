@@ -127,8 +127,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     ------
     NotImplementedError
         If the file extension is not supported yet.
-
     """
+
     # Check options to make them internally coherent pt. I
     # #!# This can probably be done while parsing?
     outdir = utils.check_input_dir(outdir)
@@ -177,6 +177,11 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     infile = os.path.join(indir, filename)
     utils.check_file_exists(infile)
 
+    if isinstance(num_timepoints_expected, int):
+        num_timepoints_expected = [num_timepoints_expected]
+    if isinstance(tr, (int, float)):
+        tr = [tr]
+
     # Read file!
     if ftype == 'acq':
         from phys2bids.interfaces.acq import populate_phys_input
@@ -216,6 +221,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         phys_in.rename_channels(ch_name)
 
     # Checking acquisition type via user's input
+    run_amount = 1  # default number of runs, unless otherwise determined
     if tr is not None and num_timepoints_expected is not None:
 
         #  Multi-run acquisition type section
@@ -261,17 +267,17 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # and the time offset.
             phys_in.check_trigger_amount(thr, num_timepoints_expected[0], tr[0])
             # save a figure of the trigger
-            viz.export_trigger_plot(phys_in, num_timepoints_expected, outdir, filename, sub, ses)
+            viz.export_trigger_plot(phys_in, num_timepoints_expected[0], tr[0], chtrig,
+                                    outdir, filename, sub, ses)
 
             # Reassign phys_in as dictionary
             # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY
             phys_in = {1: phys_in}
-            # define run amount
-            run_amount = 1
 
     else:
         LGR.warning('Skipping trigger pulse count. If you want to run it, '
                     'call phys2bids using both "-ntp" and "-tr" arguments')
+        phys_in = {1: phys_in}
 
     # The next few lines create a dictionary of different BlueprintInput
     # objects, one for each unique frequency for each run in phys_in
@@ -279,7 +285,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     uniq_freq_list = set(phys_in[1].freq)
     freq_amount = len(uniq_freq_list)
     if freq_amount > 1:
-        LGR.warning(f'Found {freq_amount} different frequencies in input!')
+        LGR.info(f'Found {freq_amount} different frequencies in input!')
 
     # If heuristics are used, init a dict of arguments to pass to use_heuristic
     if heur_file is not None and sub is not None:

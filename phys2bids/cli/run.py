@@ -60,11 +60,6 @@ def _get_parser():
                                'in the current folder. Edit the heur_ex.py file in '
                                'heuristics folder.',
                           default=None)
-    # optional.add_argument('-hdir', '--heur-dir',
-    #                       dest='heurdir',
-    #                       type=str,
-    #                       help='Folder containing heuristic file.',
-    #                       default='.')
     optional.add_argument('-sub', '--subject',
                           dest='sub',
                           type=str,
@@ -77,11 +72,6 @@ def _get_parser():
                           help='Specify alongside \"-heur\". Code of '
                                'session to process.',
                           default=None)
-    #  optional.add_argument('-run', '--multi-run',
-    #                        dest= run,
-    #                        help=''
-    #
-    #
     optional.add_argument('-chtrig', '--channel-trigger',
                           dest='chtrig',
                           type=int,
@@ -104,14 +94,14 @@ def _get_parser():
                                'Default is 0. Note: the estimation of beggining of '
                                'neuroimaging acquisition cannot take place with this default.'
                                'Give a list of each expected ntp for multi-run recordings.',
-                          default=[0, ])
+                          default=None)
     optional.add_argument('-tr', '--tr',
                           dest='tr',
                           nargs='*',
                           type=float,
                           help='TR of sequence in seconds. '
                                'You can list each TR used throughout the session',
-                          default=[0, ])
+                          default=None)
     optional.add_argument('-thr', '--threshold',
                           dest='thr',
                           type=float,

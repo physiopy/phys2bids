@@ -135,6 +135,7 @@ def export_trigger_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, fi
 
     Used in main workflow (`phys2bids`), this function minimizes repetition in code for parallel
     workflow (multi-run workflow and default workflow) and maintains readability of code
+
     Parameters
     ---------
     phys_in : object

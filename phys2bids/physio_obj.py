@@ -299,10 +299,10 @@ class BlueprintInput():
             idx = slice(idx, idx + 1)
 
         # If idx.start or stop are None, make them 0 or trigger length.
-        if not idx.start:
-            idx.start = 0
-        if not idx.stop:
-            idx.stop = trigger_length
+        if idx.start is None:
+            idx = slice(0, idx.stop)
+        if idx.stop is None:
+            idx = slice(idx.start, trigger_length)
 
         # Check that the indexes are not out of bounds
         if idx.start >= trigger_length or idx.stop > trigger_length:
