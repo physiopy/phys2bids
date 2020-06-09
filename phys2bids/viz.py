@@ -170,7 +170,7 @@ def export_trigger_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, fi
                              os.path.splitext(os.path.basename(filename))[0])
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
-    if sub:
+    if sub is not None:
         plot_path += f'_sub-{sub}'
     if ses:
         plot_path += f'_ses-{ses}'
