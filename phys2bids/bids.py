@@ -22,7 +22,6 @@ UNIT_ALIASES = {
                 # ampere: electric current
                 'ampere': 'A', 'amp': 'A', 'amps': 'A',
                 # second: time and hertzs: frequency
-                'a': 'A', 'ampere': 'A', 'amp': 'A', 'amps': 'A',
                 # siemens: electric conductance (e.g. EDA)
                 'siemens': 'S',
                 # second: time and hertzs
