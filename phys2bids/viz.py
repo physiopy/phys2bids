@@ -175,7 +175,7 @@ def export_trigger_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, fi
     if ses is not None:
         plot_path += f'_ses-{ses}'
     # add run to filename
-    if run:
+    if run is not None:
         filename = f'{filename}_run-{run:02d}'
 
     # adjust for multi run arguments, iterate through acquisition attributes
