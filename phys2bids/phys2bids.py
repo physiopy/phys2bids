@@ -259,7 +259,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         else:
             # Run analysis on trigger channel to get first timepoint
             # and the time offset.
-            phys_in.check_trigger_amount(chtrig, thr, num_timepoints_expected[0], tr[0])
+            phys_in.check_trigger_amount(thr, num_timepoints_expected[0], tr[0])
             # save a figure of the trigger
             viz.export_trigger_plot(phys_in, num_timepoints_expected, outdir, filename, sub, ses)
 
