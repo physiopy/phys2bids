@@ -112,8 +112,8 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
 
 
 def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
-              sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=0,
-              tr=1, thr=None, ch_name=[], chplot='', debug=False, quiet=False):
+              sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=None,
+              tr=None, thr=None, ch_name=[], chplot='', debug=False, quiet=False):
     """
     Run main workflow of phys2bids.
 
