@@ -326,7 +326,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         # Preparing output parameters: name and folder.
         for uniq_freq in uniq_freq_list:
             # If possible, prepare bids renaming.
-            if heur_file and sub:
+            if heur_file is not None and sub is not None:
                 # Add run info to heur_args if more than one run is present
                 if run_amount > 1:
                     heur_args['run'] = f'{run:02d}'
