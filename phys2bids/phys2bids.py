@@ -282,7 +282,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         LGR.warning(f'Found {freq_amount} different frequencies in input!')
 
     # If heuristics are used, init a dict of arguments to pass to use_heuristic
-    if heur_file and sub:
+    if heur_file is not None and sub is not None:
         heur_args = {'heur_file': heur_file, 'sub': sub, 'ses': ses,
                      'filename': filename, 'outdir': outdir, 'run': '',
                      'record_label': ''}
