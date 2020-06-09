@@ -319,7 +319,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
         if heur_file is not None and sub is not None:
             LGR.info(f'Preparing BIDS output using {heur_file}')
-        elif heur_file and not sub:
+        elif heur_file is not None and sub is None:
             LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
                         'Skipping BIDS formatting.')
 
