@@ -307,7 +307,7 @@ def test_integration_info():
     command_str = (f'phys2bids -in {test_filename} -indir {test_path} ',
                    f'-chtrig {test_chtrig} -outdir {test_outdir} ',
                    f'-tr {test_tr} -ntp {test_ntp} -thr {test_thr} ',
-                   f'-info')
+                   '-info')
     command_str = ''.join(command_str)
     subprocess.run(command_str, shell=True, check=True)
 
