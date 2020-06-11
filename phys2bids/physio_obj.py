@@ -556,6 +556,9 @@ class BlueprintOutput():
     start_time : float
         Starting time of acquisition (equivalent to first TR,
         or to the opposite sign of the time offset).
+    filename : string
+        Filename the object will be saved with. Init as empty string
+
 
     Methods
     -------
