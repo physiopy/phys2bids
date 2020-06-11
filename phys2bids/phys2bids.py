@@ -113,7 +113,7 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
 
 def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=None,
-              tr=None, thr=None, ch_name=[], chplot='', debug=False, quiet=False):
+              tr=None, thr=None, pad=9, ch_name=[], chplot='', debug=False, quiet=False):
     """
     Run main workflow of phys2bids.
 
@@ -251,7 +251,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
             # slice the recording based on user's entries
             # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY
-            phys_in = slice4phys(phys_in, num_timepoints_expected, tr, thr)
+            phys_in = slice4phys(phys_in, num_timepoints_expected, tr,
+                                 phys_in.thr, pad)
             # returns a dictionary in the form {run_idx: phys_in[startpoint, endpoint]}
 
             # save a figure for each run | give the right acquisition parameters for runs

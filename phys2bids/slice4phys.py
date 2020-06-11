@@ -87,10 +87,10 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
         # Save *start* and *end_index* in dictionary along with *time_offset* and *ntp found*
         # dict key must be readable by human
         # LGRinfo
-        LGR.info("\n--------------------------------------------------------------\n"
-                 f"Slicing between {(run_start/phys_in.freq[phys_in.trigger_idx])} seconds and "
-                 f"{run_end/phys_in.freq[phys_in.trigger_idx]} seconds\n"
-                 "--------------------------------------------------------------")
+        LGR.info('\n--------------------------------------------------------------\n'
+                 f'Slicing between {(run_start/phys_in.freq[phys_in.trigger_idx])} seconds and '
+                 f'{run_end/phys_in.freq[phys_in.trigger_idx]} seconds\n'
+                 '--------------------------------------------------------------')
 
         run_timestamps[run_idx + 1] = (run_start, run_end,
                                        phys_in.time_offset,
@@ -103,7 +103,7 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
     return run_timestamps
 
 
-def slice4phys(phys_in, ntp_list, tr_list, padding=9):
+def slice4phys(phys_in, ntp_list, tr_list, thr, padding=9):
     """
     Slice runs for phys2bids.
 
@@ -130,12 +130,12 @@ def slice4phys(phys_in, ntp_list, tr_list, padding=9):
     """
     phys_in_slices = {}
     # inform the user
-    LGR.warning("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-                "\nphys2bids will split the input file according to the given -tr and -ntp"
-                " arguments"
-                "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    LGR.warning('\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+                '\nphys2bids will split the input file according to the given -tr and -ntp'
+                ' arguments'
+                '\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     # Find the timestamps
-    run_timestamps = find_runs(phys_in, ntp_list, tr_list, padding)
+    run_timestamps = find_runs(phys_in, ntp_list, tr_list, thr, padding)
 
     for run in run_timestamps.keys():
 

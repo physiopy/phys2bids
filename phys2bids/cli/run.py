@@ -26,8 +26,8 @@ def _get_parser():
     required.add_argument('-in', '--input-file',
                           dest='filename',
                           type=str,
-                          help='The name of the file containing physiological data, with or '
-                               'without extension.',
+                          help='The name of the file containing physiological '
+                               'data, with or without extension.',
                           required=True)
     optional.add_argument('-info', '--info',
                           dest='info',
@@ -91,25 +91,37 @@ def _get_parser():
                           nargs='*',
                           type=int,
                           help='Number of expected trigger timepoints (TRs). '
-                               'Default is 0. Note: the estimation of beggining of '
-                               'neuroimaging acquisition cannot take place with this default.'
-                               'Give a list of each expected ntp for multi-run recordings.',
+                               'Default is None. Note: the estimation of beggining of '
+                               'neuroimaging acquisition cannot take place with this default. '
+                               'If you\'re running phys2bids on a multi-run recording, '
+                               'give a list of each expected ntp for each run.',
                           default=None)
     optional.add_argument('-tr', '--tr',
                           dest='tr',
                           nargs='*',
                           type=float,
                           help='TR of sequence in seconds. '
-                               'You can list each TR used throughout the session',
+                               'If you\'re running phys2bids on a multi-run recording, '
+                               'you can give a list of each expected ntp for each run, '
+                               'or just one TR if it is consistent throughout the session.',
                           default=None)
     optional.add_argument('-thr', '--threshold',
                           dest='thr',
                           type=float,
                           help='Threshold to use for trigger detection. '
-                               'If "ntp" and "TR" are specified, phys2bids automatically computes '
-                               'a threshold to detect the triggers. Use this parameter to set it '
-                               'manually',
+                               'If "ntp" and "TR" are specified, phys2bids '
+                               'automatically computes a threshold to detect '
+                               'the triggers. Use this parameter to set it manually. '
+                               'If you\'re running phys2bids on a multi-run recording, '
+                               'you NEED to set this.',
                                default=None)
+    optional.add_argument('-pad', '--padding',
+                          dest='pad',
+                          type=float,
+                          help='Padding in seconds used around a single run '
+                               'when separating multi-run session files. '
+                               'Default is 9 seconds.',
+                               default=9)
     optional.add_argument('-chnames', '--channel-names',
                           dest='ch_name',
                           nargs='*',
