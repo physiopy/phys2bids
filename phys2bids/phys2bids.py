@@ -31,7 +31,7 @@ import datetime
 import logging
 from copy import deepcopy
 
-from numpy import savetxt, ones
+import numpy as np
 
 from phys2bids import utils, viz, _version
 from phys2bids.bids import bidsify_units, use_heuristic
@@ -230,7 +230,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # if multi-run of same sequence type, pad list with ones
             # and multiply array with user's input
             if len(tr) == 1:
-                tr = ones(len(num_timepoints_expected)) * tr[0]
+                tr = np.ones(len(num_timepoints_expected)) * tr[0]
             # Check equivalency of length
             elif len(num_timepoints_expected) != len(tr):
                 raise Exception('Number of sequence types listed with TR '
@@ -369,8 +369,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                     phys_out[key].filename = f'{phys_out[key].filename}_{uniq_freq}'
 
             LGR.info(f'Exporting files for run {run} freq {uniq_freq}')
-            savetxt(phys_out[key].filename + '.tsv.gz', phys_out[key].timeseries,
-                    fmt='%.8e', delimiter='\t')
+            np.savetxt(phys_out[key].filename + '.tsv.gz', phys_out[key].timeseries,
+                       fmt='%.8e', delimiter='\t')
             print_json(phys_out[key].filename, phys_out[key].freq,
                        phys_out[key].start_time,
                        phys_out[key].ch_name)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from numpy import where
+import numpy as np
 import logging
 
 LGR = logging.getLogger(__name__)
@@ -58,7 +58,7 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
         if run_idx == 0:
             run_start = 0
         else:
-            run_start = where(phys_in.timeseries[0] <= 0)[0][0] - padding
+            run_start = np.where(phys_in.timeseries[0] <= 0)[0][0] - padding
 
         # Defining end of acquisition
         # run length in seconds
@@ -67,7 +67,7 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
         # define index of the run's last trigger + padding (HAS TO BE INT type)
         # pick first value of time array that is over specified run length
         # where returns list of values over end_sec and its dtype, choose [list][first value]
-        run_end = int(where(phys_in.timeseries[0] > end_sec)[0][0] + padding)
+        run_end = int(np.where(phys_in.timeseries[0] > end_sec)[0][0] + padding)
         update = int(run_end - padding + 1)
 
         # if the padding is too much for the remaining timeseries length
