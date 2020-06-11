@@ -112,8 +112,7 @@ def _get_parser():
                                'If "ntp" and "TR" are specified, phys2bids '
                                'automatically computes a threshold to detect '
                                'the triggers. Use this parameter to set it manually. '
-                               'If you\'re running phys2bids on a multi-run recording, '
-                               'you NEED to set this.',
+                               'This parameter is necessary for multi-run recordings. '
                                default=None)
     optional.add_argument('-pad', '--padding',
                           dest='pad',
