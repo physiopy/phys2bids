@@ -26,6 +26,7 @@ def loaded_lab_file(multifreq_lab_file):
     header_lab, channels_lab = txt.read_header_and_channels(multifreq_lab_file, chtrig)
 
     # just a few quick checks to make sure the data loaded correctly
+    assert len(channels_lab[0]) == 5
     assert 'Interval=' in header_lab[0]
 
     return header_lab, channels_lab, chtrig
