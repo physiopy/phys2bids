@@ -246,7 +246,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # if it passes call slice4phys
             if phys_in.num_timepoints_found != sum(num_timepoints_expected):
                 raise Exception('The number of triggers found is different '
-                                'than expected. Better stop now than breaking '
+                                'than expected. Better stop now than break '
                                 'something.')
 
             # slice the recording based on user's entries
