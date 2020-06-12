@@ -333,7 +333,7 @@ The logger also notifies you about the slicing points used (the first always bei
 What if I have multiple acquisition types ?
 *******************************************
 
-The user can also benefit from this utility when dealing with multiple **acquisition types** such as different functional scans with different TRs. Like ``-ntp``, ``-tr`` can take multiple values. **Though, if more than one value is specified, they require the same amount of values**. The idea is simple: if you only have one acquisition type, the one ``-tr`` input you gave will be broadcast through all runs, but if there are different acquisition types, you have to list all of them in order.
+The user can also benefit from this utility when dealing with multiple **acquisition types** such as different functional scans with different TRs. Like ``-ntp``, ``-tr`` can take multiple values. **Though, if more than one value is specified, they require the same amount of values**. The idea is simple: if you only have one acquisition type, the one ``-tr`` input you gave will be broadcast through all runs, but if you have different acquisition types, you have to list all of them in order.
 
 .. warning::
     There are currently no ``multi-run tutorial files`` available along with the package (under ``phys2bids/tests/data``). Although, you can visit `phys2bids OSF <https://osf.io/3txqr/files/>`_ storage to access a LabChart physiological recording with multiple fMRI acquisitions. Find it under ``labchart/chicago``.
@@ -341,7 +341,7 @@ The user can also benefit from this utility when dealing with multiple **acquisi
 .. note::
     **Why would I have more than one fMRI acquisition in the physiological recording?**
 
-    The idea is to reduce human error and have a good padding around you fMRI scan!
+    The idea is to reduce human error and have a good padding around your fMRI scan!
 
     Synchronization between start of both fMRI and physiological acquisitions can be difficult, so it is safer to have as few physiological recordings as possible, with multiple imaging sequences.
 
