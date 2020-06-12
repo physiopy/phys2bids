@@ -258,8 +258,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
             # save a figure for each run | give the right acquisition parameters for runs
             for i, run in enumerate(phys_in.keys()):
+                plot_filename = f'{filename}_{run}'
                 viz.export_trigger_plot(phys_in[run], num_timepoints_expected[i], tr[i],
-                                        chtrig, outdir, filename, sub, ses, run)
+                                        chtrig, outdir, plot_filename, sub, ses, run)
             # define run amount
             run_amount = len(phys_in)
 
