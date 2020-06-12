@@ -182,6 +182,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     if isinstance(tr, (int, float)):
         tr = [tr]
 
+    if tr is not None and num_timepoints_expected is not None:
+        # If tr and ntp were specified, check that tr is either length one or ntp.
+        if len(num_timepoints_expected) != len(tr) and len(tr) != 1:
+            raise Exception('Number of sequence types listed with TR '
+                            'doesn\'t match expected number of runs in '
+                            'the session')
+
     # Read file!
     if ftype == 'acq':
         from phys2bids.interfaces.acq import populate_phys_input
@@ -221,7 +228,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         phys_in.rename_channels(ch_name)
 
     # Checking acquisition type via user's input
-    run_amount = 1  # default number of runs, unless otherwise determined
     if tr is not None and num_timepoints_expected is not None:
 
         #  Multi-run acquisition type section
@@ -231,11 +237,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # and multiply array with user's input
             if len(tr) == 1:
                 tr = np.ones(len(num_timepoints_expected)) * tr[0]
-            # Check equivalency of length
-            elif len(num_timepoints_expected) != len(tr):
-                raise Exception('Number of sequence types listed with TR '
-                                'doesn\'t match expected number of runs in '
-                                'the session')
 
             # Sum of values in ntp_list should be equivalent to num_timepoints_found
             phys_in.check_trigger_amount(thr=thr,
@@ -274,6 +275,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # Reassign phys_in as dictionary
             # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY
             phys_in = {1: phys_in}
+            run_amount = 1
 
     else:
         LGR.warning('Skipping trigger pulse count. If you want to run it, '
