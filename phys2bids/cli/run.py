@@ -112,15 +112,15 @@ def _get_parser():
                                'If "ntp" and "TR" are specified, phys2bids '
                                'automatically computes a threshold to detect '
                                'the triggers. Use this parameter to set it manually. '
-                               'This parameter is necessary for multi-run recordings. '
-                               default=None)
+                               'This parameter is necessary for multi-run recordings. ',
+                          default=None)
     optional.add_argument('-pad', '--padding',
                           dest='pad',
                           type=float,
                           help='Padding in seconds used around a single run '
                                'when separating multi-run session files. '
                                'Default is 9 seconds.',
-                               default=9)
+                          default=9)
     optional.add_argument('-chnames', '--channel-names',
                           dest='ch_name',
                           nargs='*',
