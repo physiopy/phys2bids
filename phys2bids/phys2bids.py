@@ -259,8 +259,11 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # save a figure for each run | give the right acquisition parameters for runs
             for i, run in enumerate(phys_in.keys()):
                 plot_filename = f'{filename}_{run}'
-                viz.export_trigger_plot(phys_in[run], num_timepoints_expected[i], tr[i],
-                                        chtrig, outdir, plot_filename, sub, ses, run)
+                fileprefix = os.path.join(outdir,
+                                          os.path.splitext(os.path.basename(plot_filename))[0])
+                viz.export_trigger_plot(phys_in[run], chtrig, fileprefix, tr[i],
+                                        num_timepoints_expected[i], filename,
+                                        sub, ses)
             # define run amount
             run_amount = len(phys_in)
 
@@ -270,8 +273,11 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # and the time offset.
             phys_in.check_trigger_amount(thr, num_timepoints_expected[0], tr[0])
             # save a figure of the trigger
-            viz.export_trigger_plot(phys_in, num_timepoints_expected[0], tr[0], chtrig,
-                                    outdir, filename, sub, ses)
+            fileprefix = os.path.join(outdir,
+                                      os.path.splitext(os.path.basename(filename))[0])
+            viz.export_trigger_plot(phys_in, chtrig, fileprefix, tr[0],
+                                    num_timepoints_expected[0], filename,
+                                    sub, ses)
 
             # Reassign phys_in as dictionary
             # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY

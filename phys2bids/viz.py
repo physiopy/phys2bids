@@ -128,8 +128,9 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     plt.close()
 
 
-def export_trigger_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, filename,
-                        sub=None, ses=None, run=None, figsize=FIGSIZE, dpi=SET_DPI):
+def export_trigger_plot(phys_in, chtrig, fileprefix, tr, num_timepoints_expected,
+                        filename, sub=None, ses=None, figsize=FIGSIZE,
+                        dpi=SET_DPI):
     """
     Save a trigger plot.
 
@@ -141,24 +142,22 @@ def export_trigger_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, fi
     phys_in : object
         Object returned by BlueprintInput class
         For multi-run acquisitions, phys_in is a slice of the whole object
-    num_timepoints_expected : list
-        a list of integers given by the user as `ntp` input
-    tr : list
-        a list of float given by the user as `tr` input
     chtrig : int
         trigger channel
         integer representing the index of the trigger on phys_in.timeseries
-    outdir : str
-        directory to save output.
-        if ses and sub are specified, it can be understood as root directory of dataset
+    fileprefix: str or path
+        A string representing a file name or a fullpath
+        to a file, WITHOUT extension
+    tr : list
+        a list of float given by the user as `tr` input
+    num_timepoints_expected : list
+        a list of integers given by the user as `ntp` input
     filename : str
         name of the input file given by user's entry
     sub: str or int
         Name of subject. Default is None
     ses: str or int or None
         Name of session. Default is None
-    run: int or None
-        Run number. Default is None
     figsize: tuple or list of floats
         Size of the figure expressed as (size_x, size_y),
         Default is {FIGSIZE}
@@ -167,21 +166,16 @@ def export_trigger_plot(phys_in, num_timepoints_expected, tr, chtrig, outdir, fi
         Default is {SET_DPI}
     """
     LGR.info('Plot trigger')
-    plot_path = os.path.join(outdir,
-                             os.path.splitext(os.path.basename(filename))[0])
     # Create trigger plot. If possible, to have multiple outputs in the same
     # place, adds sub and ses label.
     if sub is not None:
-        plot_path += f'_sub-{sub}'
+        fileprefix += f'_sub-{sub}'
     if ses is not None:
-        plot_path += f'_ses-{ses}'
-    # add run to filename
-    if run is not None:
-        filename = f'{filename}_run-{run:02d}'
+        fileprefix += f'_ses-{ses}'
 
     # adjust for multi run arguments, iterate through acquisition attributes
     plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
-                 plot_path, tr, phys_in.thr, num_timepoints_expected,
+                 fileprefix, tr, phys_in.thr, num_timepoints_expected,
                  filename, figsize, dpi)
 
 
