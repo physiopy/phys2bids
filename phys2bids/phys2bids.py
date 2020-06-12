@@ -301,7 +301,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     phys_out = {}
 
     # Export a (set of) phys_out for each element in phys_in
-    # what's the run key ??? 1 or 0
+    # run keys start from 1 (human friendly)
     for run in phys_in.keys():
         for uniq_freq in uniq_freq_list:
             # Initialise the key for the (possibly huge amount of) dictionary entries
