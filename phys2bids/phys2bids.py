@@ -227,6 +227,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         LGR.info('Renaming channels with given names')
         phys_in.rename_channels(ch_name)
 
+    # Default amount of runs
+    run_amount = 1
     # Checking acquisition type via user's input
     if tr is not None and num_timepoints_expected is not None:
 
@@ -282,7 +284,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # Reassign phys_in as dictionary
             # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY
             phys_in = {1: phys_in}
-            run_amount = 1
 
     else:
         LGR.warning('Skipping trigger pulse count. If you want to run it, '
