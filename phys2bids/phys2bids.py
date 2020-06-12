@@ -259,11 +259,11 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # returns a dictionary in the form {run_idx: phys_in[startpoint, endpoint]}
 
             # save a figure for each run | give the right acquisition parameters for runs
+            fileprefix = os.path.join(outdir,
+                                      os.path.splitext(os.path.basename(filename))[0])
             for i, run in enumerate(phys_in.keys()):
-                plot_filename = f'{filename}_{run}'
-                fileprefix = os.path.join(outdir,
-                                          os.path.splitext(os.path.basename(plot_filename))[0])
-                viz.export_trigger_plot(phys_in[run], chtrig, fileprefix, tr[i],
+                plot_fileprefix = f'{fileprefix}_{run}'
+                viz.export_trigger_plot(phys_in[run], chtrig, plot_fileprefix, tr[i],
                                         num_timepoints_expected[i], filename,
                                         sub, ses)
             # define run amount
