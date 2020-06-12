@@ -341,7 +341,7 @@ The user can also benefit from this utility when dealing with multiple **acquisi
 .. note::
     **Why would I have more than one fMRI acquisition in the physiological recording?**
 
-    The idea is to reduce human error and have a good padding around you fMRI scan!
+    The idea is to reduce human error and have a good padding around your fMRI scan!
 
     Synchronization between start of both fMRI and physiological acquisitions can be difficult, so it is safer to have as few physiological recordings as possible, with multiple imaging sequences.
 
