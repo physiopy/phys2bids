@@ -328,7 +328,7 @@ Now, instead of counting the trigger timepoints once, ``physbids`` will check th
     INFO:phys2bids.phys2bids:Preparing 2 output files.
     INFO:phys2bids.phys2bids:Exporting files for run 1 freq 1000.0
 
-The logger also notifies the user about the slicing points used (the first always being from the beginning of session, until the specified number of timepoints after the first trigger). The user can also check the resulting slice by looking at the plot of the trigger channel for each run. Each slice is adjusted with a padding after the last trigger. Such padding can be specified while calling ``phys2bids`` with ``-pad``. If nothing is specified, the default value of 9 seconds will be used. This padding is also applied at the beginning (before the first trigger of the run) of the 2nd to last run.
+The logger also notifies you about the slicing points used (the first always being from the beginning of session, until the specified number of timepoints after the first trigger). The user can also check the resulting slice by looking at the plot of the trigger channel for each run. Each slice is adjusted with a padding after the last trigger. Such padding can be specified while calling ``phys2bids`` with ``-pad``. If nothing is specified, the default value of 9 seconds will be used. This padding is also applied at the beginning (before the first trigger of the run) of the 2nd to last run.
 
 What if I have multiple acquisition types ?
 *******************************************
