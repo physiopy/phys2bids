@@ -35,9 +35,9 @@ from pathlib import Path
 from numpy import savetxt
 
 from phys2bids import utils, viz, _version
+from phys2bids.bids import bidsify_units
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
-from phys2bids.bids_units import bidsify_units
 
 LGR = logging.getLogger(__name__)
 

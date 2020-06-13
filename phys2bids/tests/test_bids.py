@@ -1,5 +1,5 @@
-from phys2bids.bids_units import bidsify_units
-from phys2bids.bids_units import UNIT_ALIASES
+from phys2bids.bids import bidsify_units
+from phys2bids.bids import UNIT_ALIASES
 
 
 def test_bidsify_units():
