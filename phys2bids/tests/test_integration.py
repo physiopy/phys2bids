@@ -227,12 +227,12 @@ def test_integration_multifreq(multifreq_acq_file):
         os.remove(filename)
 
 
-def test_integration_heuristic(samefreq_full_acq_file):
+def test_integration_heuristic(samefreq_short_txt_file):
     """
     Does integration test of tutorial file with heurositics
     """
 
-    test_path, test_filename = os.path.split(samefreq_full_acq_file)
+    test_path, test_filename = os.path.split(samefreq_short_txt_file)
     test_full_path = os.path.join(test_path, test_filename)
     test_chtrig = 1
     test_outdir = test_path
@@ -274,7 +274,7 @@ def test_integration_heuristic(samefreq_full_acq_file):
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 10000.0,)
     assert math.isclose(json_data['StartTime'], -189.6,)
-    assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'PULSE - Custom, DA100C', 'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
+    assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'MR TRIGGER - Custom, HLT100C - A 5']
 
     # Remove generated files
     for filename in glob.glob(os.path.join(test_path, 'phys2bids*')):
