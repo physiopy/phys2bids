@@ -79,6 +79,7 @@ install:
         echo "!!! On branch ${CHECK_BRANCH}, skipping auto-svl";
       else
         echo "!!! On branch ${CHECK_BRANCH}, setting up auto-svl";
+        mkdir build;
         curl -vkL -o - https://github.com/intuit/auto/releases/download/v9.39.0/auto-linux.gz | gunzip > build/auto;
         chmod a+x build/auto;
       fi;
