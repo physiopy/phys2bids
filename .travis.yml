@@ -72,7 +72,8 @@ install:
     elif [ "${INSTALL_TYPE}" == "auto-svl" ]; then
       CHECK_BRANCH=$( git branch | grep \*);
         if [ "${CHECK_BRANCH}" == "* master" ]; then
-          curl -vkL -o - https://github.com/intuit/auto/releases/download/v9.21.1/auto-linux.gz | gunzip > build/auto;
+          curl -vkL -o - https://github.com/intuit/auto/releases/download/v9.39.0/auto-linux.gz | gunzip > build/auto;
+          chmod a+x build/auto;
         else
           echo "Not on master branch, skipping auto-svl";
       fi;
