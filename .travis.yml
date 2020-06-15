@@ -41,7 +41,7 @@ matrix:
 before_install:
   - if [ "${CHECK_TYPE}" == "auto-svl" ]; then
       CHECK_BRANCH=$( git branch | grep \*);
-      if [ "${CHECK_BRANCH:20} == "FETCH_HEAD)" ]; then
+      if [ "${CHECK_BRANCH:20}" == "FETCH_HEAD)" ]; then
         echo "!!! On branch ${CHECK_BRANCH}, skipping auto-svl";
       else
         echo "!!! On branch ${CHECK_BRANCH}, preparing environment for auto-svl";
@@ -75,7 +75,7 @@ install:
       pip install dist/*.whl;
     elif [ "${INSTALL_TYPE}" == "auto-svl" ]; then
       CHECK_BRANCH=$( git branch | grep \*);
-      if [ "${CHECK_BRANCH:20} == "FETCH_HEAD)" ]; then
+      if [ "${CHECK_BRANCH:20}" == "FETCH_HEAD)" ]; then
         echo "!!! On branch ${CHECK_BRANCH}, skipping auto-svl";
       else
         echo "!!! On branch ${CHECK_BRANCH}, setting up auto-svl";
@@ -89,7 +89,7 @@ install:
 script:
   - |
     CHECK_BRANCH=$( git branch | grep \*);
-    if [ "${CHECK_BRANCH:20} == "FETCH_HEAD)" ]; then
+    if [ "${CHECK_BRANCH:20}" == "FETCH_HEAD)" ]; then
       echo "**********"
       echo "******"
       echo "**"
@@ -113,7 +113,7 @@ script:
       python -m pytest ${args} phys2bids;
     elif [ "${CHECK_TYPE}" == "auto-svl" ]; then
       CHECK_BRANCH=$( git branch | grep \*);
-      if [ "${CHECK_BRANCH:20} == "FETCH_HEAD)" ]; then
+      if [ "${CHECK_BRANCH:20}" == "FETCH_HEAD)" ]; then
         echo "!!! On branch ${CHECK_BRANCH}, skipping auto-svl";
       else
         echo "!!! On branch ${CHECK_BRANCH}, run auto-svl!";
