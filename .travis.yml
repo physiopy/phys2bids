@@ -41,11 +41,12 @@ matrix:
 before_install:
   - if [ "${CHECK_TYPE}" == "auto-svl" ]; then
       CHECK_BRANCH=$( git branch | grep \*);
-      if [ "${CHECK_BRANCH}" == "* master" ]; then
+      if [ "${CHECK_BRANCH:20} == "FETCH_HEAD)" ]; then
+        echo "!!! On branch ${CHECK_BRANCH}, skipping auto-svl";
+      else
+        echo "!!! On branch ${CHECK_BRANCH}, preparing environment for auto-svl";
         git config --local user.name "${GIT_NAME}";
         git config --local user.email "${GIT_EMAIL}";
-      else
-        echo "On branch ${CHECK_BRANCH}, skipping auto-svl";
       fi;
     else
       python -m pip install --upgrade pip;
@@ -74,11 +75,12 @@ install:
       pip install dist/*.whl;
     elif [ "${INSTALL_TYPE}" == "auto-svl" ]; then
       CHECK_BRANCH=$( git branch | grep \*);
-        if [ "${CHECK_BRANCH}" == "* master" ]; then
-          curl -vkL -o - https://github.com/intuit/auto/releases/download/v9.39.0/auto-linux.gz | gunzip > build/auto;
-          chmod a+x build/auto;
-        else
-          echo "On branch ${CHECK_BRANCH}, skipping auto-svl";
+      if [ "${CHECK_BRANCH:20} == "FETCH_HEAD)" ]; then
+        echo "!!! On branch ${CHECK_BRANCH}, skipping auto-svl";
+      else
+        echo "!!! On branch ${CHECK_BRANCH}, setting up auto-svl";
+        curl -vkL -o - https://github.com/intuit/auto/releases/download/v9.39.0/auto-linux.gz | gunzip > build/auto;
+        chmod a+x build/auto;
       fi;
     else
       false;
@@ -86,6 +88,17 @@ install:
 
 script:
   - |
+    CHECK_BRANCH=$( git branch | grep \*);
+    if [ "${CHECK_BRANCH:20} == "FETCH_HEAD)" ]; then
+      echo "**********"
+      echo "******"
+      echo "**"
+      echo "!!! On branch ${CHECK_BRANCH}, this should be a **test for submitted PR**";
+      echo "**"
+      echo "******"
+      echo "**********"
+    else
+      echo "!!! On branch ${CHECK_BRANCH}, this should be a **test after MERGE**";
     if [ "${CHECK_TYPE}" == "linting" ]; then
       flake8 phys2bids;
     elif [ "${CHECK_TYPE}" == "docdoctest" ]; then
@@ -100,10 +113,11 @@ script:
       python -m pytest ${args} phys2bids;
     elif [ "${CHECK_TYPE}" == "auto-svl" ]; then
       CHECK_BRANCH=$( git branch | grep \*);
-        if [ "${CHECK_BRANCH}" == "* master" ]; then
-          build/auto shipit;
-        else
-          echo "Not on master branch, skipping auto-svl";
+      if [ "${CHECK_BRANCH:20} == "FETCH_HEAD)" ]; then
+        echo "!!! On branch ${CHECK_BRANCH}, skipping auto-svl";
+      else
+        echo "!!! On branch ${CHECK_BRANCH}, run auto-svl!";
+        build/auto shipit;
       fi;
     else
       false;
