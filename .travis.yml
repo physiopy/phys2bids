@@ -45,7 +45,7 @@ before_install:
         git config --local user.name "${GIT_NAME}";
         git config --local user.email "${GIT_EMAIL}";
       else
-        echo "Not on master branch, skipping auto-svl";
+        echo "On branch ${CHECK_BRANCH}, skipping auto-svl";
       fi;
     else
       python -m pip install --upgrade pip;
