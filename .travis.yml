@@ -89,17 +89,17 @@ install:
 script:
   - |
     CHECK_BRANCH=$( git branch | grep \*);
+    echo "**********";
+    echo "******";
+    echo "**";
     if [ "${CHECK_BRANCH:20}" == "FETCH_HEAD)" ]; then
-      echo "**********";
-      echo "******";
-      echo "**";
       echo "!!! On branch ${CHECK_BRANCH}, this should be a **test for submitted PR**";
-      echo "**";
-      echo "******";
-      echo "**********";
     else
       echo "!!! On branch ${CHECK_BRANCH}, this should be a **test after MERGE**";
     fi;
+    echo "**";
+    echo "******";
+    echo "**********";
     if [ "${CHECK_TYPE}" == "linting" ]; then
       flake8 phys2bids;
     elif [ "${CHECK_TYPE}" == "docdoctest" ]; then
