@@ -82,7 +82,7 @@ def test_integration_tutorial():
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '1000.0')
     # Check sampling frequency
-    assert check_string(log_info, 'Sampling started', '0.24499999999989086')
+    assert check_string(log_info, 'Sampling started', '0.2450')
     # Check start time
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -92,7 +92,7 @@ def test_integration_tutorial():
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 1000.0)
-    assert math.isclose(json_data['StartTime'], 0.245)
+    assert math.isclose(json_data['StartTime'], 0.2450)
     assert json_data['Columns'] == ['time', 'Trigger', 'CO2', 'O2', 'Pulse']
 
     # Remove generated files
@@ -126,7 +126,7 @@ def test_integration_acq(samefreq_full_acq_file):
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '10000.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '10.425107798467103')
+    assert check_string(log_info, 'Sampling started', '10.4251')
     # Check start time
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -136,7 +136,7 @@ def test_integration_acq(samefreq_full_acq_file):
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 10000.0)
-    assert math.isclose(json_data['StartTime'], 10.425107798467103)
+    assert math.isclose(json_data['StartTime'], 10.4251)
     assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'PULSE - Custom, DA100C',
                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
@@ -181,7 +181,7 @@ def test_integration_multifreq(multifreq_acq_file):
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '625.0')
     # Check sampling frequency
-    assert check_string(log_info, 'Sampling started', '0.29052734375')
+    assert check_string(log_info, 'Sampling started', '0.2905')
     # Check start time
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -191,7 +191,7 @@ def test_integration_multifreq(multifreq_acq_file):
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 625.0)
-    assert math.isclose(json_data['StartTime'], 0.29052734375)
+    assert math.isclose(json_data['StartTime'], 0.2905)
     assert json_data['Columns'] == ['PULSE - Custom, DA100C']
 
     """
@@ -208,7 +208,7 @@ def test_integration_multifreq(multifreq_acq_file):
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '10000.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '10.425107798467103')
+    assert check_string(log_info, 'Sampling started', '10.4251')
     # Check start time
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -218,7 +218,7 @@ def test_integration_multifreq(multifreq_acq_file):
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 10000.0)
-    assert math.isclose(json_data['StartTime'], 10.425107798467103)
+    assert math.isclose(json_data['StartTime'], 10.4251)
     assert json_data['Columns'] == ['time', 'RESP - RSP100C',
                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
@@ -266,7 +266,7 @@ def test_integration_heuristic():
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '1000.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '0.24499999999989086')
+    assert check_string(log_info, 'Sampling started', '0.2450')
     # Check start time
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -277,7 +277,7 @@ def test_integration_heuristic():
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 1000.0)
-    assert math.isclose(json_data['StartTime'], 0.24499999999989086)
+    assert math.isclose(json_data['StartTime'], 0.2450)
     assert json_data['Columns'] == ['time', 'Trigger', 'CO2', 'O2', 'Pulse']
 
     # Remove generated files

@@ -1,6 +1,4 @@
-"""
-Tests physio_obj.py
-"""
+"""Test physio_obj.py ."""
 
 import numpy as np
 from pytest import raises
@@ -44,6 +42,48 @@ def test_has_size():
     assert size_output == test_list
 
 
+def test_are_equal():
+    """Test are_equal ."""
+    test_string = 'So Long, and Thanks for All the Fish'
+    test_time = np.array([0, 1, 1, 2, 3, 5, 8, 13])
+    test_trigger = np.array([0, 1, 0, 0, 0, 0, 0, 0])
+
+    class C(object):
+        c = 'c'
+
+    c1 = C()
+    c1.ts = [test_time, test_trigger]
+
+    c2 = C()
+    c2.ts = [test_time]
+
+    test_half = np.array([0, 1, 2])
+    test_twice = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    test_timeseries = [test_time, test_trigger, test_half, test_twice]
+    test_freq = [1, 1, 0.5, 2]
+    test_chn_name = ['time', 'trigger', 'half', 'twice']
+    test_units = ['s', 'V', 'V', 'V']
+    test_chtrig = 1
+
+    phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                test_units, test_chtrig)
+    phys_out = po.BlueprintInput([test_trigger, test_half, test_twice],
+                                 test_freq, test_chn_name,
+                                 test_units, test_chtrig)
+
+    assert po.are_equal(test_string, test_string)
+    assert po.are_equal(c1, c1)
+    assert po.are_equal(phys_in, phys_in)
+    assert po.are_equal(c1, c1.__dict__)
+    assert po.are_equal(c1.__dict__, c1)
+    assert not po.are_equal(c1, c2)
+    assert not po.are_equal(c1, phys_in)
+    assert not po.are_equal(phys_out, phys_in)
+    assert not po.are_equal(phys_in, c2)
+    assert not po.are_equal(c1, c2.__dict__)
+    assert not po.are_equal(test_string, c1)
+
+
 # Tests BlueprintInput
 def test_BlueprintInput():
     test_time = np.array([0, 1, 1, 2, 3, 5, 8, 13])
@@ -53,9 +93,11 @@ def test_BlueprintInput():
     test_freq = [42.0, 3.14, 20.0]
     test_chn_name = ['time', 'trigger', 'chocolate']
     test_units = ['s', 's', 'sweetness']
+    test_chtrig = 1
     num_channnels = len(test_timeseries)
 
-    blueprint_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name, test_units)
+    blueprint_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                     test_units, test_chtrig)
 
     # Tests rename_channels
     new_names = ['trigger', 'time', 'lindt']
@@ -78,6 +120,69 @@ def test_BlueprintInput():
     blueprint_in.check_trigger_amount(thr=0.9, num_timepoints_expected=1)
     assert blueprint_in.num_timepoints_found == 1
 
+    # Tests delete_at_index with trigger channel
+    blueprint_in.delete_at_index(test_chtrig)
+    assert blueprint_in.ch_amount == num_channnels - 2
+    assert blueprint_in.trigger_idx == 0
+
+    # Test __eq__
+    assert blueprint_in == blueprint_in
+
+
+def test_BlueprintInput_slice():
+    """Test BlueprintInput_slice.__getitem__ ."""
+    test_time = np.array([0, 1, 2, 3, 4])
+    test_trigger = np.array([0, 1, 2, 3, 4])
+    test_half = np.array([0, 1, 2])
+    test_twice = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    test_timeseries = [test_time, test_trigger, test_half, test_twice]
+    test_freq = [1, 1, 0.5, 2]
+    test_chn_name = ['time', 'trigger', 'half', 'twice']
+    test_units = ['s', 'V', 'V', 'V']
+    test_chtrig = 1
+
+    phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                test_units, test_chtrig)
+
+    phys_dict = {'timeseries': test_timeseries,
+                 'freq': test_freq,
+                 'ch_name': ['time', 'trigger', 'half', 'twice'],
+                 'units': ['s', 'V', 'V', 'V'],
+                 'trigger_idx': 1,
+                 'num_timepoints_found': None,
+                 'thr': None,
+                 'time_offset': 0}
+
+    # Test all-comprehensive slice
+    assert phys_in[0:len(test_trigger)] == phys_dict
+
+    # Test instantaneous slice first and last
+    phys_dict['timeseries'] = [np.array([test_time[0]]),
+                               np.array([test_trigger[0]]),
+                               np.array([test_half[0]]),
+                               np.array([test_twice[0]])]
+    assert phys_in[0] == phys_dict
+
+    phys_dict['timeseries'] = [np.array([test_time[-1]]),
+                               np.array([test_trigger[-1]]),
+                               np.array([test_half[-1]]),
+                               np.array([test_twice[-2]])]
+    assert phys_in[-1] == phys_dict
+
+    # Test slice in the middle
+    phys_dict['timeseries'] = [np.array(test_time[2:4]),
+                               np.array(test_trigger[2:4]),
+                               np.array(test_half[1:2]),
+                               np.array(test_twice[4:8])]
+    assert phys_in[2:4] == phys_dict
+
+    # Test slice in the middle with steps
+    phys_dict['timeseries'] = [np.array(test_time[1:4:2]),
+                               np.array(test_trigger[1:4:2]),
+                               np.array(test_half[0:2:1]),
+                               np.array(test_twice[4:8:4])]
+    assert phys_in[1:4:2] == phys_dict
+
 
 def test_BlueprintOutput():
     test_time = np.array([0, 1, 1, 2, 3, 5, 8, 13])
@@ -87,9 +192,11 @@ def test_BlueprintOutput():
     test_freq = [42.0, 3.14, 20.0]
     test_chn_name = ['trigger', 'time', 'chocolate']
     test_units = ['s', 's', 'sweetness']
+    test_chtrig = 1
     num_channnels = len(test_timeseries)
 
-    blueprint_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name, test_units)
+    blueprint_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                     test_units, test_chtrig)
 
     # Tests init_from_blueprint
     blueprint_out = po.BlueprintOutput.init_from_blueprint(blueprint_in)
@@ -122,3 +229,6 @@ def test_BlueprintOutput():
     assert len(blueprint_out.units) == num_channnels - 1
     assert blueprint_out.timeseries.shape[1] == num_channnels - 1
     assert blueprint_out.ch_amount == num_channnels - 1
+
+    # Test __eq__
+    assert blueprint_out == blueprint_out

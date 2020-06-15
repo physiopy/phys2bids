@@ -14,7 +14,8 @@ FIGSIZE = (18, 10)
 def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
                  filename, figsize=FIGSIZE, dpi=SET_DPI):
     """
-    Produces a figure with three plots:
+    Produce a figure with three plots.
+
     1. Plots the triggers in blue, a block in orange that indicates
     the time from the first trigger to the last, and a red line showing
     the threshold used for trigger detection
@@ -129,7 +130,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
 
 def plot_all(ch_name, timeseries, units, freq, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
     """
-    Plots all the channels for visualizations and saves them in outfile
+    Plot all the channels for visualizations and saves them in outfile.
 
     Parameters
     ----------
