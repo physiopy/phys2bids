@@ -227,12 +227,12 @@ def test_integration_multifreq(multifreq_acq_file):
         os.remove(filename)
 
 
-def test_integration_heuristic():
+def test_integration_heuristic(samefreq_full_acq_file):
     """
     Does integration test of tutorial file with heurositics
     """
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'tutorial_file.txt'
+
+    test_path, test_filename = os.path.split(samefreq_full_acq_file)
     test_full_path = os.path.join(test_path, test_filename)
     test_chtrig = 1
     test_outdir = test_path
@@ -240,7 +240,7 @@ def test_integration_heuristic():
     test_tr = 1.2
     test_thr = 0.735
     heur_path = resource_filename('phys2bids', 'heuristics')
-    test_heur = os.path.join(heur_path, 'heur_tutorial.py')
+    test_heur = os.path.join(heur_path, 'heur_test_acq.py')
     phys2bids(filename=test_full_path, chtrig=test_chtrig, outdir=test_outdir,
               num_timepoints_expected=test_ntp, tr=test_tr, thr=test_thr, sub='006',
               ses='01', heur_file=test_heur)
@@ -248,35 +248,33 @@ def test_integration_heuristic():
     test_path_output = os.path.join(test_path, 'sub-006/ses-01/func')
 
     # Check that files are generated
-    base_filename = 'sub-006_ses-01_task-test_rec-labchart_run-01_physio'
+    base_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_physio'
     for suffix in ['.log', '.json', '.tsv.gz']:
         assert os.path.isfile(os.path.join(test_path_output, base_filename + suffix))
 
     # Read log file (note that this file is not the logger file)
-    log_filename = 'sub-006_ses-01_task-test_rec-labchart_run-01_physio.log'
+    log_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_physio.log'
     with open(os.path.join(test_path_output, log_filename)) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
     assert check_string(log_info, 'Timepoints expected', '158')
     # Check timepoints found
-    assert check_string(log_info, 'Timepoints found', '158')
+    assert check_string(log_info, 'Timepoints found', '0')
     # Check sampling frequency
-    assert check_string(log_info, 'Sampling Frequency', '1000.0')
+    assert check_string(log_info, 'Sampling Frequency', '10000.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '0.2450')
-    # Check start time
-    assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
+    assert check_string(log_info, 'Sampling started', '-189.6000')
 
     # Checks json file
-    json_filename = 'sub-006_ses-01_task-test_rec-labchart_run-01_physio.json'
+    json_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_physio.json'
     with open(os.path.join(test_path_output, json_filename)) as json_file:
         json_data = json.load(json_file)
 
     # Compares values in json file with ground truth
-    assert math.isclose(json_data['SamplingFrequency'], 1000.0)
-    assert math.isclose(json_data['StartTime'], 0.2450)
-    assert json_data['Columns'] == ['time', 'Trigger', 'CO2', 'O2', 'Pulse']
+    assert math.isclose(json_data['SamplingFrequency'], 10000.0,)
+    assert math.isclose(json_data['StartTime'], -189.6,)
+    assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'PULSE - Custom, DA100C', 'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
     # Remove generated files
     for filename in glob.glob(os.path.join(test_path, 'phys2bids*')):
@@ -287,12 +285,12 @@ def test_integration_heuristic():
         os.remove(filename)
 
 
-def test_integration_info():
+def test_integration_info(samefreq_short_txt_file):
     """
     Tests the info option
     """
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'tutorial_file.txt'
+
+    test_path, test_filename = os.path.split(samefreq_short_txt_file)
     test_chtrig = 1
     test_outdir = test_path
     test_ntp = 158
@@ -310,21 +308,16 @@ def test_integration_info():
     subprocess.run(command_str, shell=True, check=True)
 
     # Check that plot all file is generated
-    assert os.path.isfile('tutorial_file.png')
+    assert os.path.isfile('Test_belt_pulse_samefreq_short.png')
 
     # Read logger file
     logger_file = glob.glob(os.path.join(test_path, '*phys2bids*'))[0]
     with open(logger_file) as logger_info:
         logger_info = logger_info.readlines()
 
-    # Get trigger info
-    assert check_string(logger_info, 'Trigger; sampled at', '1000.0')
-    # Get CO2 info
-    assert check_string(logger_info, 'CO2; sampled at', '1000.0')
-    # Get O2 info
-    assert check_string(logger_info, 'O2; sampled at', '1000.0')
-    # Get pulse info
-    assert check_string(logger_info, 'Pulse; sampled at', '1000.0')
+    assert check_string(logger_info, '01. RESP - RSP100C; sampled at', '10000.0')
+    assert check_string(logger_info,
+                        '02. MR TRIGGER - Custom, HLT100C - A 5; sampled at', '10000.0')
 
     # Remove generated files
     for filename in glob.glob(os.path.join(test_path, 'phys2bids*')):
