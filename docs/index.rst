@@ -26,6 +26,9 @@ phys2bids
     :target: https://codecov.io/gh/physiopy/phys2bids
     :alt: codecov
 
+.. image:: https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto
+    :target: https://github.com/intuit/auto
+    :alt: Auto Release
 
 ``phys2bids`` is a python3 library meant to format physiological files in BIDS.
 It was born for AcqKnowledge files (BIOPAC), and at the moment it supports
@@ -54,6 +57,7 @@ Contents
    howto
    heuristic
    bestpractice
+   bids
    cli
    contributing
    contributorfile
