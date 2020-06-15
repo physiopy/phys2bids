@@ -4,6 +4,7 @@
   ],
   "imageSize": 100,
   "commit": false,
+  "badgeTemplate": "[![All Contributors](https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg?style=flat)](#contributors-)",
   "contributors": [
     {
       "login": "danalclop",
@@ -135,7 +136,7 @@
       ]
     }
   ],
-  "contributorsPerLine": 5,
+  "contributorsPerLine": 7,
   "projectName": "phys2bids",
   "projectOwner": "physiopy",
   "repoType": "github",
