@@ -21,23 +21,22 @@ def check_string(str_container, str_to_find, str_expected, is_num=True):
         return str_expected in str_found
 
 
-def test_logger():
+def test_logger(multifreq_lab_file):
     """
     Tests the logger
     """
 
-    # Move into folder
-    test_path = resource_filename('phys2bids', 'tests/data')
-    subprocess.run(f'cd {test_path}', shell=True, check=True)
+    test_path, test_filename = os.path.split(multifreq_lab_file)
 
     # Input arguments
-    test_filename = 'tutorial_file.txt'
-    test_chtrig = 1
+    test_chtrig = 3
+    test_ntp = 1
     test_outdir = test_path
 
     # Phys2bids call through terminal
     subprocess.run(f'phys2bids -in {test_filename} -indir {test_path} '
-                   f'-chtrig {test_chtrig} -outdir {test_outdir}', shell=True, check=True)
+                   f'-chtrig {test_chtrig} -ntp {test_ntp} -outdir {test_outdir}',
+                   shell=True, check=True)
 
     # Read logger file
     logger_file = glob.glob(os.path.join(test_path, '*phys2bids*'))[0]
@@ -145,12 +144,12 @@ def test_integration_acq(samefreq_full_acq_file):
         os.remove(filename)
 
 
-def test_integration_multifreq(multifreq_acq_file):
+def test_integration_multifreq(multifreq_lab_file):
     """
     Does the integration test for a multi-frequency file
     """
 
-    test_path, test_filename = os.path.split(multifreq_acq_file)
+    test_path, test_filename = os.path.split(multifreq_lab_file)
     test_chtrig = 3
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
@@ -159,66 +158,125 @@ def test_integration_multifreq(multifreq_acq_file):
     # Check that files are generated
     for suffix in ['.log', '.json', '.tsv.gz']:
         assert os.path.isfile(os.path.join(test_path,
-                                           'Test_belt_pulse_multifreq_625.0' + suffix))
+                                           'Test1_multifreq_onescan_40.0' + suffix))
     for suffix in ['.log', '.json', '.tsv.gz']:
         assert os.path.isfile(os.path.join(test_path,
-                                           'Test_belt_pulse_multifreq_10000.0' + suffix))
-    assert os.path.isfile(os.path.join(test_path, 'Test_belt_pulse_multifreq_trigger_time.png'))
+                                           'Test1_multifreq_onescan_100.0' + suffix))
+    for suffix in ['.log', '.json', '.tsv.gz']:
+        assert os.path.isfile(os.path.join(test_path,
+                                           'Test1_multifreq_onescan_500.0' + suffix))
+    for suffix in ['.log', '.json', '.tsv.gz']:
+        assert os.path.isfile(os.path.join(test_path,
+                                           'Test1_multifreq_onescan_1000.0' + suffix))
+    assert os.path.isfile(os.path.join(test_path, 'Test1_multifreq_onescan_trigger_time.png'))
 
     """
-    Checks 625 Hz output
+    Checks 40 Hz output
     """
     # Read log file of frequency 625 (note that this file is not the logger file)
-    with open(os.path.join(test_path, 'Test_belt_pulse_multifreq_625.0.log')) as log_info:
+    with open(os.path.join(test_path, 'Test1_multifreq_onescan_40.0.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
     assert check_string(log_info, 'Timepoints expected', '1')
     # Check timepoints found
-    assert check_string(log_info, 'Timepoints found', '60')
+    assert check_string(log_info, 'Timepoints found', '0')
     # Check sampling frequency
-    assert check_string(log_info, 'Sampling Frequency', '625.0')
+    assert check_string(log_info, 'Sampling Frequency', '40.0')
     # Check sampling frequency
-    assert check_string(log_info, 'Sampling started', '0.2905')
+    assert check_string(log_info, 'Sampling started', '-157.8535')
     # Check start time
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
     # Checks json file
-    with open(os.path.join(test_path, 'Test_belt_pulse_multifreq_625.0.json')) as json_file:
+    with open(os.path.join(test_path, 'Test1_multifreq_onescan_40.0.json')) as json_file:
         json_data = json.load(json_file)
 
     # Compares values in json file with ground truth
-    assert math.isclose(json_data['SamplingFrequency'], 625.0)
-    assert math.isclose(json_data['StartTime'], 0.2905)
-    assert json_data['Columns'] == ['PULSE - Custom, DA100C']
+    assert math.isclose(json_data['SamplingFrequency'], 40.0)
+    assert math.isclose(json_data['StartTime'], -157.8535)
+    assert json_data['Columns'] == ['O2']
 
     """
-    Checks 10000 Hz output
+    Checks 100 Hz output
     """
     # Read log file of frequency 625 (note that this file is not the logger file)
-    with open(os.path.join(test_path, 'Test_belt_pulse_multifreq_10000.0.log')) as log_info:
+    with open(os.path.join(test_path, 'Test1_multifreq_onescan_100.0.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
     assert check_string(log_info, 'Timepoints expected', '1')
     # Check timepoints found
-    assert check_string(log_info, 'Timepoints found', '60')
+    assert check_string(log_info, 'Timepoints found', '0')
     # Check sampling frequency
-    assert check_string(log_info, 'Sampling Frequency', '10000.0')
+    assert check_string(log_info, 'Sampling Frequency', '100.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '10.4251')
+    assert check_string(log_info, 'Sampling started', '-0.3057')
     # Check start time
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
     # Checks json file
-    with open(os.path.join(test_path, 'Test_belt_pulse_multifreq_10000.0.json')) as json_file:
+    with open(os.path.join(test_path, 'Test1_multifreq_onescan_100.0.json')) as json_file:
         json_data = json.load(json_file)
 
     # Compares values in json file with ground truth
-    assert math.isclose(json_data['SamplingFrequency'], 10000.0)
-    assert math.isclose(json_data['StartTime'], 10.4251)
-    assert json_data['Columns'] == ['time', 'RESP - RSP100C',
-                                    'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
+    assert math.isclose(json_data['SamplingFrequency'], 100.0)
+    assert math.isclose(json_data['StartTime'], -0.3057)
+    assert json_data['Columns'] == ['CO2']
+
+    """
+    Checks 100 Hz output
+    """
+    # Read log file of frequency 625 (note that this file is not the logger file)
+    with open(os.path.join(test_path, 'Test1_multifreq_onescan_500.0.log')) as log_info:
+        log_info = log_info.readlines()
+
+    # Check timepoints expected
+    assert check_string(log_info, 'Timepoints expected', '1')
+    # Check timepoints found
+    assert check_string(log_info, 'Timepoints found', '0')
+    # Check sampling frequency
+    assert check_string(log_info, 'Sampling Frequency', '500.0')
+    # Check sampling started
+    assert check_string(log_info, 'Sampling started', '-4.2019')
+    # Check start time
+    assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
+
+    # Checks json file
+    with open(os.path.join(test_path, 'Test1_multifreq_onescan_500.0.json')) as json_file:
+        json_data = json.load(json_file)
+
+    # Compares values in json file with ground truth
+    assert math.isclose(json_data['SamplingFrequency'], 500.0)
+    assert math.isclose(json_data['StartTime'], -4.2019)
+    assert json_data['Columns'] == ['Belt']
+
+    """
+    Checks 100 Hz output
+    """
+    # Read log file of frequency 625 (note that this file is not the logger file)
+    with open(os.path.join(test_path, 'Test1_multifreq_onescan_1000.0.log')) as log_info:
+        log_info = log_info.readlines()
+
+    # Check timepoints expected
+    assert check_string(log_info, 'Timepoints expected', '1')
+    # Check timepoints found
+    assert check_string(log_info, 'Timepoints found', '0')
+    # Check sampling frequency
+    assert check_string(log_info, 'Sampling Frequency', '1000.0')
+    # Check sampling started
+    assert check_string(log_info, 'Sampling started', '-1.0000')
+    # Check start time
+    assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
+
+    # Checks json file
+    with open(os.path.join(test_path, 'Test1_multifreq_onescan_1000.0.json')) as json_file:
+        json_data = json.load(json_file)
+
+    # Compares values in json file with ground truth
+    assert math.isclose(json_data['SamplingFrequency'], 1000.0)
+    assert math.isclose(json_data['StartTime'], -1.0000)
+    assert json_data['Columns'] == ['time', 'Trigger']
 
     # Remove generated files
     for filename in glob.glob(os.path.join(test_path, 'phys2bids*')):
@@ -265,6 +323,8 @@ def test_integration_heuristic(samefreq_short_txt_file):
     assert check_string(log_info, 'Sampling Frequency', '10000.0')
     # Check sampling started
     assert check_string(log_info, 'Sampling started', '-189.6000')
+    # Check first trigger
+    assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
     # Checks json file
     json_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_physio.json'
