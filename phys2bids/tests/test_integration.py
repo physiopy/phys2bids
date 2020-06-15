@@ -225,7 +225,7 @@ def test_integration_multifreq(multifreq_lab_file):
     assert json_data['Columns'] == ['CO2']
 
     """
-    Checks 100 Hz output
+    Checks 500 Hz output
     """
     # Read log file of frequency 625 (note that this file is not the logger file)
     with open(os.path.join(test_path, 'Test1_multifreq_onescan_500.0.log')) as log_info:
