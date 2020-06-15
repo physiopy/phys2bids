@@ -18,6 +18,7 @@ env:
     - CHECK_TYPE=test
   global:
     - INSTALL_TYPE=setup
+    - secure: FTG5VDvtYYy1cZh7HJXsLAF6Q2gJT0Oz/KZFWCjRnK3jIWGq7uOcr5L9Wf5PTRzLglE5x/oaj4q+wSK8j2EdcDYK0YS8fFGoRpfxcPLFV8Nl1I7ubFkfnAwAs1UhwKTyaHmcEdWsf7QrN71HzT//3/Wl2WA2GuB3PK8n8sxm2YnkKM35MeHoR/+z5XgFNuZEETJ0kVqbH7TAoyOCLoVbm8IsEjU3aY6Sd5PiiLe3ZEZNMA4y6LgCvzW/9rTNfqcUP/r7SDou1BACNA1GCGZb6yYh7OA53onRv4Bwcqk+J/2aFz9DNeG+qGbDTivypf7TPt/5KgZJcRi7bjiJqR3MfifVNzDWkfXStA/SAOUvChTB/O+bzLVc3pd06kgi3u+9fzvckCUBIBvQHVSPT7L+i1VwwuuqtCI+VhaH0mqOru6a8qTwY2GKaWXTbnN0YeKJCjaIGhcspZdMsLbrkALf9W1YMWE0a5/oYEXINC4xec8WnRaVcPXZsMxoPJ/RY9eGcrNkROBVf8xvFqA6N4Eww+9Fc/52Lg8/p2x8nq66RXWOqlZgt8pm4bF+XlXjGn+81JKruXIvnDlLwXu6keQLyWygFYGIZdtcMljVfKQ7cFuPsjpvYGwdPTr0xFcuRpx8YZBcOy3KikYJ4ly+3DvHYPx+C2QryEuiANhtpB1h3PU=
 
 matrix:
   include:
@@ -47,6 +48,7 @@ before_install:
         echo "!!! On branch ${CHECK_BRANCH}, preparing environment for auto-svl";
         git config --local user.name "${GIT_NAME}";
         git config --local user.email "${GIT_EMAIL}";
+        echo "GH_TOKEN=${GH_TOKEN}" >> .env;
       fi;
     else
       python -m pip install --upgrade pip;
