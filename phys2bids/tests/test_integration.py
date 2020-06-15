@@ -52,51 +52,49 @@ def test_logger():
     os.remove(os.path.join(test_path, logger_file))
 
 
-def test_integration_tutorial():
+def test_integration_txt(samefreq_short_txt_file):
     """
     Does an integration test with the tutorial file
     """
-    test_path = resource_filename('phys2bids', 'tests/data')
-    test_filename = 'tutorial_file.txt'
-    test_full_path = os.path.join(test_path, test_filename)
-    test_chtrig = 1
-    test_outdir = test_path
-    test_ntp = 158
-    test_tr = 1.2
-    test_thr = 0.735
-    phys2bids(filename=test_full_path, chtrig=test_chtrig, outdir=test_outdir,
-              num_timepoints_expected=test_ntp, tr=test_tr, thr=test_thr)
+
+    test_path, test_filename = os.path.split(samefreq_short_txt_file)
+    test_chtrig = 2
+
+    phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
+              chtrig=test_chtrig, num_timepoints_expected=1)
 
     # Check that files are generated
     for suffix in ['.log', '.json', '.tsv.gz', '_trigger_time.png']:
-        assert os.path.isfile(os.path.join(test_path, 'tutorial_file' + suffix))
+        assert os.path.isfile(os.path.join(test_path, 'Test_belt_pulse_samefreq_short' + suffix))
 
     # Read log file (note that this file is not the logger file)
-    with open(os.path.join(test_path, 'tutorial_file.log')) as log_info:
+    with open(os.path.join(test_path, 'Test_belt_pulse_samefreq_short.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
-    assert check_string(log_info, 'Timepoints expected', '158')
+    assert check_string(log_info, 'Timepoints expected', '1')
     # Check timepoints found
-    assert check_string(log_info, 'Timepoints found', '158')
+    assert check_string(log_info, 'Timepoints found', '60')
     # Check sampling frequency
-    assert check_string(log_info, 'Sampling Frequency', '1000.0')
-    # Check sampling frequency
-    assert check_string(log_info, 'Sampling started', '0.2450')
+    assert check_string(log_info, 'Sampling Frequency', '10000.0')
+    # Check sampling started
+    assert check_string(log_info, 'Sampling started', '10.4251')
     # Check start time
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
     # Checks json file
-    with open(os.path.join(test_path, 'tutorial_file.json')) as json_file:
+    with open(os.path.join(test_path, 'Test_belt_pulse_samefreq_short.json')) as json_file:
         json_data = json.load(json_file)
 
     # Compares values in json file with ground truth
-    assert math.isclose(json_data['SamplingFrequency'], 1000.0)
-    assert math.isclose(json_data['StartTime'], 0.2450)
-    assert json_data['Columns'] == ['time', 'Trigger', 'CO2', 'O2', 'Pulse']
+    assert math.isclose(json_data['SamplingFrequency'], 10000.0)
+    assert math.isclose(json_data['StartTime'], 10.4251)
+    assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'MR TRIGGER - Custom, HLT100C - A 5']
 
     # Remove generated files
     for filename in glob.glob(os.path.join(test_path, 'phys2bids*')):
+        os.remove(filename)
+    for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_samefreq_short*')):
         os.remove(filename)
 
 
