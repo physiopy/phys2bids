@@ -1,10 +1,11 @@
-language: python
-sudo: false
-dist: xenial
+os: linux
+dist: bionic
 services:
   - xvfb
 notifications:
   email: change
+
+language: python
 
 python:
   - 3.6
@@ -28,9 +29,27 @@ matrix:
       env:
         - INSTALL_TYPE=wheel
         - CHECK_TYPE=test
+    - language: node_js
+      node_js: 10
+      env:
+        - INSTALL_TYPE=auto-svl
+        - CHECK_TYPE=auto-svl
+        - GIT_NAME="Stefano Moia"
+        - GIT_EMAIL="s.moia@bcbl.eu"
+        - GH_USER="smoia"
 
 before_install:
-  - python -m pip install --upgrade pip
+  - if [ "${CHECK_TYPE}" == "auto-svl" ]; then
+      CHECK_BRANCH=$( git branch | grep \*);
+      if [ "${CHECK_BRANCH}" == "* master" ]; then
+        git config --local user.name "${GIT_NAME}";
+        git config --local user.email "${GIT_EMAIL}";
+      else
+        echo "Not on master branch, skipping auto-svl";
+      fi;
+    else
+      python -m pip install --upgrade pip;
+    fi
   - if [ "${CHECK_TYPE}" == "linting" ]; then
       pip install flake8;
     fi
@@ -53,6 +72,14 @@ install:
       pip install "bioread>=1.0.5";
       python setup.py bdist_wheel;
       pip install dist/*.whl;
+    elif [ "${INSTALL_TYPE}" == "auto-svl" ]; then
+      CHECK_BRANCH=$( git branch | grep \*);
+        if [ "${CHECK_BRANCH}" == "* master" ]; then
+          curl -vkL -o - https://github.com/intuit/auto/releases/download/v9.39.0/auto-linux.gz | gunzip > build/auto;
+          chmod a+x build/auto;
+        else
+          echo "Not on master branch, skipping auto-svl";
+      fi;
     else
       false;
     fi
@@ -71,6 +98,13 @@ script:
       cp ../setup.cfg ./;
       args="--doctest-modules --cov-report term-missing --cov=phys2bids --pyargs"
       python -m pytest ${args} phys2bids;
+    elif [ "${CHECK_TYPE}" == "auto-svl" ]; then
+      CHECK_BRANCH=$( git branch | grep \*);
+        if [ "${CHECK_BRANCH}" == "* master" ]; then
+          build/auto shipit;
+        else
+          echo "Not on master branch, skipping auto-svl";
+      fi;
     else
       false;
     fi

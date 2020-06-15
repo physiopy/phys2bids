@@ -1,0 +1,78 @@
+{
+  "metadata": {
+    "license": {
+      "id": "Apache-2.0"
+    }, 
+    "title": "physiopy/phys2bids: BIDS formatting of physiological recordings", 
+    "relations": {
+      "version": [
+        {
+          "count": 8, 
+          "index": 7, 
+          "parent": {
+            "pid_type": "recid", 
+            "pid_value": "3470091"
+          }
+        }
+      ]
+    }, 
+    "creators": [
+      {
+        "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+        "name": "Daniel Alcal\u00e1"
+      }, 
+      {
+        "affiliation": "Northwestern University", 
+        "name": "Apoorva Ayyagari"
+      }, 
+      {
+        "affiliation": "Northwestern University", 
+        "name": "Molly Bright"
+      }, 
+      {
+        "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+        "name": "C\u00e9sar Caballero Gaudes"
+      }, 
+      {
+        "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+        "name": "Vicente Ferrer"
+      }, 
+      {
+        "name": "Soichi Hayashi"
+      }, 
+      {
+        "affiliation": "McGill University", 
+        "name": "Ross Markello"
+      }, 
+      {
+        "orcid": "0000-0002-2553-3327", 
+        "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+        "name": "Stefano Moia"
+      }, 
+      {
+        "affiliation": "Northwestern University", 
+        "name": "Rachael Stickland"
+      }, 
+      {
+        "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+        "name": "Eneko Uru\u00f1uela"
+      }, 
+      {
+        "affiliation": "Northwestern University", 
+        "name": "Kristina Zvolanek"
+      }
+    ], 
+    "access_right": "open", 
+    "resource_type": {
+      "type": "software", 
+      "title": "Software"
+    }, 
+    "related_identifiers": [ 
+      {
+        "scheme": "doi", 
+        "identifier": "10.5281/zenodo.3470091", 
+        "relation": "isVersionOf"
+      }
+    ]
+  }
+}
