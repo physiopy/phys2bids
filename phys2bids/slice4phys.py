@@ -61,7 +61,7 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
         if run_idx == 0:
             run_start = 0
         else:
-            run_start = np.where(phys_in.timeseries[0] <= 0)[0][0] - padding
+            run_start = np.where(np.isclose(phys_in.timeseries[0], 0))[0][0] - padding
 
         # Defining end of acquisition
         # run length in seconds
