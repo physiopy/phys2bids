@@ -133,12 +133,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     outdir = utils.check_input_dir(outdir)
     utils.path_exists_or_make_it(outdir)
     # generate extra path
-    utils.path_exists_or_make_it(outdir + "/extra")
+    extra = outdir + "/extra"
+    utils.path_exists_or_make_it(extra)
     # Create logfile name
     basename = 'phys2bids_'
     extension = 'tsv'
     isotime = datetime.datetime.now().strftime('%Y-%m-%dT%H%M%S')
-    logname = os.path.join(outdir, (basename + isotime + '.' + extension))
+    logname = os.path.join(extra, (basename + isotime + '.' + extension))
 
     # Set logging format
     log_formatter = logging.Formatter(
