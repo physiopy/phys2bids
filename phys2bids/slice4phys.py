@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import numpy as np
 import logging
+from copy import deepcopy
+
+import numpy as np
 
 LGR = logging.getLogger(__name__)
 
@@ -51,7 +53,8 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
     for run_idx, run_tps in enumerate(ntp_list):
 
         # correct time offset for this iteration's object
-        phys_in.check_trigger_amount(thr=thr, num_timepoints_expected=run_tps, tr=tr_list[run_idx])
+        phys_in.check_trigger_amount(thr=thr, num_timepoints_expected=run_tps,
+                                     tr=tr_list[run_idx])
 
         # If it's the very first run, start the run at sample 0,
         # otherwise "add" the padding
@@ -98,7 +101,7 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
 
         # update the object so that next iteration will look for the first trigger
         # after previous run's last trigger. maybe padding extends to next run
-        phys_in = phys_in[update:-1]
+        phys_in = deepcopy(phys_in[update:-1])
 
     return run_timestamps
 
@@ -137,17 +140,16 @@ def slice4phys(phys_in, ntp_list, tr_list, thr, padding=9):
     # Find the timestamps
     run_timestamps = find_runs(phys_in, ntp_list, tr_list, thr, padding)
 
-    for run in run_timestamps.keys():
+    for n, run in enumerate(run_timestamps.keys()):
 
         # tmp variable to collect run's info
         run_attributes = run_timestamps[run]
 
-        phys_in_slices[run] = phys_in[run_attributes[0]:run_attributes[1]]
+        phys_in_slices[run] = deepcopy(phys_in[run_attributes[0]:run_attributes[1]])
 
-        # Overwrite current run phys_in attributes
-        # 3rd item of run_attributes is adjusted time offset
-        phys_in_slices[run].time_offset = run_attributes[2]
-        # 4th item of run_attributes is the nb of tp found by check_trigger_amount
-        phys_in_slices[run].num_timepoints_found = run_attributes[3]
+        # Run check_trigger amount
+        phys_in_slices[run].check_trigger_amount(thr=thr,
+                                                 num_timepoints_expected=ntp_list[n],
+                                                 tr=tr_list[n])
 
     return phys_in_slices
