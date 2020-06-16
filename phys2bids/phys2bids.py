@@ -120,7 +120,7 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
      version=__version__,
      cite_module=True)
 @due.dcite(
-    DOI('10.1038/sdata.2016.44'),
+    Doi('10.1038/sdata.2016.44'),
     path='phys2bids',
     description='The BIDS specification',
     cite_module=True)
