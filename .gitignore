@@ -124,5 +124,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+docs/generated/
 .vscode/
 phys2bids/tests/data/*

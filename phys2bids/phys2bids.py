@@ -128,7 +128,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     NotImplementedError
         If the file extension is not supported yet.
     """
-
     # Check options to make them internally coherent pt. I
     # #!# This can probably be done while parsing?
     outdir = utils.check_input_dir(outdir)
