@@ -104,7 +104,8 @@ def test_integration_acq(samefreq_full_acq_file):
 
     test_path, test_filename = os.path.split(samefreq_full_acq_file)
     test_chtrig = 3
-
+    extra_dir = test_path + "/extra/"
+    
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1)
 
@@ -151,6 +152,7 @@ def test_integration_multifreq(multifreq_lab_file):
 
     test_path, test_filename = os.path.split(multifreq_lab_file)
     test_chtrig = 3
+    extra_dir = test_path + "/extra/"
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1)
@@ -294,6 +296,7 @@ def test_integration_heuristic(samefreq_short_txt_file):
     test_full_path = os.path.join(test_path, test_filename)
     test_chtrig = 1
     test_outdir = test_path
+    extra_dir = test_path + "/extra/"
     test_ntp = 158
     test_tr = 1.2
     test_thr = 0.735
