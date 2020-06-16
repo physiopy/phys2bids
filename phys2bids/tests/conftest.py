@@ -45,12 +45,6 @@ def samefreq_full_acq_file(testpath):
 
 
 @pytest.fixture
-def samefreq_full_txt_file(testpath):
-    return fetch_file('sdz4n', testpath,
-                      'Test_belt_pulse_samefreq.txt')
-
-
-@pytest.fixture
 def samefreq_short_txt_file(testpath):
     return fetch_file('4yudk', testpath,
                       'Test_belt_pulse_samefreq_short.txt')
@@ -58,7 +52,7 @@ def samefreq_short_txt_file(testpath):
 
 @pytest.fixture
 def samefreq_noheader_txt_file(testpath):
-    return fetch_file('sre3h', testpath,
+    return fetch_file('xbwq9', testpath,
                       'Test_belt_pulse_samefreq_no_header.txt')
 
 
@@ -70,11 +64,11 @@ def multifreq_acq_file(testpath):
 
 @pytest.fixture
 def multifreq_lab_file(testpath):
-    return fetch_file('q4x2f', testpath,
-                      'Test_2minRest_trig_multifreq_header_comment.txt')
+    return fetch_file('7se4t', testpath,
+                      'Test1_multifreq_onescan.txt')
 
 
 @pytest.fixture
 def notime_lab_file(testpath):
-    return fetch_file('5829m', testpath,
-                      'Test2_trigger_CO2_O2_pulse_1000Hz_534TRs_no_time.txt')
+    return fetch_file('cv5zr', testpath,
+                      'Test2_samefreq_onescan_notime.txt')
