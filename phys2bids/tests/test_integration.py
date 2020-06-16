@@ -32,14 +32,14 @@ def test_logger(multifreq_lab_file):
     test_chtrig = 3
     test_ntp = 1
     test_outdir = test_path
-
+    extra_dir = test_path + "/extra/"
     # Phys2bids call through terminal
     subprocess.run(f'phys2bids -in {test_filename} -indir {test_path} '
                    f'-chtrig {test_chtrig} -ntp {test_ntp} -outdir {test_outdir}',
                    shell=True, check=True)
 
     # Read logger file
-    logger_file = glob.glob(os.path.join(test_path, '*phys2bids*'))[0]
+    logger_file = glob.glob(os.path.join(extra_dir, '*phys2bids*'))[0]
     with open(logger_file) as logger_info:
         logger_info = logger_info.readlines()
 
