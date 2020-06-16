@@ -125,6 +125,11 @@ def _get_parser():
                           type=str,
                           help='full path to store channels plot ',
                           default='')
+    optional.add_argument('-yml', '--participant-yml',
+                          dest='yml',
+                          type=str,
+                          help='file with info needed to generate participant.tsv file ',
+                          default='participants.yml')
     optional.add_argument('-debug', '--debug',
                           dest='debug',
                           action='store_true',

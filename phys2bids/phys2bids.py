@@ -31,6 +31,7 @@ import datetime
 import logging
 from copy import deepcopy
 
+import yaml
 from numpy import savetxt
 
 from phys2bids import utils, viz, _version
@@ -112,7 +113,8 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
 
 def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=0,
-              tr=1, thr=None, ch_name=[], chplot='', debug=False, quiet=False):
+              tr=1, thr=None, ch_name=[], chplot='', debug=False, quiet=False,
+              yml='participants.yml'):
     """
     Main workflow of phys2bids.
 
@@ -295,6 +297,30 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         print_summary(filename, num_timepoints_expected,
                       phys_in.num_timepoints_found, uniq_freq,
                       phys_out[uniq_freq].start_time, outfile)
+
+    # Generate participants.tsv file if it doesn't exist already
+    if heur_file:
+        participants_file = os.path.join(outdir, 'participants.tsv')
+        if not os.path.exists(participants_file):
+            # Read yaml info if file exists
+            if os.path.exists(os.path.join(indir, yml)):
+                with open(os.path.join(indir, yml)) as f:
+                    yaml_data = yaml.load(f, Loader=yaml.FullLoader)
+                p_id = yaml_data['participant']['participant_id']
+                p_age = yaml_data['participant']['age']
+                p_sex = yaml_data['participant']['sex']
+                p_handedness = yaml_data['participant']['handedness']
+            else:
+                # Fill in with data from phys2bids
+                p_id = sub
+                p_age = 'n/a'
+                p_sex = 'n/a'
+                p_handedness = 'n/a'
+
+            participants_data = (f'participant_id \t age \t sex \t handedness \n'
+                                 f'{p_id} \t {p_age} \t {p_sex} \t {p_handedness}')
+
+        utils.writefile(participants_file, '', participants_data)
 
 
 def _main(argv=None):
