@@ -132,7 +132,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # #!# This can probably be done while parsing?
     outdir = utils.check_input_dir(outdir)
     utils.path_exists_or_make_it(outdir)
-
+    # generate extra path
+    utils.path_exists_or_make_it(outdir + "/extra")
     # Create logfile name
     basename = 'phys2bids_'
     extension = 'tsv'
