@@ -5,6 +5,7 @@ import os
 import re
 import shutil
 import subprocess
+from csv import reader
 from pkg_resources import resource_filename
 
 from phys2bids._version import get_versions
@@ -354,6 +355,19 @@ def test_integration_heuristic(samefreq_short_txt_file):
     assert math.isclose(json_data['SamplingFrequency'], 10000.0,)
     assert math.isclose(json_data['StartTime'], -189.6,)
     assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'MR TRIGGER - Custom, HLT100C - A 5']
+
+    # Check that participant.tsv gets updated
+    phys2bids(filename=test_full_path, chtrig=test_chtrig, outdir=test_outdir,
+            num_timepoints_expected=test_ntp, tr=test_tr, thr=test_thr, sub='002',
+            ses='01', heur_file=test_heur)
+
+    counter = 0
+    subject_list = ['participant_id', '006', '002']
+    with open(os.path.join(test_path, 'participants.tsv')) as pf:
+        tsvreader = reader(pf, delimiter="\t")
+        for line in tsvreader:
+            assert subject_list[counter] in line[0]
+            counter += 1
 
     # Remove generated files
     for filename in glob.glob(os.path.join(extra_dir, 'phys2bids*')):
