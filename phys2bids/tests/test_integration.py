@@ -33,7 +33,7 @@ def test_logger(multifreq_lab_file):
     test_chtrig = 3
     test_ntp = 1
     test_outdir = test_path
-    extra_dir = test_path + "/bids_ignore/"
+    extra_dir = test_path + '/bids_ignore/'
     # Phys2bids call through terminal
     subprocess.run(f'phys2bids -in {test_filename} -indir {test_path} '
                    f'-chtrig {test_chtrig} -ntp {test_ntp} -outdir {test_outdir}',
@@ -59,7 +59,7 @@ def test_integration_txt(samefreq_short_txt_file):
 
     test_path, test_filename = os.path.split(samefreq_short_txt_file)
     test_chtrig = 2
-    extra_dir = test_path + "/bids_ignore/"
+    extra_dir = test_path + '/bids_ignore/'
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1)
@@ -111,7 +111,7 @@ def test_integration_acq(samefreq_full_acq_file):
 
     test_path, test_filename = os.path.split(samefreq_full_acq_file)
     test_chtrig = 3
-    extra_dir = test_path + "/bids_ignore/"
+    extra_dir = test_path + '/bids_ignore/'
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1)
@@ -164,7 +164,7 @@ def test_integration_multifreq(multifreq_lab_file):
 
     test_path, test_filename = os.path.split(multifreq_lab_file)
     test_chtrig = 3
-    extra_dir = test_path + "/bids_ignore/"
+    extra_dir = test_path + '/bids_ignore/'
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1)
@@ -312,7 +312,7 @@ def test_integration_heuristic(samefreq_short_txt_file):
     test_full_path = os.path.join(test_path, test_filename)
     test_chtrig = 1
     test_outdir = test_path
-    extra_dir = test_path + "/bids_ignore/"
+    extra_dir = test_path + '/bids_ignore/'
     test_ntp = 158
     test_tr = 1.2
     test_thr = 0.735
