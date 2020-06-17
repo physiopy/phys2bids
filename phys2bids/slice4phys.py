@@ -84,7 +84,7 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
             # adjust time_offset to keep original timing information
             phys_in.time_offset = phys_in.time_offset + run_timestamps[run_idx][2]
             # update run_start, removing 2 paddings (one for this run, one for the previous)
-            run_start = int(run_start + previous_end_index - 2*padding)
+            run_start = int(run_start + previous_end_index - 2 * padding)
             # update run_end, removing the padding of the previous end
             run_end = int(run_end + previous_end_index - padding)
 
