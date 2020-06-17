@@ -113,7 +113,7 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
 def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=0,
               tr=1, thr=None, ch_name=[], chplot='', debug=False, quiet=False,
-              yml=None):
+              yml=''):
     """
     Main workflow of phys2bids.
 
@@ -268,9 +268,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         # Generate participants.tsv file if it doesn't exist already.
         # Update the file if the subject is not in the file.
         # Do not update if the subject is already in the file.
-        if yml is None:
-            yml = ''
-        participants_file(outdir, os.path.join(indir, yml), sub)
+        participants_file(outdir, yml, sub)
     elif heur_file and not sub:
         LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
                     'Skipping BIDS formatting.')
