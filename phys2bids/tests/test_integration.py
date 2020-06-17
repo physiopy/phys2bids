@@ -376,7 +376,7 @@ def test_integration_info(samefreq_short_txt_file):
     test_ntp = 158
     test_tr = 1.2
     test_thr = 0.735
-    extra_dir = test_path + "/bids_ignore/"
+    extra_dir = test_path + '/bids_ignore/'
     # Move into folder
     subprocess.run(f'cd {test_path}', shell=True, check=True)
     # Phys2bids call through terminal
