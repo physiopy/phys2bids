@@ -265,6 +265,10 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     if heur_file and sub:
         LGR.info(f'Preparing BIDS output using {heur_file}')
+        # Generate participants.tsv file if it doesn't exist already.
+        # Update the file if the subject is not in the file.
+        # Do not update if the subject is already in the file.
+        participants_file(indir, outdir, yml, sub)
     elif heur_file and not sub:
         LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
                     'Skipping BIDS formatting.')
@@ -296,12 +300,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         print_summary(filename, num_timepoints_expected,
                       phys_in.num_timepoints_found, uniq_freq,
                       phys_out[uniq_freq].start_time, outfile)
-
-    # Generate participants.tsv file if it doesn't exist already.
-    # Update the file if the subject is not in the file.
-    # Do not update if the subject is already in the file.
-    if heur_file and sub:
-        participants_file(indir, outdir, yml, sub)
 
 
 def _main(argv=None):
