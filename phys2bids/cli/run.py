@@ -128,7 +128,8 @@ def _get_parser():
     optional.add_argument('-yml', '--participant-yml',
                           dest='yml',
                           type=str,
-                          help='full path to file with info needed to generate participant.tsv file ',
+                          help='full path to file with info needed to generate '
+                               'participant.tsv file ',
                           default='')
     optional.add_argument('-debug', '--debug',
                           dest='debug',
