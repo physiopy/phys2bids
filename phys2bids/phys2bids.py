@@ -34,7 +34,7 @@ from copy import deepcopy
 from numpy import savetxt
 
 from phys2bids import utils, viz, _version
-from phys2bids.bids import bidsify_units, use_heuristic
+from phys2bids.bids import bidsify_units, use_heuristic, participants_file
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
 
@@ -301,7 +301,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # Update the file if the subject is not in the file.
     # Do not update if the subject is already in the file.
     if heur_file:
-        utils.participants_file(indir, outdir, yml, sub)
+        participants_file(indir, outdir, yml, sub)
 
 
 def _main(argv=None):
