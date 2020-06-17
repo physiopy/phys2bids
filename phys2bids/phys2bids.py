@@ -133,13 +133,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     outdir = utils.check_input_dir(outdir)
     utils.path_exists_or_make_it(outdir)
     # generate extra path
-    extra = outdir + "/extra"
-    utils.path_exists_or_make_it(extra)
+    extra_dir = outdir + "/extra"
+    utils.path_exists_or_make_it(extra_dir)
     # Create logfile name
     basename = 'phys2bids_'
     extension = 'tsv'
     isotime = datetime.datetime.now().strftime('%Y-%m-%dT%H%M%S')
-    logname = os.path.join(extra, (basename + isotime + '.' + extension))
+    logname = os.path.join(extra_dir, (basename + isotime + '.' + extension))
 
     # Set logging format
     log_formatter = logging.Formatter(
@@ -194,9 +194,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     LGR.info('Reading infos')
     phys_in.print_info(filename)
     # #!# Here the function viz.plot_channel should be called
-    if chplot != '' or info:
-        viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
-                     phys_in.freq, infile, chplot)
+    viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
+                 phys_in.freq, infile, extra_dir)
     # If only info were asked, end here.
     if info:
         return
