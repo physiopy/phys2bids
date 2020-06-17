@@ -315,7 +315,7 @@ def participants_file(indir, outdir, yml, sub):
         header = ['participant_id', 'age', 'sex', 'handedness']
         append_list_as_row(participants_file, header)
 
-        participants_data = [sub, p_age, p_sex, p_handedness]
+        participants_data = [p_id, p_age, p_sex, p_handedness]
         append_list_as_row(participants_file, participants_data)
 
     else:
@@ -327,9 +327,9 @@ def participants_file(indir, outdir, yml, sub):
         with open(participants_file) as pf:
             tsvreader = reader(pf, delimiter="\t")
             for line in tsvreader:
-                if sub in line[0]:
+                if sub in line[p_id_idx]:
                     sub_exists = True
                     break
         if not sub_exists:
-            participants_data = [sub, 'n/a', 'n/a','n/a']
+            participants_data = [sub, 'n/a', 'n/a', 'n/a']
             append_list_as_row(participants_file, participants_data)
