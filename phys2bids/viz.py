@@ -180,6 +180,5 @@ def plot_all(ch_name, timeseries, units, freq, infile, outfile, dpi=SET_DPI, siz
         ax[row].grid()
     ax[row].set_xlabel("seconds")
     outfile = os.path.join(outfile, os.path.splitext(os.path.basename(infile))[0] + '.png')
-    print(outfile)
     LGR.info(f'saving channel plot to {outfile}')
     fig.savefig(outfile, dpi=dpi, bbox_inches='tight')
