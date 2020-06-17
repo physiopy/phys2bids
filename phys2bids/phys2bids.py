@@ -268,6 +268,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         # Generate participants.tsv file if it doesn't exist already.
         # Update the file if the subject is not in the file.
         # Do not update if the subject is already in the file.
+        if yml is None:
+            yml = ''
         participants_file(outdir, os.path.join(indir, yml), sub)
     elif heur_file and not sub:
         LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
