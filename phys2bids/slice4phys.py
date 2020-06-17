@@ -55,13 +55,12 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
         # correct time offset for this iteration's object
         phys_in.check_trigger_amount(thr=thr, num_timepoints_expected=run_tps,
                                      tr=tr_list[run_idx])
-
         # If it's the very first run, start the run at sample 0,
-        # otherwise "add" the padding
+        # otherwise find the index of time 0
         if run_idx == 0:
             run_start = 0
         else:
-            run_start = np.where(np.isclose(phys_in.timeseries[0], 0))[0][0] - padding
+            run_start = int(np.where(np.isclose(phys_in.timeseries[0], 0))[0])
 
         # Defining end of acquisition
         # run length in seconds
@@ -84,8 +83,10 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
             previous_end_index = run_timestamps[run_idx][1]
             # adjust time_offset to keep original timing information
             phys_in.time_offset = phys_in.time_offset + run_timestamps[run_idx][2]
-            run_start = int(run_start + previous_end_index)
-            run_end = int(run_end + previous_end_index)
+            # update run_start, removing 2 paddings (one for this run, one for the previous)
+            run_start = int(run_start + previous_end_index - 2*padding)
+            # update run_end, removing the padding of the previous end
+            run_end = int(run_end + previous_end_index - padding)
 
         # Save *start* and *end_index* in dictionary along with *time_offset* and *ntp found*
         # dict key must be readable by human
@@ -139,7 +140,6 @@ def slice4phys(phys_in, ntp_list, tr_list, thr, padding=9):
                 '\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     # Find the timestamps
     run_timestamps = find_runs(phys_in, ntp_list, tr_list, thr, padding)
-
     for n, run in enumerate(run_timestamps.keys()):
 
         # tmp variable to collect run's info
