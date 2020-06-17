@@ -133,7 +133,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     outdir = utils.check_input_dir(outdir)
     utils.path_exists_or_make_it(outdir)
     # generate extra path
-    extra_dir = outdir + "/extra"
+    extra_dir = outdir + "/bids_ignore"
     utils.path_exists_or_make_it(extra_dir)
     # Create logfile name
     basename = 'phys2bids_'
