@@ -195,7 +195,7 @@ def participants_file(outdir, yml, sub):
     if not os.path.exists(file_path):
         LGR.warning('phys2bids could not find participants.tsv')
         # Read yaml info if file exists
-        if '.yml' in yml and os.path.exists(yml):
+        if '.yml' in yml is not None and os.path.exists(yml):
             LGR.info('Using yaml data to populate participants.tsv')
             with open(yml) as f:
                 yaml_data = yaml.load(f, Loader=yaml.FullLoader)
@@ -239,6 +239,7 @@ def participants_file(outdir, yml, sub):
         # Only append to file if subject is not in the file
         if not sub_exists:
             LGR.info(f'Appending subjet sub-{sub} to participants.tsv ...')
-            participants_data = 'n/a' * header_length
+            breakpoint()
+            participants_data = ['n/a'] * header_length
             participants_data[p_id_idx] = f'sub-{sub}'
             utils.append_list_as_row(file_path, participants_data)
