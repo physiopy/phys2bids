@@ -129,7 +129,7 @@ def _get_parser():
                           dest='yml',
                           type=str,
                           help='file with info needed to generate participant.tsv file ',
-                          default='participants.yml')
+                          default=None)
     optional.add_argument('-debug', '--debug',
                           dest='debug',
                           action='store_true',

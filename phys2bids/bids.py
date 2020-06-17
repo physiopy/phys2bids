@@ -188,7 +188,7 @@ def participants_file(indir, outdir, yml, sub):
     if not os.path.exists(file_path):
         LGR.warning('phys2bids could not find participants.tsv')
         # Read yaml info if file exists
-        if os.path.exists(os.path.join(indir, yml)):
+        if yml is not None and os.path.exists(os.path.join(indir, yml)):
             LGR.info('Using yaml data to populate participants.tsv')
             with open(os.path.join(indir, yml)) as f:
                 yaml_data = yaml.load(f, Loader=yaml.FullLoader)
