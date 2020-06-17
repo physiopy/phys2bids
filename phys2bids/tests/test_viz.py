@@ -10,7 +10,8 @@ def test_plot_all(samefreq_full_acq_file):
     phys_obj = acq.populate_phys_input(samefreq_full_acq_file, chtrig)
     viz.plot_all(phys_obj.ch_name, phys_obj.timeseries, phys_obj.units,
                  phys_obj.freq, test_filename, outfile=test_path)
-    assert os.path.isfile(out)
+    assert os.path.isfile(os.path.join(test_path,
+                          os.path.splitext(os.path.basename(test_filename))[0] + '.png'))
 
 
 def test_plot_trigger(samefreq_full_acq_file):
