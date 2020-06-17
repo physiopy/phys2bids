@@ -239,7 +239,6 @@ def participants_file(outdir, yml, sub):
         # Only append to file if subject is not in the file
         if not sub_exists:
             LGR.info(f'Appending subjet sub-{sub} to participants.tsv ...')
-            breakpoint()
             participants_data = ['n/a'] * header_length
             participants_data[p_id_idx] = f'sub-{sub}'
             utils.append_list_as_row(file_path, participants_data)
