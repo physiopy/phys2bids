@@ -300,7 +300,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # Generate participants.tsv file if it doesn't exist already.
     # Update the file if the subject is not in the file.
     # Do not update if the subject is already in the file.
-    if heur_file:
+    if heur_file and sub:
         participants_file(indir, outdir, yml, sub)
 
 
