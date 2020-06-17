@@ -105,7 +105,7 @@ def test_integration_acq(samefreq_full_acq_file):
     test_path, test_filename = os.path.split(samefreq_full_acq_file)
     test_chtrig = 3
     extra_dir = test_path + "/extra/"
-    
+
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1)
 
