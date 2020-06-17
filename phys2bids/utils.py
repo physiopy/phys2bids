@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from csv import reader, writer
 import json
 import logging
 import os
 import sys
 from pathlib import Path
+import yaml
 
 LGR = logging.getLogger(__name__)
 
@@ -280,3 +282,54 @@ def load_heuristic(heuristic):
         except Exception as exc:
             raise ImportError(f'Failed to import heuristic {heuristic}: {exc}')
     return mod
+
+
+def append_list_as_row(file_name, list_of_elem):
+    # Open file in append mode
+    with open(file_name, 'a+', newline='') as write_obj:
+        # Create a writer object from csv module
+        csv_writer = writer(write_obj, delimiter='\t')
+        # Add contents of list as last row in the csv file
+        csv_writer.writerow(list_of_elem)
+
+
+def participants_file(indir, outdir, yml, sub):
+
+    participants_file = os.path.join(outdir, 'participants.tsv')
+    if not os.path.exists(participants_file):
+        # Read yaml info if file exists
+        if os.path.exists(os.path.join(indir, yml)):
+            with open(os.path.join(indir, yml)) as f:
+                yaml_data = yaml.load(f, Loader=yaml.FullLoader)
+            p_id = yaml_data['participant']['participant_id']
+            p_age = yaml_data['participant']['age']
+            p_sex = yaml_data['participant']['sex']
+            p_handedness = yaml_data['participant']['handedness']
+        else:
+            # Fill in with data from phys2bids
+            p_id = sub
+            p_age = 'n/a'
+            p_sex = 'n/a'
+            p_handedness = 'n/a'
+
+        header = ['participant_id', 'age', 'sex', 'handedness']
+        append_list_as_row(participants_file, header)
+
+        participants_data = [sub, p_age, p_sex, p_handedness]
+        append_list_as_row(participants_file, participants_data)
+
+    else:
+        pf = open(participants_file, 'r')
+        header = pf.readline().split("\t")
+        pf.close()
+        p_id_idx = header.index('participant_id')
+        sub_exists = False
+        with open(participants_file) as pf:
+            tsvreader = reader(pf, delimiter="\t")
+            for line in tsvreader:
+                if sub in line[0]:
+                    sub_exists = True
+                    break
+        if not sub_exists:
+            participants_data = [sub, 'n/a', 'n/a','n/a']
+            append_list_as_row(participants_file, participants_data)
