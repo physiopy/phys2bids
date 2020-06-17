@@ -1,9 +1,9 @@
-from csv import reader
 import os
 import logging
+from csv import reader
+from pathlib import Path
 
 import yaml
-from pathlib import Path
 
 from phys2bids import utils
 
@@ -174,25 +174,32 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
     return heurpath
 
 
-def participants_file(indir, outdir, yml, sub):
-    """[summary]
+def participants_file(outdir, yml, sub):
+    """
+    Create participants.tsv file if it does not exist.
+    If it exists and the subject is missing, then add it.
+    Otherwise, do nothing.
 
-    Args:
-        indir ([type]): [description]
-        outdir ([type]): [description]
-        yml ([type]): [description]
-        sub ([type]): [description]
+    Parameters
+    ----------
+    outdir: path
+        Full path to the output directory.
+    yml: path
+        Full path to the yaml file.
+    sub: str
+        Subject ID.
+
     """
     LGR.info('Updating participants.tsv ...')
     file_path = os.path.join(outdir, 'participants.tsv')
     if not os.path.exists(file_path):
         LGR.warning('phys2bids could not find participants.tsv')
         # Read yaml info if file exists
-        if yml is not None and os.path.exists(os.path.join(indir, yml)):
+        if yml is not None and os.path.exists(yml):
             LGR.info('Using yaml data to populate participants.tsv')
-            with open(os.path.join(indir, yml)) as f:
+            with open(yml) as f:
                 yaml_data = yaml.load(f, Loader=yaml.FullLoader)
-            p_id = sub
+            p_id = f'sub-{sub}'
             p_age = yaml_data['participant']['age']
             p_sex = yaml_data['participant']['sex']
             p_handedness = yaml_data['participant']['handedness']
@@ -200,7 +207,7 @@ def participants_file(indir, outdir, yml, sub):
             LGR.info('No yaml file was provided. Using phys2bids data to '
                      'populate participants.tsv')
             # Fill in with data from phys2bids
-            p_id = sub
+            p_id = f'sub-{sub}'
             p_age = 'n/a'
             p_sex = 'n/a'
             p_handedness = 'n/a'
@@ -217,6 +224,7 @@ def participants_file(indir, outdir, yml, sub):
         # Find participant_id column in header
         pf = open(file_path, 'r')
         header = pf.readline().split("\t")
+        header_length = len(header)
         pf.close()
         p_id_idx = header.index('participant_id')
 
@@ -230,6 +238,7 @@ def participants_file(indir, outdir, yml, sub):
                     break
         # Only append to file if subject is not in the file
         if not sub_exists:
-            LGR.info(f'Appending subjet {sub} to participants.tsv ...')
-            participants_data = [sub, 'n/a', 'n/a', 'n/a']
+            LGR.info(f'Appending subjet sub-{sub} to participants.tsv ...')
+            participants_data = 'n/a' * header_length
+            participants_data[p_id_idx] = f'sub-{sub}'
             utils.append_list_as_row(file_path, participants_data)
