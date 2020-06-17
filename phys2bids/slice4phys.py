@@ -56,7 +56,7 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
         phys_in.check_trigger_amount(thr=thr, num_timepoints_expected=run_tps,
                                      tr=tr_list[run_idx])
         # If it's the very first run, start the run at sample 0,
-        # otherwise find the index of time 0
+        # otherwise start is first trigger (adjust with padding later)
         if run_idx == 0:
             run_start = 0
         else:
