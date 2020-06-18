@@ -45,12 +45,17 @@ html, body {
     display: inline-block;
 }
 
-.main {
+.tree {
     display: inline-block;
     margin-top: 150px;
     margin-left: 100px;
     margin-right: 100px;
     width: 100%;
+}
+
+.tree_text {
+    margin-top: 50px;
+    margin-bottom: 70px;
 }
 
 .bk-root {
@@ -59,9 +64,4 @@ html, body {
     margin-left: 100px;
     margin-right: 100px;
     width: 100%;
-}
-
-.tree {
-    margin-top: 50px;
-    margin-bottom: 70px;
 }
