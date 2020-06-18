@@ -148,11 +148,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     outdir = utils.check_input_dir(outdir)
     utils.path_exists_or_make_it(outdir)
     utils.path_exists_or_make_it(os.path.join(outdir, 'code'))
-    conversion_path = os.path.join(outdir, 'code/conversion')
+    conversion_path = os.path.join(outdir, 'code', 'conversion')
     utils.path_exists_or_make_it(conversion_path)
-    # generate extra path
-    extra_dir = os.path.join(outdir, 'bids_ignore')
-    utils.path_exists_or_make_it(extra_dir)
+
     # Create logfile name
     basename = 'phys2bids_'
     extension = 'tsv'
@@ -284,7 +282,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # returns a dictionary in the form {run_idx: phys_in[startpoint, endpoint]}
 
             # save a figure for each run | give the right acquisition parameters for runs
-            fileprefix = os.path.join(outdir,
+            fileprefix = os.path.join(conversion_path,
                                       os.path.splitext(os.path.basename(filename))[0])
             for i, run in enumerate(phys_in.keys()):
                 plot_fileprefix = f'{fileprefix}_{run}'
@@ -300,7 +298,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # and the time offset.
             phys_in.check_trigger_amount(thr, num_timepoints_expected[0], tr[0])
             # save a figure of the trigger
-            fileprefix = os.path.join(outdir,
+            fileprefix = os.path.join(conversion_path,
                                       os.path.splitext(os.path.basename(filename))[0])
             viz.export_trigger_plot(phys_in, chtrig, fileprefix, tr[0],
                                     num_timepoints_expected[0], filename,
@@ -396,16 +394,14 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                     if any([phys.filename == phys_out[key].filename
                            for phys in phys_out.values()]):
                         phys_out[key].filename = (f'{phys_out[key].filename}'
-                                                  '_take-{run}')
+                                                  f'_take-{run}')
                         LGR.warning('Identified multiple outputs with the same name.\n'
                                     'Appending fake label to avoid overwriting.\n'
                                     '!!! ATTENTION !!! the output is not BIDS compliant.\n'
                                     'Please check heuristics to solve the problem.')
 
             else:
-                phys_out[key].filename = os.path.join(outdir,
-                                                      os.path.splitext(os.path.basename(filename)
-                                                                       )[0])
+                phys_out[key].filename = os.path.splitext(os.path.basename(filename))[0]
                 # Append "run" to filename if more than one run
                 if run_amount > 1:
                     phys_out[key].filename = f'{phys_out[key].filename}_{run:02d}'
@@ -414,15 +410,15 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                     phys_out[key].filename = f'{phys_out[key].filename}_{uniq_freq}'
 
             LGR.info(f'Exporting files for run {run} freq {uniq_freq}')
-            np.savetxt(phys_out[key].filename + '.tsv.gz', phys_out[key].timeseries,
-                       fmt='%.8e', delimiter='\t')
-            print_json(phys_out[key].filename, phys_out[key].freq,
-                       phys_out[key].start_time,
+            np.savetxt(os.path.join(outdir, phys_out[key].filename + '.tsv.gz'),
+                       phys_out[key].timeseries, fmt='%.8e', delimiter='\t')
+            print_json(os.path.join(outdir, phys_out[key].filename),
+                       phys_out[key].freq, phys_out[key].start_time,
                        phys_out[key].ch_name)
             print_summary(filename, num_timepoints_expected,
                           phys_in[run].num_timepoints_found, uniq_freq,
-                          phys_out[key].start_time, os.path.join(conversion_path,
-                                                                 phys_out[key].filename))
+                          phys_out[key].start_time,
+                          os.path.join(conversion_path, phys_out[key].filename))
 
 
 def _main(argv=None):
