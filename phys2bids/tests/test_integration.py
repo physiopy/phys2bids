@@ -412,8 +412,8 @@ def test_integration_info(samefreq_short_txt_file):
     subprocess.run(command_str, shell=True, check=True)
 
     # Check that plot all file is generated
-    assert os.path.isfile(os.path.join(test_outdir,
-                                       'bids_ignore/Test_belt_pulse_samefreq_short.png'))
+    assert os.path.isfile(os.path.join(conversion_path,
+                                       'Test_belt_pulse_samefreq_short.png'))
 
     # Read logger file
     logger_file = glob.glob(os.path.join(conversion_path, '*phys2bids*'))[0]
