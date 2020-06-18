@@ -11,7 +11,7 @@ from bokeh.layouts import gridplot
 from phys2bids import _version
 
 
-def _save_as_html(log_path, log_content):
+def _save_as_html(log_html_path, log_content, qc_html_path):
     """
     Save an HTML report out to a file.
     Parameters
@@ -25,11 +25,12 @@ def _save_as_html(log_path, log_content):
     with open(str(head_template_path), 'r') as head_file:
         head_tpl = Template(head_file.read())
 
-    html = head_tpl.substitute(version=_version.get_versions()['version'], log_path=log_path,
-                               log_content=log_content)
+    html = head_tpl.substitute(version=_version.get_versions()['version'],
+                               log_html_path=log_html_path, log_content=log_content,
+                               qc_html_path=qc_html_path)
     return html
 
-def _update_fpage_template(tree_string, bokeh_id, bokeh_js, log_html_path):
+def _update_fpage_template(tree_string, bokeh_id, bokeh_js, log_html_path, qc_html_path):
     """
     Populate a report with content.
     Parameters
@@ -54,7 +55,8 @@ def _update_fpage_template(tree_string, bokeh_id, bokeh_js, log_html_path):
                                content=bokeh_id,
                                javascript=bokeh_js,
                                version=_version.get_versions()['version'],
-                               log_html_path=log_html_path)
+                               log_html_path=log_html_path,
+                               qc_html_path=qc_html_path)
     return body
 
 def _generate_file_tree(out_dir):
@@ -146,7 +148,7 @@ def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750)):
     for row, timeser in enumerate(timeseries[1:]):
         y = timeser[:max_time]
         i = row + 1
-        breakpoint()
+
         hovertool = HoverTool(tooltips=[(ch_name[i], '@y{0.00}'+units[i]),
                                         ('time', '@x{0.00}s')])
         tools=['wheel_zoom,pan,reset', hovertool]
@@ -202,17 +204,18 @@ def generate_report(out_dir, log_path, ch_name, timeseries, units, freq):
         log_content = f.read()
 
     log_content = log_content.replace('\n', '<br>')
+    log_html_path = opj(out_dir, 'phys2bids_report_log.html')
+    qc_html_path = opj(out_dir, 'phys2bids_report_plots.html')
 
-    html = _save_as_html(log_path, log_content)
+    html = _save_as_html(log_html_path, log_content, qc_html_path)
 
-    with open(opj(out_dir, 'phys2bids_report_log.html'), 'wb') as f:
+    with open(log_html_path, 'wb') as f:
         f.write(html.encode('utf-8'))
 
     ## Read in output directory structure & create tree 
     tree_string = _generate_file_tree(out_dir)
     bokeh_div, bokeh_js = _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750))
-    log_html_path = opj(out_dir, 'phys2bids_report_log.html')
-    html = _update_fpage_template(tree_string, bokeh_div, bokeh_js, log_html_path)
-#    html = _save_as_html(body)
-    with open(opj(out_dir, 'phys2bids_report_plots.html'), 'wb') as f:
+    html = _update_fpage_template(tree_string, bokeh_div, bokeh_js, log_html_path, qc_html_path)
+
+    with open(qc_html_path, 'wb') as f:
         f.write(html.encode('utf-8'))
