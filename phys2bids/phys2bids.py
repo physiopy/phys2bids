@@ -132,8 +132,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # #!# This can probably be done while parsing?
     outdir = utils.check_input_dir(outdir)
     utils.path_exists_or_make_it(outdir)
-    utils.path_exists_or_make_it(os.path.join(outdir, '/code'))
-    conversion_path = os.path.join(outdir, '/code/conversion')
+    utils.path_exists_or_make_it(os.path.join(outdir, 'code'))
+    conversion_path = os.path.join(outdir, 'code/conversion')
     utils.path_exists_or_make_it(conversion_path)
     # generate extra path
     extra_dir = os.path.join(outdir, 'bids_ignore')
@@ -142,7 +142,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     basename = 'phys2bids_'
     extension = 'tsv'
     isotime = datetime.datetime.now().strftime('%Y-%m-%dT%H%M%S')
-    logname = os.path.join(extra_dir, (basename + isotime + '.' + extension))
+    logname = os.path.join(conversion_path, (basename + isotime + '.' + extension))
 
     # Set logging format
     log_formatter = logging.Formatter(
