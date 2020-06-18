@@ -242,3 +242,18 @@ def participants_file(outdir, yml, sub):
             participants_data = ['n/a'] * header_length
             participants_data[p_id_idx] = f'sub-{sub}'
             utils.append_list_as_row(file_path, participants_data)
+
+
+def data_description_file(outdir, name):
+    """
+    Create dataset_description.json file if it does not exist.
+    If it exists, do nothing.
+
+    Parameters
+    ----------
+    outdir: path
+        Full path to the output directory.
+    name: str
+        Dataset name
+
+    """
