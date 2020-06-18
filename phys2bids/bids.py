@@ -278,7 +278,7 @@ def readme_file(outdir):
 
     """
     file_path = os.path.join(outdir, 'README')
-    text = 'Empty README, plese fill in describing the dataset in more details SHOULD be provided'
+    text = 'Empty README, please fill in describing the dataset in more detail.'
     if not os.path.exists(file_path):
         LGR.warning('phys2bids could not find README,'
                     'generating it EMPTY, please fill in the necessary info')
