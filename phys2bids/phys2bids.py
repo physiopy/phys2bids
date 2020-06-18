@@ -27,10 +27,8 @@ Please scroll to bottom to read full license.
 """
 
 import datetime
-import getpass
 import logging
 import os
-import socket
 import sys
 from copy import deepcopy
 from shutil import copy as cp
@@ -170,6 +168,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     version_number = _version.get_versions()['version']
     LGR.info(f'Currently running phys2bids version {version_number}')
     LGR.info(f'Input file is {filename}')
+
+    # Save call.sh
+    arg_str = ' '.join(sys.argv[1:])
+    call_str = f'phys2bids {arg_str}'
+    f = open(os.path.join(conversion_path, 'call.sh'), "a")
+    f.write(f'#!bin/bash \n{call_str}')
+    f.close()
 
     # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
@@ -319,14 +324,10 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 def _main(argv=None):
     options = _get_parser().parse_args(argv)
     phys2bids(**vars(options))
-    # Command
-    args_str = ' '.join(argv)
-    call_str = f'phys2bids {args_str}'
-    
 
 
 if __name__ == '__main__':
-    _main()
+    _main(sys.argv[1:])
 
 """
 Copyright 2019, The Phys2BIDS community.
