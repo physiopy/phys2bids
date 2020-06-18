@@ -130,5 +130,5 @@ def test_participants_file(outdir):
         for line in tsvreader:
             assert line == test_missing_list[counter]
             counter += 1
-    os.remove(os.path.join(outdir, "participants.tsv"))
+    #os.remove(os.path.join(outdir, "participants.tsv"))
     os.remove(os.path.join(outdir, "test.yml"))
