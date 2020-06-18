@@ -35,7 +35,7 @@ from numpy import savetxt
 
 from phys2bids import utils, viz, _version
 from phys2bids.bids import bidsify_units, use_heuristic, participants_file
-from phys2bids.bids import dataset_description_file, README_file
+from phys2bids.bids import dataset_description_file, readme_file
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
 
