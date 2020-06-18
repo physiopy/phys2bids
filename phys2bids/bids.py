@@ -244,7 +244,7 @@ def participants_file(outdir, yml, sub):
             utils.append_list_as_row(file_path, participants_data)
 
 
-def data_description_file(outdir):
+def dataset_description_file(outdir):
     """
     Create dataset_description.json file if it does not exist.
     If it exists, do nothing.
@@ -265,3 +265,21 @@ def data_description_file(outdir):
                     'generating it with provided info')
         utils.writejson(file_path, data_dict)
 
+
+def README_file(outdir):
+    """
+    Create README file if it does not exist.
+    If it exists, do nothing.
+
+    Parameters
+    ----------
+    outdir: path
+        Full path to the output directory.
+
+    """
+    file_path = os.path.join(outdir, 'README')
+    text = 'Empty README, plese fill in describing the dataset in more details SHOULD be provided'
+    if not os.path.exists(file_path):
+        LGR.warning('phys2bids could not find README,'
+                    'generating it EMPTY, please fill in the necessary info')
+        utils.writefile(file_path, '', text)
