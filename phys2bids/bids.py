@@ -266,7 +266,7 @@ def dataset_description_file(outdir):
         utils.writejson(file_path, data_dict)
 
 
-def README_file(outdir):
+def readme_file(outdir):
     """
     Create README file if it does not exist.
     If it exists, do nothing.
