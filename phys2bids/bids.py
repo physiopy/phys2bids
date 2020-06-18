@@ -244,7 +244,7 @@ def participants_file(outdir, yml, sub):
             utils.append_list_as_row(file_path, participants_data)
 
 
-def data_description_file(outdir, name):
+def data_description_file(outdir):
     """
     Create dataset_description.json file if it does not exist.
     If it exists, do nothing.
@@ -253,7 +253,15 @@ def data_description_file(outdir, name):
     ----------
     outdir: path
         Full path to the output directory.
-    name: str
-        Dataset name
 
     """
+    # dictionary that will be written for the basic dataset description version
+    data_dict = {"Name": os.path.splitext(os.path.basename(outdir))[0],
+                 "BIDSVersion": "1.4.0", "DatasetType": "raw"}
+    file_path = os.path.join(outdir, 'dataset_description.json')
+    # check if dataset_description.json exists, if it doesn't create it
+    if not os.path.exists(file_path):
+        LGR.warning('phys2bids could not find dataset_description.json,'
+                    'generating it with provided info')
+        utils.writejson(file_path, data_dict)
+
