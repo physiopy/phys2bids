@@ -3,9 +3,12 @@ import os
 from pkg_resources import resource_filename
 
 import pytest
+import yaml
+from csv import reader
 
-from phys2bids.bids import bidsify_units, use_heuristic, readme_file, dataset_description_file
+from phys2bids import bids
 from phys2bids.bids import UNIT_ALIASES
+from phys2bids.utils import append_list_as_row
 
 
 def test_bidsify_units():
@@ -20,10 +23,10 @@ def test_bidsify_units():
                  }
     # Actually test
     for unit_key in unit_tests.keys():
-        assert bidsify_units(unit_key) == unit_tests[unit_key]
+        assert bids.bidsify_units(unit_key) == unit_tests[unit_key]
     # test there is not problem with every unit in the dict
     for unit_key in UNIT_ALIASES.keys():
-        assert bidsify_units(unit_key) == UNIT_ALIASES[unit_key]
+        assert bids.bidsify_units(unit_key) == bids.UNIT_ALIASES[unit_key]
 
 
 @pytest.mark.parametrize('test_sub', ['SBJ01', 'sub-006', '006'])
@@ -38,7 +41,7 @@ def test_use_heuristic(tmpdir, test_sub, test_ses):
     test_outdir = tmpdir
     test_record_label = 'test'
 
-    heur_path = use_heuristic(test_full_heur_path, test_sub, test_ses,
+    heur_path = bids.use_heuristic(test_full_heur_path, test_sub, test_ses,
                               test_full_input_path, test_outdir, test_record_label)
 
     if test_sub[:4] == 'sub-':
@@ -62,13 +65,45 @@ def test_use_heuristic(tmpdir, test_sub, test_ses):
 
 @pytest.mark.parametrize('outdir', '.')
 def test_README_file(outdir):
-    readme_file(outdir)
+    bids.readme_file(outdir)
     assert os.path.join(outdir, "README.md")
     os.remove(os.path.join(outdir, "README.md"))
 
 
 @pytest.mark.parametrize('outdir', '.')
 def test_dataset_description_file(outdir):
-    dataset_description_file(outdir)
+    bids.dataset_description_file(outdir)
     assert os.path.join(outdir, "dataset_description.json")
     os.remove(os.path.join(outdir, "dataset_description.json"))
+
+
+@pytest.mark.parametrize('outdir', '.')
+def test_participants_file(outdir):
+    test_sub = '001'
+    test_yaml_path = os.path.join(outdir, 'test.yml')
+
+    # Populate yaml file
+    data = dict(
+        participant = dict(
+            participant_id = f'sub-{test_sub}',
+            age = '25',
+            sex = 'm',
+            handedness = 'r',
+        )
+    )
+
+    test_header = ['participant_id', 'age', 'sex', 'handedness']
+    test_data = [f'sub-{test_sub}', '25', 'm', 'r']
+    test_list = [test_header, test_data]
+
+    with open(test_yaml_path, 'w') as outfile:
+        yaml.dump(data, outfile, default_flow_style=False)
+
+    bids.participants_file(outdir, test_yaml_path, test_sub)
+
+    counter = 0
+    with open(os.path.join(outdir, 'participants.tsv')) as pf:
+        tsvreader = reader(pf, delimiter="\t")
+        for line in tsvreader:
+            assert line == test_list[counter]
+            counter += 1
