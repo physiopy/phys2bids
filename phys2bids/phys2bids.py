@@ -26,10 +26,12 @@ Please scroll to bottom to read full license.
 
 """
 
-import os
 import datetime
 import logging
+import os
+import sys
 from copy import deepcopy
+from shutil import copy as cp
 
 from numpy import savetxt
 
@@ -145,6 +147,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # #!# This can probably be done while parsing?
     outdir = utils.check_input_dir(outdir)
     utils.path_exists_or_make_it(outdir)
+    utils.path_exists_or_make_it(os.path.join(outdir, 'code'))
+    conversion_path = os.path.join(outdir, 'code/conversion')
+    utils.path_exists_or_make_it(conversion_path)
     # generate extra path
     extra_dir = os.path.join(outdir, 'bids_ignore')
     utils.path_exists_or_make_it(extra_dir)
@@ -152,7 +157,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     basename = 'phys2bids_'
     extension = 'tsv'
     isotime = datetime.datetime.now().strftime('%Y-%m-%dT%H%M%S')
-    logname = os.path.join(extra_dir, (basename + isotime + '.' + extension))
+    logname = os.path.join(conversion_path, (basename + isotime + '.' + extension))
 
     # Set logging format
     log_formatter = logging.Formatter(
@@ -177,6 +182,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     version_number = _version.get_versions()['version']
     LGR.info(f'Currently running phys2bids version {version_number}')
     LGR.info(f'Input file is {filename}')
+
+    # Save call.sh
+    arg_str = ' '.join(sys.argv[1:])
+    call_str = f'phys2bids {arg_str}'
+    f = open(os.path.join(conversion_path, 'call.sh'), "a")
+    f.write(f'#!bin/bash \n{call_str}')
+    f.close()
 
     # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
@@ -208,7 +220,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     phys_in.print_info(filename)
     # #!# Here the function viz.plot_channel should be called
     viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
-                 phys_in.freq, infile, extra_dir)
+                 phys_in.freq, infile, conversion_path)
     # If only info were asked, end here.
     if info:
         return
@@ -220,7 +232,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         # #!# Get option of no trigger! (which is wrong practice or Respiract)
         phys_in.check_trigger_amount(thr, num_timepoints_expected, tr)
         LGR.info('Plot trigger')
-        plot_path = os.path.join(extra_dir,
+        plot_path = os.path.join(conversion_path,
                                  os.path.splitext(os.path.basename(filename))[0])
         if sub:
             plot_path += f'_sub-{sub}'
@@ -286,6 +298,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         bids.dataset_description_file(outdir)
         # Generate README file if it doesn't exist already.
         bids.readme_file(outdir)
+        cp(heur_file, os.path.join(conversion_path,
+           os.path.splitext(os.path.basename(heur_file))[0] + '.py'))
     elif heur_file and not sub:
         LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
                     'Skipping BIDS formatting.')
@@ -317,7 +331,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         print_summary(filename, num_timepoints_expected,
                       phys_in.num_timepoints_found, uniq_freq,
                       phys_out[uniq_freq].start_time,
-                      os.path.join(extra_dir, os.path.splitext(os.path.basename(outfile))[0]))
+                      os.path.join(conversion_path,
+                                   os.path.splitext(os.path.basename(outfile))[0]))
 
 
 def _main(argv=None):
@@ -326,7 +341,7 @@ def _main(argv=None):
 
 
 if __name__ == '__main__':
-    _main()
+    _main(sys.argv[1:])
 
 """
 Copyright 2019, The Phys2BIDS community.

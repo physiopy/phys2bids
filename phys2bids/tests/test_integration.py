@@ -34,14 +34,16 @@ def test_logger(multifreq_lab_file):
     test_chtrig = 3
     test_ntp = 1
     test_outdir = test_path
-    extra_dir = os.path.join(test_path, 'bids_ignore')
+    conversion_path = os.path.join(test_path, 'code/conversion')
     # Phys2bids call through terminal
     subprocess.run(f'phys2bids -in {test_filename} -indir {test_path} '
                    f'-chtrig {test_chtrig} -ntp {test_ntp} -outdir {test_outdir}',
                    shell=True, check=True)
 
+    assert os.path.isfile(os.path.join(conversion_path, 'call.sh'))
+
     # Read logger file
-    logger_file = glob.glob(os.path.join(extra_dir, '*phys2bids*'))[0]
+    logger_file = glob.glob(os.path.join(conversion_path, '*phys2bids*'))[0]
     with open(logger_file) as logger_info:
         logger_info = logger_info.readlines()
 
@@ -51,6 +53,7 @@ def test_logger(multifreq_lab_file):
 
     # Removes generated files
     os.remove(os.path.join(test_path, logger_file))
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_txt(samefreq_short_txt_file):
@@ -60,7 +63,7 @@ def test_integration_txt(samefreq_short_txt_file):
 
     test_path, test_filename = os.path.split(samefreq_short_txt_file)
     test_chtrig = 2
-    extra_dir = os.path.join(test_path, 'bids_ignore')
+    conversion_path = os.path.join(test_path, 'code/conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1)
@@ -71,10 +74,11 @@ def test_integration_txt(samefreq_short_txt_file):
 
     # Check files in extra are generated
     for suffix in ['.log', '_trigger_time.png']:
-        assert os.path.isfile(os.path.join(extra_dir, 'Test_belt_pulse_samefreq_short' + suffix))
+        assert os.path.isfile(os.path.join(conversion_path,
+                                           'Test_belt_pulse_samefreq_short' + suffix))
 
     # Read log file (note that this file is not the logger file)
-    with open(os.path.join(extra_dir, 'Test_belt_pulse_samefreq_short.log')) as log_info:
+    with open(os.path.join(conversion_path, 'Test_belt_pulse_samefreq_short.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -102,7 +106,7 @@ def test_integration_txt(samefreq_short_txt_file):
         os.remove(filename)
     for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_samefreq_short*')):
         os.remove(filename)
-    shutil.rmtree(extra_dir)
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_acq(samefreq_full_acq_file):
@@ -112,7 +116,7 @@ def test_integration_acq(samefreq_full_acq_file):
 
     test_path, test_filename = os.path.split(samefreq_full_acq_file)
     test_chtrig = 3
-    extra_dir = os.path.join(test_path, 'bids_ignore')
+    conversion_path = os.path.join(test_path, 'code/conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1)
@@ -123,10 +127,10 @@ def test_integration_acq(samefreq_full_acq_file):
 
     # Check files in extra are generated
     for suffix in ['.log', '_trigger_time.png']:
-        assert os.path.isfile(os.path.join(extra_dir, 'Test_belt_pulse_samefreq' + suffix))
+        assert os.path.isfile(os.path.join(conversion_path, 'Test_belt_pulse_samefreq' + suffix))
 
     # Read log file (note that this file is not the logger file)
-    with open(os.path.join(extra_dir, 'Test_belt_pulse_samefreq.log')) as log_info:
+    with open(os.path.join(conversion_path, 'Test_belt_pulse_samefreq.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -151,11 +155,11 @@ def test_integration_acq(samefreq_full_acq_file):
                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
     # Remove generated files
-    for filename in glob.glob(os.path.join(extra_dir, 'phys2bids*')):
+    for filename in glob.glob(os.path.join(conversion_path, 'phys2bids*')):
         os.remove(filename)
     for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_samefreq*')):
         os.remove(filename)
-    shutil.rmtree(extra_dir)
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_multifreq(multifreq_lab_file):
@@ -165,7 +169,7 @@ def test_integration_multifreq(multifreq_lab_file):
 
     test_path, test_filename = os.path.split(multifreq_lab_file)
     test_chtrig = 3
-    extra_dir = os.path.join(test_path, 'bids_ignore')
+    conversion_path = os.path.join(test_path, 'code/conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1)
@@ -184,15 +188,16 @@ def test_integration_multifreq(multifreq_lab_file):
         assert os.path.isfile(os.path.join(test_path,
                                            'Test1_multifreq_onescan_1000.0' + suffix))
     for freq in ['40', '100', '500', '1000']:
-        assert os.path.isfile(os.path.join(extra_dir,
+        assert os.path.isfile(os.path.join(conversion_path,
                                            'Test1_multifreq_onescan_' + freq + '.log'))
-    assert os.path.isfile(os.path.join(extra_dir, 'Test1_multifreq_onescan_trigger_time.png'))
+    assert os.path.isfile(os.path.join(conversion_path,
+                          'Test1_multifreq_onescan_trigger_time.png'))
 
     """
     Checks 40 Hz output
     """
     # Read log file of frequency 625 (note that this file is not the logger file)
-    with open(os.path.join(extra_dir, 'Test1_multifreq_onescan_40.log')) as log_info:
+    with open(os.path.join(conversion_path, 'Test1_multifreq_onescan_40.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -219,7 +224,7 @@ def test_integration_multifreq(multifreq_lab_file):
     Checks 100 Hz output
     """
     # Read log file of frequency 625 (note that this file is not the logger file)
-    with open(os.path.join(extra_dir, 'Test1_multifreq_onescan_100.log')) as log_info:
+    with open(os.path.join(conversion_path, 'Test1_multifreq_onescan_100.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -246,7 +251,7 @@ def test_integration_multifreq(multifreq_lab_file):
     Checks 500 Hz output
     """
     # Read log file of frequency 625 (note that this file is not the logger file)
-    with open(os.path.join(extra_dir, 'Test1_multifreq_onescan_500.log')) as log_info:
+    with open(os.path.join(conversion_path, 'Test1_multifreq_onescan_500.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -273,7 +278,7 @@ def test_integration_multifreq(multifreq_lab_file):
     Checks 1000 Hz output
     """
     # Read log file of frequency 625 (note that this file is not the logger file)
-    with open(os.path.join(extra_dir, 'Test1_multifreq_onescan_1000.log')) as log_info:
+    with open(os.path.join(conversion_path, 'Test1_multifreq_onescan_1000.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -297,11 +302,11 @@ def test_integration_multifreq(multifreq_lab_file):
     assert json_data['Columns'] == ['time', 'Trigger']
 
     # Remove generated files
-    for filename in glob.glob(os.path.join(extra_dir, 'phys2bids*')):
+    for filename in glob.glob(os.path.join(conversion_path, 'phys2bids*')):
         os.remove(filename)
     for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_multifreq*')):
         os.remove(filename)
-    shutil.rmtree(extra_dir)
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_heuristic(samefreq_short_txt_file):
@@ -313,7 +318,7 @@ def test_integration_heuristic(samefreq_short_txt_file):
     test_full_path = os.path.join(test_path, test_filename)
     test_chtrig = 1
     test_outdir = test_path
-    extra_dir = os.path.join(test_path, 'bids_ignore')
+    conversion_path = os.path.join(test_path, 'code/conversion')
     test_ntp = 158
     test_tr = 1.2
     test_thr = 0.735
@@ -329,10 +334,10 @@ def test_integration_heuristic(samefreq_short_txt_file):
     base_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_physio'
     for suffix in ['.json', '.tsv.gz']:
         assert os.path.isfile(os.path.join(test_path_output, base_filename + suffix))
-    assert os.path.isfile(os.path.join(extra_dir, base_filename + '.log'))
+    assert os.path.isfile(os.path.join(conversion_path, base_filename + '.log'))
     # Read log file (note that this file is not the logger file)
     log_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_physio.log'
-    with open(os.path.join(extra_dir, log_filename)) as log_info:
+    with open(os.path.join(conversion_path, log_filename)) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -370,13 +375,13 @@ def test_integration_heuristic(samefreq_short_txt_file):
             counter += 1
 
     # Remove generated files
-    for filename in glob.glob(os.path.join(extra_dir, 'phys2bids*')):
+    for filename in glob.glob(os.path.join(conversion_path, 'phys2bids*')):
         os.remove(filename)
     for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_samefreq*')):
         os.remove(filename)
     for filename in glob.glob(os.path.join(test_path_output, '*')):
         os.remove(filename)
-    shutil.rmtree(extra_dir)
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_info(samefreq_short_txt_file):
@@ -390,7 +395,7 @@ def test_integration_info(samefreq_short_txt_file):
     test_ntp = 158
     test_tr = 1.2
     test_thr = 0.735
-    extra_dir = os.path.join(test_path, 'bids_ignore')
+    conversion_path = os.path.join(test_path, 'code/conversion')
     # Move into folder
     subprocess.run(f'cd {test_path}', shell=True, check=True)
     # Phys2bids call through terminal
@@ -402,11 +407,11 @@ def test_integration_info(samefreq_short_txt_file):
     subprocess.run(command_str, shell=True, check=True)
 
     # Check that plot all file is generated
-    assert os.path.isfile(os.path.join(test_outdir,
-                                       'bids_ignore/Test_belt_pulse_samefreq_short.png'))
+    assert os.path.isfile(os.path.join(conversion_path,
+                                       'Test_belt_pulse_samefreq_short.png'))
 
     # Read logger file
-    logger_file = glob.glob(os.path.join(extra_dir, '*phys2bids*'))[0]
+    logger_file = glob.glob(os.path.join(conversion_path, '*phys2bids*'))[0]
     with open(logger_file) as logger_info:
         logger_info = logger_info.readlines()
 
@@ -415,6 +420,6 @@ def test_integration_info(samefreq_short_txt_file):
                         '02. MR TRIGGER - Custom, HLT100C - A 5; sampled at', '10000.0')
 
     # Remove generated files
-    for filename in glob.glob(os.path.join(extra_dir, 'phys2bids*')):
+    for filename in glob.glob(os.path.join(conversion_path, 'phys2bids*')):
         os.remove(filename)
-    shutil.rmtree(extra_dir)
+    shutil.rmtree(conversion_path)
