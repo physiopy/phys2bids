@@ -155,7 +155,7 @@ def test_integration_acq(samefreq_full_acq_file):
                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
     # Remove generated files
-    for filename in glob.glob(os.path.join(extra_dir, 'phys2bids*')):
+    for filename in glob.glob(os.path.join(conversion_path, 'phys2bids*')):
         os.remove(filename)
     for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_samefreq*')):
         os.remove(filename)
@@ -303,7 +303,7 @@ def test_integration_multifreq(multifreq_lab_file):
     assert json_data['Columns'] == ['time', 'Trigger']
 
     # Remove generated files
-    for filename in glob.glob(os.path.join(extra_dir, 'phys2bids*')):
+    for filename in glob.glob(os.path.join(conversion_path, 'phys2bids*')):
         os.remove(filename)
     for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_multifreq*')):
         os.remove(filename)
@@ -378,7 +378,7 @@ def test_integration_heuristic(samefreq_short_txt_file):
             counter += 1
 
     # Remove generated files
-    for filename in glob.glob(os.path.join(extra_dir, 'phys2bids*')):
+    for filename in glob.glob(os.path.join(conversion_path, 'phys2bids*')):
         os.remove(filename)
     for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_samefreq*')):
         os.remove(filename)
@@ -416,7 +416,7 @@ def test_integration_info(samefreq_short_txt_file):
                                        'bids_ignore/Test_belt_pulse_samefreq_short.png'))
 
     # Read logger file
-    logger_file = glob.glob(os.path.join(extra_dir, '*phys2bids*'))[0]
+    logger_file = glob.glob(os.path.join(conversion_path, '*phys2bids*'))[0]
     with open(logger_file) as logger_info:
         logger_info = logger_info.readlines()
 
@@ -425,7 +425,7 @@ def test_integration_info(samefreq_short_txt_file):
                         '02. MR TRIGGER - Custom, HLT100C - A 5; sampled at', '10000.0')
 
     # Remove generated files
-    for filename in glob.glob(os.path.join(extra_dir, 'phys2bids*')):
+    for filename in glob.glob(os.path.join(conversion_path, 'phys2bids*')):
         os.remove(filename)
     shutil.rmtree(extra_dir)
     shutil.rmtree(conversion_path)
