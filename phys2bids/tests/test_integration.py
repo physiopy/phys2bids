@@ -34,14 +34,14 @@ def test_logger(multifreq_lab_file):
     test_chtrig = 3
     test_ntp = 1
     test_outdir = test_path
-    extra_dir = os.path.join(test_path, 'bids_ignore')
+    conversion_path = os.path.join(test_path, 'code/conversion')
     # Phys2bids call through terminal
     subprocess.run(f'phys2bids -in {test_filename} -indir {test_path} '
                    f'-chtrig {test_chtrig} -ntp {test_ntp} -outdir {test_outdir}',
                    shell=True, check=True)
 
     # Read logger file
-    logger_file = glob.glob(os.path.join(extra_dir, '*phys2bids*'))[0]
+    logger_file = glob.glob(os.path.join(conversion_path, '*phys2bids*'))[0]
     with open(logger_file) as logger_info:
         logger_info = logger_info.readlines()
 
@@ -51,6 +51,7 @@ def test_logger(multifreq_lab_file):
 
     # Removes generated files
     os.remove(os.path.join(test_path, logger_file))
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_txt(samefreq_short_txt_file):
@@ -61,6 +62,7 @@ def test_integration_txt(samefreq_short_txt_file):
     test_path, test_filename = os.path.split(samefreq_short_txt_file)
     test_chtrig = 2
     extra_dir = os.path.join(test_path, 'bids_ignore')
+    conversion_path = os.path.join(test_path, 'code/conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1)
@@ -103,6 +105,7 @@ def test_integration_txt(samefreq_short_txt_file):
     for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_samefreq_short*')):
         os.remove(filename)
     shutil.rmtree(extra_dir)
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_acq(samefreq_full_acq_file):
@@ -113,6 +116,7 @@ def test_integration_acq(samefreq_full_acq_file):
     test_path, test_filename = os.path.split(samefreq_full_acq_file)
     test_chtrig = 3
     extra_dir = os.path.join(test_path, 'bids_ignore')
+    conversion_path = os.path.join(test_path, 'code/conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1)
@@ -156,6 +160,7 @@ def test_integration_acq(samefreq_full_acq_file):
     for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_samefreq*')):
         os.remove(filename)
     shutil.rmtree(extra_dir)
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_multifreq(multifreq_lab_file):
@@ -166,6 +171,7 @@ def test_integration_multifreq(multifreq_lab_file):
     test_path, test_filename = os.path.split(multifreq_lab_file)
     test_chtrig = 3
     extra_dir = os.path.join(test_path, 'bids_ignore')
+    conversion_path = os.path.join(test_path, 'code/conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1)
@@ -302,6 +308,7 @@ def test_integration_multifreq(multifreq_lab_file):
     for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_multifreq*')):
         os.remove(filename)
     shutil.rmtree(extra_dir)
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_heuristic(samefreq_short_txt_file):
@@ -314,6 +321,7 @@ def test_integration_heuristic(samefreq_short_txt_file):
     test_chtrig = 1
     test_outdir = test_path
     extra_dir = os.path.join(test_path, 'bids_ignore')
+    conversion_path = os.path.join(test_path, 'code/conversion')
     test_ntp = 158
     test_tr = 1.2
     test_thr = 0.735
@@ -377,6 +385,7 @@ def test_integration_heuristic(samefreq_short_txt_file):
     for filename in glob.glob(os.path.join(test_path_output, '*')):
         os.remove(filename)
     shutil.rmtree(extra_dir)
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_info(samefreq_short_txt_file):
@@ -391,6 +400,7 @@ def test_integration_info(samefreq_short_txt_file):
     test_tr = 1.2
     test_thr = 0.735
     extra_dir = os.path.join(test_path, 'bids_ignore')
+    conversion_path = os.path.join(test_path, 'code/conversion')
     # Move into folder
     subprocess.run(f'cd {test_path}', shell=True, check=True)
     # Phys2bids call through terminal
@@ -418,3 +428,4 @@ def test_integration_info(samefreq_short_txt_file):
     for filename in glob.glob(os.path.join(extra_dir, 'phys2bids*')):
         os.remove(filename)
     shutil.rmtree(extra_dir)
+    shutil.rmtree(conversion_path)
