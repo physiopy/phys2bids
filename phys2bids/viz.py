@@ -179,7 +179,7 @@ def export_trigger_plot(phys_in, chtrig, fileprefix, tr, num_timepoints_expected
                  filename, figsize, dpi)
 
 
-def plot_all(ch_name, timeseries, units, freq, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
+def plot_all(ch_name, timeseries, units, freq, infile, outfile, dpi=SET_DPI, size=FIGSIZE):
     """
     Plot all the channels for visualizations and saves them in outfile.
 
@@ -230,7 +230,6 @@ def plot_all(ch_name, timeseries, units, freq, infile, outfile='', dpi=SET_DPI, 
         ax[row].xlim = 30 * 60 * freq[0]  # maximum display of half an hour
         ax[row].grid()
     ax[row].set_xlabel('seconds')
-    if outfile == '':
-        outfile = os.path.splitext(os.path.basename(infile))[0] + '.png'
+    outfile = os.path.join(outfile, os.path.splitext(os.path.basename(infile))[0] + '.png')
     LGR.info(f'saving channel plot to {outfile}')
     fig.savefig(outfile, dpi=dpi, bbox_inches='tight')

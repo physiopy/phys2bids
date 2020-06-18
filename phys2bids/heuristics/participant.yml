@@ -1,0 +1,5 @@
+participant:
+    participant_id: # Required
+    age: n/a
+    sex: n/a
+    handedness: n/a

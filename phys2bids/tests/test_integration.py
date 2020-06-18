@@ -3,7 +3,9 @@ import json
 import math
 import os
 import re
+import shutil
 import subprocess
+from csv import reader
 from pkg_resources import resource_filename
 
 from phys2bids._version import get_versions
@@ -32,14 +34,17 @@ def test_logger(multifreq_lab_file):
     test_chtrig = 3
     test_ntp = 1
     test_outdir = test_path
-
+    conversion_path = os.path.join(test_path, 'code/conversion')
     # Phys2bids call through terminal
     subprocess.run(f'phys2bids -in {test_filename} -indir {test_path} '
                    f'-chtrig {test_chtrig} -ntp {test_ntp} -outdir {test_outdir}',
                    shell=True, check=True)
 
+    assert os.path.isfile(os.path.join(conversion_path, 'call.sh'))
+
     # Read logger file
-    logger_file = sorted(glob.glob(os.path.join(test_path, '*phys2bids*')))[-1]
+    logger_file = glob.glob(os.path.join(conversion_path, '*phys2bids*'))[0]
+    # logger_file = sorted(glob.glob(os.path.join(test_path, '*phys2bids*')))[-1]
     with open(logger_file) as logger_info:
         logger_info = logger_info.readlines()
 
@@ -49,6 +54,7 @@ def test_logger(multifreq_lab_file):
 
     # Removes generated files
     os.remove(os.path.join(test_path, logger_file))
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_txt(samefreq_short_txt_file):
@@ -58,16 +64,22 @@ def test_integration_txt(samefreq_short_txt_file):
 
     test_path, test_filename = os.path.split(samefreq_short_txt_file)
     test_chtrig = 2
+    conversion_path = os.path.join(test_path, 'code', 'conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1, tr=1)
 
     # Check that files are generated
-    for suffix in ['.log', '.json', '.tsv.gz', '_trigger_time.png']:
+    for suffix in ['.json', '.tsv.gz']:
         assert os.path.isfile(os.path.join(test_path, 'Test_belt_pulse_samefreq_short' + suffix))
 
+    # Check files in extra are generated
+    for suffix in ['.log', '_trigger_time.png']:
+        assert os.path.isfile(os.path.join(conversion_path,
+                                           'Test_belt_pulse_samefreq_short' + suffix))
+
     # Read log file (note that this file is not the logger file)
-    with open(os.path.join(test_path, 'Test_belt_pulse_samefreq_short.log')) as log_info:
+    with open(os.path.join(conversion_path, 'Test_belt_pulse_samefreq_short.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -95,6 +107,7 @@ def test_integration_txt(samefreq_short_txt_file):
         os.remove(filename)
     for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_samefreq_short*')):
         os.remove(filename)
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_acq(samefreq_full_acq_file):
@@ -104,16 +117,21 @@ def test_integration_acq(samefreq_full_acq_file):
 
     test_path, test_filename = os.path.split(samefreq_full_acq_file)
     test_chtrig = 3
+    conversion_path = os.path.join(test_path, 'code', 'conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1, tr=1)
 
     # Check that files are generated
-    for suffix in ['.log', '.json', '.tsv.gz', '_trigger_time.png']:
+    for suffix in ['.json', '.tsv.gz']:
         assert os.path.isfile(os.path.join(test_path, 'Test_belt_pulse_samefreq' + suffix))
 
+    # Check files in extra are generated
+    for suffix in ['.log', '_trigger_time.png']:
+        assert os.path.isfile(os.path.join(conversion_path, 'Test_belt_pulse_samefreq' + suffix))
+
     # Read log file (note that this file is not the logger file)
-    with open(os.path.join(test_path, 'Test_belt_pulse_samefreq.log')) as log_info:
+    with open(os.path.join(conversion_path, 'Test_belt_pulse_samefreq.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -138,10 +156,11 @@ def test_integration_acq(samefreq_full_acq_file):
                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
     # Remove generated files
-    for filename in glob.glob(os.path.join(test_path, 'phys2bids*')):
+    for filename in glob.glob(os.path.join(conversion_path, 'phys2bids*')):
         os.remove(filename)
     for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_samefreq*')):
         os.remove(filename)
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_multifreq(multifreq_lab_file):
@@ -151,30 +170,35 @@ def test_integration_multifreq(multifreq_lab_file):
 
     test_path, test_filename = os.path.split(multifreq_lab_file)
     test_chtrig = 3
+    conversion_path = os.path.join(test_path, 'code', 'conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1, tr=1)
 
     # Check that files are generated
-    for suffix in ['.log', '.json', '.tsv.gz']:
+    for suffix in ['.json', '.tsv.gz']:
         assert os.path.isfile(os.path.join(test_path,
                                            'Test1_multifreq_onescan_40.0' + suffix))
-    for suffix in ['.log', '.json', '.tsv.gz']:
+    for suffix in ['.json', '.tsv.gz']:
         assert os.path.isfile(os.path.join(test_path,
                                            'Test1_multifreq_onescan_100.0' + suffix))
-    for suffix in ['.log', '.json', '.tsv.gz']:
+    for suffix in ['.json', '.tsv.gz']:
         assert os.path.isfile(os.path.join(test_path,
                                            'Test1_multifreq_onescan_500.0' + suffix))
-    for suffix in ['.log', '.json', '.tsv.gz']:
+    for suffix in ['.json', '.tsv.gz']:
         assert os.path.isfile(os.path.join(test_path,
                                            'Test1_multifreq_onescan_1000.0' + suffix))
-    assert os.path.isfile(os.path.join(test_path, 'Test1_multifreq_onescan_trigger_time.png'))
+    for freq in ['40', '100', '500', '1000']:
+        assert os.path.isfile(os.path.join(conversion_path,
+                                           'Test1_multifreq_onescan_' + freq + '.log'))
+    assert os.path.isfile(os.path.join(conversion_path,
+                          'Test1_multifreq_onescan_trigger_time.png'))
 
     """
     Checks 40 Hz output
     """
     # Read log file of frequency 625 (note that this file is not the logger file)
-    with open(os.path.join(test_path, 'Test1_multifreq_onescan_40.0.log')) as log_info:
+    with open(os.path.join(conversion_path, 'Test1_multifreq_onescan_40.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -201,7 +225,7 @@ def test_integration_multifreq(multifreq_lab_file):
     Checks 100 Hz output
     """
     # Read log file of frequency 625 (note that this file is not the logger file)
-    with open(os.path.join(test_path, 'Test1_multifreq_onescan_100.0.log')) as log_info:
+    with open(os.path.join(conversion_path, 'Test1_multifreq_onescan_100.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -228,7 +252,7 @@ def test_integration_multifreq(multifreq_lab_file):
     Checks 500 Hz output
     """
     # Read log file of frequency 625 (note that this file is not the logger file)
-    with open(os.path.join(test_path, 'Test1_multifreq_onescan_500.0.log')) as log_info:
+    with open(os.path.join(conversion_path, 'Test1_multifreq_onescan_500.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -252,10 +276,10 @@ def test_integration_multifreq(multifreq_lab_file):
     assert json_data['Columns'] == ['Belt']
 
     """
-    Checks 100 Hz output
+    Checks 1000 Hz output
     """
     # Read log file of frequency 625 (note that this file is not the logger file)
-    with open(os.path.join(test_path, 'Test1_multifreq_onescan_1000.0.log')) as log_info:
+    with open(os.path.join(conversion_path, 'Test1_multifreq_onescan_1000.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -279,10 +303,11 @@ def test_integration_multifreq(multifreq_lab_file):
     assert json_data['Columns'] == ['time', 'Trigger']
 
     # Remove generated files
-    for filename in glob.glob(os.path.join(test_path, 'phys2bids*')):
+    for filename in glob.glob(os.path.join(conversion_path, 'phys2bids*')):
         os.remove(filename)
     for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_multifreq*')):
         os.remove(filename)
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_heuristic(samefreq_short_txt_file):
@@ -294,6 +319,7 @@ def test_integration_heuristic(samefreq_short_txt_file):
     test_full_path = os.path.join(test_path, test_filename)
     test_chtrig = 1
     test_outdir = test_path
+    conversion_path = os.path.join(test_path, 'code', 'conversion')
     test_ntp = 158
     test_tr = 1.2
     test_thr = 0.735
@@ -303,16 +329,16 @@ def test_integration_heuristic(samefreq_short_txt_file):
               num_timepoints_expected=test_ntp, tr=test_tr, thr=test_thr, sub='006',
               ses='01', heur_file=test_heur)
 
-    test_path_output = os.path.join(test_path, 'sub-006/ses-01/func')
+    test_path_output = os.path.join(test_path, 'sub-006', 'ses-01', 'func')
 
     # Check that files are generated
     base_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_physio'
-    for suffix in ['.log', '.json', '.tsv.gz']:
+    for suffix in ['.json', '.tsv.gz']:
         assert os.path.isfile(os.path.join(test_path_output, base_filename + suffix))
-
+    assert os.path.isfile(os.path.join(conversion_path, base_filename + '.log'))
     # Read log file (note that this file is not the logger file)
     log_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_physio.log'
-    with open(os.path.join(test_path_output, log_filename)) as log_info:
+    with open(os.path.join(conversion_path, log_filename)) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -336,13 +362,27 @@ def test_integration_heuristic(samefreq_short_txt_file):
     assert math.isclose(json_data['StartTime'], -189.6,)
     assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'MR TRIGGER - Custom, HLT100C - A 5']
 
+    # Check that participant.tsv gets updated
+    phys2bids(filename=test_full_path, chtrig=test_chtrig, outdir=test_outdir,
+              num_timepoints_expected=test_ntp, tr=test_tr, thr=test_thr, sub='002',
+              ses='01', heur_file=test_heur)
+
+    counter = 0
+    subject_list = ['participant_id', '006', '002']
+    with open(os.path.join(test_path, 'participants.tsv')) as pf:
+        tsvreader = reader(pf, delimiter="\t")
+        for line in tsvreader:
+            assert subject_list[counter] in line[0]
+            counter += 1
+
     # Remove generated files
-    for filename in glob.glob(os.path.join(test_path, 'phys2bids*')):
+    for filename in glob.glob(os.path.join(conversion_path, 'phys2bids*')):
         os.remove(filename)
     for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_samefreq*')):
         os.remove(filename)
     for filename in glob.glob(os.path.join(test_path_output, '*')):
         os.remove(filename)
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_info(samefreq_short_txt_file):
@@ -356,7 +396,7 @@ def test_integration_info(samefreq_short_txt_file):
     test_ntp = 158
     test_tr = 1.2
     test_thr = 0.735
-
+    conversion_path = os.path.join(test_path, 'code/conversion')
     # Move into folder
     subprocess.run(f'cd {test_path}', shell=True, check=True)
     # Phys2bids call through terminal
@@ -368,10 +408,11 @@ def test_integration_info(samefreq_short_txt_file):
     subprocess.run(command_str, shell=True, check=True)
 
     # Check that plot all file is generated
-    assert os.path.isfile('Test_belt_pulse_samefreq_short.png')
+    assert os.path.isfile(os.path.join(conversion_path,
+                                       'Test_belt_pulse_samefreq_short.png'))
 
     # Read logger file
-    logger_file = glob.glob(os.path.join(test_path, '*phys2bids*'))[0]
+    logger_file = glob.glob(os.path.join(conversion_path, '*phys2bids*'))[0]
     with open(logger_file) as logger_info:
         logger_info = logger_info.readlines()
 
@@ -380,5 +421,6 @@ def test_integration_info(samefreq_short_txt_file):
                         '02. MR TRIGGER - Custom, HLT100C - A 5; sampled at', '10000.0')
 
     # Remove generated files
-    for filename in glob.glob(os.path.join(test_path, 'phys2bids*')):
+    for filename in glob.glob(os.path.join(conversion_path, 'phys2bids*')):
         os.remove(filename)
+    shutil.rmtree(conversion_path)

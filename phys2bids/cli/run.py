@@ -127,10 +127,11 @@ def _get_parser():
                           type=str,
                           help='Column header (for json file output).',
                           default=[])
-    optional.add_argument('-chplot', '--channels-plot',
-                          dest='chplot',
+    optional.add_argument('-yml', '--participant-yml',
+                          dest='yml',
                           type=str,
-                          help='full path to store channels plot ',
+                          help='full path to file with info needed to generate '
+                               'participant.tsv file ',
                           default='')
     optional.add_argument('-debug', '--debug',
                           dest='debug',
