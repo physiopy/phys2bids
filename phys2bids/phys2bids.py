@@ -309,7 +309,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         print_summary(filename, num_timepoints_expected,
                       phys_in.num_timepoints_found, uniq_freq,
                       phys_out[uniq_freq].start_time,
-                      os.path.join(extra_dir, os.path.splitext(os.path.basename(outfile))[0]))
+                      os.path.join(conversion_path, os.path.splitext(os.path.basename(outfile))[0]))
 
 
 def _main(argv=None):
