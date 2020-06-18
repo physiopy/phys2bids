@@ -26,17 +26,21 @@ Please scroll to bottom to read full license.
 
 """
 
-import os
 import datetime
 import logging
+import os
+import sys
 from copy import deepcopy
-from pathlib import Path
+from shutil import copy as cp
 
 from numpy import savetxt
 
-from phys2bids import utils, viz, _version
+from phys2bids import utils, viz, _version, bids
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
+
+from . import __version__
+from .due import due, Doi
 
 LGR = logging.getLogger(__name__)
 
@@ -75,7 +79,7 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
                f'Timepoints expected: {ntp_expected}\n'
                f'Timepoints found:    {ntp_found}\n'
                f'Sampling Frequency:  {samp_freq} Hz\n'
-               f'Sampling started at: {start_time} s\n'
+               f'Sampling started at: {start_time:.4f} s\n'
                f'Tip: Time 0 is the time of first trigger\n'
                f'------------------------------------------------\n')
     LGR.info(summary)
@@ -105,99 +109,32 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
     """
     start_time = -time_offset
     summary = dict(SamplingFrequency=samp_freq,
-                   StartTime=start_time,
+                   StartTime=round(start_time, 4),
                    Columns=ch_name)
     utils.writejson(outfile, summary, indent=4, sort_keys=False)
 
 
-def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
-    """
-    Import and use the heuristic specified by the user to rename the file.
-
-    Parameters
-    ----------
-    heur_file: path
-        Fullpath to heuristic file.
-    sub: str or int
-        Name of subject.
-    ses: str or int or None
-        Name of session.
-    filename: path
-        Name of the input of phys2bids.
-    outdir: str or path
-        Path to the directory that will become the "site" folder
-        ("root" folder of BIDS database).
-    record_label: str
-        Optional label for the "record" entry of BIDS.
-
-    Returns
-    -------
-    heurpath: str or path
-        Returned fullpath to tsv.gz new file (post BIDS formatting).
-
-    Raises
-    ------
-    KeyError
-        if `bids_keys['task']` is empty
-    """
-    utils.check_file_exists(heur_file)
-
-    # Initialise a dictionary of bids_keys that has already "recording"
-    bids_keys = {'sub': '', 'ses': '', 'task': '', 'acq': '', 'ce': '',
-                 'dir': '', 'rec': '', 'run': '', 'recording': record_label}
-
-    # Start filling bids_keys dictionary and path with subject and session
-    if sub.startswith('sub-'):
-        bids_keys['sub'] = sub[4:]
-        fldr = os.path.join(outdir, sub)
-    else:
-        bids_keys['sub'] = sub
-        fldr = os.path.join(outdir, f'sub-{sub}')
-
-    if ses:
-        if ses.startswith('ses-'):
-            bids_keys['ses'] = ses[4:]
-            fldr = os.path.join(fldr, ses)
-        else:
-            bids_keys['ses'] = ses
-            fldr = os.path.join(fldr, f'ses-{ses}')
-
-    # Load heuristic and use it to fill dictionary
-    heur = utils.load_heuristic(heur_file)
-    bids_keys.update(heur.heur(Path(filename).stem))
-
-    # If bids_keys['task'] is still empty, stop the program
-    if not bids_keys['task']:
-        LGR.warning(f'The heuristic {heur_file} could not deal with'
-                    f'{Path(filename).stem}')
-        raise KeyError(f'No "task" attribute found')
-
-    # Compose name by looping in the bids_keys dictionary
-    # and adding nonempty keys
-    name = ''
-    for key in bids_keys:
-        if bids_keys[key] != '':
-            name = f'{name}{key}-{bids_keys[key]}_'
-
-    # Finish path, create it, add filename, export
-    fldr = os.path.join(fldr, 'func')
-    utils.path_exists_or_make_it(fldr)
-
-    heurpath = os.path.join(fldr, f'{name}physio')
-
-    return heurpath
-
-
+@due.dcite(
+     Doi('10.5281/zenodo.3470091'),
+     path='phys2bids',
+     description='Conversion of physiological trace data to BIDS format',
+     version=__version__,
+     cite_module=True)
+@due.dcite(
+    Doi('10.1038/sdata.2016.44'),
+    path='phys2bids',
+    description='The BIDS specification',
+    cite_module=True)
 def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=0,
-              tr=1, thr=None, ch_name=[], chplot='', debug=False, quiet=False):
+              tr=1, thr=None, ch_name=[], yml='', debug=False, quiet=False):
     """
     Main workflow of phys2bids.
 
     Runs the parser, does some checks on input, then imports
     the right interface file to read the input. If only info is required,
     it returns a summary onscreen.
-    Otherwise, it operates on the input to return a .tsv.gz file, possibily
+    Otherwise, it operates on the input to return a .tsv.gz file, possibly
     in BIDS format.
 
     Raises
@@ -210,12 +147,17 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # #!# This can probably be done while parsing?
     outdir = utils.check_input_dir(outdir)
     utils.path_exists_or_make_it(outdir)
-
+    utils.path_exists_or_make_it(os.path.join(outdir, 'code'))
+    conversion_path = os.path.join(outdir, 'code/conversion')
+    utils.path_exists_or_make_it(conversion_path)
+    # generate extra path
+    extra_dir = os.path.join(outdir, 'bids_ignore')
+    utils.path_exists_or_make_it(extra_dir)
     # Create logfile name
     basename = 'phys2bids_'
     extension = 'tsv'
     isotime = datetime.datetime.now().strftime('%Y-%m-%dT%H%M%S')
-    logname = os.path.join(outdir, (basename + isotime + '.' + extension))
+    logname = os.path.join(conversion_path, (basename + isotime + '.' + extension))
 
     # Set logging format
     log_formatter = logging.Formatter(
@@ -241,6 +183,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     LGR.info(f'Currently running phys2bids version {version_number}')
     LGR.info(f'Input file is {filename}')
 
+    # Save call.sh
+    arg_str = ' '.join(sys.argv[1:])
+    call_str = f'phys2bids {arg_str}'
+    f = open(os.path.join(conversion_path, 'call.sh'), "a")
+    f.write(f'#!bin/bash \n{call_str}')
+    f.close()
+
     # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
     indir = utils.check_input_dir(indir)
@@ -265,12 +214,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     LGR.info(f'Reading the file {infile}')
     phys_in = populate_phys_input(infile, chtrig)
+    for index, unit in enumerate(phys_in.units):
+        phys_in.units[index] = bids.bidsify_units(unit)
     LGR.info('Reading infos')
     phys_in.print_info(filename)
     # #!# Here the function viz.plot_channel should be called
-    if chplot != '' or info:
-        viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
-                     phys_in.freq, infile, chplot)
+    viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
+                 phys_in.freq, infile, conversion_path)
     # If only info were asked, end here.
     if info:
         return
@@ -280,9 +230,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     if tr != 0 and num_timepoints_expected != 0:
         # Run analysis on trigger channel to get first timepoint and the time offset.
         # #!# Get option of no trigger! (which is wrong practice or Respiract)
-        phys_in.check_trigger_amount(chtrig, thr, num_timepoints_expected, tr)
+        phys_in.check_trigger_amount(thr, num_timepoints_expected, tr)
         LGR.info('Plot trigger')
-        plot_path = os.path.join(outdir,
+        plot_path = os.path.join(conversion_path,
                                  os.path.splitext(os.path.basename(filename))[0])
         if sub:
             plot_path += f'_sub-{sub}'
@@ -340,9 +290,19 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     if heur_file and sub:
         LGR.info(f'Preparing BIDS output using {heur_file}')
+        # Generate participants.tsv file if it doesn't exist already.
+        # Update the file if the subject is not in the file.
+        # Do not update if the subject is already in the file.
+        bids.participants_file(outdir, yml, sub)
+        # Generate dataset_description.json file if it doesn't exist already.
+        bids.dataset_description_file(outdir)
+        # Generate README file if it doesn't exist already.
+        bids.readme_file(outdir)
+        cp(heur_file, os.path.join(conversion_path,
+           os.path.splitext(os.path.basename(heur_file))[0] + '.py'))
     elif heur_file and not sub:
-        LGR.warning(f'While "-heur" was specified, option "-sub" was not.\n'
-                    f'Skipping BIDS formatting.')
+        LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
+                    'Skipping BIDS formatting.')
 
     # Preparing output parameters: name and folder.
     for uniq_freq in uniq_freq_list:
@@ -350,10 +310,10 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         if heur_file and sub:
             if output_amount > 1:
                 # Add "recording-freq" to filename if more than one freq
-                outfile = use_heuristic(heur_file, sub, ses, filename,
-                                        outdir, uniq_freq)
+                outfile = bids.use_heuristic(heur_file, sub, ses, filename,
+                                             outdir, uniq_freq)
             else:
-                outfile = use_heuristic(heur_file, sub, ses, filename, outdir)
+                outfile = bids.use_heuristic(heur_file, sub, ses, filename, outdir)
 
         else:
             outfile = os.path.join(outdir,
@@ -370,7 +330,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                    phys_out[uniq_freq].ch_name)
         print_summary(filename, num_timepoints_expected,
                       phys_in.num_timepoints_found, uniq_freq,
-                      phys_out[uniq_freq].start_time, outfile)
+                      phys_out[uniq_freq].start_time,
+                      os.path.join(conversion_path,
+                                   os.path.splitext(os.path.basename(outfile))[0]))
 
 
 def _main(argv=None):
@@ -379,7 +341,7 @@ def _main(argv=None):
 
 
 if __name__ == '__main__':
-    _main()
+    _main(sys.argv[1:])
 
 """
 Copyright 2019, The Phys2BIDS community.

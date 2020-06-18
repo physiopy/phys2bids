@@ -35,7 +35,7 @@ before_install:
       pip install flake8;
     fi
   - if [ "${CHECK_TYPE}" == "test" ]; then
-      pip install "pytest>=3.6" pytest-cov coverage coveralls codecov;
+      pip install "pytest>=4.6" pytest-cov coverage coveralls codecov;
     fi
   - if [ "${CHECK_TYPE}" == "docdoctest" ]; then
       pip install "sphinx>2.0" sphinx_rtd_theme pandas sphinx-argparse;
@@ -43,11 +43,14 @@ before_install:
 
 install:
     if [ "${INSTALL_TYPE}" == "setup" ]; then
+      pip install "bioread>=1.0.5";
       python setup.py install;
     elif [ "${INSTALL_TYPE}" == "sdist" ]; then
+      pip install "bioread>=1.0.5";
       python setup.py sdist;
       pip install dist/*.tar.gz;
     elif [ "${INSTALL_TYPE}" == "wheel" ]; then
+      pip install "bioread>=1.0.5";
       python setup.py bdist_wheel;
       pip install dist/*.whl;
     else

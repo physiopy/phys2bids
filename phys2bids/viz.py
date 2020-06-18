@@ -14,7 +14,8 @@ FIGSIZE = (18, 10)
 def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
                  filename, figsize=FIGSIZE, dpi=SET_DPI):
     """
-    Produces a figure with three plots:
+    Produce a figure with three plots.
+
     1. Plots the triggers in blue, a block in orange that indicates
     the time from the first trigger to the last, and a red line showing
     the threshold used for trigger detection
@@ -127,9 +128,9 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     plt.close()
 
 
-def plot_all(ch_name, timeseries, units, freq, infile, outfile='', dpi=SET_DPI, size=FIGSIZE):
+def plot_all(ch_name, timeseries, units, freq, infile, outfile, dpi=SET_DPI, size=FIGSIZE):
     """
-    Plots all the channels for visualizations and saves them in outfile
+    Plot all the channels for visualizations and saves them in outfile.
 
     Parameters
     ----------
@@ -178,7 +179,6 @@ def plot_all(ch_name, timeseries, units, freq, infile, outfile='', dpi=SET_DPI, 
         ax[row].xlim = 30 * 60 * freq[0]  # maximum display of half an hour
         ax[row].grid()
     ax[row].set_xlabel("seconds")
-    if outfile == '':
-        outfile = os.path.splitext(os.path.basename(infile))[0] + '.png'
+    outfile = os.path.join(outfile, os.path.splitext(os.path.basename(infile))[0] + '.png')
     LGR.info(f'saving channel plot to {outfile}')
     fig.savefig(outfile, dpi=dpi, bbox_inches='tight')

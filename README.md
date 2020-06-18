@@ -6,12 +6,12 @@ phys2bids
 =========
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3653153.svg)](https://doi.org/10.5281/zenodo.3653153)
-[![Join the chat at https://gitter.im/phys2bids/community](https://badges.gitter.im/phys2bids/community.svg)](https://gitter.im/phys2bids/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at Gitter: https://gitter.im/physiopy/phys2bids](https://badges.gitter.im/physiopy/phys2bids.svg)](https://gitter.im/physiopy/phys2bids?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge)
 [![codecov](https://codecov.io/gh/physiopy/phys2bids/branch/master/graph/badge.svg)](https://codecov.io/gh/physiopy/phys2bids)
 
-[![Build Status](https://travis-ci.org/physiopy/phys2bids.svg?branch=master)](https://travis-ci.org/physiopy/phys2bids)
-[![Build Status](https://dev.azure.com/physiopy/phys2bids/_apis/build/status/physiopy.phys2bids?branchName=master)](https://dev.azure.com/physiopy/phys2bids/_build/latest?definitionId=1&branchName=master)
-[![Documentation Status](https://readthedocs.org/projects/phys2bids/badge/?version=latest)](https://phys2bids.readthedocs.io/en/latest/?badge=latest)
+[![Build Status: Linux](https://travis-ci.org/physiopy/phys2bids.svg?branch=master)](https://travis-ci.org/physiopy/phys2bids)
+[![Build Status. Windows](https://dev.azure.com/physiopy/phys2bids/_apis/build/status/physiopy.phys2bids?branchName=master)](https://dev.azure.com/physiopy/phys2bids/_build/latest?definitionId=1&branchName=master)
+[![See the documentation at: https://phys2bids.readthedocs.io](https://readthedocs.org/projects/phys2bids/badge/?version=latest)](https://phys2bids.readthedocs.io/en/latest/?badge=latest)
 [![Requirements Status](https://requires.io/github/physiopy/phys2bids/requirements.svg?branch=master)](https://requires.io/github/physiopy/phys2bids/requirements/?branch=master)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat)](#contributors-)
@@ -23,7 +23,7 @@ It was born for AcqKnowledge files (BIOPAC), and at the moment it supports
 (ADInstruments).
 It doesn't support physiological files recorded with the MRI, as you can find a software for it [here](https://github.com/tarrlab/physio2bids).
 
-If you use ``phy2bids`` in your work, please cite it with the zenodo DOI as:
+If you use ``phys2bids`` in your work, please cite it with the zenodo DOI as:
 
 >The phys2bids contributors, Daniel Alcalá, Apoorva Ayyagari, Molly Bright, César Caballero-Gaudes, Vicente Ferrer Gallardo, Soichi Hayashi, Ross Markello, Stefano Moia, Rachael Stickland, Eneko Uruñuela, & Kristina Zvolanek (2020, February 6). physiopy/phys2bids: BIDS formatting of physiological recordings v1.3.0-beta (Version v1.3.0-beta). Zenodo. http://doi.org/10.5281/zenodo.3653153
 

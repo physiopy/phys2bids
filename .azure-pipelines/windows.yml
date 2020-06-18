@@ -36,13 +36,9 @@ jobs:
         mkdir for_testing
         cd for_testing
         cp ../setup.cfg .
-        python -m pytest --doctest-modules --cov-report term-missing --cov=phys2bids --pyargs phys2bids
-        cp ./.coverage ../
+        python -m pytest --doctest-modules --cov-report term-missing --cov-report xml --cov=phys2bids --pyargs phys2bids
       displayName: 'Run tests'
-      condition: and(succeeded(), eq(variables['CHECK_TYPE'], 'test'))
-    - script: |
-        python -m pip install codecov
-        codecov
+      failOnStderr: true
+    - bash: |
+        bash <(curl -s https://codecov.io/bash) -Z -C $BUILD_SOURCEVERSION
       displayName: 'Upload To Codecov'
-      env:
-        CODECOV_TOKEN: $(CODECOV_TOKEN)
