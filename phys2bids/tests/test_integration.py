@@ -72,7 +72,8 @@ def test_integration_txt(samefreq_short_txt_file):
 
     # Check files in extra are generated
     for suffix in ['.log', '_trigger_time.png']:
-        assert os.path.isfile(os.path.join(conversion_path, 'Test_belt_pulse_samefreq_short' + suffix))
+        assert os.path.isfile(os.path.join(conversion_path,
+                                           'Test_belt_pulse_samefreq_short' + suffix))
 
     # Read log file (note that this file is not the logger file)
     with open(os.path.join(conversion_path, 'Test_belt_pulse_samefreq_short.log')) as log_info:
@@ -187,7 +188,8 @@ def test_integration_multifreq(multifreq_lab_file):
     for freq in ['40', '100', '500', '1000']:
         assert os.path.isfile(os.path.join(conversion_path,
                                            'Test1_multifreq_onescan_' + freq + '.log'))
-    assert os.path.isfile(os.path.join(conversion_path, 'Test1_multifreq_onescan_trigger_time.png'))
+    assert os.path.isfile(os.path.join(conversion_path,
+                          'Test1_multifreq_onescan_trigger_time.png'))
 
     """
     Checks 40 Hz output
