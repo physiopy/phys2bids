@@ -273,7 +273,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         # Generate dataset_description.json file if it doesn't exist already.
         dataset_description_file(outdir)
         # Generate README file if it doesn't exist already.
-        README_file(outdir)
+        readme_file(outdir)
     elif heur_file and not sub:
         LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
                     'Skipping BIDS formatting.')
