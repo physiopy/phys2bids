@@ -96,10 +96,10 @@ def test_participants_file(outdir):
     test_header = ['participant_id', 'age', 'sex', 'handedness']
     test_data = [f'sub-{test_sub}', '25', 'm', 'r']
     test_na = [f'sub-{test_sub_no_yml}', 'n/a', 'n/a', 'n/a']
-    test_missing_list = [f'sub-{test_missing_sub}', 'n/a', 'n/a', 'n/a']
+    test_missing = [f'sub-{test_missing_sub}', 'n/a', 'n/a', 'n/a']
     test_list = [test_header, test_data]
     test_no_yml = [test_header, test_data, test_na]
-
+    test_missing_list = [test_header, test_data, test_na, test_missing]
     # Checks validity of tsv lines when yml file is given
     with open(test_yaml_path, 'w') as outfile:
         yaml.dump(data, outfile, default_flow_style=False)
@@ -114,7 +114,7 @@ def test_participants_file(outdir):
             counter += 1
 
     # Checks when no yml file is given
-    bids.participants_file(outdir, yml=None, sub=test_sub_no_yml)
+    bids.participants_file(outdir=outdir, yml='', sub=test_sub_no_yml)
     counter = 0
     with open(os.path.join(outdir, 'participants.tsv')) as pf:
         tsvreader = reader(pf, delimiter="\t")
@@ -123,9 +123,12 @@ def test_participants_file(outdir):
             counter += 1
 
     # Checks validity of tsv lines when file exists but no line for Subject
-    bids.participants_file(outdir, test_missing_sub)
-    tsvreader = reader(pf, delimiter="\t")
-    for line in tsvreader:
-        assert line == test_missing_list[counter]
-        counter += 1
-    breakpoint()
+    bids.participants_file(outdir=outdir, yml='', sub=test_missing_sub)
+    counter = 0
+    with open(os.path.join(outdir, 'participants.tsv')) as pf:
+        tsvreader = reader(pf, delimiter="\t")
+        for line in tsvreader:
+            assert line == test_missing_list[counter]
+            counter += 1
+    os.remove(os.path.join(outdir, "participants.tsv"))
+    os.remove(os.path.join(outdir, "test.yml"))
