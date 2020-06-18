@@ -4,7 +4,7 @@ from pkg_resources import resource_filename
 
 import pytest
 
-from phys2bids.bids import bidsify_units, use_heuristic
+from phys2bids.bids import bidsify_units, use_heuristic, readme_file, dataset_description_file
 from phys2bids.bids import UNIT_ALIASES
 
 
@@ -58,3 +58,17 @@ def test_use_heuristic(tmpdir, test_sub, test_ses):
                    f'_task-test_rec-biopac_run-01_recording-test_physio')
 
     assert os.path.normpath(test_result) == os.path.normpath(str(heur_path))
+
+
+@pytest.mark.parametrize('outdir', '.')
+def test_README_file(outdir):
+    readme_file(outdir)
+    assert os.path.join(outdir, "README.md")
+    os.remove(os.path.join(outdir, "README.md"))
+
+
+@pytest.mark.parametrize('outdir', '.')
+def test_dataset_description_file(outdir):
+    dataset_description_file(outdir)
+    assert os.path.join(outdir, "dataset_description.json")
+    os.remove(os.path.join(outdir, "dataset_description.json"))

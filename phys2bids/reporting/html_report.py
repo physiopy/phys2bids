@@ -20,7 +20,7 @@ def _save_as_html(log_html_path, log_content, qc_html_path):
         Body for HTML report with embedded figures
     """
     resource_path = Path(__file__).resolve().parent
-    head_template_name = 'report_template.html'
+    head_template_name = 'report_log_template.html'
     head_template_path = resource_path.joinpath(head_template_name)
     with open(str(head_template_path), 'r') as head_file:
         head_tpl = Template(head_file.read())
@@ -29,6 +29,7 @@ def _save_as_html(log_html_path, log_content, qc_html_path):
                                log_html_path=log_html_path, log_content=log_content,
                                qc_html_path=qc_html_path)
     return html
+
 
 def _update_fpage_template(tree_string, bokeh_id, bokeh_js, log_html_path, qc_html_path):
     """
@@ -58,6 +59,7 @@ def _update_fpage_template(tree_string, bokeh_id, bokeh_js, log_html_path, qc_ht
                                log_html_path=log_html_path,
                                qc_html_path=qc_html_path)
     return body
+
 
 def _generate_file_tree(out_dir):
     """
@@ -102,6 +104,7 @@ def _generate_file_tree(out_dir):
     for line in tree(Path(out_dir)):
         tree_string += line + '<br>'
     return tree_string
+
 
 def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750)):
     """
@@ -166,6 +169,7 @@ def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750)):
     script,div = components(p)
     return script, div
 
+
 def generate_report(out_dir, log_path, ch_name, timeseries, units, freq):
     """
     Plot all the channels for visualizations as linked line plots for dynamic report.
@@ -205,7 +209,7 @@ def generate_report(out_dir, log_path, ch_name, timeseries, units, freq):
 
     log_content = log_content.replace('\n', '<br>')
     log_html_path = opj(out_dir, 'phys2bids_report_log.html')
-    qc_html_path = opj(out_dir, 'phys2bids_report_plots.html')
+    qc_html_path = opj(out_dir, 'phys2bids_report.html')
 
     html = _save_as_html(log_html_path, log_content, qc_html_path)
 
