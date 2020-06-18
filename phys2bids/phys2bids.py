@@ -26,9 +26,12 @@ Please scroll to bottom to read full license.
 
 """
 
-import os
 import datetime
+import getpass
 import logging
+import os
+import socket
+import sys
 from copy import deepcopy
 from shutil import copy as cp
 
@@ -316,6 +319,10 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 def _main(argv=None):
     options = _get_parser().parse_args(argv)
     phys2bids(**vars(options))
+    # Command
+    args_str = ' '.join(argv)
+    call_str = f'phys2bids {args_str}'
+    
 
 
 if __name__ == '__main__':
