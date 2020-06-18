@@ -113,8 +113,7 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
 
 def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=0,
-              tr=1, thr=None, ch_name=[], chplot='', debug=False, quiet=False,
-              yml=''):
+              tr=1, thr=None, ch_name=[], yml='', debug=False, quiet=False):
     """
     Main workflow of phys2bids.
 
@@ -134,12 +133,14 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # #!# This can probably be done while parsing?
     outdir = utils.check_input_dir(outdir)
     utils.path_exists_or_make_it(outdir)
-
+    # generate extra path
+    extra_dir = os.path.join(outdir, 'bids_ignore')
+    utils.path_exists_or_make_it(extra_dir)
     # Create logfile name
     basename = 'phys2bids_'
     extension = 'tsv'
     isotime = datetime.datetime.now().strftime('%Y-%m-%dT%H%M%S')
-    logname = os.path.join(outdir, (basename + isotime + '.' + extension))
+    logname = os.path.join(extra_dir, (basename + isotime + '.' + extension))
 
     # Set logging format
     log_formatter = logging.Formatter(
@@ -194,9 +195,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     LGR.info('Reading infos')
     phys_in.print_info(filename)
     # #!# Here the function viz.plot_channel should be called
-    if chplot != '' or info:
-        viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
-                     phys_in.freq, infile, chplot)
+    viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
+                 phys_in.freq, infile, extra_dir)
     # If only info were asked, end here.
     if info:
         return
@@ -208,7 +208,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         # #!# Get option of no trigger! (which is wrong practice or Respiract)
         phys_in.check_trigger_amount(thr, num_timepoints_expected, tr)
         LGR.info('Plot trigger')
-        plot_path = os.path.join(outdir,
+        plot_path = os.path.join(extra_dir,
                                  os.path.splitext(os.path.basename(filename))[0])
         if sub:
             plot_path += f'_sub-{sub}'
@@ -304,7 +304,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                    phys_out[uniq_freq].ch_name)
         print_summary(filename, num_timepoints_expected,
                       phys_in.num_timepoints_found, uniq_freq,
-                      phys_out[uniq_freq].start_time, outfile)
+                      phys_out[uniq_freq].start_time,
+                      os.path.join(extra_dir, os.path.splitext(os.path.basename(outfile))[0]))
 
 
 def _main(argv=None):
