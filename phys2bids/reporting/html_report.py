@@ -183,9 +183,6 @@ def generate_report(out_dir, log_path, ch_name, timeseries, units, freq):
     freq: (ch) list of floats
         List of floats - one per channel.
         Contains all the frequencies of the recorded channel.
-    figsize: tuple
-        Size of the figure expressed as (size_x, size_y),
-        Default is 250x750px
     -----
     outcome:
         Creates new plot with path specified in outfile.
@@ -209,7 +206,7 @@ def generate_report(out_dir, log_path, ch_name, timeseries, units, freq):
 
     with open(opj(out_dir, 'phys2bids_report_log.html'), 'wb') as f:
         f.write(html.encode('utf-8'))
-    
+
     ## Read in output directory structure & create tree 
     tree_string = _generate_file_tree(out_dir)
     bokeh_div, bokeh_js = _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750))

@@ -37,6 +37,7 @@ from phys2bids import utils, viz, _version
 from phys2bids.bids import bidsify_units, use_heuristic, participants_file
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
+from phys2bids.reporting.html_report import generate_report
 
 LGR = logging.getLogger(__name__)
 
@@ -273,6 +274,12 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
                     'Skipping BIDS formatting.')
 
+    # Initiate lists for reports
+    ch_name = []
+    timeseries = []
+    units = []
+    freq = []
+
     # Preparing output parameters: name and folder.
     for uniq_freq in uniq_freq_list:
         # If possible, prepare bids renaming.
@@ -300,6 +307,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         print_summary(filename, num_timepoints_expected,
                       phys_in.num_timepoints_found, uniq_freq,
                       phys_out[uniq_freq].start_time, outfile)
+
+        ch_name.append(phys_out[uniq_freq].ch_name)
+        timeseries.append(phys_out[uniq_freq].timeseries)
+        units.append(phys_out[uniq_freq].units)
+        freq += [phys_out[uniq_freq].freq]*len(phys_out[uniq_freq].ch_name)
+
+    generate_report(outdir, logname, ch_name, timeseries, units, freq)
 
 
 def _main(argv=None):
