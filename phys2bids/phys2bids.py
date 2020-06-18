@@ -198,7 +198,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     phys_in.print_info(filename)
     # #!# Here the function viz.plot_channel should be called
     viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
-                 phys_in.freq, infile, extra_dir)
+                 phys_in.freq, infile, conversion_path)
     # If only info were asked, end here.
     if info:
         return
