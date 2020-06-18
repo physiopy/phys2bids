@@ -40,6 +40,8 @@ def test_logger(multifreq_lab_file):
                    f'-chtrig {test_chtrig} -ntp {test_ntp} -outdir {test_outdir}',
                    shell=True, check=True)
 
+    assert os.path.isfile(os.path.join(conversion_path, 'call.sh'))
+
     # Read logger file
     logger_file = glob.glob(os.path.join(conversion_path, '*phys2bids*'))[0]
     with open(logger_file) as logger_info:
