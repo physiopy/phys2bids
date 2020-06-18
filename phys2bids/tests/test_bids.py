@@ -58,3 +58,7 @@ def test_use_heuristic(tmpdir, test_sub, test_ses):
                    f'_task-test_rec-biopac_run-01_recording-test_physio')
 
     assert os.path.normpath(test_result) == os.path.normpath(str(heur_path))
+
+
+def test_participants_file():
+    test_tsv = 'participants.tsv'
