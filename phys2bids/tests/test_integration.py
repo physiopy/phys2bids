@@ -358,8 +358,8 @@ def test_integration_heuristic(samefreq_short_txt_file):
 
     # Check that participant.tsv gets updated
     phys2bids(filename=test_full_path, chtrig=test_chtrig, outdir=test_outdir,
-            num_timepoints_expected=test_ntp, tr=test_tr, thr=test_thr, sub='002',
-            ses='01', heur_file=test_heur)
+              num_timepoints_expected=test_ntp, tr=test_tr, thr=test_thr, sub='002',
+              ses='01', heur_file=test_heur)
 
     counter = 0
     subject_list = ['participant_id', '006', '002']
@@ -402,7 +402,8 @@ def test_integration_info(samefreq_short_txt_file):
     subprocess.run(command_str, shell=True, check=True)
 
     # Check that plot all file is generated
-    assert os.path.isfile(os.path.join(test_outdir, 'bids_ignore/Test_belt_pulse_samefreq_short.png'))
+    assert os.path.isfile(os.path.join(test_outdir,
+                                       'bids_ignore/Test_belt_pulse_samefreq_short.png'))
 
     # Read logger file
     logger_file = glob.glob(os.path.join(extra_dir, '*phys2bids*'))[0]
