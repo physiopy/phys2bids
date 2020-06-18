@@ -242,3 +242,44 @@ def participants_file(outdir, yml, sub):
             participants_data = ['n/a'] * header_length
             participants_data[p_id_idx] = f'sub-{sub}'
             utils.append_list_as_row(file_path, participants_data)
+
+
+def dataset_description_file(outdir):
+    """
+    Create dataset_description.json file if it does not exist.
+    If it exists, do nothing.
+
+    Parameters
+    ----------
+    outdir: path
+        Full path to the output directory.
+
+    """
+    # dictionary that will be written for the basic dataset description version
+    data_dict = {"Name": os.path.splitext(os.path.basename(outdir))[0],
+                 "BIDSVersion": "1.4.0", "DatasetType": "raw"}
+    file_path = os.path.join(outdir, 'dataset_description.json')
+    # check if dataset_description.json exists, if it doesn't create it
+    if not os.path.exists(file_path):
+        LGR.warning('phys2bids could not find dataset_description.json,'
+                    'generating it with provided info')
+        utils.writejson(file_path, data_dict)
+
+
+def readme_file(outdir):
+    """
+    Create README file if it does not exist.
+    If it exists, do nothing.
+
+    Parameters
+    ----------
+    outdir: path
+        Full path to the output directory.
+
+    """
+    file_path = os.path.join(outdir, 'README.md')
+    if not os.path.exists(file_path):
+        text = 'Empty README, please fill in describing the dataset in more detail.'
+        LGR.warning('phys2bids could not find README,'
+                    'generating it EMPTY, please fill in the necessary info')
+        utils.writefile(file_path, '', text)
