@@ -30,6 +30,7 @@ import os
 import datetime
 import logging
 from copy import deepcopy
+from shutil import copy as cp
 
 from numpy import savetxt
 
@@ -275,6 +276,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         bids.dataset_description_file(outdir)
         # Generate README file if it doesn't exist already.
         bids.readme_file(outdir)
+        cp(heur_file, os.path.join(conversion_path,
+           os.path.splitext(os.path.basename(heur_file))[0] + '.py'))
     elif heur_file and not sub:
         LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
                     'Skipping BIDS formatting.')
