@@ -33,9 +33,7 @@ from copy import deepcopy
 
 from numpy import savetxt
 
-from phys2bids import utils, viz, _version
-from phys2bids.bids import bidsify_units, use_heuristic, participants_file
-from phys2bids.bids import dataset_description_file, readme_file
+from phys2bids import utils, viz, _version, bids
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
 
@@ -191,7 +189,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     LGR.info(f'Reading the file {infile}')
     phys_in = populate_phys_input(infile, chtrig)
     for index, unit in enumerate(phys_in.units):
-        phys_in.units[index] = bidsify_units(unit)
+        phys_in.units[index] = bids.bidsify_units(unit)
     LGR.info('Reading infos')
     phys_in.print_info(filename)
     # #!# Here the function viz.plot_channel should be called
@@ -269,11 +267,11 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         # Generate participants.tsv file if it doesn't exist already.
         # Update the file if the subject is not in the file.
         # Do not update if the subject is already in the file.
-        participants_file(outdir, yml, sub)
+        bids.participants_file(outdir, yml, sub)
         # Generate dataset_description.json file if it doesn't exist already.
-        dataset_description_file(outdir)
+        bids.dataset_description_file(outdir)
         # Generate README file if it doesn't exist already.
-        readme_file(outdir)
+        bids.readme_file(outdir)
     elif heur_file and not sub:
         LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
                     'Skipping BIDS formatting.')
@@ -284,10 +282,10 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         if heur_file and sub:
             if output_amount > 1:
                 # Add "recording-freq" to filename if more than one freq
-                outfile = use_heuristic(heur_file, sub, ses, filename,
+                outfile = bids.use_heuristic(heur_file, sub, ses, filename,
                                         outdir, uniq_freq)
             else:
-                outfile = use_heuristic(heur_file, sub, ses, filename, outdir)
+                outfile = bids.use_heuristic(heur_file, sub, ses, filename, outdir)
 
         else:
             outfile = os.path.join(outdir,
