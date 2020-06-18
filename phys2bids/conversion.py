@@ -22,32 +22,24 @@
    scans that weren't kept in the BIDS dataset.
 """
 import os.path as op
+from operator import itemgetter
+from itertools import groupby
+from datetime import datetime
 
 from bids import BIDSLayout
 import pandas as pd
 import numpy as np
 import nibabel as nib
-from datetime import datetime
 
 
-def extract_physio_onsets(physio_file):
+def extract_physio_onsets(trigger_timeseries, freq, threshold=0.5):
     """
     Collect onsets from physio file, both in terms of seconds and time series
     indices.
-    TODO: Replace file-loading with phys2bids physio_obj
     TODO: Stitch segments together before extracting onsets.
     """
-    import bioread
-    from operator import itemgetter
-    from itertools import groupby
-    physio_data = bioread.read_file(physio_file)
-    is_trigger = ['trig' in c.name.lower() for c in physio_data.channels]
-    trigger_idx = np.where(is_trigger)[0]
-    trigger_idx = trigger_idx[0] if len(trigger_idx) else -1
-    trigger_channel = physio_data.channels[trigger_idx]
-    samplerate = 1. / trigger_channel.samples_per_second
-    trigger_data = trigger_channel.data
-    scan_idx = np.where(trigger_data > 0)[0]
+    samplerate = 1. / freq
+    scan_idx = np.where(trigger_timeseries > 0)[0]
     # Get groups of consecutive numbers in index
     groups = []
     for k, g in groupby(enumerate(scan_idx), lambda x: x[0] - x[1]):
@@ -68,23 +60,26 @@ def extract_physio_onsets(physio_file):
 
 
 def synchronize_onsets(phys_df, scan_df):
-    """Find matching scans and physio trigger periods from separate DataFrames.
+    """Find matching scans and physio trigger periods from separate DataFrames,
+    using time differences within each DataFrame.
 
     There can be fewer physios than scans (task failed to trigger physio)
     or fewer scans than physios (aborted scans are not retained in BIDS dataset).
 
-    Onsets are in seconds. The baseline doesn't matter.
+    Onsets are in seconds. The baseline (i.e., absolute timing) doesn't matter.
+    Relative timing is all that matters.
 
     Parameters
     ----------
     phys_df : pandas.DataFrame
         DataFrame with onsets of physio trigger periods, in seconds. The
         baseline does not matter, so it is reasonable for the onsets to start
-        with zero.
+        with zero. The following columns are required: 'onset', 'index'.
     scan_df : pandas.DataFrame
         DataFrame with onsets and names of functional scans from BIDS dataset,
         in seconds. The baseline does not matter, so it is reasonable for the
-        onsets to start with zero.
+        onsets to start with zero. The following columns are required: 'onset',
+        'duration'.
 
     Returns
     -------
@@ -124,7 +119,7 @@ def synchronize_onsets(phys_df, scan_df):
 
     # Isolate close, but negative relative onsets, to ensure scan onsets are
     # always before or at physio triggers.
-    close_thresh = 2  # threshold for "close" onsets
+    close_thresh = 2  # threshold for "close" onsets, in seconds
     diffs_from_phys_onset = onset_diffs - offset
     min_diff_row_idx = np.argmin(np.abs(diffs_from_phys_onset), axis=0)
     min_diff_col_idx = np.arange(len(min_diff_row_idx))
@@ -141,6 +136,7 @@ def synchronize_onsets(phys_df, scan_df):
                   (phys_df.loc[1, 'onset'] - phys_df.loc[0, 'onset']))
     scan_df['index_onset'] = (scan_df['phys_onset'] * samplerate).astype(int)
     scan_df['index_duration'] = (scan_df['duration'] * samplerate).astype(int)
+    scan_df['index_offset'] = scan_df['index_onset'] + scan_df['index_duration']
     return scan_df
 
 
@@ -152,6 +148,8 @@ def merge_segments(physio_file):
     Timestamps have second-level resolution, so stitching them together adds
     uncertainty to timing, which should be accounted for in the onset
     synchronization.
+
+    NOTE: NOT WORKING
     """
     import bioread
     d = bioread.read_file(physio_file)
@@ -182,7 +180,7 @@ def merge_segments(physio_file):
             # Now we have the sizes, we can load the data and insert zeros.
 
 
-def split_physio(scan_df, physio_file, time_before=6, time_after=6):
+def split_physio(physio, split_times, time_before=6, time_after=6):
     """Extract timeseries associated with each scan.
     Key in dict is scan name or physio filename and value is physio data in
     some format.
@@ -191,10 +189,14 @@ def split_physio(scan_df, physio_file, time_before=6, time_after=6):
 
     Parameters
     ----------
-    scan_df : pandas.DataFrame
-    physio_file : str
+    physio_file : BlueprintInput
+    split_times : list of tuple
     time_before : float
+        Amount of time, in seconds, to retain in physio time series *before*
+        scan.
     time_after : float
+        Amount of time, in seconds, to retain in physio time series *after*
+        scan.
 
     Returns
     -------
@@ -205,7 +207,7 @@ def split_physio(scan_df, physio_file, time_before=6, time_after=6):
     pass
 
 
-def save_physio(physio_data_dict):
+def save_physio(fn, physio_data):
     """Save split physio data to BIDS dataset.
     """
     pass
@@ -248,7 +250,20 @@ def determine_scan_durations(layout, scan_df, sub, ses):
 
 
 def load_scan_data(layout, sub, ses):
-    """
+    """Extract subject- and session-specific scan onsets and durations from
+    BIDSLayout.
+
+    Parameters
+    ----------
+    layout : BIDSLayout
+    sub : str
+    ses : str
+
+    Returns
+    -------
+    df : pandas.DataFrame
+        DataFrame with the following columns: 'filename', 'acq_time',
+        'duration', 'onset'.
     """
     # This is the strategy we'll use in the future. Commented out for now.
     # scans_file = layout.get(extension='tsv', suffix='scans', sub=sub, ses=ses)
@@ -284,7 +299,7 @@ def load_scan_data(layout, sub, ses):
     return df
 
 
-def workflow(bids_dir, physio_file, sub, ses=None):
+def workflow(bids_dir, physio_file, chtrig, sub, ses=None):
     """A potential workflow for running physio/scan onset synchronization and
     BIDSification. This workflow writes out physio files to a BIDS dataset.
 
@@ -305,9 +320,17 @@ def workflow(bids_dir, physio_file, sub, ses=None):
     """
     layout = BIDSLayout(bids_dir)
     scan_df = load_scan_data(layout, sub=sub, ses=ses)
-    physio_df = extract_physio_onsets(physio_file)
+    physio = populate_phys_input(physio_file, chtrig)
+    # physio = merge_physio_segments(physio)
+    trigger_timeseries = physio.timeseries[chtrig]
+    freq = physio.freq[chtrig]
+    physio_df = extract_physio_onsets(trigger_timeseries, freq=freq)
     scan_df = synchronize_onsets(physio_df, scan_df)
-    # Extract timeseries associated with each scan. Key in dict is scan name or
-    # physio filename and key is physio data in some format.
-    physio_data_dict = split_physio(scan_df, physio_file)
-    save_physio(layout, physio_data_dict)
+    for i_row, row in scan_df.iterrows():
+        base_fname = row['filename']
+        split_times = (row['index_onset'], row['index_offset'])
+        physio_split = split_physio(physio, split_times)
+        # we need a more elegant approach that drops multi-contrast entities and
+        # allows for other base datatypes
+        out_fname = base_fname.replace('_bold.nii.gz', '_physio.tsv.gz')
+        save_physio(out_fname, physio_split)
