@@ -210,7 +210,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         # #!# Get option of no trigger! (which is wrong practice or Respiract)
         phys_in.check_trigger_amount(thr, num_timepoints_expected, tr)
         LGR.info('Plot trigger')
-        plot_path = os.path.join(extra_dir,
+        plot_path = os.path.join(conversion_path,
                                  os.path.splitext(os.path.basename(filename))[0])
         if sub:
             plot_path += f'_sub-{sub}'
