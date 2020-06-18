@@ -37,6 +37,9 @@ from phys2bids import utils, viz, _version, bids
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
 
+from . import __version__
+from .due import due, Doi
+
 LGR = logging.getLogger(__name__)
 
 
@@ -109,6 +112,17 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
     utils.writejson(outfile, summary, indent=4, sort_keys=False)
 
 
+@due.dcite(
+     Doi('10.5281/zenodo.3470091'),
+     path='phys2bids',
+     description='Conversion of physiological trace data to BIDS format',
+     version=__version__,
+     cite_module=True)
+@due.dcite(
+    Doi('10.1038/sdata.2016.44'),
+    path='phys2bids',
+    description='The BIDS specification',
+    cite_module=True)
 def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=0,
               tr=1, thr=None, ch_name=[], yml='', debug=False, quiet=False):
@@ -118,7 +132,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     Runs the parser, does some checks on input, then imports
     the right interface file to read the input. If only info is required,
     it returns a summary onscreen.
-    Otherwise, it operates on the input to return a .tsv.gz file, possibily
+    Otherwise, it operates on the input to return a .tsv.gz file, possibly
     in BIDS format.
 
     Raises

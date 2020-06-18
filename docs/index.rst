@@ -43,6 +43,8 @@ If you use ``phys2bids``, please cite it using the Zenodo DOI as:
 
     The phys2bids contributors, Daniel Alcalá, Apoorva Ayyagari, Molly Bright, César Caballero-Gaudes, Vicente Ferrer Gallardo, Soichi Hayashi, Ross Markello, Stefano Moia, Rachael Stickland, Eneko Uruñuela, & Kristina Zvolanek (2020, February 6). physiopy/phys2bids: BIDS formatting of physiological recordings v1.3.0-beta (Version v1.3.0-beta). Zenodo. http://doi.org/10.5281/zenodo.3653153
 
+We also support gathering all relevant citations via `DueCredit <http://duecredit.org>`_.
+
 
 Contents
 --------
