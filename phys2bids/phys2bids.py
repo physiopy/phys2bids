@@ -35,6 +35,7 @@ from numpy import savetxt
 
 from phys2bids import utils, viz, _version
 from phys2bids.bids import bidsify_units, use_heuristic, participants_file
+from phys2bids.bids import dataset_description_file, README_file
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
 
@@ -269,6 +270,10 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         # Update the file if the subject is not in the file.
         # Do not update if the subject is already in the file.
         participants_file(outdir, yml, sub)
+        # Generate dataset_description.json file if it doesn't exist already.
+        dataset_description_file(outdir)
+        # Generate README file if it doesn't exist already.
+        README_file(outdir)
     elif heur_file and not sub:
         LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
                     'Skipping BIDS formatting.')
