@@ -73,7 +73,7 @@ def _generate_file_tree(out_dir):
     HTMLReport : an instance of a populated HTML report
     """
     # prefix components:
-    space =  '    '
+    space =  '&emsp;'
     branch = '│   '
     # pointers:
     tee =    '├── '
