@@ -105,4 +105,4 @@ def test_append_list_as_row():
     with open(file_name, mode='r') as tsv:
         tsv_read = reader(tsv, delimiter="\t")
         for row in tsv_read:
-            assert len(row) == len(list_of_elem)
+            assert row == list_of_elem

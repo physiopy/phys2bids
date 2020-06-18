@@ -42,7 +42,7 @@ def test_use_heuristic(tmpdir, test_sub, test_ses):
     test_record_label = 'test'
 
     heur_path = bids.use_heuristic(test_full_heur_path, test_sub, test_ses,
-                              test_full_input_path, test_outdir, test_record_label)
+                                   test_full_input_path, test_outdir, test_record_label)
 
     if test_sub[:4] == 'sub-':
         test_sub = test_sub[4:]
@@ -82,22 +82,25 @@ def test_participants_file(outdir):
 
     # Checks first condition in line 198
     test_sub = '001'
+    test_sub_no_yml = '002'
+    test_missing_sub = '003'
     test_yaml_path = os.path.join(outdir, 'test.yml')
 
     # Populate yaml file
-    data = dict(
-        participant = dict(
-            participant_id = f'sub-{test_sub}',
-            age = '25',
-            sex = 'm',
-            handedness = 'r',
-        )
-    )
+    data = dict(participant=dict(
+                participant_id=f'sub-{test_sub}',
+                age='25',
+                sex='m',
+                handedness='r'))
 
     test_header = ['participant_id', 'age', 'sex', 'handedness']
     test_data = [f'sub-{test_sub}', '25', 'm', 'r']
+    test_na = [f'sub-{test_sub_no_yml}', 'n/a', 'n/a', 'n/a']
+    test_missing_list = [f'sub-{test_missing_sub}', 'n/a', 'n/a', 'n/a']
     test_list = [test_header, test_data]
+    test_no_yml = [test_header, test_data, test_na]
 
+    # Checks validity of tsv lines when yml file is given
     with open(test_yaml_path, 'w') as outfile:
         yaml.dump(data, outfile, default_flow_style=False)
 
@@ -110,4 +113,19 @@ def test_participants_file(outdir):
             assert line == test_list[counter]
             counter += 1
 
-    # Checks second condition in line 206
+    # Checks when no yml file is given
+    bids.participants_file(outdir, yml=None, sub=test_sub_no_yml)
+    counter = 0
+    with open(os.path.join(outdir, 'participants.tsv')) as pf:
+        tsvreader = reader(pf, delimiter="\t")
+        for line in tsvreader:
+            assert line == test_no_yml[counter]
+            counter += 1
+
+    # Checks validity of tsv lines when file exists but no line for Subject
+    bids.participants_file(outdir, test_missing_sub)
+    tsvreader = reader(pf, delimiter="\t")
+    for line in tsvreader:
+        assert line == test_missing_list[counter]
+        counter += 1
+    breakpoint()
