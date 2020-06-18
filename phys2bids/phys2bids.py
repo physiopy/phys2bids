@@ -34,9 +34,10 @@ from copy import deepcopy
 from numpy import savetxt
 
 from phys2bids import utils, viz, _version
-from phys2bids.bids import bidsify_units, use_heuristic
+from phys2bids.bids import bidsify_units, use_heuristic, participants_file
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
+from phys2bids.reporting.html_report import generate_report
 
 LGR = logging.getLogger(__name__)
 
@@ -112,7 +113,8 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
 
 def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=0,
-              tr=1, thr=None, ch_name=[], chplot='', debug=False, quiet=False):
+              tr=1, thr=None, ch_name=[], chplot='', debug=False, quiet=False,
+              yml=''):
     """
     Main workflow of phys2bids.
 
@@ -264,9 +266,19 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     if heur_file and sub:
         LGR.info(f'Preparing BIDS output using {heur_file}')
+        # Generate participants.tsv file if it doesn't exist already.
+        # Update the file if the subject is not in the file.
+        # Do not update if the subject is already in the file.
+        participants_file(outdir, yml, sub)
     elif heur_file and not sub:
         LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
                     'Skipping BIDS formatting.')
+
+    # Initiate lists for reports
+    ch_name = []
+    timeseries = []
+    units = []
+    freq = []
 
     # Preparing output parameters: name and folder.
     for uniq_freq in uniq_freq_list:
@@ -295,6 +307,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         print_summary(filename, num_timepoints_expected,
                       phys_in.num_timepoints_found, uniq_freq,
                       phys_out[uniq_freq].start_time, outfile)
+
+        ch_name += phys_out[uniq_freq].ch_name
+        timeseries += phys_out[uniq_freq].timeseries.T.tolist()
+        units += phys_out[uniq_freq].units
+        freq += [phys_out[uniq_freq].freq]*len(phys_out[uniq_freq].ch_name)
+
+    generate_report(outdir, logname, ch_name, timeseries, units, freq)
 
 
 def _main(argv=None):

@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import sys
+from csv import writer
 from pathlib import Path
 
 LGR = logging.getLogger(__name__)
@@ -280,3 +281,12 @@ def load_heuristic(heuristic):
         except Exception as exc:
             raise ImportError(f'Failed to import heuristic {heuristic}: {exc}')
     return mod
+
+
+def append_list_as_row(file_name, list_of_elem):
+    # Open file in append mode
+    with open(file_name, 'a+', newline='') as write_obj:
+        # Create a writer object from csv module
+        csv_writer = writer(write_obj, delimiter='\t')
+        # Add contents of list as last row in the csv file
+        csv_writer.writerow(list_of_elem)

@@ -23,18 +23,22 @@
                 <a href="https://pypi.org/project/phys2bids/" target="_blank">phys2bids $version</a>
             </div>
             <div class="header_links">
-                <!-- This will be a link to the Log page once we populate the report -->
+                <a href="$qc_html_path">Quality Check</a>
+            </div>
+            <div class="header_links">
                 <a href="$log_html_path">Log</a>
             </div>
             <div class="header_links">
                 <a href="https://github.com/physiopy/phys2bids" target="_blank">GitHub</a>
             </div>
         </div>
-        <div class="main">
-            <big>phys2BIDS Output Directory</big>
-            <p>$tree</p>
-            <big>Channel Plots</big>
-            <p>$content</p>
+        <div class="tree">
+            <h2>phys2BIDS Output Directory</h2>
+            <p class="tree_text">$tree</p>
+        </div>
+        <div class="bokeh_plots">
+            <h2>Channel Plots</h2>
+            $content
         </div>
     </body>
 </html>
