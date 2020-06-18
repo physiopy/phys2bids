@@ -4,7 +4,7 @@ from pkg_resources import resource_filename
 
 import pytest
 
-from phys2bids.bids import bidsify_units, use_heuristic, README_file, dataset_description_file
+from phys2bids.bids import bidsify_units, use_heuristic, readme_file, dataset_description_file
 from phys2bids.bids import UNIT_ALIASES
 
 
