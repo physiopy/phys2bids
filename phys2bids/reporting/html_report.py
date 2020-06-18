@@ -146,6 +146,7 @@ def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750)):
     for row, timeser in enumerate(timeseries[1:]):
         y = timeser[:max_time]
         i = row + 1
+        breakpoint()
         hovertool = HoverTool(tooltips=[(ch_name[i], '@y{0.00}'+units[i]),
                                         ('time', '@x{0.00}s')])
         tools=['wheel_zoom,pan,reset', hovertool]

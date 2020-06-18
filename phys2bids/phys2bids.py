@@ -308,9 +308,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                       phys_in.num_timepoints_found, uniq_freq,
                       phys_out[uniq_freq].start_time, outfile)
 
-        ch_name.append(phys_out[uniq_freq].ch_name)
-        timeseries.append(phys_out[uniq_freq].timeseries)
-        units.append(phys_out[uniq_freq].units)
+        ch_name += phys_out[uniq_freq].ch_name
+        timeseries += phys_out[uniq_freq].timeseries.T.tolist()
+        units += phys_out[uniq_freq].units
         freq += [phys_out[uniq_freq].freq]*len(phys_out[uniq_freq].ch_name)
 
     generate_report(outdir, logname, ch_name, timeseries, units, freq)
