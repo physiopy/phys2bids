@@ -50,7 +50,6 @@ html, body {
     margin-top: 150px;
     margin-left: 100px;
     margin-right: 100px;
-    width: 100%;
 }
 
 .tree_text {
@@ -64,4 +63,11 @@ html, body {
     margin-left: 100px;
     margin-right: 100px;
     width: 100%;
+}
+
+.bokeh_plots {
+    display: inline-block;
+    margin-top: 50px;
+    margin-left: 100px;
+    margin-right: 100px;
 }
