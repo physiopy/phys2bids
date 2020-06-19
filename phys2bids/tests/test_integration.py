@@ -1,12 +1,11 @@
 import glob
 import json
 import math
-import os
 import re
 import shutil
 import subprocess
-from csv import reader
-from os.path import join as opj
+from os import remove
+from os.path import isfile, join, split
 from pkg_resources import resource_filename
 
 from phys2bids._version import get_versions
@@ -29,23 +28,23 @@ def test_integration_acq(samefreq_full_acq_file):
     Does the integration test for an acq file
     """
 
-    test_path, test_filename = os.path.split(samefreq_full_acq_file)
+    test_path, test_filename = split(samefreq_full_acq_file)
     test_chtrig = 3
-    conversion_path = opj(test_path, 'code/conversion')
+    conversion_path = join(test_path, 'code', 'conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1)
 
     # Check that files are generated
     for suffix in ['.json', '.tsv.gz']:
-        assert os.path.isfile(opj(test_path, 'Test_belt_pulse_samefreq' + suffix))
+        assert isfile(join(test_path, 'Test_belt_pulse_samefreq' + suffix))
 
     # Check files in extra are generated
     for suffix in ['.log', '_trigger_time.png']:
-        assert os.path.isfile(opj(conversion_path, 'Test_belt_pulse_samefreq' + suffix))
+        assert isfile(join(conversion_path, 'Test_belt_pulse_samefreq' + suffix))
 
     # Read log file (note that this file is not the logger file)
-    with open(opj(conversion_path, 'Test_belt_pulse_samefreq.log')) as log_info:
+    with open(join(conversion_path, 'Test_belt_pulse_samefreq.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -60,7 +59,7 @@ def test_integration_acq(samefreq_full_acq_file):
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
     # Checks json file
-    with open(opj(test_path, 'Test_belt_pulse_samefreq.json')) as json_file:
+    with open(join(test_path, 'Test_belt_pulse_samefreq.json')) as json_file:
         json_data = json.load(json_file)
 
     # Compares values in json file with ground truth
@@ -70,10 +69,10 @@ def test_integration_acq(samefreq_full_acq_file):
                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
     # Remove generated files
-    for filename in glob.glob(opj(conversion_path, 'phys2bids*')):
-        os.remove(filename)
-    for filename in glob.glob(opj(test_path, 'Test_belt_pulse_samefreq*')):
-        os.remove(filename)
+    for filename in glob.glob(join(conversion_path, 'phys2bids*')):
+        remove(filename)
+    for filename in glob.glob(join(test_path, 'Test_belt_pulse_samefreq*')):
+        remove(filename)
     shutil.rmtree(conversion_path)
 
 
@@ -82,16 +81,16 @@ def test_integration_heuristic(multifreq_lab_file):
     Does integration test of tutorial file with heurositics
     """
 
-    test_path, test_filename = os.path.split(multifreq_lab_file)
-    test_full_path = opj(test_path, test_filename)
+    test_path, test_filename = split(multifreq_lab_file)
+    test_full_path = join(test_path, test_filename)
     test_chtrig = 3
     test_outdir = test_path
-    conversion_path = opj(test_path, 'code/conversion')
+    conversion_path = join(test_path, 'code', 'conversion')
     test_ntp = 158
     test_tr = 1.2
     test_thr = 0.735
     heur_path = resource_filename('phys2bids', 'heuristics')
-    test_heur = opj(heur_path, 'heur_test_multifreq.py')
+    test_heur = join(heur_path, 'heur_test_multifreq.py')
 
     # Move into folder
     subprocess.run(f'cd {test_path}', shell=True, check=True)
@@ -104,10 +103,10 @@ def test_integration_heuristic(multifreq_lab_file):
     subprocess.run(command_str, shell=True, check=True)
 
     # Check that call.sh is generated
-    assert os.path.isfile(opj(conversion_path, 'call.sh'))
+    assert isfile(join(conversion_path, 'call.sh'))
 
     # Read logger file
-    logger_file = glob.glob(opj(conversion_path, '*phys2bids*'))[0]
+    logger_file = glob.glob(join(conversion_path, '*phys2bids*'))[0]
     with open(logger_file) as logger_info:
         logger_info = logger_info.readlines()
 
@@ -120,25 +119,25 @@ def test_integration_heuristic(multifreq_lab_file):
 
     # Check that files are generated in conversion path
     for freq in ['40', '100', '500', '1000']:
-        assert os.path.isfile(opj(conversion_path,
-                                           'sub-006_ses-01_task-test_rec-biopac_run-01_recording-'
-                                           + freq + '.log'))
-    assert os.path.isfile(opj(conversion_path,
-                          'Test1_multifreq_onescan_sub-006_ses-01_trigger_time.png'))
-    assert os.path.isfile(opj(conversion_path, 'Test1_multifreq_onescan.png'))
-    assert os.path.isfile(opj(conversion_path, 'heur_test_multifreq.py'))
-    test_path_output = opj(test_path, 'sub-006/ses-01/func')
+        assert isfile(join(conversion_path,
+                           'sub-006_ses-01_task-test_rec-biopac_run-01_recording-'
+                           + freq + '.log'))
+    assert isfile(join(conversion_path,
+                       'Test1_multifreq_onescan_sub-006_ses-01_trigger_time.png'))
+    assert isfile(join(conversion_path, 'Test1_multifreq_onescan.png'))
+    assert isfile(join(conversion_path, 'heur_test_multifreq.py'))
+    test_path_output = join(test_path, 'sub-006/ses-01/func')
 
     # Check that files are generated
     base_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_recording-'
     for suffix in ['.json', '.tsv.gz']:
         for freq in ['40.0', '100.0', '500.0', '1000.0']:
-            assert os.path.isfile(opj(test_path_output, base_filename + freq + '_physio' + suffix))
+            assert isfile(join(test_path_output, base_filename + freq + '_physio' + suffix))
 
-    ###### Checks for 40 Hz files
+    # ##### Checks for 40 Hz files
     # Read log file (note that this file is not the logger file)
     log_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_recording-40.log'
-    with open(opj(conversion_path, log_filename)) as log_info:
+    with open(join(conversion_path, log_filename)) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -154,7 +153,7 @@ def test_integration_heuristic(multifreq_lab_file):
 
     # Checks json file
     json_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_recording-40.0_physio.json'
-    with open(opj(test_path_output, json_filename)) as json_file:
+    with open(join(test_path_output, json_filename)) as json_file:
         json_data = json.load(json_file)
 
     # Compares values in json file with ground truth
@@ -162,10 +161,10 @@ def test_integration_heuristic(multifreq_lab_file):
     assert math.isclose(json_data['StartTime'], -157.8535,)
     assert json_data['Columns'] == ['O2']
 
-    ###### Checks for 100 Hz files
+    # ##### Checks for 100 Hz files
     # Read log file (note that this file is not the logger file)
     log_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_recording-100.log'
-    with open(opj(conversion_path, log_filename)) as log_info:
+    with open(join(conversion_path, log_filename)) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -181,7 +180,7 @@ def test_integration_heuristic(multifreq_lab_file):
 
     # Checks json file
     json_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_recording-100.0_physio.json'
-    with open(opj(test_path_output, json_filename)) as json_file:
+    with open(join(test_path_output, json_filename)) as json_file:
         json_data = json.load(json_file)
 
     # Compares values in json file with ground truth
@@ -192,5 +191,5 @@ def test_integration_heuristic(multifreq_lab_file):
     # Remove generated files
     shutil.rmtree(test_path_output)
     shutil.rmtree(conversion_path)
-    for filename in glob.glob(opj(test_path, 'Test1_multifreq_onescan*')):
-        os.remove(filename)
+    for filename in glob.glob(join(test_path, 'Test1_multifreq_onescan*')):
+        remove(filename)
