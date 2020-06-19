@@ -23,145 +23,6 @@ def check_string(str_container, str_to_find, str_expected, is_num=True):
         return str_expected in str_found
 
 
-def test_logger(multifreq_lab_file):
-    """
-    Tests the logger
-    """
-
-    test_path, test_filename = os.path.split(multifreq_lab_file)
-
-    # Input arguments
-    test_chtrig = 3
-    test_ntp = 1
-    test_outdir = test_path
-    conversion_path = os.path.join(test_path, 'code/conversion')
-    # Phys2bids call through terminal
-    subprocess.run(f'phys2bids -in {test_filename} -indir {test_path} '
-                   f'-chtrig {test_chtrig} -ntp {test_ntp} -outdir {test_outdir}',
-                   shell=True, check=True)
-
-    assert os.path.isfile(os.path.join(conversion_path, 'call.sh'))
-
-    # Read logger file
-    logger_file = glob.glob(os.path.join(conversion_path, '*phys2bids*'))[0]
-    with open(logger_file) as logger_info:
-        logger_info = logger_info.readlines()
-
-    # Get version info
-    current_version = get_versions()
-    assert check_string(logger_info, 'phys2bids version', current_version['version'], is_num=False)
-
-    # Removes generated files
-    os.remove(os.path.join(test_path, logger_file))
-    shutil.rmtree(conversion_path)
-
-
-def test_integration_txt(samefreq_short_txt_file):
-    """
-    Does an integration test with the tutorial file
-    """
-
-    test_path, test_filename = os.path.split(samefreq_short_txt_file)
-    test_chtrig = 2
-    conversion_path = os.path.join(test_path, 'code/conversion')
-
-    phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
-              chtrig=test_chtrig, num_timepoints_expected=1)
-
-    # Check that files are generated
-    for suffix in ['.json', '.tsv.gz']:
-        assert os.path.isfile(os.path.join(test_path, 'Test_belt_pulse_samefreq_short' + suffix))
-
-    # Check files in extra are generated
-    for suffix in ['.log', '_trigger_time.png']:
-        assert os.path.isfile(os.path.join(conversion_path,
-                                           'Test_belt_pulse_samefreq_short' + suffix))
-
-    # Read log file (note that this file is not the logger file)
-    with open(os.path.join(conversion_path, 'Test_belt_pulse_samefreq_short.log')) as log_info:
-        log_info = log_info.readlines()
-
-    # Check timepoints expected
-    assert check_string(log_info, 'Timepoints expected', '1')
-    # Check timepoints found
-    assert check_string(log_info, 'Timepoints found', '60')
-    # Check sampling frequency
-    assert check_string(log_info, 'Sampling Frequency', '10000.0')
-    # Check sampling started
-    assert check_string(log_info, 'Sampling started', '10.4251')
-    # Check start time
-    assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
-
-    # Checks json file
-    with open(os.path.join(test_path, 'Test_belt_pulse_samefreq_short.json')) as json_file:
-        json_data = json.load(json_file)
-
-    # Compares values in json file with ground truth
-    assert math.isclose(json_data['SamplingFrequency'], 10000.0)
-    assert math.isclose(json_data['StartTime'], 10.4251)
-    assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'MR TRIGGER - Custom, HLT100C - A 5']
-
-    # Remove generated files
-    for filename in glob.glob(os.path.join(test_path, 'phys2bids*')):
-        os.remove(filename)
-    for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_samefreq_short*')):
-        os.remove(filename)
-    shutil.rmtree(conversion_path)
-
-
-def test_integration_acq(samefreq_full_acq_file):
-    """
-    Does the integration test for an acq file
-    """
-
-    test_path, test_filename = os.path.split(samefreq_full_acq_file)
-    test_chtrig = 3
-    conversion_path = os.path.join(test_path, 'code/conversion')
-
-    phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
-              chtrig=test_chtrig, num_timepoints_expected=1)
-
-    # Check that files are generated
-    for suffix in ['.json', '.tsv.gz']:
-        assert os.path.isfile(os.path.join(test_path, 'Test_belt_pulse_samefreq' + suffix))
-
-    # Check files in extra are generated
-    for suffix in ['.log', '_trigger_time.png']:
-        assert os.path.isfile(os.path.join(conversion_path, 'Test_belt_pulse_samefreq' + suffix))
-
-    # Read log file (note that this file is not the logger file)
-    with open(os.path.join(conversion_path, 'Test_belt_pulse_samefreq.log')) as log_info:
-        log_info = log_info.readlines()
-
-    # Check timepoints expected
-    assert check_string(log_info, 'Timepoints expected', '1')
-    # Check timepoints found
-    assert check_string(log_info, 'Timepoints found', '60')
-    # Check sampling frequency
-    assert check_string(log_info, 'Sampling Frequency', '10000.0')
-    # Check sampling started
-    assert check_string(log_info, 'Sampling started', '10.4251')
-    # Check start time
-    assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
-
-    # Checks json file
-    with open(os.path.join(test_path, 'Test_belt_pulse_samefreq.json')) as json_file:
-        json_data = json.load(json_file)
-
-    # Compares values in json file with ground truth
-    assert math.isclose(json_data['SamplingFrequency'], 10000.0)
-    assert math.isclose(json_data['StartTime'], 10.4251)
-    assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'PULSE - Custom, DA100C',
-                                    'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
-
-    # Remove generated files
-    for filename in glob.glob(os.path.join(conversion_path, 'phys2bids*')):
-        os.remove(filename)
-    for filename in glob.glob(os.path.join(test_path, 'Test_belt_pulse_samefreq*')):
-        os.remove(filename)
-    shutil.rmtree(conversion_path)
-
-
 def test_integration_multifreq(multifreq_lab_file):
     """
     Does the integration test for a multi-frequency file
@@ -405,6 +266,9 @@ def test_integration_info(samefreq_short_txt_file):
                    f'-info')
     command_str = ''.join(command_str)
     subprocess.run(command_str, shell=True, check=True)
+
+    # Check that call.sh is generated
+    assert os.path.isfile(os.path.join(conversion_path, 'call.sh'))
 
     # Check that plot all file is generated
     assert os.path.isfile(os.path.join(conversion_path,
