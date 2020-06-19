@@ -100,6 +100,7 @@ def test_participants_file(outdir):
     test_list = [test_header, test_data]
     test_no_yml = [test_header, test_data, test_na]
     test_missing_list = [test_header, test_data, test_na, test_missing]
+
     # Checks validity of tsv lines when yml file is given
     with open(test_yaml_path, 'w') as outfile:
         yaml.dump(data, outfile, default_flow_style=False)
@@ -130,5 +131,15 @@ def test_participants_file(outdir):
         for line in tsvreader:
             assert line == test_missing_list[counter]
             counter += 1
+
+    # Test that subject from previous check is already there
+    bids.participants_file(outdir=outdir, yml='', sub=test_missing_sub)
+    counter = 0
+    with open(os.path.join(outdir, 'participants.tsv')) as pf:
+        tsvreader = reader(pf, delimiter="\t")
+        for line in tsvreader:
+            assert line == test_missing_list[counter]
+            counter += 1
+
     os.remove(os.path.join(outdir, "participants.tsv"))
     os.remove(os.path.join(outdir, "test.yml"))
