@@ -56,7 +56,7 @@ def heur(physinfo):
     # ##  See example below          ## #
     # ################################# #
 
-    if fnmatch.fnmatchcase(physinfo, '*samefreq*'):
+    if fnmatch.fnmatchcase(physinfo, '*onescan*'):
         info['task'] = 'test'
         info['run'] = '01'
         info['rec'] = 'biopac'

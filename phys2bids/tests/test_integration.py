@@ -91,7 +91,7 @@ def test_integration_heuristic(multifreq_lab_file):
     test_tr = 1.2
     test_thr = 0.735
     heur_path = resource_filename('phys2bids', 'heuristics')
-    test_heur = opj(heur_path, 'heur_test_acq.py')
+    test_heur = opj(heur_path, 'heur_test_multifreq.py')
 
     # Move into folder
     subprocess.run(f'cd {test_path}', shell=True, check=True)
@@ -126,7 +126,7 @@ def test_integration_heuristic(multifreq_lab_file):
     assert os.path.isfile(opj(conversion_path,
                           'Test1_multifreq_onescan_sub-006_ses-01_trigger_time.png'))
     assert os.path.isfile(opj(conversion_path, 'Test1_multifreq_onescan.png'))
-    assert os.path.isfile(opj(conversion_path, 'heur_test_acq.py'))
+    assert os.path.isfile(opj(conversion_path, 'heur_test_multifreq.py'))
     test_path_output = opj(test_path, 'sub-006/ses-01/func')
 
     # Check that files are generated
