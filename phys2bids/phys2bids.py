@@ -407,7 +407,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                     phys_out[key].filename = f'{phys_out[key].filename}_{run:02d}'
                 # Append "freq" to filename if more than one freq
                 if freq_amount > 1:
-                    phys_out[key].filename = f'{phys_out[key].filename}_{uniq_freq}'
+                    phys_out[key].filename = f'{phys_out[key].filename}_{uniq_freq:.0f}'
 
             LGR.info(f'Exporting files for run {run} freq {uniq_freq}')
             np.savetxt(os.path.join(outdir, phys_out[key].filename + '.tsv.gz'),
