@@ -400,7 +400,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                     'Please check heuristics to solve the problem.')
 
             else:
-                phys_out[key].filename = os.path.splitext(os.path.basename(filename))[0]
+                phys_out[key].filename = os.path.join(outdir,
+                                                      os.path.splitext(os.path.basename(filename))[0])
                 # Append "run" to filename if more than one run
                 if run_amount > 1:
                     phys_out[key].filename = f'{phys_out[key].filename}_{run:02d}'
@@ -409,15 +410,15 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                     phys_out[key].filename = f'{phys_out[key].filename}_{uniq_freq:.0f}'
 
             LGR.info(f'Exporting files for run {run} freq {uniq_freq}')
-            np.savetxt(os.path.join(outdir, phys_out[key].filename + '.tsv.gz'),
+            np.savetxt(phys_out[key].filename + '.tsv.gz',
                        phys_out[key].timeseries, fmt='%.8e', delimiter='\t')
-            print_json(os.path.join(outdir, phys_out[key].filename),
-                       phys_out[key].freq, phys_out[key].start_time,
-                       phys_out[key].ch_name)
+            print_json(phys_out[key].filename, phys_out[key].freq,
+                       phys_out[key].start_time, phys_out[key].ch_name)
             print_summary(filename, num_timepoints_expected,
                           phys_in[run].num_timepoints_found, uniq_freq,
                           phys_out[key].start_time,
-                          os.path.join(conversion_path, phys_out[key].filename))
+                          os.path.join(conversion_path,
+                                       os.path.splitext(os.path.basename(filename))[0]))
 
 
 def _main(argv=None):
