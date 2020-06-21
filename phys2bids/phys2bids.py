@@ -307,25 +307,44 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     else:
         LGR.warning('Skipping trigger pulse count. If you want to run it, '
                     'call phys2bids using both "-ntp" and "-tr" arguments')
+        # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY
         phys_in = {1: phys_in}
 
     # The next few lines create a dictionary of different BlueprintInput
     # objects, one for each unique frequency for each run in phys_in
     # they also save the amount of runs and unique frequencies
+    run_amount = len(phys_in)
     uniq_freq_list = set(phys_in[1].freq)
     freq_amount = len(uniq_freq_list)
     if freq_amount > 1:
         LGR.info(f'Found {freq_amount} different frequencies in input!')
 
-    # If heuristics are used, init a dict of arguments to pass to use_heuristic
-    if heur_file is not None and sub is not None:
-        heur_args = {'heur_file': heur_file, 'sub': sub, 'ses': ses,
-                     'filename': filename, 'outdir': outdir, 'run': '',
-                     'record_label': ''}
+    if run_amount > 1:
+        LGR.info(f'Found {run_amount} different scans in input!')
 
     LGR.info(f'Preparing {freq_amount*run_amount} output files.')
     # Create phys_out dict that will have a blueprint object for each different frequency
     phys_out = {}
+
+    if heur_file is not None and sub is not None:
+        LGR.info(f'Preparing BIDS output using {heur_file}')
+        # If heuristics are used, init a dict of arguments to pass to use_heuristic
+        heur_args = {'heur_file': heur_file, 'sub': sub, 'ses': ses,
+                     'filename': filename, 'outdir': outdir, 'run': '',
+                     'record_label': ''}
+        # Generate participants.tsv file if it doesn't exist already.
+        # Update the file if the subject is not in the file.
+        # Do not update if the subject is already in the file.
+        bids.participants_file(outdir, yml, sub)
+        # Generate dataset_description.json file if it doesn't exist already.
+        bids.dataset_description_file(outdir)
+        # Generate README file if it doesn't exist already.
+        bids.readme_file(outdir)
+        cp(heur_file, os.path.join(conversion_path,
+           os.path.splitext(os.path.basename(heur_file))[0] + '.py'))
+    elif heur_file is not None and sub is None:
+        LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
+                    'Skipping BIDS formatting.')
 
     # Export a (set of) phys_out for each element in phys_in
     # run keys start from 1 (human friendly)
@@ -352,22 +371,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # Populate it with the corresponding blueprint input and replace it
             # in the dictionary.
             phys_out[key] = BlueprintOutput.init_from_blueprint(phys_out[key])
-
-        if heur_file is not None and sub is not None:
-            LGR.info(f'Preparing BIDS output using {heur_file}')
-            # Generate participants.tsv file if it doesn't exist already.
-            # Update the file if the subject is not in the file.
-            # Do not update if the subject is already in the file.
-            bids.participants_file(outdir, yml, sub)
-            # Generate dataset_description.json file if it doesn't exist already.
-            bids.dataset_description_file(outdir)
-            # Generate README file if it doesn't exist already.
-            bids.readme_file(outdir)
-            cp(heur_file, os.path.join(conversion_path,
-               os.path.splitext(os.path.basename(heur_file))[0] + '.py'))
-        elif heur_file is not None and sub is None:
-            LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
-                        'Skipping BIDS formatting.')
 
         # Preparing output parameters: name and folder.
         for uniq_freq in uniq_freq_list:
