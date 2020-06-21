@@ -384,7 +384,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
                 # Append "recording-freq" to filename if more than one freq
                 if freq_amount > 1:
-                    heur_args['record_label'] = f'freq{uniq_freq}'
+                    heur_args['record_label'] = f'freq{uniq_freq:.0f}'
 
                 phys_out[key].filename = bids.use_heuristic(**heur_args)
 
