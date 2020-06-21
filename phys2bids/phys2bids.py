@@ -250,8 +250,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         LGR.info('Renaming channels with given names')
         phys_in.rename_channels(ch_name)
 
-    # Default amount of runs
-    run_amount = 1
     # Checking acquisition type via user's input
     if tr is not None and num_timepoints_expected is not None:
 
@@ -289,8 +287,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                 viz.export_trigger_plot(phys_in[run], chtrig, plot_fileprefix, tr[i],
                                         num_timepoints_expected[i], filename,
                                         sub, ses)
-            # define run amount
-            run_amount = len(phys_in)
 
         # Single run acquisition type, or : nothing to split workflow
         else:
