@@ -418,7 +418,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                           phys_in[run].num_timepoints_found, uniq_freq,
                           phys_out[key].start_time,
                           os.path.join(conversion_path,
-                                       os.path.splitext(os.path.basename(filename))[0]))
+                                       os.path.splitext(os.path.basename(phys_out[key].filename))[0]))
 
 
 def _main(argv=None):
