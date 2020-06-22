@@ -126,3 +126,4 @@ dmypy.json
 
 docs/generated/
 .vscode/
+phys2bids/tests/data/*

@@ -80,7 +80,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     subplot.set_ylabel('Volts')
     subplot.plot(time, trigger, '-', time, thrline, 'r-.', time, block, '-')
     subplot.fill_between(time, block, where=block >= d, interpolate=True, color='#ffbb6e')
-    subplot.legend(["trigger", "Trigger detection threshold", "time block"], loc='upper right')
+    subplot.legend(['trigger', 'Trigger detection threshold', 'time block'], loc='upper right')
     # plot the first spike according to the user threshold
     subplot = fig.add_subplot(223)
     subplot.set_xlim([-tr * 4, tr * 4])
@@ -126,6 +126,57 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     subplot.fill_between(time, block, where=block >= d, interpolate=True, color='#ffbb6e')
     plt.savefig(fileprefix + '_trigger_time.png', dpi=dpi)
     plt.close()
+
+
+def export_trigger_plot(phys_in, chtrig, fileprefix, tr, num_timepoints_expected,
+                        filename, sub=None, ses=None, figsize=FIGSIZE,
+                        dpi=SET_DPI):
+    """
+    Save a trigger plot.
+
+    Used in main workflow (`phys2bids`), this function minimizes repetition in code for parallel
+    workflow (multi-run workflow and default workflow) and maintains readability of code
+
+    Parameters
+    ---------
+    phys_in : object
+        Object returned by BlueprintInput class
+        For multi-run acquisitions, phys_in is a slice of the whole object
+    chtrig : int
+        trigger channel
+        integer representing the index of the trigger on phys_in.timeseries
+    fileprefix: str or path
+        A string representing a file name or a fullpath
+        to a file, WITHOUT extension
+    tr : list
+        a list of float given by the user as `tr` input
+    num_timepoints_expected : list
+        a list of integers given by the user as `ntp` input
+    filename : str
+        name of the input file given by user's entry
+    sub: str or int
+        Name of subject. Default is None
+    ses: str or int or None
+        Name of session. Default is None
+    figsize: tuple or list of floats
+        Size of the figure expressed as (size_x, size_y),
+        Default is {FIGSIZE}
+    dpi: int
+        Desired DPI of the figure,
+        Default is {SET_DPI}
+    """
+    LGR.info('Plot trigger')
+    # Create trigger plot. If possible, to have multiple outputs in the same
+    # place, adds sub and ses label.
+    if sub is not None:
+        fileprefix += f'_sub-{sub}'
+    if ses is not None:
+        fileprefix += f'_ses-{ses}'
+
+    # adjust for multi run arguments, iterate through acquisition attributes
+    plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
+                 fileprefix, tr, phys_in.thr, num_timepoints_expected,
+                 filename, figsize, dpi)
 
 
 def plot_all(ch_name, timeseries, units, freq, infile, outfile, dpi=SET_DPI, size=FIGSIZE):
@@ -178,7 +229,7 @@ def plot_all(ch_name, timeseries, units, freq, infile, outfile, dpi=SET_DPI, siz
         ax[row].set_ylabel(units[row + 1])
         ax[row].xlim = 30 * 60 * freq[0]  # maximum display of half an hour
         ax[row].grid()
-    ax[row].set_xlabel("seconds")
+    ax[row].set_xlabel('seconds')
     outfile = os.path.join(outfile, os.path.splitext(os.path.basename(infile))[0] + '.png')
     LGR.info(f'saving channel plot to {outfile}')
     fig.savefig(outfile, dpi=dpi, bbox_inches='tight')

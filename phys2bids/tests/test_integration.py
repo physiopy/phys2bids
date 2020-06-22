@@ -33,7 +33,7 @@ def test_integration_acq(samefreq_full_acq_file):
     conversion_path = join(test_path, 'code', 'conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
-              chtrig=test_chtrig, num_timepoints_expected=1)
+              chtrig=test_chtrig, num_timepoints_expected=1, tr=1)
 
     # Check that files are generated
     for suffix in ['.json', '.tsv.gz']:
@@ -120,8 +120,8 @@ def test_integration_heuristic(multifreq_lab_file):
     # Check that files are generated in conversion path
     for freq in ['40', '100', '500', '1000']:
         assert isfile(join(conversion_path,
-                           'sub-006_ses-01_task-test_rec-biopac_run-01_recording-'
-                           + freq + '.log'))
+                           'sub-006_ses-01_task-test_rec-biopac_run-01_'
+                           f'recording-{freq}Hz_physio.log'))
     assert isfile(join(conversion_path,
                        'Test1_multifreq_onescan_sub-006_ses-01_trigger_time.png'))
     assert isfile(join(conversion_path, 'Test1_multifreq_onescan.png'))
@@ -131,12 +131,13 @@ def test_integration_heuristic(multifreq_lab_file):
     # Check that files are generated
     base_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_recording-'
     for suffix in ['.json', '.tsv.gz']:
-        for freq in ['40.0', '100.0', '500.0', '1000.0']:
-            assert isfile(join(test_path_output, base_filename + freq + '_physio' + suffix))
+        for freq in ['40', '100', '500', '1000']:
+            assert isfile(join(test_path_output,
+                               f'{base_filename}{freq}Hz_physio{suffix}'))
 
     # ##### Checks for 40 Hz files
     # Read log file (note that this file is not the logger file)
-    log_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_recording-40.log'
+    log_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_recording-40Hz_physio.log'
     with open(join(conversion_path, log_filename)) as log_info:
         log_info = log_info.readlines()
 
@@ -152,7 +153,7 @@ def test_integration_heuristic(multifreq_lab_file):
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
     # Checks json file
-    json_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_recording-40.0_physio.json'
+    json_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_recording-40Hz_physio.json'
     with open(join(test_path_output, json_filename)) as json_file:
         json_data = json.load(json_file)
 
@@ -163,7 +164,7 @@ def test_integration_heuristic(multifreq_lab_file):
 
     # ##### Checks for 100 Hz files
     # Read log file (note that this file is not the logger file)
-    log_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_recording-100.log'
+    log_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_recording-100Hz_physio.log'
     with open(join(conversion_path, log_filename)) as log_info:
         log_info = log_info.readlines()
 
@@ -179,7 +180,7 @@ def test_integration_heuristic(multifreq_lab_file):
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
     # Checks json file
-    json_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_recording-100.0_physio.json'
+    json_filename = 'sub-006_ses-01_task-test_rec-biopac_run-01_recording-100Hz_physio.json'
     with open(join(test_path_output, json_filename)) as json_file:
         json_data = json.load(json_file)
 

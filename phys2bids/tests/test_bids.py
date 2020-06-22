@@ -1,5 +1,4 @@
 import os
-
 from pkg_resources import resource_filename
 
 import pytest
@@ -8,7 +7,6 @@ from csv import reader
 
 from phys2bids import bids
 from phys2bids.bids import UNIT_ALIASES
-from phys2bids.utils import append_list_as_row
 
 
 def test_bidsify_units():
@@ -42,7 +40,8 @@ def test_use_heuristic(tmpdir, test_sub, test_ses):
     test_record_label = 'test'
 
     heur_path = bids.use_heuristic(test_full_heur_path, test_sub, test_ses,
-                                   test_full_input_path, test_outdir, test_record_label)
+                                   test_full_input_path, test_outdir,
+                                   record_label=test_record_label)
 
     if test_sub[:4] == 'sub-':
         test_sub = test_sub[4:]

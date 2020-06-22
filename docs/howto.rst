@@ -279,6 +279,74 @@ By looking at this figure, we can work out that we need a smaller threshold in o
     Tip: Time 0 is the time of first trigger
     ------------------------------------------------
 
+Splitting your input file into multiple run output files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If your file contains more than one (f)MRI acquisition (or runs), you can provide multiple values to ``-ntp`` in order to get multiple ``.tsv.gz`` outputs. If the TR of the entire session is consistent (i.e. all your acquisitions have the same TR), then you can specify one value after ``-tr``.
+
+By specifying the number of timepoints in each acquisition, ``phys2bids`` will recursively cut the input file by detecting the first trigger of the entire session and the ones after the number of timepoints you specified.
+
+.. code-block:: shell
+
+    phys2bids -in two_scans_samefreq_all.txt -chtrig 2 -ntp 536 398 -tr 1.2 -thr 2
+
+Now, instead of counting the trigger timepoints once, ``physbids`` will check the trigger channel recursively with all the values listed in ``-ntp``. The logger will inform you about the number of timepoints left at each iteration.
+
+.. code-block:: shell
+
+    INFO:phys2bids.physio_obj:Counting trigger points
+    INFO:phys2bids.physio_obj:The trigger is in channel 2
+    INFO:phys2bids.physio_obj:The number of timepoints found with the manual threshold of 2.0000 is 934
+    INFO:phys2bids.physio_obj:Checking number of timepoints
+    INFO:phys2bids.physio_obj:Found just the right amount of timepoints!
+    WARNING:phys2bids.slice4phys:
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    phys2bids will split the input file according to the given -tr and -ntp arguments
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    INFO:phys2bids.physio_obj:Counting trigger points
+    INFO:phys2bids.physio_obj:The trigger is in channel 2
+    INFO:phys2bids.physio_obj:The number of timepoints found with the manual threshold of 2.0000 is 934
+    INFO:phys2bids.physio_obj:Checking number of timepoints
+    WARNING:phys2bids.physio_obj:Found 398 timepoints more than expected!
+    Assuming extra timepoints are at the end (try again with a more liberal thr)
+    INFO:phys2bids.slice4phys:
+    --------------------------------------------------------------
+    Slicing between 0.0 seconds and 961.381 seconds
+    --------------------------------------------------------------
+    INFO:phys2bids.physio_obj:Counting trigger points
+    INFO:phys2bids.physio_obj:The trigger is in channel 2
+    INFO:phys2bids.physio_obj:The number of timepoints found with the manual threshold of 2.0000 is 400
+    INFO:phys2bids.physio_obj:Checking number of timepoints
+    WARNING:phys2bids.physio_obj:Found 2 timepoints more than expected!
+    Assuming extra timepoints are at the end (try again with a more liberal thr)
+    INFO:phys2bids.slice4phys:
+    --------------------------------------------------------------
+    Slicing between 952.381 seconds and 1817.96 seconds
+    --------------------------------------------------------------
+    INFO:phys2bids.viz:Plot trigger
+    INFO:phys2bids.viz:Plot trigger
+    INFO:phys2bids.phys2bids:Preparing 2 output files.
+    INFO:phys2bids.phys2bids:Exporting files for run 1 freq 1000.0
+
+The logger also notifies you about the slicing points used (the first always being from the beginning of session, until the specified number of timepoints after the first trigger). The user can also check the resulting slice by looking at the plot of the trigger channel for each run. Each slice is adjusted with a padding after the last trigger. Such padding can be specified while calling ``phys2bids`` with ``-pad``. If nothing is specified, the default value of 9 seconds will be used. This padding is also applied at the beginning (before the first trigger of the run) of the 2nd to last run.
+
+What if I have multiple acquisition types ?
+*******************************************
+
+The user can also benefit from this utility when dealing with multiple **acquisition types** such as different functional scans with different TRs. Like ``-ntp``, ``-tr`` can take multiple values. **Though, if more than one value is specified, they require the same amount of values**. The idea is simple: if you only have one acquisition type, the one ``-tr`` input you gave will be broadcast through all runs, but if you have different acquisition types, you have to list all of them in order.
+
+.. warning::
+    There are currently no ``multi-run tutorial files`` available along with the package (under ``phys2bids/tests/data``). Although, you can visit `phys2bids OSF <https://osf.io/3txqr/files/>`_ storage to access a LabChart physiological recording with multiple fMRI acquisitions. Find it under ``labchart/chicago``.
+
+.. note::
+    **Why would I have more than one fMRI acquisition in the physiological recording?**
+
+    The idea is to reduce human error and have a good padding around your fMRI scan!
+
+    Synchronization between start of both fMRI and physiological acquisitions can be difficult, so it is safer to have as few physiological recordings as possible, with multiple imaging sequences.
+
+    Moreover, if you want to correct for recording/physiological delays, you will love *that bit of recorded information* around your fMRI scan!
+
 Generating outputs in BIDs format
 #################################
 
