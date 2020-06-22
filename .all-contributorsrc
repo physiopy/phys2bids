@@ -1,9 +1,16 @@
 {
+  "projectName": "phys2bids",
+  "projectOwner": "physiopy",
+  "repoType": "github",
+  "repoHost": "https://github.com",
   "files": [
     "README.md"
   ],
+  "badgeTemplate": "[![All Contributors](https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg?style=flat)](#contributors)",
   "imageSize": 100,
-  "commit": false,
+  "commit": true,
+  "commitConvention": "none",
+  "contributorsPerLine": 4,
   "contributors": [
     {
       "login": "danalclop",
@@ -107,7 +114,8 @@
         "bug",
         "data",
         "doc",
-        "userTesting"
+        "userTesting",
+        "code"
       ]
     },
     {
@@ -134,11 +142,5 @@
         "content"
       ]
     }
-  ],
-  "contributorsPerLine": 5,
-  "projectName": "phys2bids",
-  "projectOwner": "physiopy",
-  "repoType": "github",
-  "repoHost": "https://github.com",
-  "skipCi": true
+  ]
 }
