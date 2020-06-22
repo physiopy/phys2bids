@@ -1,3 +1,50 @@
+# v2.1.0 (Tue Jun 23 2020)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Taylor Salo ([@tsalo](https://github.com/tsalo))
+
+:heart: François Lespinasse ([@sangfrois](https://github.com/sangfrois))
+
+#### 🚀 Enhancement
+
+- Add the possibility to split multi-run physiological recordings [#206](https://github.com/physiopy/phys2bids/pull/206) ([@sangfrois](https://github.com/sangfrois) [@smoia](https://github.com/smoia) [@rmarkello](https://github.com/rmarkello))
+- Create folder code/conversion to store trigger and channel plots, yaml and heuristic files and the call.sh file [#256](https://github.com/physiopy/phys2bids/pull/256) ([@vinferrer](https://github.com/vinferrer) [@eurunuela](https://github.com/eurunuela))
+- Add duecredit to handle citations [#249](https://github.com/physiopy/phys2bids/pull/249) ([@tsalo](https://github.com/tsalo) [@smoia](https://github.com/smoia))
+- Generate dataset_description.json and README.md when they do not exist and update the json file when the subject is missing [#255](https://github.com/physiopy/phys2bids/pull/255) ([@vinferrer](https://github.com/vinferrer))
+- Create bids_ignore directory and redirect channels plot, trigger plot, logger output and subject log file to this directory [#245](https://github.com/physiopy/phys2bids/pull/245) ([@vinferrer](https://github.com/vinferrer) [@smoia](https://github.com/smoia))
+- Generate participants.tsv if it doesn't exist or update it if subject is missing in the file [#244](https://github.com/physiopy/phys2bids/pull/244) ([@eurunuela](https://github.com/eurunuela))
+
+#### 🐛 Bug Fix
+
+- Auto [#236](https://github.com/physiopy/phys2bids/pull/236) ([@smoia](https://github.com/smoia))
+- Check branch in travisCI [#235](https://github.com/physiopy/phys2bids/pull/235) ([@smoia](https://github.com/smoia))
+
+#### ⚠️ Tests
+
+- Change os path import and linter [#260](https://github.com/physiopy/phys2bids/pull/260) ([@smoia](https://github.com/smoia))
+- Remove redundant integration tests [#259](https://github.com/physiopy/phys2bids/pull/259) ([@eurunuela](https://github.com/eurunuela))
+- Add unit tests for participants_file and append_list_as_row [#254](https://github.com/physiopy/phys2bids/pull/254) ([@sangfrois](https://github.com/sangfrois) [@eurunuela](https://github.com/eurunuela))
+- Update testing to use short files. [#241](https://github.com/physiopy/phys2bids/pull/241) ([@eurunuela](https://github.com/eurunuela))
+
+#### 🏠 Internal
+
+- Add zenodo default to improve automatic release tracking [#261](https://github.com/physiopy/phys2bids/pull/261) ([@smoia](https://github.com/smoia))
+
+#### Authors: 9
+
+- Eneko Uruñuela ([@eurunuela](https://github.com/eurunuela))
+- François Lespinasse ([@sangfrois](https://github.com/sangfrois))
+- Rachael Stickland ([@RayStick](https://github.com/RayStick))
+- Ross Markello ([@rmarkello](https://github.com/rmarkello))
+- Stefano Moia ([@smoia](https://github.com/smoia))
+- Taylor Salo ([@tsalo](https://github.com/tsalo))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
 # v2.0.0 (Mon Jun 15 2020)
 
 :tada: This release contains work from a new contributor! :tada:
