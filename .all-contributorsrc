@@ -27,9 +27,9 @@
       "avatar_url": "https://avatars1.githubusercontent.com/u/50453337?v=4",
       "profile": "https://github.com/AyyagariA",
       "contributions": [
+        "content",
         "data",
-        "doc",
-        "content"
+        "doc"
       ]
     },
     {
@@ -38,9 +38,9 @@
       "avatar_url": "https://avatars2.githubusercontent.com/u/32640425?v=4",
       "profile": "http://brightlab.northwestern.edu",
       "contributions": [
+        "content",
         "data",
-        "ideas",
-        "content"
+        "ideas"
       ]
     },
     {
@@ -49,9 +49,9 @@
       "avatar_url": "https://avatars1.githubusercontent.com/u/7611340?v=4",
       "profile": "https://github.com/CesarCaballeroGaudes",
       "contributions": [
+        "content",
         "data",
-        "ideas",
-        "content"
+        "ideas"
       ]
     },
     {
@@ -93,6 +93,7 @@
       "contributions": [
         "bug",
         "code",
+        "content",
         "ideas",
         "infra",
         "review",
@@ -106,13 +107,13 @@
       "profile": "https://github.com/smoia",
       "contributions": [
         "code",
+        "content",
         "data",
         "ideas",
         "infra",
         "projectManagement",
         "review",
-        "doc",
-        "content"
+        "doc"
       ]
     },
     {
@@ -168,8 +169,8 @@
       "profile": "https://github.com/kristinazvolanek",
       "contributions": [
         "data",
-        "doc",
-        "content"
+        "content",
+        "doc"
       ]
     }
   ]
