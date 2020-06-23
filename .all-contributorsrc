@@ -76,6 +76,16 @@
       ]
     },
     {
+      "login": "sangfrois",
+      "name": "François Lespinasse",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/38385719?v=4",
+      "profile": "https://github.com/sangfrois",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
       "login": "rmarkello",
       "name": "Ross Markello",
       "avatar_url": "https://avatars0.githubusercontent.com/u/14265705?v=4",
@@ -106,16 +116,36 @@
       ]
     },
     {
+      "login": "robertoostenveld",
+      "name": "Robert Oostenveld",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/899043?v=4",
+      "profile": "https://github.com/robertoostenveld",
+      "contributions": [
+        "ideas",
+        "review"
+      ]
+    },
+    {
+      "login": "tsalo",
+      "name": "Taylor Salo",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/8228902?v=4",
+      "profile": "https://github.com/tsalo",
+      "contributions": [
+        "ideas",
+        "code"
+      ]
+    },
+    {
       "login": "RayStick",
       "name": "Rachael Stickland",
       "avatar_url": "https://avatars3.githubusercontent.com/u/50215726?v=4",
       "profile": "https://github.com/RayStick",
       "contributions": [
         "bug",
+        "code",
         "data",
         "doc",
-        "userTesting",
-        "code"
+        "userTesting"
       ]
     },
     {
@@ -140,33 +170,6 @@
         "data",
         "doc",
         "content"
-      ]
-    },
-    {
-      "login": "sangfrois",
-      "name": "François Lespinasse",
-      "avatar_url": "https://avatars0.githubusercontent.com/u/38385719?v=4",
-      "profile": "https://github.com/sangfrois",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "tsalo",
-      "name": "Taylor Salo",
-      "avatar_url": "https://avatars3.githubusercontent.com/u/8228902?v=4",
-      "profile": "https://github.com/tsalo",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "robertoostenveld",
-      "name": "Robert Oostenveld",
-      "avatar_url": "https://avatars1.githubusercontent.com/u/899043?v=4",
-      "profile": "https://github.com/robertoostenveld",
-      "contributions": [
-        "review"
       ]
     }
   ]
