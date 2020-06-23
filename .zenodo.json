@@ -48,16 +48,5 @@
             "name": "Kristina Zvolanek"
         }
     ], 
-    "access_right": "open", 
-    "related_identifiers": [
-        {
-            "scheme": "url",
-            "relation": "isSupplementTo"
-        }, 
-        {
-            "scheme": "doi", 
-            "identifier": "10.5281/zenodo.3470091", 
-            "relation": "isVersionOf"
-        }
-    ]
+    "access_right": "open"
 }
