@@ -24,7 +24,7 @@ It was born for AcqKnowledge files (BIOPAC), and at the moment it supports
 (ADInstruments).
 It doesn't support physiological files recorded with the MRI, as you can find a software for it [here](https://github.com/tarrlab/physio2bids).
 
-If you use ``phys2bids`` in your work, please cite it with the zenodo DOI. You can check it [here](https://zenodo.org/record/3903920)
+> If you use ``phys2bids`` in your work, please cite it with the zenodo DOI. You can check it [here](https://zenodo.org/record/3903920)
 
 [Read the latest documentation](https://phys2bids.readthedocs.io/en/latest/) for more information on phys2bids!
 
@@ -44,9 +44,7 @@ We have a milestone [here](https://github.com/physiopy/phys2bids/milestone/5) as
 Check the issues with a `BrainWeb` label. Of course, they are only suggestions, so feel free to tackle any issue you want, even open new ones!
 You can also contact us on Gitter, in the BrainHack Mattermost (<a href="https://mattermost.brainhack.org/brainhack/channels/physiopy">#physiopy</a>), and don't hesitate to contact [Stefano](https://github.com/smoia) in other ways to jump in the development!
 
-
-**The project is currently under development**.
-Any suggestion/bug report is welcome! Feel free to open an issue.
+**We're looking for code contributors,** but any suggestion/bug report is welcome! Feel free to open issues!
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
@@ -88,7 +86,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 License
 -------
 
-Copyright 2019, The Phys2BIDS community.
+Copyright 2019-2020, The Phys2BIDS community.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
