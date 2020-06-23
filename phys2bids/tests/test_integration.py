@@ -194,3 +194,31 @@ def test_integration_heuristic(multifreq_lab_file):
     shutil.rmtree(conversion_path)
     for filename in glob.glob(join(test_path, 'Test1_multifreq_onescan*')):
         remove(filename)
+
+
+def test_integration_multirun(multi_run_file):
+
+    test_path, test_filename = split(multi_run_file)
+    test_chtrig = 1
+    conversion_path = join(test_path, 'code', 'conversion')
+
+    phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
+              chtrig=test_chtrig, num_timepoints_expected=[534, 513], tr=[1.2, 1.2])
+
+    # Check that files are generated in outdir
+    base_filename = 'Test2_samefreq_TWOscans_'
+    for suffix in ['.json', '.tsv.gz']:
+        for run in ['01', '02']:
+            assert isfile(join(test_path, f'{base_filename}{run}{suffix}'))
+
+    assert isfile(join(test_path, 'Test2_samefreq_TWOscans.txt'))
+
+    # Check that files are generated in conversion_path
+    for run in ['01', '02']:
+        assert isfile(join(conversion_path, f'Test2_samefreq_TWOscans_{run}.log'))
+
+    # Check that plots are generated in conversion_path
+    base_filename = 'Test2_samefreq_TWOscans_'
+    for run in ['1', '2']:
+        assert isfile(join(conversion_path, f'Test2_samefreq_TWOscans_{run}_trigger_time.png'))
+    assert isfile(join(conversion_path, 'Test2_samefreq_TWOscans.png'))
