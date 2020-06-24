@@ -72,3 +72,9 @@ def multifreq_lab_file(testpath):
 def notime_lab_file(testpath):
     return fetch_file('cv5zr', testpath,
                       'Test2_samefreq_onescan_notime.txt')
+
+
+@pytest.fixture
+def multi_run_file(testpath):
+    return fetch_file('gvy84', testpath,
+                      'Test2_samefreq_TWOscans.txt')
