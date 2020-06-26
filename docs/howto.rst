@@ -79,13 +79,13 @@ This ``-info`` argument means ``phys2bids`` does not process the file, but only 
     04. Pulse; sampled at 1000.0 Hz
     ------------------------------------------------
 
-    INFO:phys2bids.viz:saving channel plot to tutorial_file.png
+    INFO:phys2bids.viz:saving channel plot to ./code/conversion/tutorial_file.png
 
 .. image:: _static/tutorial_file.png
    :alt: tutorial_file_channels
    :align: center
 
-When using the ``-info`` option, the channel plot will always be made. It will be saved as a png file in your working directory, with the *same name* as your input filename. If you want to change the filename and output location, you can use the ``-chplot`` argument, which allows you to specify the name (and full path) for the output of this channel plot.
+When using the ``-info`` option, the channel plot will always be made. It will be saved as a png file in the directory ``./code/conversion/tutorial_file.png``, with the *same name* as your input filename.
 
 Now we know that the file contains four channels, sampled at the same frequency, and that the trigger is in the first column. All this information will become useful.
 
@@ -137,18 +137,22 @@ This is outputted to the terminal:
     Tip: Time 0 is the time of first trigger
     ------------------------------------------------
 
-Four files have been generated in the output directory:
+Five files have been generated in the output directory:
 
-- **tutorial_file.log**
-    The same information outputted to the terminal at the end of the call.
 - **tutorial_file.tsv.gz**
     Compressed file in ``tsv`` format containing your data without header information.
 - **tutorial_file.json**
     As phys2bids is designed to be BIDs compatible, this is one of the two necessary BIDs files. It describes the content of your ``tsv.gz`` file.
+Inside the ``code/coverage folder:
+- **tutorial_file.log**
+    The same information outputted to the terminal at the end of the call.
 - **phys2bids_yyyy-mm-ddThh:mm:ss.tsv**
     This is the logger file. It contains the full terminal output of your ``phys2bids`` call.
+- **call.sh**
+    Contains the original phys2bids command
+- **tutorial_file.png**
+    channels plot.
 
-When calling ``phys2bids`` without using the ``-info`` option, the channel plot will not be automatically outputted. If you still want it to be outputted, use the ``-chplot``, as explained in the previous section.
 Unless specified with ``-chsel``, ``phys2bids`` will process and output all channels. Unless specified with ``-chnames``, ``phys2bids`` will read the channel names from the header information in the file. In this tutorial, we are processing all channels and reading the names from the header information.
 
 Finding the "start time"
@@ -380,14 +384,21 @@ You will also see a folder for the specified subject, that (optionally) contains
 .. code-block:: none
 
     - /home/arthurdent/physio_bids /
-        - tutorial_file_sub-006_sub-01_trigger_time.png
-        - phys2bids_yyyy-mm-ddThh:mm:ss.tsv
+        participants.tsv
+        README.md
+        dataset_description.json
         - sub-006 /
             - ses-01 /
                 - func /
                     - sub-006_ses-01_task-test_rec-labchart_run-00_physio.json
                     - sub-006_ses-01_task-test_rec-labchart_run-00_physio.tsv.gz
-                    - sub-006_ses-01_task-test_rec-labchart_run-00_physio.log
+        - code /
+            - coverage/
+                - phys2bids_yyyy-mm-ddThh:mm:ss.tsv
+                - call.sh
+                - tutorial_file.png
+                - tutorial_file_sub-006_sub-01_trigger_time.png
+                - sub-006_ses-01_task-test_rec-labchart_run-01_physio.log
 
 .. note::
     The main idea is that ``phys2bids`` should be called through a loop that can process all the files of your dataset. It's still a bit cranky, but we're looking to implement *smarter* solutions.
