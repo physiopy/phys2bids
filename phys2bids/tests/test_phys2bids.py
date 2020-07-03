@@ -10,7 +10,7 @@ from phys2bids import phys2bids
 
 def test_print_summary(tmpdir):
     test_filename = 'input.txt'
-    test_ntp_expected = 10
+    test_ntp_expected = [10, ]
     test_ntp_found = 5
     test_samp_freq = 0.2
     test_time_offset = 0.8

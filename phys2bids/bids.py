@@ -1,5 +1,5 @@
-import os
 import logging
+import os
 from csv import reader
 from pathlib import Path
 
@@ -25,6 +25,9 @@ UNIT_ALIASES = {
                 # ampere: electric current
                 'ampere': 'A', 'amp': 'A', 'amps': 'A',
                 # second: time and hertzs: frequency
+                # siemens: electric conductance (e.g. EDA)
+                'siemens': 'S',
+                # second: time and hertzs
                 '1/hz': 's', '1/hertz': 's', 'hz': 'Hz',
                 '1/s': 'Hz', '1/second': 'Hz', '1/seconds': 'Hz',
                 '1/sec': 'Hz', '1/secs': 'Hz', 'hertz': 'Hz',
@@ -96,7 +99,7 @@ def bidsify_units(orig_unit):
     return orig_unit
 
 
-def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
+def use_heuristic(heur_file, sub, ses, filename, outdir, run='', record_label=''):
     """
     Import and use the heuristic specified by the user to rename the file.
 
@@ -130,7 +133,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
 
     # Initialise a dictionary of bids_keys that has already "recording"
     bids_keys = {'sub': '', 'ses': '', 'task': '', 'acq': '', 'ce': '',
-                 'dir': '', 'rec': '', 'run': '', 'recording': record_label}
+                 'dir': '', 'rec': '', 'run': run, 'recording': record_label}
 
     # Start filling bids_keys dictionary and path with subject and session
     if sub.startswith('sub-'):
@@ -150,7 +153,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, record_label=''):
 
     # Load heuristic and use it to fill dictionary
     heur = utils.load_heuristic(heur_file)
-    bids_keys.update(heur.heur(Path(filename).stem))
+    bids_keys.update(heur.heur(Path(filename).stem, run))
 
     # If bids_keys['task'] is still empty, stop the program
     if not bids_keys['task']:

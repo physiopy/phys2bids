@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-phys2bids interface for txt files.
-"""
+"""phys2bids interface for txt files."""
 
 import logging
 from collections import Counter

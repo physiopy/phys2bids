@@ -298,8 +298,15 @@ class BlueprintInput():
 
             idx = slice(idx, idx + 1)
 
+        # If idx.start or stop are None, make them 0 or trigger length.
+        if idx.start is None:
+            idx = slice(0, idx.stop)
+        if idx.stop is None:
+            idx = slice(idx.start, trigger_length)
+
+        # Check that the indexes are not out of bounds
         if idx.start >= trigger_length or idx.stop > trigger_length:
-            raise IndexError(f'slice ({idx.start}, {idx.stop}) is out of '
+            raise IndexError(f'Slice ({idx.start}, {idx.stop}) is out of '
                              f'bounds for channel {self.trigger_idx} '
                              f'with size {trigger_length}')
 
@@ -549,6 +556,9 @@ class BlueprintOutput():
     start_time : float
         Starting time of acquisition (equivalent to first TR,
         or to the opposite sign of the time offset).
+    filename : string
+        Filename the object will be saved with. Init as empty string
+
 
     Methods
     -------
@@ -564,13 +574,14 @@ class BlueprintOutput():
         method to populate from input blueprint instead of init
     """
 
-    def __init__(self, timeseries, freq, ch_name, units, start_time):
+    def __init__(self, timeseries, freq, ch_name, units, start_time, filename=''):
         """Initialise BlueprintOutput (see class docstring)."""
         self.timeseries = is_valid(timeseries, np.ndarray)
         self.freq = is_valid(freq, (int, float))
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
         self.start_time = start_time
+        self.filename = is_valid(filename, str)
 
     @property
     def ch_amount(self):

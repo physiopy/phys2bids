@@ -4,7 +4,7 @@
 
 import json
 import os
-
+from csv import reader
 from phys2bids import utils
 
 
@@ -95,3 +95,14 @@ def test_load_heuristics():
     test_heuristic = 'heur_test_acq'
     heuristic_output_filename = utils.load_heuristic(test_heuristic).filename
     assert test_heuristic in heuristic_output_filename
+
+
+# Test writing rows util
+def test_append_list_as_row():
+    file_name = 'test_row.tsv'
+    list_of_elem = ["01", "32", 'some_info', "132.98", 'M']
+    utils.append_list_as_row(file_name, list_of_elem)
+    with open(file_name, mode='r') as tsv:
+        tsv_read = reader(tsv, delimiter="\t")
+        for row in tsv_read:
+            assert row == list_of_elem
