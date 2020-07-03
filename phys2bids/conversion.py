@@ -21,15 +21,22 @@
    in cases where trigger failed, and ignore trigger periods associated with
    scans that weren't kept in the BIDS dataset.
 """
+import re
 import os.path as op
 from operator import itemgetter
 from itertools import groupby
 from datetime import datetime
+import logging
 
 from bids import BIDSLayout
 import pandas as pd
 import numpy as np
 import nibabel as nib
+
+from .slice4phys import update_name, slice_phys
+from .interfaces.acq import populate_phys_input
+
+LGR = logging.getLogger(__name__)
 
 
 def extract_physio_onsets(trigger_timeseries, freq, threshold=0.5):
@@ -180,37 +187,19 @@ def merge_segments(physio_file):
             # Now we have the sizes, we can load the data and insert zeros.
 
 
-def split_physio(physio, split_times, time_before=6, time_after=6):
-    """Extract timeseries associated with each scan.
-    Key in dict is scan name or physio filename and value is physio data in
-    some format.
-    Uses the onsets, durations, and filenames from scan_df, and the time series
-    data from physio_file.
-
-    Parameters
-    ----------
-    physio_file : BlueprintInput
-    split_times : list of tuple
-    time_before : float
-        Amount of time, in seconds, to retain in physio time series *before*
-        scan.
-    time_after : float
-        Amount of time, in seconds, to retain in physio time series *after*
-        scan.
-
-    Returns
-    -------
-    physio_data_dict : dict
-        Dictionary containing physio run names as keys and associated segments
-        as values.
-    """
-    pass
-
-
 def save_physio(fn, physio_data):
     """Save split physio data to BIDS dataset.
     """
     pass
+
+
+def drop_bids_multicontrast_keys(fname):
+    dirname = op.dirname(fname)
+    fname = op.basename(fname)
+    multi_contrast_entities = ['echo', 'part', 'fa', 'inv', 'ch']
+    regex = '_({})-[0-9a-zA-Z]+'.format('|'.join(multi_contrast_entities))
+    fname = re.sub(regex, '', fname)
+    return op.join(dirname, fname)
 
 
 def determine_scan_durations(layout, scan_df, sub, ses):
@@ -235,17 +224,17 @@ def determine_scan_durations(layout, scan_df, sub, ses):
     # TODO: parse entities in func files for searches instead of larger search.
     func_files = layout.get(datatype='func', suffix='bold',
                             extension=['nii.gz', 'nii'],
-                            sub=sub, ses=ses, echo=1)
+                            sub=sub, ses=ses)
     scan_df['duration'] = None
     for func_file in func_files:
         filename = op.join('func', func_file.filename)
-        if filename in scan_df['filename'].values:
+        if filename in scan_df['original_filename'].values:
             n_vols = nib.load(func_file.path).shape[3]
             tr = func_file.get_metadata()['RepetitionTime']
             duration = n_vols * tr
-            scan_df.loc[scan_df['filename'] == filename, 'duration'] = duration
+            scan_df.loc[scan_df['original_filename'] == filename, 'duration'] = duration
         else:
-            print('Skipping {}'.format(filename))
+            LGR.info('Skipping {}'.format(filename))
     return scan_df
 
 
@@ -276,24 +265,27 @@ def load_scan_data(layout, sub, ses):
     # AcquisitionTime across multi-contrast scans like multi-echo at this step.
     img_files = layout.get(datatype='func', suffix='bold',
                            extension=['nii.gz', 'nii'],
-                           sub=sub, ses=ses, echo=1)
+                           sub=sub, ses=ses)
     df = pd.DataFrame(
-        columns=['filename', 'acq_time'],
+        columns=['original_filename', 'acq_time'],
     )
     for i, img_file in enumerate(img_files):
-        df.loc[i, 'filename'] = op.join('func', img_file.filename)
+        df.loc[i, 'original_filename'] = op.join('func', img_file.filename)
         df.loc[i, 'acq_time'] = img_file.get_metadata()['AcquisitionTime']
+
+    # Get generic filenames (without within-acquisition entities like echo)
+    df['filename'] = df['original_filename'].apply(drop_bids_multicontrast_keys)
+
+    # Get "first" scan from multi-file acquisitions
+    df['acq_time'] = pd.to_datetime(df['acq_time'])
+    df = df.sort_values(by='acq_time')
+    df = df.drop_duplicates(subset='filename', keep='first', ignore_index=True)
 
     # Now back to general-purpose code
     df = determine_scan_durations(layout, df, sub=sub, ses=ses)
     df = df.dropna(subset=['duration'])  # limit to relevant scans
-    # TODO: Drop duplicates at second-level resolution. Because echoes are
-    # acquired at ever-so-slightly different times.
-    df = df.drop_duplicates(subset=['acq_time'])  # for multi-contrast scans
 
     # Convert scan times to relative onsets (first scan is at 0 seconds)
-    df['acq_time'] = pd.to_datetime(df['acq_time'])
-    df = df.sort_values(by='acq_time')
     df['onset'] = (df['acq_time'] - df['acq_time'].min())
     df['onset'] = df['onset'].dt.total_seconds()
     return df
@@ -322,15 +314,16 @@ def workflow(bids_dir, physio_file, chtrig, sub, ses=None):
     scan_df = load_scan_data(layout, sub=sub, ses=ses)
     physio = populate_phys_input(physio_file, chtrig)
     # physio = merge_physio_segments(physio)
-    trigger_timeseries = physio.timeseries[chtrig]
-    freq = physio.freq[chtrig]
+
+    trigger_timeseries = physio.timeseries[physio.trigger_idx + 1]
+    freq = physio.freq[physio.trigger_idx + 1]
     physio_df = extract_physio_onsets(trigger_timeseries, freq=freq)
     scan_df = synchronize_onsets(physio_df, scan_df)
+    run_dict = {}
     for i_row, row in scan_df.iterrows():
-        base_fname = row['filename']
+        # we need something better for updating the fname here
+        base_fname = update_name(row['filename'], suffix='physio', extension='.tsv.gz')
         split_times = (row['index_onset'], row['index_offset'])
-        physio_split = split_physio(physio, split_times)
-        # we need a more elegant approach that drops multi-contrast entities and
-        # allows for other base datatypes
-        out_fname = base_fname.replace('_bold.nii.gz', '_physio.tsv.gz')
-        save_physio(out_fname, physio_split)
+        run_dict[base_fname] = split_times
+    phys_dict = slice_phys(physio, run_dict)
+    return phys_dict

@@ -1,12 +1,74 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+import re
 import logging
 from copy import deepcopy
 
 import numpy as np
 
 LGR = logging.getLogger(__name__)
+
+
+def update_name(basename, **kwargs):
+    """
+    Add entities, suffix, and/or extension to a BIDS filename while retaining
+    BIDS compatibility.
+
+    TODO: Replace list of entities with versioned, yaml entity table from BIDS.
+    """
+    import os.path as op
+    ENTITY_ORDER = ['sub', 'ses', 'task', 'acq', 'ce', 'rec', 'dir', 'run',
+                    'mod', 'echo', 'recording', 'proc', 'space', 'split']
+
+    outdir = op.dirname(basename)
+    outname = op.basename(basename)
+
+    # Determine scan suffix (should always be physio)
+    suffix = outname.split('_')[-1].split('.')[0]
+    extension = '.' + '.'.join(outname.split('_')[-1].split('.')[1:])
+    filetype = suffix + extension
+
+    for key, val in kwargs.items():
+        if key == 'suffix':
+            if not val.startswith('_'):
+                val = '_' + val
+
+            if not val.endswith('.'):
+                val = val + '.'
+
+            outname = outname.replace('_' + suffix + '.', val)
+        elif key == 'extension':
+            if not val.startswith('.'):
+                val = '.' + val
+            outname = outname.replace(extension, val)
+        else:
+            if key not in ENTITY_ORDER:
+                raise ValueError('Key {} not understood.'.format(key))
+
+            # entities
+            if '_{}-{}'.format(key, val) in basename:
+                LGR.warning('Key {} already found in basename {}. '
+                            'Skipping.'.format(key, basename))
+
+            elif '_{}-'.format(key) in basename:
+                LGR.warning('Key {} already found in basename {}. '
+                            'Overwriting.'.format(key, basename))
+                regex = '_{}-[0-9a-zA-Z]+'.format(key)
+                fname = re.sub(regex, '_{}-{}'.format(key, val), fname)
+            else:
+                loc = ENTITY_ORDER.index(key)
+                entities_to_check = ENTITY_ORDER[loc:]
+                entities_to_check = ['_{}-'.format(etc) for etc in entities_to_check]
+                entities_to_check.append('_{}'.format(filetype))
+                for etc in entities_to_check:
+                    if etc in outname:
+                        outname = outname.replace(
+                            etc,
+                            '_{}-{}{}'.format(key, val, etc)
+                        )
+                        break
+    outname = op.join(outdir, outname)
+    return outname
 
 
 def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
@@ -107,6 +169,55 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
     return run_timestamps
 
 
+def slice_phys(phys, run_timestamps):
+    """
+    Slice a physio object based on run-/file-wise onsets and offsets.
+    Adapted from slice4phys with the goal of modularizing slicing functionality
+    (i.e., cutting out the run detection step).
+
+    Parameters
+    ----------
+    phys : BlueprintInput
+    run_timestamps : dict
+        Each key is a run-wise filename and value is a tuple of (onset, offset),
+        where onset and offset are integers corresponding to index values of
+        the trigger channel.
+
+    Returns
+    -------
+    phys_in_slices : dict
+        Each key is a run-wise filename (possibly further split by frequency)
+        and each value is a BlueprintInput object.
+    """
+    phys_in_slices = {}
+    for i_run, fname in enumerate(run_timestamps.keys()):
+        # tmp variable to collect run's info
+        run_attributes = run_timestamps[fname]
+        trigger_onset, trigger_offset = run_attributes
+
+        unique_frequencies = np.unique(phys.freq)
+        trigger_freq = phys.freq[phys.trigger_idx + 1]
+        for freq in unique_frequencies:
+            # Get onset and offset for the requested frequency
+            if freq != trigger_freq:
+                onset = int(trigger_onset * trigger_freq / freq)  # no clue if this is right
+                offset = int(trigger_offset * trigger_freq / freq)
+            else:
+                onset = trigger_onset
+                offset = trigger_offset
+
+            # Split into frequency-specific object limited to onset-offset
+            if len(unique_frequencies) > 1:
+                run_fname = update_name(fname, recording=str(freq)+'Hz')
+                temp_phys_in = deepcopy(phys[onset:offset])
+                not_freq = [i for i in range(len(phys.freq)) if phys.freq[i] != freq]
+                temp_phys_in.delete_at_index(not_freq)
+                phys_in_slices[run_fname] = temp_phys_in
+            else:
+                phys_in_slices[fname] = deepcopy(phys[onset:offset])
+    return phys_in_slices
+
+
 def slice4phys(phys_in, ntp_list, tr_list, thr, padding=9):
     """
     Slice runs for phys2bids.
@@ -115,13 +226,10 @@ def slice4phys(phys_in, ntp_list, tr_list, thr, padding=9):
     ---------
     phys_in: BlueprintInput object
         Object returned by BlueprintInput class
-    ntp_list: list
-        a list of integers given by the user as `ntp` input
+    nsec_list: list
+        a list of floats given by the user as `nsec` input
         Default: [0, ]
-    tr_list: list
-        a list of float given by the user as `tr` input
-        Default: [1,]
-    padding: int
+    padding: int, optional
         extra time at beginning and end of timeseries, expressed in seconds (s)
         Default: 9
 
