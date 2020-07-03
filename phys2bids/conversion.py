@@ -139,8 +139,9 @@ def synchronize_onsets(phys_df, scan_df):
 
     # Get onset of each scan in terms of the physio time series
     scan_df['phys_onset'] = scan_df['onset'] + offset
-    samplerate = ((phys_df.loc[1, 'index'] - phys_df.loc[0, 'index']) /
-                  (phys_df.loc[1, 'onset'] - phys_df.loc[0, 'onset']))
+    rise = (phys_df.loc[1, 'index'] - phys_df.loc[0, 'index'])
+    run = (phys_df.loc[1, 'onset'] - phys_df.loc[0, 'onset'])
+    samplerate = rise / run
     scan_df['index_onset'] = (scan_df['phys_onset'] * samplerate).astype(int)
     scan_df['index_duration'] = (scan_df['duration'] * samplerate).astype(int)
     scan_df['index_offset'] = scan_df['index_onset'] + scan_df['index_duration']
@@ -166,7 +167,7 @@ def merge_segments(physio_file):
         print('{}: {}'.format(em.text, em.sample_index))
         try:
             em_dt = datetime.strptime(em.text, '%a %b %d %Y %H:%M:%S')
-        except:
+        except ValueError:
             continue
         em_df.loc[c, 'segment'] = em.text
         em_df.loc[c, 'start_idx'] = em.sample_index
@@ -185,6 +186,7 @@ def merge_segments(physio_file):
             diff_diff_sec = time_pair_diff - idx_pair_diff
             diff_diff_idx = diff_diff_sec * d.samples_per_second
             # Now we have the sizes, we can load the data and insert zeros.
+    return diff_diff_idx
 
 
 def save_physio(fn, physio_data):

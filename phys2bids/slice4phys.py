@@ -54,7 +54,7 @@ def update_name(basename, **kwargs):
                 LGR.warning('Key {} already found in basename {}. '
                             'Overwriting.'.format(key, basename))
                 regex = '_{}-[0-9a-zA-Z]+'.format(key)
-                fname = re.sub(regex, '_{}-{}'.format(key, val), fname)
+                outname = re.sub(regex, '_{}-{}'.format(key, val), outname)
             else:
                 loc = ENTITY_ORDER.index(key)
                 entities_to_check = ENTITY_ORDER[loc:]
@@ -208,7 +208,7 @@ def slice_phys(phys, run_timestamps):
 
             # Split into frequency-specific object limited to onset-offset
             if len(unique_frequencies) > 1:
-                run_fname = update_name(fname, recording=str(freq)+'Hz')
+                run_fname = update_name(fname, recording=str(freq) + 'Hz')
                 temp_phys_in = deepcopy(phys[onset:offset])
                 not_freq = [i for i in range(len(phys.freq)) if phys.freq[i] != freq]
                 temp_phys_in.delete_at_index(not_freq)
