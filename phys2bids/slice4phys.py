@@ -3,72 +3,13 @@
 import re
 import logging
 from copy import deepcopy
+import os.path as op
 
 import numpy as np
 
+from phys2bids.utils import update_name
+
 LGR = logging.getLogger(__name__)
-
-
-def update_name(basename, **kwargs):
-    """
-    Add entities, suffix, and/or extension to a BIDS filename while retaining
-    BIDS compatibility.
-
-    TODO: Replace list of entities with versioned, yaml entity table from BIDS.
-    """
-    import os.path as op
-    ENTITY_ORDER = ['sub', 'ses', 'task', 'acq', 'ce', 'rec', 'dir', 'run',
-                    'mod', 'echo', 'recording', 'proc', 'space', 'split']
-
-    outdir = op.dirname(basename)
-    outname = op.basename(basename)
-
-    # Determine scan suffix (should always be physio)
-    suffix = outname.split('_')[-1].split('.')[0]
-    extension = '.' + '.'.join(outname.split('_')[-1].split('.')[1:])
-    filetype = suffix + extension
-
-    for key, val in kwargs.items():
-        if key == 'suffix':
-            if not val.startswith('_'):
-                val = '_' + val
-
-            if not val.endswith('.'):
-                val = val + '.'
-
-            outname = outname.replace('_' + suffix + '.', val)
-        elif key == 'extension':
-            if not val.startswith('.'):
-                val = '.' + val
-            outname = outname.replace(extension, val)
-        else:
-            if key not in ENTITY_ORDER:
-                raise ValueError('Key {} not understood.'.format(key))
-
-            # entities
-            if '_{}-{}'.format(key, val) in basename:
-                LGR.warning('Key {} already found in basename {}. '
-                            'Skipping.'.format(key, basename))
-
-            elif '_{}-'.format(key) in basename:
-                LGR.warning('Key {} already found in basename {}. '
-                            'Overwriting.'.format(key, basename))
-                regex = '_{}-[0-9a-zA-Z]+'.format(key)
-                outname = re.sub(regex, '_{}-{}'.format(key, val), outname)
-            else:
-                loc = ENTITY_ORDER.index(key)
-                entities_to_check = ENTITY_ORDER[loc:]
-                entities_to_check = ['_{}-'.format(etc) for etc in entities_to_check]
-                entities_to_check.append('_{}'.format(filetype))
-                for etc in entities_to_check:
-                    if etc in outname:
-                        outname = outname.replace(
-                            etc,
-                            '_{}-{}{}'.format(key, val, etc)
-                        )
-                        break
-    outname = op.join(outdir, outname)
-    return outname
 
 
 def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
