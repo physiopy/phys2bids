@@ -3,6 +3,7 @@
 import json
 import logging
 import os
+import re
 import sys
 from csv import writer
 from pathlib import Path
@@ -27,12 +28,12 @@ def drop_bids_multicontrast_keys(fname):
     fname : str
         Valid BIDS filename, minus the within-acquisition entities.
     """
-    dirname = op.dirname(fname)
-    fname = op.basename(fname)
+    dirname = os.path.dirname(fname)
+    fname = os.path.basename(fname)
     multi_contrast_entities = ['echo', 'part', 'fa', 'inv', 'ch']
     regex = '_({})-[0-9a-zA-Z]+'.format('|'.join(multi_contrast_entities))
     fname = re.sub(regex, '', fname)
-    fname = op.join(dirname, fname)
+    fname = os.path.join(dirname, fname)
     return fname
 
 
@@ -59,8 +60,8 @@ def update_name(basename, **kwargs):
     ENTITY_ORDER = ['sub', 'ses', 'task', 'acq', 'ce', 'rec', 'dir', 'run',
                     'mod', 'echo', 'recording', 'proc', 'space', 'split']
 
-    outdir = op.dirname(basename)
-    outname = op.basename(basename)
+    outdir = os.path.dirname(basename)
+    outname = os.path.basename(basename)
 
     # Determine scan suffix (should always be physio)
     suffix = outname.split('_')[-1].split('.')[0]
@@ -77,7 +78,8 @@ def update_name(basename, **kwargs):
 
             outname = outname.replace('_' + suffix + '.', val)
         elif key == 'extension':
-            if not val.startswith('.'):
+            # add leading . if not ''
+            if val and not val.startswith('.'):
                 val = '.' + val
             outname = outname.replace(extension, val)
         else:
@@ -106,7 +108,7 @@ def update_name(basename, **kwargs):
                             '_{}-{}{}'.format(key, val, etc)
                         )
                         break
-    outname = op.join(outdir, outname)
+    outname = os.path.join(outdir, outname)
     return outname
 
 
@@ -326,6 +328,34 @@ def writefile(filename, ext, text):
     """
     with open(filename + ext, 'w') as text_file:
         print(text, file=text_file)
+
+
+def save_json(outfile, samp_freq, time_offset, ch_name):
+    """
+    Print the json required by BIDS format.
+
+    Parameters
+    ----------
+    outfile: str or path
+        Fullpath to output file.
+    samp_freq: float
+        Frequency of sampling for the output file.
+    time_offset: float
+        Difference between beginning of file and first TR.
+    ch_name: list of str
+        List of channel names, as specified by BIDS format.
+
+    Notes
+    -----
+    Outcome:
+    outfile: .json file
+        File containing information for BIDS.
+    """
+    start_time = -time_offset
+    summary = dict(SamplingFrequency=samp_freq,
+                   StartTime=round(start_time, 4),
+                   Columns=ch_name)
+    writejson(outfile, summary, indent=4, sort_keys=False)
 
 
 def writejson(filename, data, **kwargs):

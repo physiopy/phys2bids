@@ -87,34 +87,6 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
     utils.writefile(outfile, '.log', summary)
 
 
-def print_json(outfile, samp_freq, time_offset, ch_name):
-    """
-    Print the json required by BIDS format.
-
-    Parameters
-    ----------
-    outfile: str or path
-        Fullpath to output file.
-    samp_freq: float
-        Frequency of sampling for the output file.
-    time_offset: float
-        Difference between beginning of file and first TR.
-    ch_name: list of str
-        List of channel names, as specified by BIDS format.
-
-    Notes
-    -----
-    Outcome:
-    outfile: .json file
-        File containing information for BIDS.
-    """
-    start_time = -time_offset
-    summary = dict(SamplingFrequency=samp_freq,
-                   StartTime=round(start_time, 4),
-                   Columns=ch_name)
-    utils.writejson(outfile, summary, indent=4, sort_keys=False)
-
-
 @due.dcite(
      Doi('10.5281/zenodo.3470091'),
      path='phys2bids',
@@ -413,8 +385,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             LGR.info(f'Exporting files for run {run} freq {uniq_freq}')
             np.savetxt(phys_out[key].filename + '.tsv.gz',
                        phys_out[key].timeseries, fmt='%.8e', delimiter='\t')
-            print_json(phys_out[key].filename, phys_out[key].freq,
-                       phys_out[key].start_time, phys_out[key].ch_name)
+            utils.save_json(phys_out[key].filename, phys_out[key].freq,
+                            phys_out[key].start_time, phys_out[key].ch_name)
             print_summary(filename, num_timepoints_expected,
                           phys_in[run].num_timepoints_found, uniq_freq,
                           phys_out[key].start_time,

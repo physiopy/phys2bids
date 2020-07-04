@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import re
 import logging
 from copy import deepcopy
-import os.path as op
 
 import numpy as np
 
@@ -110,7 +108,7 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
     return run_timestamps
 
 
-def slice_phys(phys, run_timestamps):
+def slice_phys(phys, run_timestamps, time_before=5):
     """
     Slice a physio object based on run-/file-wise onsets and offsets.
     Adapted from slice4phys with the goal of modularizing slicing functionality
@@ -139,12 +137,14 @@ def slice_phys(phys, run_timestamps):
         unique_frequencies = np.unique(phys.freq)
         trigger_freq = phys.freq[phys.trigger_idx + 1]
         for freq in unique_frequencies:
+            to_subtract = int(time_before * freq)
             # Get onset and offset for the requested frequency
             if freq != trigger_freq:
-                onset = int(trigger_onset * trigger_freq / freq)  # no clue if this is right
+                # no clue if this is right
+                onset = int(trigger_onset * trigger_freq / freq) - to_subtract
                 offset = int(trigger_offset * trigger_freq / freq)
             else:
-                onset = trigger_onset
+                onset = trigger_onset - to_subtract
                 offset = trigger_offset
 
             # Split into frequency-specific object limited to onset-offset
@@ -153,9 +153,20 @@ def slice_phys(phys, run_timestamps):
                 temp_phys_in = deepcopy(phys[onset:offset])
                 not_freq = [i for i in range(len(phys.freq)) if phys.freq[i] != freq]
                 temp_phys_in.delete_at_index(not_freq)
+                # NOTE: Won't work when timeseries 0 isn't time.
+                # zero out time
+                temp_phys_in.timeseries[0] = (
+                    temp_phys_in.timeseries[0] - np.min(temp_phys_in.timeseries[0])
+                )
+                temp_phys_in.timeseries[0] = temp_phys_in.timeseries[0] - time_before
                 phys_in_slices[run_fname] = temp_phys_in
             else:
-                phys_in_slices[fname] = deepcopy(phys[onset:offset])
+                temp_phys_in = deepcopy(phys[onset:offset])
+                temp_phys_in.timeseries[0] = (
+                    temp_phys_in.timeseries[0] - np.min(temp_phys_in.timeseries[0])
+                )
+                temp_phys_in.timeseries[0] = temp_phys_in.timeseries[0] - time_before
+                phys_in_slices[fname] = temp_phys_in
     return phys_in_slices
 
 

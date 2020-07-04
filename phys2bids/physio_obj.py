@@ -8,6 +8,8 @@ from itertools import groupby
 
 import numpy as np
 
+from .utils import save_json
+
 LGR = logging.getLogger(__name__)
 
 
@@ -678,3 +680,9 @@ class BlueprintOutput():
         units = blueprint.units
         start_time = timeseries[0, 0]
         return cls(timeseries, freq, ch_name, units, start_time)
+
+    def save(self):
+        np.savetxt(self.filename + '.tsv.gz',
+                   self.timeseries, fmt='%.8e', delimiter='\t')
+        save_json(self.filename + '.json', self.freq,
+                  self.start_time, self.ch_name)
