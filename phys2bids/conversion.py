@@ -32,7 +32,6 @@ import numpy as np
 import nibabel as nib
 
 from .slice4phys import update_name, slice_phys
-from .interfaces.acq import populate_phys_input
 from .utils import drop_bids_multicontrast_keys
 from .physio_obj import BlueprintOutput
 
@@ -261,20 +260,17 @@ def synchronize_onsets(phys_df, scan_df):
     return scan_df
 
 
-def workflow(bids_dir, physio_file, chtrig, sub, ses=None):
+def workflow(physio, bids_dir, sub, ses=None):
     """
     A potential workflow for running physio/scan onset synchronization and
     BIDSification. This workflow writes out physio files to a BIDS dataset.
 
     Parameters
     ----------
+    physio : BlueprintInput
+        Object *must* contain multiple physio trigger periods associated with scans.
     bids_dir : str
         Path to BIDS dataset
-    physio_file : str or list of str
-        Either a single BioPac physio file or multiple physio files from the
-        same scanning session. Each file *must* contain multiple physio trigger
-        periods associated with scans. If multiple files are provided, they
-        must have timestamped segments.
     sub : str
         Subject ID. Used to search the BIDS dataset for relevant scans.
     ses : str or None, optional
@@ -283,13 +279,10 @@ def workflow(bids_dir, physio_file, chtrig, sub, ses=None):
 
     Returns
     -------
-    out : dict
-        Keys are output filenames, while values are the chopped up BlueprintInput
-        objects.
+    out : list of BlueprintOutput
     """
     layout = BIDSLayout(bids_dir)
     scan_df = load_scan_data(layout, sub=sub, ses=ses)
-    physio = populate_phys_input(physio_file, chtrig)
 
     trigger_timeseries = physio.timeseries[physio.trigger_idx + 1]
     freq = physio.freq[physio.trigger_idx + 1]
