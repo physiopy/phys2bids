@@ -260,6 +260,63 @@ def synchronize_onsets(phys_df, scan_df):
     return scan_df
 
 
+def plot_sync(scan_df, physio_df):
+    """
+    Plot unsynchronized and synchonized scan and physio onsets and durations.
+    """
+    fig, axes = plt.subplots(nrows=2, figsize=(20, 6), sharex=True)
+
+    max_ = int(1000 * np.ceil(max((physio_df['onset'].max(), scan_df[onset_col].max())) / 1000))
+    scalar = 10
+    x = np.linspace(0, max_, (max_*scalar)+1)
+
+    # first the raw version
+    physio_timeseries = np.zeros(x.shape)
+    func_timeseries = np.zeros(x.shape)
+    for i, row in scan_df.iterrows():
+        func_timeseries[
+            int(row['onset'] * scalar):int((row['onset'] + row['duration']) * scalar)
+        ] = 1
+
+    for i, row in physio_df.iterrows():
+        physio_timeseries[
+            int(row['onset'] * scalar):int((row['onset'] + row['duration']) * scalar)
+        ] = 0.5
+
+    axes[0].fill_between(x, func_timeseries, where=func_timeseries >= 0,
+                         interpolate=True, color='red', alpha=0.3,
+                         label='Functional scans')
+    axes[0].fill_between(x, physio_timeseries, where=physio_timeseries >= 0,
+                         interpolate=True, color='blue', alpha=0.3,
+                         label='Physio triggers')
+
+    # now the adjusted version
+    physio_timeseries = np.zeros(x.shape)
+    func_timeseries = np.zeros(x.shape)
+    for i, row in scan_df.iterrows():
+        func_timeseries[
+            int(row['phys_onset'] * scalar):int((row['phys_onset'] + row['duration']) * scalar)
+        ] = 1
+
+    for i, row in physio_df.iterrows():
+        physio_timeseries[
+            int(row['onset'] * scalar):int((row['onset'] + row['duration']) * scalar)
+        ] = 0.5
+
+    axes[1].fill_between(x, func_timeseries, where=func_timeseries >= 0,
+                         interpolate=True, color='red', alpha=0.3,
+                         label='Functional scans')
+    axes[1].fill_between(x, physio_timeseries, where=physio_timeseries >= 0,
+                         interpolate=True, color='blue', alpha=0.3,
+                         label='Physio triggers')
+
+    axes[0].set_xlim((min(x), max(x)))
+    axes[0].set_ylim((0, None))
+    axes[1].set_xlabel('Time (s)')
+    axes[0].legend()
+    return fig, axes
+
+
 def workflow(physio, bids_dir, sub, ses=None):
     """
     A potential workflow for running physio/scan onset synchronization and
@@ -288,6 +345,11 @@ def workflow(physio, bids_dir, sub, ses=None):
     freq = physio.freq[physio.trigger_idx + 1]
     physio_df = extract_physio_onsets(trigger_timeseries, freq=freq)
     scan_df = synchronize_onsets(physio_df, scan_df)
+
+    # we should do something better with this figure, but it's nice to have for QC
+    fig, axes = plot_sync(scan_df, physio_df)
+    fig.savefig('synchronization_results.png')
+
     run_dict = {}
     # could probably be replaced with apply() followed by to_dict()
     for _, row in scan_df.iterrows():
