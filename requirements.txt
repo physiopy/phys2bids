@@ -1,3 +1,5 @@
 numpy>=1.9.3, !=*rc*
 matplotlib>=3.1.1 ,!=3.3.0rc1
 PyYAML!=*rc*
+pybids
+pandas
