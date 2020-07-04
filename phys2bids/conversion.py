@@ -266,7 +266,11 @@ def plot_sync(scan_df, physio_df):
     """
     fig, axes = plt.subplots(nrows=2, figsize=(20, 6), sharex=True)
 
-    max_ = int(1000 * np.ceil(max((physio_df['onset'].max(), scan_df[onset_col].max())) / 1000))
+    # get max value rounded to nearest 1000
+    max_ = int(1000 * np.ceil(max((
+        physio_df['onset'].max(),
+        scan_df['onset'].max(),
+        scan_df['phys_onset'].max())) / 1000))
     scalar = 10
     x = np.linspace(0, max_, (max_*scalar)+1)
 
