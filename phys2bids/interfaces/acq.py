@@ -30,9 +30,9 @@ def populate_phys_input(filename, chtrig):
 
     Note
     ----
-    chtrig is not a python index - instead, it's human readable.
-    This is handy because when initialising the class, it gets initiliased
-    with a channel more at the beginning - that is already taken into account!
+    chtrig is not a 0-based Python index - instead, it's human readable (i.e., 1-based).
+    This is handy because, when initialising the class, a new channel corresponding
+    to time is added at the beginning - that is already taken into account!
 
     See Also
     --------
