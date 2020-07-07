@@ -21,7 +21,7 @@ def populate_phys_input(filename, chtrig):
     filename: str
         path to the txt labchart file
     chtrig : int
-        index of trigger channel. Must be a positive, non-zero integer.
+        index of trigger channel.
         !!! ATTENTION: IT'S MEANT TO REPRESENT AN INDEX STARTING FROM 1 !!!
 
     Returns
