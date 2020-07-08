@@ -3,7 +3,6 @@
 import json
 import logging
 import os
-import re
 import sys
 from csv import writer
 from pathlib import Path
@@ -11,105 +10,6 @@ from pathlib import Path
 LGR = logging.getLogger(__name__)
 
 SUPPORTED_FTYPES = ('acq', 'txt')  # 'mat', ...
-
-
-def drop_bids_multicontrast_keys(fname):
-    """
-    Use regular expressions to remove within-acquisition entities (e.g., echo)
-    from a BIDS filename.
-
-    Parameters
-    ----------
-    fname : str
-        Valid BIDS filename.
-
-    Returns
-    -------
-    fname : str
-        Valid BIDS filename, minus the within-acquisition entities.
-    """
-    dirname = os.path.dirname(fname)
-    fname = os.path.basename(fname)
-    multi_contrast_entities = ['echo', 'part', 'fa', 'inv', 'ch']
-    regex = '_({})-[0-9a-zA-Z]+'.format('|'.join(multi_contrast_entities))
-    fname = re.sub(regex, '', fname)
-    fname = os.path.join(dirname, fname)
-    return fname
-
-
-def update_name(basename, **kwargs):
-    """
-    Add entities, suffix, and/or extension to a BIDS filename while retaining
-    BIDS compatibility.
-
-    Parameters
-    ----------
-    basename : str
-        Name of valid BIDS file.
-    kwargs : dict
-        Keyword arguments indicating entities and/or suffix and/or extension
-        to update/add to the BIDS filename.
-
-    Returns
-    -------
-    outname : str
-        Valid BIDS filename with updated entities/suffix/extension.
-    """
-    # This is hardcoded, but would be nice to use the yaml-fied BIDS entity
-    # table when that's up and running.
-    ENTITY_ORDER = ['sub', 'ses', 'task', 'acq', 'ce', 'rec', 'dir', 'run',
-                    'mod', 'echo', 'recording', 'proc', 'space', 'split']
-
-    outdir = os.path.dirname(basename)
-    outname = os.path.basename(basename)
-
-    # Determine scan suffix (should always be physio)
-    suffix = outname.split('_')[-1].split('.')[0]
-    extension = '.' + '.'.join(outname.split('_')[-1].split('.')[1:])
-    filetype = suffix + extension
-
-    for key, val in kwargs.items():
-        if key == 'suffix':
-            if not val.startswith('_'):
-                val = '_' + val
-
-            if not val.endswith('.'):
-                val = val + '.'
-
-            outname = outname.replace('_' + suffix + '.', val)
-        elif key == 'extension':
-            # add leading . if not ''
-            if val and not val.startswith('.'):
-                val = '.' + val
-            outname = outname.replace(extension, val)
-        else:
-            if key not in ENTITY_ORDER:
-                raise ValueError('Key {} not understood.'.format(key))
-
-            # entities
-            if '_{}-{}'.format(key, val) in basename:
-                LGR.warning('Key {} already found in basename {}. '
-                            'Skipping.'.format(key, basename))
-
-            elif '_{}-'.format(key) in basename:
-                LGR.warning('Key {} already found in basename {}. '
-                            'Overwriting.'.format(key, basename))
-                regex = '_{}-[0-9a-zA-Z]+'.format(key)
-                outname = re.sub(regex, '_{}-{}'.format(key, val), outname)
-            else:
-                loc = ENTITY_ORDER.index(key)
-                entities_to_check = ENTITY_ORDER[loc:]
-                entities_to_check = ['_{}-'.format(etc) for etc in entities_to_check]
-                entities_to_check.append('_{}'.format(filetype))
-                for etc in entities_to_check:
-                    if etc in outname:
-                        outname = outname.replace(
-                            etc,
-                            '_{}-{}{}'.format(key, val, etc)
-                        )
-                        break
-    outname = os.path.join(outdir, outname)
-    return outname
 
 
 def check_input_dir(indir):

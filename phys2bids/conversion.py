@@ -1,38 +1,20 @@
 """
-1. Extract segments from physio file.
-    - Each segment must be named according to the onset time if there are
-      multiple segments. If there is only one segment, then there is no need
-      for a timestamp.
-2. Extract trigger periods from physio segments.
-    - Onset
-3. Extract scan times
-    - Name
-    - Onset with subsecond resolution as close to trigger pulse as possible
-    - Duration (from TR * data dimension)
-4. Calculate difference in time between each scan and each physio trigger.
-5. Use differences to identify similar values across as many physio/scan pairs as possible.
-    - Physio may be missing if trigger failed.
-    - Physio may be delayed if task was manually trigger after scan began
-      (sometimes happens with resting-state scans where the task itself isn't
-      very important).
-    - Scan may be missing if it wasn't converted (e.g., a scan stopped early
-      and re-run).
-6. Assign scan names to trigger period, infer times for other scan times
-   in cases where trigger failed, and ignore trigger periods associated with
-   scans that weren't kept in the BIDS dataset.
+A small module (to be broken up) with functions for synchronizing multi-run
+physio files with pre-converted BIDS imaging data.
 """
 import os.path as op
 from operator import itemgetter
 from itertools import groupby
 import logging
+import matplotlib.pyplot as plt
 
 from bids import BIDSLayout
 import pandas as pd
 import numpy as np
 import nibabel as nib
 
-from .slice4phys import update_name, slice_phys
-from .utils import drop_bids_multicontrast_keys
+from .bids import update_bids_name
+from .slice4phys import slice_phys
 from .physio_obj import BlueprintOutput
 
 LGR = logging.getLogger(__name__)
@@ -76,7 +58,10 @@ def load_scan_data(layout, sub, ses=None):
         df.loc[i, 'acq_time'] = img_file.get_metadata()['AcquisitionTime']
 
     # Get generic filenames (without within-acquisition entities like echo)
-    df['filename'] = df['original_filename'].apply(drop_bids_multicontrast_keys)
+    df['filename'] = df['original_filename'].apply(update_bids_name,
+                                                   echo=None, fa=None,
+                                                   inv=None, mt=None, part=None,
+                                                   ch=None)
 
     # Get "first" scan from multi-file acquisitions
     df['acq_time'] = pd.to_datetime(df['acq_time'])
@@ -117,7 +102,6 @@ def determine_scan_durations(layout, scan_df, sub, ses=None):
         Updated DataFrame with new "duration" column. Calculated durations are
         in seconds.
     """
-    # TODO: parse entities in func files for searches instead of larger search.
     func_files = layout.get(datatype='func', suffix='bold',
                             extension=['.nii.gz', '.nii'],
                             subject=sub, session=ses)
@@ -263,18 +247,42 @@ def synchronize_onsets(phys_df, scan_df):
 def plot_sync(scan_df, physio_df):
     """
     Plot unsynchronized and synchonized scan and physio onsets and durations.
+
+    Parameters
+    ----------
+    scan_df : pandas.DataFrame
+        DataFrame with timing associated with scan files. Must have the
+        following columns: onset (scan onsets in seconds), duration (scan
+        durations in seconds), and phys_onset (scan onsets after being matches
+        with physio onsets, in seconds).
+    physio_df : pandas.DataFrame
+        DataFrame with timing associated with physio trigger periods. Must have
+        the following columns: onset (trigger period onsets in seconds) and
+        duration (trigger period durations in seconds).
+
+    Returns
+    -------
+    fig : matplotlib.pyplot.Figure
+        Figure from plot.
+    axes : list of two matplotlib.pyplot.Axis objects
+        Axis objects for top and bottom subplots of figure. Top subplot has
+        unsynchronized onsets and bottom has synchronized ones.
     """
     fig, axes = plt.subplots(nrows=2, figsize=(20, 6), sharex=True)
 
-    # get max value rounded to nearest 1000
+    # get max (onset time + duration) rounded up to nearest 1000
     max_ = int(1000 * np.ceil(max((
-        physio_df['onset'].max(),
-        scan_df['onset'].max(),
-        scan_df['phys_onset'].max())) / 1000))
+        (physio_df['onset'] + physio_df['duration']).max(),
+        (scan_df['onset'] + scan_df['duration']).max(),
+        (scan_df['phys_onset'] + scan_df['duration']).max()
+    )) / 1000))
+
+    # get x-axis values
     scalar = 10
     x = np.linspace(0, max_, (max_*scalar)+1)
 
-    # first the raw version
+    # first plot the onsets and durations of the raw scan and physio runs in
+    # the top axis
     physio_timeseries = np.zeros(x.shape)
     func_timeseries = np.zeros(x.shape)
     for i, row in scan_df.iterrows():
@@ -294,7 +302,7 @@ def plot_sync(scan_df, physio_df):
                          interpolate=True, color='blue', alpha=0.3,
                          label='Physio triggers')
 
-    # now the adjusted version
+    # now plot the adjusted onsets (and original durations) in the bottom axis
     physio_timeseries = np.zeros(x.shape)
     func_timeseries = np.zeros(x.shape)
     for i, row in scan_df.iterrows():
@@ -341,6 +349,30 @@ def workflow(physio, bids_dir, sub, ses=None):
     Returns
     -------
     out : list of BlueprintOutput
+
+    Notes
+    -----
+    The workflow works as follows:
+    1. Extract trigger period onsets from physio file.
+    2. Extract scan times from BIDS dataset, to get the following information:
+        - Scan name
+        - Onset with subsecond resolution as close to trigger pulse as possible
+        - Duration (from TR * data dimension)
+    3. Calculate difference in time between each scan onset and each physio
+       trigger onset.
+    4. Use differences to identify similar values across as many physio/scan
+       pairs as possible. Physio may be missing if trigger failed.
+       Physio may be delayed if task was manually triggered after scan began,
+       or if there's a bug in the task script. Scan may be missing if it wasn't
+       converted (e.g., a scan stopped early and re-run).
+    5. Infer physio periods from scan periods, once physio and scan onsets
+       are matched.
+    6. Assign scan names to physio periods, infer times for other scan times
+       in cases where trigger failed, and ignore trigger periods associated with
+       scans that weren't kept in the BIDS dataset.
+    7. Split physio file based on scan-specific onsets and offsets.
+    8. Write out scan-associated physio files.
+    9. Generate and return scan/physio onsets figure for manual QC.
     """
     layout = BIDSLayout(bids_dir)
     scan_df = load_scan_data(layout, sub=sub, ses=ses)
@@ -357,7 +389,7 @@ def workflow(physio, bids_dir, sub, ses=None):
     run_dict = {}
     # could probably be replaced with apply() followed by to_dict()
     for _, row in scan_df.iterrows():
-        base_fname = update_name(row['filename'], suffix='physio', extension='')
+        base_fname = update_bids_name(row['filename'], suffix='physio', extension='')
         split_times = (row['index_onset'], row['index_offset'])
         run_dict[base_fname] = split_times
     phys_dict = slice_phys(physio, run_dict, time_before=6)

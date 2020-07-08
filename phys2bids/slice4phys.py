@@ -5,7 +5,7 @@ from copy import deepcopy
 
 import numpy as np
 
-from phys2bids.utils import update_name
+from phys2bids.bids import update_bids_name
 
 LGR = logging.getLogger(__name__)
 
@@ -111,8 +111,6 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
 def slice_phys(phys, run_timestamps, time_before=5):
     """
     Slice a physio object based on run-/file-wise onsets and offsets.
-    Adapted from slice4phys with the goal of modularizing slicing functionality
-    (i.e., cutting out the run detection step).
 
     Parameters
     ----------
@@ -127,6 +125,11 @@ def slice_phys(phys, run_timestamps, time_before=5):
     phys_in_slices : dict
         Each key is a run-wise filename (possibly further split by frequency)
         and each value is a BlueprintInput object.
+
+    Notes
+    -----
+    The goal of this function is to abstract out the general slicing procedure
+    from slice4phys.
     """
     phys_in_slices = {}
     for i_run, fname in enumerate(run_timestamps.keys()):
@@ -149,7 +152,7 @@ def slice_phys(phys, run_timestamps, time_before=5):
 
             # Split into frequency-specific object limited to onset-offset
             if len(unique_frequencies) > 1:
-                run_fname = update_name(fname, recording=str(freq) + 'Hz')
+                run_fname = update_bids_name(fname, recording=str(freq) + 'Hz')
                 temp_phys_in = deepcopy(phys[onset:offset])
                 not_freq = [i for i in range(len(phys.freq)) if phys.freq[i] != freq]
                 temp_phys_in.delete_at_index(not_freq)
