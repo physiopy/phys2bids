@@ -279,7 +279,7 @@ def plot_sync(scan_df, physio_df):
 
     # get x-axis values
     scalar = 10
-    x = np.linspace(0, max_, (max_*scalar)+1)
+    x = np.linspace(0, max_, (max_ * scalar) + 1)
 
     # first plot the onsets and durations of the raw scan and physio runs in
     # the top axis
