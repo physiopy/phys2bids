@@ -76,9 +76,9 @@ def _get_parser():
                           dest='chtrig',
                           type=int,
                           help='The column number of the trigger channel. '
-                               'Channel numbering starts with 0. '
-                               'Default is 0.',
-                          default=0)
+                               'Channel numbering starts with 1. '
+                               'Default is 1.',
+                          default=1)
     optional.add_argument('-chsel', '--channel-selection',
                           dest='chsel',
                           nargs='*',

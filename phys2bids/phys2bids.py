@@ -99,7 +99,7 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
     description='The BIDS specification',
     cite_module=True)
 def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
-              sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=None,
+              sub=None, ses=None, chtrig=1, chsel=None, num_timepoints_expected=None,
               tr=None, thr=None, pad=9, ch_name=[], yml='', debug=False, quiet=False):
     """
     Run main workflow of phys2bids.
@@ -163,6 +163,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
     indir = utils.check_input_dir(indir)
+    if chtrig < 1:
+        raise Exception('Wrong trigger channel. Channel indexing starts with 1!')
+
     filename, ftype = utils.check_input_type(filename,
                                              indir)
 
