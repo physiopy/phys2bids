@@ -235,6 +235,7 @@ def synchronize_onsets(phys_df, scan_df):
 
     # Get onset of each scan in terms of the physio time series
     scan_df['phys_onset'] = scan_df['onset'] + offset
+    print(phys_df)
     rise = (phys_df.loc[1, 'index'] - phys_df.loc[0, 'index'])
     run = (phys_df.loc[1, 'onset'] - phys_df.loc[0, 'onset'])
     samplerate = rise / run
@@ -329,7 +330,7 @@ def plot_sync(scan_df, physio_df):
     return fig, axes
 
 
-def workflow(physio, bids_dir, sub, ses=None):
+def workflow(physio, bids_dir, sub, ses=None, padding=9, update_trigger=False):
     """
     A potential workflow for running physio/scan onset synchronization and
     BIDSification. This workflow writes out physio files to a BIDS dataset.
@@ -345,6 +346,16 @@ def workflow(physio, bids_dir, sub, ses=None):
     ses : str or None, optional
         Session ID. Used to search the BIDS dataset for relevant scans in
         longitudinal studies. Default is None.
+    padding : float or tuple, optional
+        Amount of time before and after run to keep in physio time series, in seconds.
+        May be a single value (in which case the time before and after is the same) or
+        a two-item tuple (which case the first item is time before and the second is
+        time after).
+        These values will be automatically reduced in cases where the pad would extend
+        before or after the physio acquisition.
+    update_trigger : bool, optional
+        Whether to update the trigger channel time series based on estimated scan onsets from
+        the BIDS dataset (True) or to leave it as-is (False). Default is False.
 
     Returns
     -------
@@ -377,8 +388,8 @@ def workflow(physio, bids_dir, sub, ses=None):
     layout = BIDSLayout(bids_dir)
     scan_df = load_scan_data(layout, sub=sub, ses=ses)
 
-    trigger_timeseries = physio.timeseries[physio.trigger_idx + 1]
-    freq = physio.freq[physio.trigger_idx + 1]
+    trigger_timeseries = physio.timeseries[physio.trigger_idx]
+    freq = physio.freq[physio.trigger_idx]
     physio_df = extract_physio_onsets(trigger_timeseries, freq=freq)
     scan_df = synchronize_onsets(physio_df, scan_df)
 
@@ -392,7 +403,7 @@ def workflow(physio, bids_dir, sub, ses=None):
         base_fname = update_bids_name(row['filename'], suffix='physio', extension='')
         split_times = (row['index_onset'], row['index_offset'])
         run_dict[base_fname] = split_times
-    phys_dict = slice_phys(physio, run_dict, time_before=6)
+    phys_dict = slice_phys(physio, run_dict, padding=padding, update_trigger=update_trigger)
     outputs = []
     for k, v in phys_dict.items():
         output = BlueprintOutput.init_from_blueprint(v)

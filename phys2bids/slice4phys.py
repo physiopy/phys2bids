@@ -108,7 +108,7 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
     return run_timestamps
 
 
-def slice_phys(phys, run_timestamps, time_before=5):
+def slice_phys(phys, run_timestamps, padding=9, update_trigger=False):
     """
     Slice a physio object based on run-/file-wise onsets and offsets.
 
@@ -119,6 +119,13 @@ def slice_phys(phys, run_timestamps, time_before=5):
         Each key is a run-wise filename and value is a tuple of (onset, offset),
         where onset and offset are integers corresponding to index values of
         the trigger channel.
+    padding : float or tuple, optional
+        Amount of time before and after run to keep in physio time series, in seconds.
+        May be a single value (in which case the time before and after is the same) or
+        a two-item tuple (which case the first item is time before and the second is
+        time after).
+        These values will be automatically reduced in cases where the pad would extend
+        before or after the physio acquisition.
 
     Returns
     -------
@@ -131,45 +138,72 @@ def slice_phys(phys, run_timestamps, time_before=5):
     The goal of this function is to abstract out the general slicing procedure
     from slice4phys.
     """
+    phys = deepcopy(phys)
+    if update_trigger:
+        phys.freq.append(phys.freq[phys.trigger_idx])
+        phys.units.append(phys.units[phys.trigger_idx])
+        phys.timeseries.append(phys.timeseries[phys.trigger_idx].copy())
+        phys.ch_name.append('Original Trigger')
+
+    if not isinstance(padding, tuple):
+        time_before, time_after = padding, padding
+    else:
+        time_before, time_after = padding
+
     phys_in_slices = {}
     for i_run, fname in enumerate(run_timestamps.keys()):
-        # tmp variable to collect run's info
-        run_attributes = run_timestamps[fname]
+        run_attributes = run_timestamps[fname]  # tmp variable to collect run's info
         trigger_onset, trigger_offset = run_attributes
+        min_onset, max_offset = 0, phys.timeseries[phys.trigger_idx].shape[0]
 
         unique_frequencies = np.unique(phys.freq)
-        trigger_freq = phys.freq[phys.trigger_idx + 1]
+        trigger_freq = phys.freq[phys.trigger_idx]
+
+        # Limit padding based on beginning and end of physio recording.
+        run_time_before = np.minimum(time_before, (trigger_onset - min_onset) / trigger_freq)
+        run_time_after = np.minimum(time_after, (max_offset - trigger_offset) / trigger_freq)
+
         for freq in unique_frequencies:
-            to_subtract = int(time_before * freq)
-            # Get onset and offset for the requested frequency
-            if freq != trigger_freq:
-                # no clue if this is right
-                onset = int(trigger_onset * trigger_freq / freq) - to_subtract
-                offset = int(trigger_offset * trigger_freq / freq)
-            else:
-                onset = trigger_onset - to_subtract
-                offset = trigger_offset
+            to_subtract = int(run_time_before * freq)
+            to_add = int(run_time_after * freq)
+
+            run_onset_idx = int(trigger_onset * freq / trigger_freq) - to_subtract
+            run_offset_idx = int(trigger_offset * freq / trigger_freq) + to_add
 
             # Split into frequency-specific object limited to onset-offset
+            temp_phys_in = deepcopy(phys[run_onset_idx:run_offset_idx])
+
+            if update_trigger:
+                # onset/offset of trigger period in terms of frequency
+                trigger_onset_idx = int(trigger_onset * freq / trigger_freq)
+                trigger_offset_idx = int(trigger_offset * freq / trigger_freq)
+                # replace trigger period with block of 1s and non-trigger with 0s
+                temp_phys_in.timeseries[temp_phys_in.trigger_idx][:] = 0
+                temp_phys_in.timeseries[temp_phys_in.trigger_idx][
+                    trigger_onset_idx:trigger_offset_idx
+                ] = 1
+
+            dog = False
+            if dog:
+                # This won't do anything if there's only one frequency
+                not_freq = [i for i in range(len(phys.freq)) if phys.freq[i] != freq]
+                not_freq = [i for i in not_freq if i != 0]  # retain time
+                min_time = np.min(temp_phys_in.timeseries[0])
+                temp_phys_in.timeseries[0]
+                temp_phys_in.timeseries[0] = temp_phys_in.timeseries[0] * freq / trigger_freq
+                temp_phys_in.delete_at_index(not_freq)
+
+            # NOTE: Won't work when timeseries 0 isn't time.
+            # zero out time
+            temp_phys_in.timeseries[0] = (
+                temp_phys_in.timeseries[0] - np.min(temp_phys_in.timeseries[0])
+            )
+            # Now take out the time before the scan starts
+            temp_phys_in.timeseries[0] = temp_phys_in.timeseries[0] - time_before
+
             if len(unique_frequencies) > 1:
                 run_fname = update_bids_name(fname, recording=str(freq) + 'Hz')
-                temp_phys_in = deepcopy(phys[onset:offset])
-                not_freq = [i for i in range(len(phys.freq)) if phys.freq[i] != freq]
-                temp_phys_in.delete_at_index(not_freq)
-                # NOTE: Won't work when timeseries 0 isn't time.
-                # zero out time
-                temp_phys_in.timeseries[0] = (
-                    temp_phys_in.timeseries[0] - np.min(temp_phys_in.timeseries[0])
-                )
-                temp_phys_in.timeseries[0] = temp_phys_in.timeseries[0] - time_before
-                phys_in_slices[run_fname] = temp_phys_in
-            else:
-                temp_phys_in = deepcopy(phys[onset:offset])
-                temp_phys_in.timeseries[0] = (
-                    temp_phys_in.timeseries[0] - np.min(temp_phys_in.timeseries[0])
-                )
-                temp_phys_in.timeseries[0] = temp_phys_in.timeseries[0] - time_before
-                phys_in_slices[fname] = temp_phys_in
+            phys_in_slices[run_fname] = temp_phys_in
     return phys_in_slices
 
 
