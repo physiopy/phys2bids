@@ -235,7 +235,6 @@ def synchronize_onsets(phys_df, scan_df):
 
     # Get onset of each scan in terms of the physio time series
     scan_df['phys_onset'] = scan_df['onset'] + offset
-    print(phys_df)
     rise = (phys_df.loc[1, 'index'] - phys_df.loc[0, 'index'])
     run = (phys_df.loc[1, 'onset'] - phys_df.loc[0, 'onset'])
     samplerate = rise / run
