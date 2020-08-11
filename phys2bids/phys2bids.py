@@ -361,11 +361,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # this counter will take into account how many channels are eliminated
             count = 0
             # for each channel in the original phys_in object
-            # freq_channel_index = phys_out[key].freq.index(uniq_freq)
-            # put time in this frequency
-            # phys_out[key].freq[0] = uniq_freq
-            # resample time channel to the present frequency
-            # phys_out[key].timeseries[0] = resample(phys_out[key].timeseries[0], phys_out[key].timeseries[freq_channel_index].shape[0])
             # take the frequency
             for idx, i in enumerate(phys_in[run].freq):
                 # if that frequency is different than the frequency of the phys_obj entry
@@ -383,7 +378,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             if uniq_freq != phys_in[run].freq[0]:
                 phys_out[key].ch_name.insert(0, phys_in[run].ch_name[0])
                 phys_out[key].units.insert(0, phys_in[run].units[0])
-                phys_out[key].timeseries.insert(0, np.linspace(phys_in[run].timeseries[0][0], phys_in[run].timeseries[0][-1], num=phys_out[key].timeseries[0].shape[0]))
+                phys_out[key].timeseries.insert(0, np.linspace(phys_in[run].timeseries[0][0],
+                                                phys_in[run].timeseries[0][-1],
+                                                num=phys_out[key].timeseries[0].shape[0]))
             phys_out[key] = BlueprintOutput.init_from_blueprint(phys_out[key])
 
         # Preparing output parameters: name and folder.
