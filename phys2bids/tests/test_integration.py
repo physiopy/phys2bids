@@ -86,7 +86,7 @@ def test_integration_heuristic(multifreq_lab_file):
     test_chtrig = 1
     test_outdir = test_path
     conversion_path = join(test_path, 'code', 'conversion')
-    test_ntp = 158
+    test_ntp = 30
     test_tr = 1.2
     test_thr = 0.735
     heur_path = resource_filename('phys2bids', 'heuristics')
@@ -142,13 +142,13 @@ def test_integration_heuristic(multifreq_lab_file):
         log_info = log_info.readlines()
 
     # Check timepoints expected
-    assert check_string(log_info, 'Timepoints expected', '158')
+    assert check_string(log_info, 'Timepoints expected', '30')
     # Check timepoints found
     assert check_string(log_info, 'Timepoints found', '30')
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '40.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '-149.9040')
+    assert check_string(log_info, 'Sampling started', '3.6960')
     # Check first trigger
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -159,7 +159,7 @@ def test_integration_heuristic(multifreq_lab_file):
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 40.0,)
-    assert math.isclose(json_data['StartTime'], -149.9040,)
+    assert math.isclose(json_data['StartTime'], 3.6960,)
     assert json_data['Columns'] == ['time', 'Trigger', 'O2']
 
     # ##### Checks for 100 Hz files
@@ -169,13 +169,13 @@ def test_integration_heuristic(multifreq_lab_file):
         log_info = log_info.readlines()
 
     # Check timepoints expected
-    assert check_string(log_info, 'Timepoints expected', '158')
+    assert check_string(log_info, 'Timepoints expected', '30')
     # Check timepoints found
     assert check_string(log_info, 'Timepoints found', '30')
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '100.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '-149.9040')
+    assert check_string(log_info, 'Sampling started', '3.6960')
     # Check first trigger
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -186,7 +186,7 @@ def test_integration_heuristic(multifreq_lab_file):
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 100.0,)
-    assert math.isclose(json_data['StartTime'], -149.9040,)
+    assert math.isclose(json_data['StartTime'], 3.6960,)
     assert json_data['Columns'] == ['time', 'Trigger', 'CO2']
 
     # Remove generated files
