@@ -34,7 +34,6 @@ from copy import deepcopy
 from shutil import copy as cp
 
 import numpy as np
-from scipy.signal import resample
 
 from phys2bids import utils, viz, _version, bids
 from phys2bids.cli.run import _get_parser
