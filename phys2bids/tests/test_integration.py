@@ -148,7 +148,7 @@ def test_integration_heuristic(multifreq_lab_file):
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '40.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '-157.8535')
+    assert check_string(log_info, 'Sampling started', '-0.3057')
     # Check first trigger
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
