@@ -70,7 +70,7 @@ script:
       mkdir for_testing && cd for_testing;
       cp ../setup.cfg ./;
       args="--doctest-modules --cov-report term-missing --cov=phys2bids --pyargs"
-      python -m pytest ${args} phys2bids;
+      travis_wait 30 python -m pytest ${args} phys2bids;
     else
       false;
     fi
