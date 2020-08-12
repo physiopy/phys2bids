@@ -23,7 +23,7 @@ def check_string(str_container, str_to_find, str_expected, is_num=True):
         return str_expected in str_found
 
 
-def test_integration_acq(samefreq_full_acq_file):
+# def test_integration_acq(samefreq_full_acq_file):
     """
     Does the integration test for an acq file
     """
