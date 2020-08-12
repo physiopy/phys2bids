@@ -32,9 +32,11 @@ def test_integration_acq(samefreq_full_acq_file):
     test_chtrig = 3
     conversion_path = join(test_path, 'code', 'conversion')
 
+    print('Running phys2bids...')
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
               chtrig=test_chtrig, num_timepoints_expected=1, tr=1)
 
+    print('Checking generated files...')
     # Check that files are generated
     for suffix in ['.json', '.tsv.gz']:
         assert isfile(join(test_path, 'Test_belt_pulse_samefreq' + suffix))
@@ -68,6 +70,7 @@ def test_integration_acq(samefreq_full_acq_file):
     assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'PULSE - Custom, DA100C',
                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
+    print('Removing generated files...')
     # Remove generated files
     for filename in glob.glob(join(conversion_path, 'phys2bids*')):
         remove(filename)
