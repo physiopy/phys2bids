@@ -38,7 +38,7 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
     conversion_path = join(test_path, 'code', 'conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
-              chtrig=test_chtrig, num_timepoints_expected=1, tr=1)
+              chtrig=test_chtrig, num_timepoints_expected=60, tr=1.5)
 
     # Check that files are generated
     for suffix in ['.json', '.tsv.gz']:
@@ -91,10 +91,10 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
 
     test_path, test_filename = split(multifreq_lab_file)
     test_full_path = join(test_path, test_filename)
-    test_chtrig = 3
+    test_chtrig = 1
     test_outdir = test_path
     conversion_path = join(test_path, 'code', 'conversion')
-    test_ntp = 158
+    test_ntp = 30
     test_tr = 1.2
     test_thr = 0.735
     heur_path = resource_filename('phys2bids', 'heuristics')
