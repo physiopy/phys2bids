@@ -8,7 +8,7 @@ from os import remove
 from os.path import isfile, join, split
 from pkg_resources import resource_filename
 
-import pystest
+import pytest
 
 from phys2bids._version import get_versions
 from phys2bids.phys2bids import phys2bids
