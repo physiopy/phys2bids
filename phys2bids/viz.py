@@ -2,6 +2,7 @@
 import os
 import logging
 
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -9,6 +10,8 @@ LGR = logging.getLogger(__name__)
 
 SET_DPI = 100
 FIGSIZE = (18, 10)
+
+matplotlib.use('Agg')
 
 
 def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
