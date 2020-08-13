@@ -152,7 +152,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     # Check timepoints expected
     assert check_string(log_info, 'Timepoints expected', '30')
     # Check timepoints found
-    assert check_string(log_info, 'Timepoints found', '1')
+    assert check_string(log_info, 'Timepoints found', '30')
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '40.0')
     # Check sampling started
