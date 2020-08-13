@@ -181,7 +181,7 @@ workflows:
   version: 2.1
   build_test:
     jobs:
-      - makeenv
+      - makeenv_37
       - unittest_36
       - unittest_37
       - integrationtest_36
