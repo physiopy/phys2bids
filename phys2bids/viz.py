@@ -11,8 +11,6 @@ LGR = logging.getLogger(__name__)
 SET_DPI = 100
 FIGSIZE = (18, 10)
 
-matplotlib.use('Agg')
-
 
 def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
                  filename, figsize=FIGSIZE, dpi=SET_DPI):
@@ -128,7 +126,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     subplot.plot(time, trigger, '-', time, block, '-')
     subplot.fill_between(time, block, where=block >= d, interpolate=True, color='#ffbb6e')
     LGR.info('Saving figure...')
-    plt.savefig(fileprefix + '_trigger_time.png', dpi=dpi)
+    # plt.savefig(fileprefix + '_trigger_time.png', dpi=dpi)
     LGR.info('Figure saved')
     plt.close()
     LGR.info('Figure closed')
