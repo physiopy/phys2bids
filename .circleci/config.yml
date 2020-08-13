@@ -106,13 +106,13 @@ jobs:
             source activate phys2bids_py36
             make integration
             mkdir /tmp/src/coverage
-            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integration
+            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integration36
       - store_artifacts:
           path: /tmp/data
       - persist_to_workspace:
           root: /tmp
           paths:
-              - src/coverage/.coverage.three-echo
+              - src/coverage/.coverage.integration36
 
   integrationtest_37:
     docker:
@@ -130,13 +130,13 @@ jobs:
             source activate phys2bids_py37  # depends on makeenv_37
             make integration
             mkdir /tmp/src/coverage
-            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integration
+            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integration37
       - store_artifacts:
           path: /tmp/data
       - persist_to_workspace:
           root: /tmp
           paths:
-              - src/coverage/.coverage.three-echo
+              - src/coverage/.coverage.integration37
 
   style_check:
     docker:
