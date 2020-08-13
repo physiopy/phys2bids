@@ -127,6 +127,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     LGR.info('Saving figure...')
     plt.savefig(fileprefix + '_trigger_time.png', dpi=dpi)
     plt.close()
+    LGR.info('Figure saved and closed')
 
 
 def export_trigger_plot(phys_in, chtrig, fileprefix, tr, num_timepoints_expected,

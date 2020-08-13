@@ -235,8 +235,10 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     LGR.info('Reading infos')
     phys_in.print_info(filename)
     # #!# Here the function viz.plot_channel should be called
+    LGR.info('Plotting all channels...')
     viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
                  phys_in.freq, infile, conversion_path)
+    LGR.info('Channel figures generated')
     # If only info were asked, end here.
     if info:
         return
@@ -283,6 +285,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # returns a dictionary in the form {run_idx: phys_in[startpoint, endpoint]}
 
             # save a figure for each run | give the right acquisition parameters for runs
+            LGR.info('Saving a figure for each run...')
             fileprefix = os.path.join(conversion_path,
                                       os.path.splitext(os.path.basename(filename))[0])
             for i, run in enumerate(phys_in.keys()):
@@ -290,6 +293,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                 viz.export_trigger_plot(phys_in[run], chtrig, plot_fileprefix, tr[i],
                                         num_timepoints_expected[i], filename,
                                         sub, ses)
+            LGR.info('Figures saved')
 
         # Single run acquisition type, or : nothing to split workflow
         else:
@@ -297,11 +301,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # and the time offset.
             phys_in.check_trigger_amount(thr, num_timepoints_expected[0], tr[0])
             # save a figure of the trigger
+            LGR.info('Saving a figure of the trigger channel...')
             fileprefix = os.path.join(conversion_path,
                                       os.path.splitext(os.path.basename(filename))[0])
             viz.export_trigger_plot(phys_in, chtrig, fileprefix, tr[0],
                                     num_timepoints_expected[0], filename,
                                     sub, ses)
+            LGR.info('Figure saved')
 
             # Reassign phys_in as dictionary
             # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY
