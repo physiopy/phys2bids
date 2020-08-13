@@ -124,7 +124,7 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     ax2.set_title('Ending triggers for selected threshold')
     subplot.plot(time, trigger, '-', time, block, '-')
     subplot.fill_between(time, block, where=block >= d, interpolate=True, color='#ffbb6e')
-    plt.savefig(fileprefix + '_trigger_time.png', dpi=dpi)
+    # plt.savefig(fileprefix + '_trigger_time.png', dpi=dpi)
     plt.close()
 
 
