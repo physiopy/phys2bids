@@ -8,6 +8,8 @@ from os import remove
 from os.path import isfile, join, split
 from pkg_resources import resource_filename
 
+import pystest
+
 from phys2bids._version import get_versions
 from phys2bids.phys2bids import phys2bids
 
@@ -23,10 +25,13 @@ def check_string(str_container, str_to_find, str_expected, is_num=True):
         return str_expected in str_found
 
 
-def test_integration_acq(samefreq_full_acq_file):
+def test_integration_acq(skip_integration, samefreq_full_acq_file):
     """
     Does the integration test for an acq file
     """
+
+    if skip_integration:
+        pytest.skip('Skipping five-echo integration test')
 
     test_path, test_filename = split(samefreq_full_acq_file)
     test_chtrig = 3
@@ -76,10 +81,13 @@ def test_integration_acq(samefreq_full_acq_file):
     shutil.rmtree(conversion_path)
 
 
-def test_integration_heuristic(multifreq_lab_file):
+def test_integration_heuristic(skip_integration, multifreq_lab_file):
     """
     Does integration test of tutorial file with heurositics
     """
+
+    if skip_integration:
+        pytest.skip('Skipping five-echo integration test')
 
     test_path, test_filename = split(multifreq_lab_file)
     test_full_path = join(test_path, test_filename)
@@ -196,7 +204,10 @@ def test_integration_heuristic(multifreq_lab_file):
         remove(filename)
 
 
-def test_integration_multirun(multi_run_file):
+def test_integration_multirun(skip_integration, multi_run_file):
+
+    if skip_integration:
+        pytest.skip('Skipping five-echo integration test')
 
     test_path, test_filename = split(multi_run_file)
     test_chtrig = 1
