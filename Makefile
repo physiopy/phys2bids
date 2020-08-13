@@ -13,7 +13,7 @@ lint:
 	@flake8 phys2bids
 
 unittest:
-	@python -m pytest --skipintegration --cov-append --cov-report term-missing --cov=phys2bids phys2bids/
+	@py.test --skipintegration --cov-append --cov-report term-missing --cov=phys2bids phys2bids/
 
 integration:
-	@python -m pytest --log-cli-level=INFO --cov-append --cov-report term-missing --cov=phys2bids -k test_integration phys2bids/tests/test_integration.py
+	@py.test --log-cli-level=INFO --cov-append --cov-report term-missing --cov=phys2bids -k test_integration phys2bids/tests/test_integration.py
