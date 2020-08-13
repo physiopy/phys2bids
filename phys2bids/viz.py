@@ -129,8 +129,9 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     subplot.fill_between(time, block, where=block >= d, interpolate=True, color='#ffbb6e')
     LGR.info('Saving figure...')
     plt.savefig(fileprefix + '_trigger_time.png', dpi=dpi)
+    LGR.info('Figure saved')
     plt.close()
-    LGR.info('Figure saved and closed')
+    LGR.info('Figure closed')
 
 
 def export_trigger_plot(phys_in, chtrig, fileprefix, tr, num_timepoints_expected,
