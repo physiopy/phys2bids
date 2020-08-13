@@ -25,60 +25,60 @@ def check_string(str_container, str_to_find, str_expected, is_num=True):
         return str_expected in str_found
 
 
-# def test_integration_acq(skip_integration, samefreq_full_acq_file):
-#     """
-#     Does the integration test for an acq file
-#     """
+def test_integration_acq(skip_integration, samefreq_full_acq_file):
+    """
+    Does the integration test for an acq file
+    """
 
-#     if skip_integration:
-#         pytest.skip('Skipping five-echo integration test')
+    if skip_integration:
+        pytest.skip('Skipping five-echo integration test')
 
-#     test_path, test_filename = split(samefreq_full_acq_file)
-#     test_chtrig = 3
-#     conversion_path = join(test_path, 'code', 'conversion')
+    test_path, test_filename = split(samefreq_full_acq_file)
+    test_chtrig = 3
+    conversion_path = join(test_path, 'code', 'conversion')
 
-#     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
-#               chtrig=test_chtrig, num_timepoints_expected=60, tr=1.5)
+    phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
+              chtrig=test_chtrig, num_timepoints_expected=60, tr=1.5)
 
-#     # Check that files are generated
-#     for suffix in ['.json', '.tsv.gz']:
-#         assert isfile(join(test_path, 'Test_belt_pulse_samefreq' + suffix))
+    # Check that files are generated
+    for suffix in ['.json', '.tsv.gz']:
+        assert isfile(join(test_path, 'Test_belt_pulse_samefreq' + suffix))
 
-#     # Check files in extra are generated
-#     for suffix in ['.log', '_trigger_time.png']:
-#         assert isfile(join(conversion_path, 'Test_belt_pulse_samefreq' + suffix))
+    # Check files in extra are generated
+    for suffix in ['.log', '_trigger_time.png']:
+        assert isfile(join(conversion_path, 'Test_belt_pulse_samefreq' + suffix))
 
-#     # Read log file (note that this file is not the logger file)
-#     with open(join(conversion_path, 'Test_belt_pulse_samefreq.log')) as log_info:
-#         log_info = log_info.readlines()
+    # Read log file (note that this file is not the logger file)
+    with open(join(conversion_path, 'Test_belt_pulse_samefreq.log')) as log_info:
+        log_info = log_info.readlines()
 
-#     # Check timepoints expected
-#     assert check_string(log_info, 'Timepoints expected', '1')
-#     # Check timepoints found
-#     assert check_string(log_info, 'Timepoints found', '60')
-#     # Check sampling frequency
-#     assert check_string(log_info, 'Sampling Frequency', '10000.0')
-#     # Check sampling started
-#     assert check_string(log_info, 'Sampling started', '10.4251')
-#     # Check start time
-#     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
+    # Check timepoints expected
+    assert check_string(log_info, 'Timepoints expected', '1')
+    # Check timepoints found
+    assert check_string(log_info, 'Timepoints found', '60')
+    # Check sampling frequency
+    assert check_string(log_info, 'Sampling Frequency', '10000.0')
+    # Check sampling started
+    assert check_string(log_info, 'Sampling started', '10.4251')
+    # Check start time
+    assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
-#     # Checks json file
-#     with open(join(test_path, 'Test_belt_pulse_samefreq.json')) as json_file:
-#         json_data = json.load(json_file)
+    # Checks json file
+    with open(join(test_path, 'Test_belt_pulse_samefreq.json')) as json_file:
+        json_data = json.load(json_file)
 
-#     # Compares values in json file with ground truth
-#     assert math.isclose(json_data['SamplingFrequency'], 10000.0)
-#     assert math.isclose(json_data['StartTime'], 10.4251)
-#     assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'PULSE - Custom, DA100C',
-#                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
+    # Compares values in json file with ground truth
+    assert math.isclose(json_data['SamplingFrequency'], 10000.0)
+    assert math.isclose(json_data['StartTime'], 10.4251)
+    assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'PULSE - Custom, DA100C',
+                                    'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
-#     # Remove generated files
-#     for filename in glob.glob(join(conversion_path, 'phys2bids*')):
-#         remove(filename)
-#     for filename in glob.glob(join(test_path, 'Test_belt_pulse_samefreq*')):
-#         remove(filename)
-#     shutil.rmtree(conversion_path)
+    # Remove generated files
+    for filename in glob.glob(join(conversion_path, 'phys2bids*')):
+        remove(filename)
+    for filename in glob.glob(join(test_path, 'Test_belt_pulse_samefreq*')):
+        remove(filename)
+    shutil.rmtree(conversion_path)
 
 
 def test_integration_heuristic(skip_integration, multifreq_lab_file):
