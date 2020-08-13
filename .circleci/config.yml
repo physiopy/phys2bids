@@ -1,0 +1,196 @@
+# Python CircleCI 2.1 configuration file
+#
+#
+#
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.5
+jobs:
+
+  makeenv_37:
+    docker:
+      - image: continuumio/miniconda3
+    working_directory: /tmp/src/phys2bids
+    steps:
+      - checkout
+      - restore_cache:
+          key: conda-py37-v1-{{ checksum "requirements.txt" }}
+      - run:
+          name: Generate environment
+          command: |
+            if [ ! -d /opt/conda/envs/phys2bids_py37 ]; then
+              conda create -yq -n phys2bids_py37 python=3.7
+              source activate phys2bids_py37
+              pip install -r requirements.txt
+            fi
+      - save_cache:
+          key: conda-py37-v1-{{ checksum "requirements.txt" }}
+          paths:
+              - /opt/conda/envs/phys2bids_py37
+
+  unittest_36:
+    docker:
+      - image: continuumio/miniconda3
+    working_directory: /tmp/src/phys2bids
+    steps:
+      - checkout
+      - restore_cache:
+          key: conda-py36-v1-{{ checksum "requirements.txt" }}
+      - run:
+          name: Generate environment
+          command: |
+            apt-get install -yqq make
+            if [ ! -d /opt/conda/envs/phys2bids_py36 ]; then
+              conda create -yq -n phys2bids_py36 python=3.6
+              source activate phys2bids_py36
+              pip install -r requirements.txt
+            fi
+      - run:
+          name: Running unit tests
+          command: |
+            source activate phys2bids_py36
+            make unittest
+            mkdir /tmp/src/coverage
+            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.py36
+      - save_cache:
+          key: conda-py36-v1-{{ checksum "requirements.txt" }}
+          paths:
+              - /opt/conda/envs/phys2bids_py36
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+              - src/coverage/.coverage.py36
+
+  unittest_37:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: /tmp/src/phys2bids
+    steps:
+      - checkout
+      - restore_cache:
+          key: conda-py37-v1-{{ checksum "requirements.txt" }}
+      - run:
+          name: Running unit tests
+          command: |
+            apt-get install -y make
+            source activate phys2bids_py37  # depends on makeenv_37
+            make unittest
+            mkdir /tmp/src/coverage
+            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.py37
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+              - src/coverage/.coverage.py37
+
+  integrationtest_36:
+    docker:
+      - image: continuumio/miniconda3
+    working_directory: /tmp/src/phys2bids
+    steps:
+      - checkout
+      - restore_cache:
+          key: conda-py36-v1-{{ checksum "requirements.txt" }}
+      - run:
+          name: Generate environment
+          command: |
+            apt-get install -yqq make
+            if [ ! -d /opt/conda/envs/phys2bids_py36 ]; then
+              conda create -yq -n phys2bids_py36 python=3.6
+              source activate phys2bids_py36
+              pip install -r requirements.txt
+            fi
+      - run:
+          name: Run integration tests
+          no_output_timeout: 10m
+          command: |
+            apt-get install -yqq make
+            source activate phys2bids_py37  # depends on makeenv_37
+            make integrationtest
+            mkdir /tmp/src/coverage
+            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integrationtest
+      - store_artifacts:
+          path: /tmp/data
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+              - src/coverage/.coverage.three-echo
+
+  integrationtest_37:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: /tmp/src/phys2bids
+    steps:
+      - checkout
+      - restore_cache:
+          key: conda-py37-v1-{{ checksum "requirements.txt" }}
+      - run:
+          name: Run integration tests
+          no_output_timeout: 10m
+          command: |
+            apt-get install -yqq make
+            source activate phys2bids_py37  # depends on makeenv_37
+            make integrationtest
+            mkdir /tmp/src/coverage
+            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integrationtest
+      - store_artifacts:
+          path: /tmp/data
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+              - src/coverage/.coverage.three-echo
+
+  style_check:
+    docker:
+      - image: continuumio/miniconda3
+    working_directory: /tmp/src/phys2bids
+    steps:
+      - checkout
+      - restore_cache:
+          key: conda-py37-v1-{{ checksum "requirements.txt" }}
+      - run:
+          name: Style check
+          command: |
+            apt-get install -yqq make
+            source activate phys2bids_py37  # depends on makeenv37
+            make lint
+
+  merge_coverage:
+    working_directory: /tmp/src/phys2bids
+    docker:
+      - image: continuumio/miniconda3
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - checkout
+      - restore_cache:
+          key: conda-py37-v1-{{ checksum "requirements.txt" }}
+      - run:
+          name: Merge coverage files
+          command: |
+            apt-get install -yqq curl
+            source activate phys2bids_py37  # depends on makeenv37
+            cd /tmp/src/coverage/
+            coverage combine
+            coverage xml
+      - store_artifacts:
+          path: /tmp/src/coverage
+      - codecov/upload:
+          file: /tmp/src/coverage/coverage.xml
+
+workflows:
+  version: 2.1
+  build_test:
+    jobs:
+      - makeenv
+      - unittest_36
+      - unittest_37
+      - integrationtest_36
+      - integrationtest_37
+      - style_check
+      - merge_coverage:
+          requires:
+            - unittest_36
+            - unittest_37
+            - integrationtest_36
+            - integrationtest_37
+            - style_check
