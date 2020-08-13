@@ -86,7 +86,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 License
 -------
 
-Copyright 2019-2020, The Phys2BIDS community.
+Copyright 2019-2020, The Phys2BIDS community..
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
