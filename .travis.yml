@@ -35,7 +35,7 @@ before_install:
       pip install flake8;
     fi
   - if [ "${CHECK_TYPE}" == "test" ]; then
-      pip install "pytest>=4.6" pytest-cov coverage coveralls codecov;
+      pip install "pytest>=5.3" pytest-cov coverage coveralls codecov;
     fi
   - if [ "${CHECK_TYPE}" == "docdoctest" ]; then
       pip install "sphinx>2.0" sphinx_rtd_theme pandas sphinx-argparse;
@@ -70,7 +70,7 @@ script:
       mkdir for_testing && cd for_testing;
       cp ../setup.cfg ./;
       args="--doctest-modules --cov-report term-missing --cov=phys2bids --pyargs"
-      python -m pytest ${args} phys2bids;
+      travis_wait 30 python -m pytest ${args} phys2bids;
     else
       false;
     fi
