@@ -156,7 +156,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '40.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '-188.4000')
+    assert check_string(log_info, 'Sampling started', '-157.8535')
     # Check first trigger
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -167,8 +167,8 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 40.0,)
-    assert math.isclose(json_data['StartTime'], -188.4000,)
-    assert json_data['Columns'] == ['time', 'O2']
+    assert math.isclose(json_data['StartTime'], -157.8535,)
+    assert json_data['Columns'] == ['O2']
 
     # ##### Checks for 100 Hz files
     # Read log file (note that this file is not the logger file)
@@ -177,13 +177,13 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
         log_info = log_info.readlines()
 
     # Check timepoints expected
-    assert check_string(log_info, 'Timepoints expected', '158')
+    assert check_string(log_info, 'Timepoints expected', '30')
     # Check timepoints found
-    assert check_string(log_info, 'Timepoints found', '1')
+    assert check_string(log_info, 'Timepoints found', '30')
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '100.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '-188.4000')
+    assert check_string(log_info, 'Sampling started', '-0.3057')
     # Check first trigger
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -194,8 +194,8 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 100.0,)
-    assert math.isclose(json_data['StartTime'], -188.4000,)
-    assert json_data['Columns'] == ['time', 'CO2']
+    assert math.isclose(json_data['StartTime'], -0.3057,)
+    assert json_data['Columns'] == ['CO2']
 
     # Remove generated files
     shutil.rmtree(test_path_output)
