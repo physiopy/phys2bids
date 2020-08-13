@@ -103,11 +103,10 @@ jobs:
           name: Run integration tests
           no_output_timeout: 10m
           command: |
-            apt-get install -yqq make
-            source activate phys2bids_py37  # depends on makeenv_37
-            make integrationtest
+            source activate phys2bids_py36
+            make integration
             mkdir /tmp/src/coverage
-            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integrationtest
+            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integration
       - store_artifacts:
           path: /tmp/data
       - persist_to_workspace:
@@ -129,9 +128,9 @@ jobs:
           command: |
             apt-get install -yqq make
             source activate phys2bids_py37  # depends on makeenv_37
-            make integrationtest
+            make integration
             mkdir /tmp/src/coverage
-            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integrationtest
+            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integration
       - store_artifacts:
           path: /tmp/data
       - persist_to_workspace:
