@@ -9,3 +9,5 @@ pytest
 pytest-cov
 requests
 sphinx
+bioread >=1.0.5
+duecredit
