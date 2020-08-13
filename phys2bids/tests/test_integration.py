@@ -8,6 +8,8 @@ from os import remove
 from os.path import isfile, join, split
 from pkg_resources import resource_filename
 
+import pytest
+
 from phys2bids._version import get_versions
 from phys2bids.phys2bids import phys2bids
 
@@ -23,17 +25,20 @@ def check_string(str_container, str_to_find, str_expected, is_num=True):
         return str_expected in str_found
 
 
-def test_integration_acq(samefreq_full_acq_file):
+def test_integration_acq(skip_integration, samefreq_full_acq_file):
     """
     Does the integration test for an acq file
     """
+
+    if skip_integration:
+        pytest.skip('Skipping five-echo integration test')
 
     test_path, test_filename = split(samefreq_full_acq_file)
     test_chtrig = 3
     conversion_path = join(test_path, 'code', 'conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
-              chtrig=test_chtrig, num_timepoints_expected=1, tr=1)
+              chtrig=test_chtrig, num_timepoints_expected=60, tr=1.5)
 
     # Check that files are generated
     for suffix in ['.json', '.tsv.gz']:
@@ -76,17 +81,20 @@ def test_integration_acq(samefreq_full_acq_file):
     shutil.rmtree(conversion_path)
 
 
-def test_integration_heuristic(multifreq_lab_file):
+def test_integration_heuristic(skip_integration, multifreq_lab_file):
     """
     Does integration test of tutorial file with heurositics
     """
 
+    if skip_integration:
+        pytest.skip('Skipping five-echo integration test')
+
     test_path, test_filename = split(multifreq_lab_file)
     test_full_path = join(test_path, test_filename)
-    test_chtrig = 3
+    test_chtrig = 1
     test_outdir = test_path
     conversion_path = join(test_path, 'code', 'conversion')
-    test_ntp = 158
+    test_ntp = 30
     test_tr = 1.2
     test_thr = 0.735
     heur_path = resource_filename('phys2bids', 'heuristics')
@@ -196,7 +204,10 @@ def test_integration_heuristic(multifreq_lab_file):
         remove(filename)
 
 
-def test_integration_multirun(multi_run_file):
+def test_integration_multirun(skip_integration, multi_run_file):
+
+    if skip_integration:
+        pytest.skip('Skipping five-echo integration test')
 
     test_path, test_filename = split(multi_run_file)
     test_chtrig = 1
