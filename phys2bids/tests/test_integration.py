@@ -53,7 +53,7 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
         log_info = log_info.readlines()
 
     # Check timepoints expected
-    assert check_string(log_info, 'Timepoints expected', '1')
+    assert check_string(log_info, 'Timepoints expected', '60')
     # Check timepoints found
     assert check_string(log_info, 'Timepoints found', '60')
     # Check sampling frequency
@@ -150,7 +150,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
         log_info = log_info.readlines()
 
     # Check timepoints expected
-    assert check_string(log_info, 'Timepoints expected', '158')
+    assert check_string(log_info, 'Timepoints expected', '30')
     # Check timepoints found
     assert check_string(log_info, 'Timepoints found', '1')
     # Check sampling frequency
