@@ -21,7 +21,7 @@ jobs:
             if [ ! -d /opt/conda/envs/phys2bids_py37 ]; then
               conda create -yq -n phys2bids_py37 python=3.7
               source activate phys2bids_py37
-              pip install -e .[tests,doc]
+              pip install -e .[test,doc]
             fi
       - save_cache:
           key: conda-py37-{{ checksum "setup.cfg" }}
@@ -43,7 +43,7 @@ jobs:
             if [ ! -d /opt/conda/envs/phys2bids_py36 ]; then
               conda create -yq -n phys2bids_py36 python=3.6
               source activate phys2bids_py36
-              pip install -e .[tests]
+              pip install -e .[test]
             fi
       - run:
           name: Running unit tests
@@ -97,7 +97,7 @@ jobs:
             if [ ! -d /opt/conda/envs/phys2bids_py36 ]; then
               conda create -yq -n phys2bids_py36 python=3.6
               source activate phys2bids_py36
-              pip install -e .[tests]
+              pip install -e .[test]
             fi
       - run:
           name: Run integration tests
