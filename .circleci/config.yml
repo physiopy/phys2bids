@@ -14,7 +14,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: conda-py37-{{ checksum "setup.cfg" }}
+          key: conda-py37-v1-{{ checksum "setup.cfg" }}
       - run:
           name: Generate environment
           command: |
@@ -24,7 +24,7 @@ jobs:
               pip install -e ".[test,doc]"
             fi
       - save_cache:
-          key: conda-py37-{{ checksum "setup.cfg" }}
+          key: conda-py37-v1-{{ checksum "setup.cfg" }}
           paths:
               - /opt/conda/envs/phys2bids_py37
 
