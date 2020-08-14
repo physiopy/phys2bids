@@ -159,7 +159,7 @@ jobs:
       - image: continuumio/miniconda3
     steps:
       - attach_workspace:  # get phys2bids
-          at: /tmp
+          at: /tmp/src
       - restore_cache:  # load environment
           key: conda-py37-v1-{{ checksum "setup.cfg" }}
       - run:
