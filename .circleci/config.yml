@@ -158,7 +158,7 @@ jobs:
     docker:
       - image: continuumio/miniconda3
     steps:
-      - attach_workspace:  # get NiMARE
+      - attach_workspace:  # get phys2bids
           at: /tmp
       - restore_cache:  # load environment
           key: conda-py37-v1-{{ checksum "setup.cfg" }}
