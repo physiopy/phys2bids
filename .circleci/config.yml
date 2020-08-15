@@ -209,17 +209,17 @@ workflows:
     jobs:
       - makeenv_37
       - unittest_36
-      - unittest_37
+      - unittest_37:
           requires:
             - phys2bids_py37
       - integrationtest_36
-      - integrationtest_37
+      - integrationtest_37:
           requires:
             - phys2bids_py37
-      - style_check
+      - style_check:
           requires:
             - phys2bids_py37
-      - build_docs
+      - build_docs:
           requires:
             - phys2bids_py37
       - merge_coverage:
