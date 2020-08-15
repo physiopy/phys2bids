@@ -159,6 +159,8 @@ jobs:
             apt-get install -yqq make
             source activate phys2bids_py37  # depends on makeenv37
             make lint
+      - store_artifacts:
+          path: /tmp/data/lint
 
   build_docs:
     working_directory: /tmp/src/phys2bids
@@ -208,7 +210,7 @@ workflows:
       - makeenv_37
       - unittest_36
       - unittest_37
-        requires:
+          requires:
             - phys2bids_py37
       - integrationtest_36
       - integrationtest_37
