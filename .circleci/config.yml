@@ -165,8 +165,8 @@ jobs:
       - run:
           name: Build documentation
           command: |
-            source activate phys2bids_py37
             apt-get install -yqq make
+            source activate phys2bids_py37  # depends on makeenv_37
             make -C docs html
       - store_artifacts:
           path: /tmp/src/phys2bids/docs/_build/html
