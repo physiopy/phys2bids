@@ -16,5 +16,4 @@ unittest:
 	@py.test --skipintegration --cov-append --cov-report term-missing --cov=phys2bids phys2bids/
 
 integration:
-	@pip install -e .
 	@py.test --log-cli-level=INFO --cov-append --cov-report term-missing --cov=phys2bids -k test_integration phys2bids/tests/test_integration.py
