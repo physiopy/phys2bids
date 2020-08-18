@@ -179,7 +179,7 @@ We encourage you to open a PR as soon as possible - even before you finish worki
 However, if it’s an incomplete PR, please open a **Draft PR**. That helps us process PRs by knowing which one to have a look first - and how picky to be when doing so.
 To be merged, PRs have to:
 
-1. Pass all the Travis CI tests.
+1. Pass all the CircleCI tests.
 2. Have the necessary amount of approving reviews, even if you’re a long time contributor. You can ask one (or more) contributor to do that review, if you think they align more with the content of your PR. You need **one** review for documentation, tests, and small changes, and **two** reviews for bugs, refactoring and enhancements.
 3. Contain at least a unit test for your contribution, if the PR contains code (it would be better if it contains an integration or function test and all the breaking tests necessary). If you’re not confident about writing tests, it is possible to refer to an issue that asks for the test to be written, or another (Draft) PR that contains the tests required.
 
@@ -197,9 +197,9 @@ You can use linters to help you write your code following style conventions. Lin
 
 Automatic Testing
 -----------------
-physiopy uses Continuous Integration (CI) to make life easier. In particular, we use the `Travis CI <https://travis-ci.org/>`_ platform to run automatic testing!
-**Automatic tests** are cold, robotic, emotionless, and opinionless tests that check that the program is doing what it is expected to. They are written by the developers and run (by Travis CI) every time they send a Pull Request to physiopy repositories. They complement the warm, human, emotional and opinionated **user tests**, as they tell us if a piece of code is failing.
-Travis CI uses `pytest <https://docs.pytest.org/en/latest/>`_ to run the tests. The great thing about it is that you can run it in advance on your local version of the code!
+physiopy uses Continuous Integration (CI) to make life easier. In particular, we use the `CircleCI <https://circleci.com/>`_ platform to run automatic testing!
+**Automatic tests** are cold, robotic, emotionless, and opinionless tests that check that the program is doing what it is expected to. They are written by the developers and run (by CircleCI) every time they send a Pull Request to physiopy repositories. They complement the warm, human, emotional and opinionated **user tests**, as they tell us if a piece of code is failing.
+CircleCI uses `pytest <https://docs.pytest.org/en/latest/>`_ to run the tests. The great thing about it is that you can run it in advance on your local version of the code!
 We can measure the amount of code that is tested with [codecov]8https://docs.pytest.org/en/latest/), which is an indication of how reliable our packages are! We try to maintain a 90% code coverage, and for this reason, PR should contain tests!
 The four main type of tests we use are:
 
