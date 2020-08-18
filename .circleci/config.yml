@@ -13,18 +13,25 @@ jobs:
     working_directory: /tmp/src/phys2bids
     steps:
       - checkout
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+              - src/phys2bids
       - restore_cache:
-          key: conda-py37-v1-{{ checksum "requirements.txt" }}
+          key: conda-py37-v1-{{ checksum "setup.cfg" }}
       - run:
           name: Generate environment
           command: |
-            if [ ! -d /opt/conda/envs/phys2bids_py37 ]; then
+            if [[ -e /opt/conda/envs/py36_env ]]; then
+              echo "Restoring environment from cache"
+                source activate phys2bids_py37
+            else
               conda create -yq -n phys2bids_py37 python=3.7
               source activate phys2bids_py37
-              pip install -r requirements.txt
+              pip install -e ".[test,doc]"
             fi
       - save_cache:
-          key: conda-py37-v1-{{ checksum "requirements.txt" }}
+          key: conda-py37-v1-{{ checksum "setup.cfg" }}
           paths:
               - /opt/conda/envs/phys2bids_py37
 
@@ -35,7 +42,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: conda-py36-v1-{{ checksum "requirements.txt" }}
+          key: conda-py36-v1-{{ checksum "setup.cfg" }}
       - run:
           name: Generate environment
           command: |
@@ -43,7 +50,7 @@ jobs:
             if [ ! -d /opt/conda/envs/phys2bids_py36 ]; then
               conda create -yq -n phys2bids_py36 python=3.6
               source activate phys2bids_py36
-              pip install -r requirements.txt
+              pip install -e ".[test]"
             fi
       - run:
           name: Running unit tests
@@ -53,7 +60,7 @@ jobs:
             mkdir /tmp/src/coverage
             mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.py36
       - save_cache:
-          key: conda-py36-v1-{{ checksum "requirements.txt" }}
+          key: conda-py36-v1-{{ checksum "setup.cfg" }}
           paths:
               - /opt/conda/envs/phys2bids_py36
       - persist_to_workspace:
@@ -63,12 +70,12 @@ jobs:
 
   unittest_37:
     docker:
-      - image: circleci/python:3.7
+      - image: continuumio/miniconda3
     working_directory: /tmp/src/phys2bids
     steps:
       - checkout
       - restore_cache:
-          key: conda-py37-v1-{{ checksum "requirements.txt" }}
+          key: conda-py37-v1-{{ checksum "setup.cfg" }}
       - run:
           name: Running unit tests
           command: |
@@ -89,7 +96,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: conda-py36-v1-{{ checksum "requirements.txt" }}
+          key: conda-py36-v1-{{ checksum "setup.cfg" }}
       - run:
           name: Generate environment
           command: |
@@ -97,47 +104,46 @@ jobs:
             if [ ! -d /opt/conda/envs/phys2bids_py36 ]; then
               conda create -yq -n phys2bids_py36 python=3.6
               source activate phys2bids_py36
-              pip install -r requirements.txt
+              pip install -e ".[test]"
             fi
       - run:
           name: Run integration tests
           no_output_timeout: 10m
           command: |
-            apt-get install -yqq make
-            source activate phys2bids_py37  # depends on makeenv_37
-            make integrationtest
+            source activate phys2bids_py36
+            make integration
             mkdir /tmp/src/coverage
-            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integrationtest
+            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integration36
       - store_artifacts:
           path: /tmp/data
       - persist_to_workspace:
           root: /tmp
           paths:
-              - src/coverage/.coverage.three-echo
+              - src/coverage/.coverage.integration36
 
   integrationtest_37:
     docker:
-      - image: circleci/python:3.7
+      - image: continuumio/miniconda3
     working_directory: /tmp/src/phys2bids
     steps:
       - checkout
       - restore_cache:
-          key: conda-py37-v1-{{ checksum "requirements.txt" }}
+          key: conda-py37-v1-{{ checksum "setup.cfg" }}
       - run:
           name: Run integration tests
           no_output_timeout: 10m
           command: |
             apt-get install -yqq make
             source activate phys2bids_py37  # depends on makeenv_37
-            make integrationtest
+            make integration
             mkdir /tmp/src/coverage
-            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integrationtest
+            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integration37
       - store_artifacts:
           path: /tmp/data
       - persist_to_workspace:
           root: /tmp
           paths:
-              - src/coverage/.coverage.three-echo
+              - src/coverage/.coverage.integration37
 
   style_check:
     docker:
@@ -146,13 +152,33 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: conda-py37-v1-{{ checksum "requirements.txt" }}
+          key: conda-py37-v1-{{ checksum "setup.cfg" }}
       - run:
           name: Style check
           command: |
             apt-get install -yqq make
             source activate phys2bids_py37  # depends on makeenv37
             make lint
+      - store_artifacts:
+          path: /tmp/data/lint
+
+  build_docs:
+    working_directory: /tmp/src/phys2bids
+    docker:
+      - image: continuumio/miniconda3
+    steps:
+      - attach_workspace:  # get phys2bids
+          at: /tmp
+      - restore_cache:  # load environment
+          key: conda-py37-v1-{{ checksum "setup.cfg" }}
+      - run:
+          name: Build documentation
+          command: |
+            apt-get install -yqq make
+            source activate phys2bids_py37  # depends on makeenv_37
+            make -C docs html
+      - store_artifacts:
+          path: /tmp/src/phys2bids/docs/_build/html
 
   merge_coverage:
     working_directory: /tmp/src/phys2bids
@@ -163,7 +189,7 @@ jobs:
           at: /tmp
       - checkout
       - restore_cache:
-          key: conda-py37-v1-{{ checksum "requirements.txt" }}
+          key: conda-py37-v1-{{ checksum "setup.cfg" }}
       - run:
           name: Merge coverage files
           command: |
@@ -181,12 +207,21 @@ workflows:
   version: 2.1
   build_test:
     jobs:
-      - makeenv
+      - makeenv_37
       - unittest_36
-      - unittest_37
+      - unittest_37:
+          requires:
+            - makeenv_37
       - integrationtest_36
-      - integrationtest_37
-      - style_check
+      - integrationtest_37:
+          requires:
+            - makeenv_37
+      - style_check:
+          requires:
+            - makeenv_37
+      - build_docs:
+          requires:
+            - makeenv_37
       - merge_coverage:
           requires:
             - unittest_36
