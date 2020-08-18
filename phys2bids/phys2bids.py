@@ -373,7 +373,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # Also create a BlueprintOutput object for each unique frequency found.
             # Populate it with the corresponding blueprint input and replace it
             # in the dictionary.
-            # add time channel in the proper frequency
+            # Add time channel in the proper frequency.
             if uniq_freq != phys_in[run].freq[0]:
                 phys_out[key].ch_name.insert(0, phys_in[run].ch_name[0])
                 phys_out[key].units.insert(0, phys_in[run].units[0])
