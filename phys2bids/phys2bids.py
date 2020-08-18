@@ -380,15 +380,16 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                 phys_out[key].timeseries.insert(0, np.linspace(phys_in[run].timeseries[0][0],
                                                 phys_in[run].timeseries[0][-1],
                                                 num=phys_out[key].timeseries[0].shape[0]))
-            # add time channel in the proper frequency
+            # add trigger channel in the proper frequency
             if uniq_freq != phys_in[run].freq[chtrig]:
                 phys_out[key].ch_name.insert(1, phys_in[run].ch_name[chtrig])
                 phys_out[key].units.insert(1, phys_in[run].units[chtrig])
-                new_time = np.linspace(phys_in[run].timeseries[0][0],
-                                       phys_in[run].timeseries[0][-1],
-                                       num=phys_out[key].timeseries[0].shape[0])
-                phys_out[key].timeseries.insert(1, np.interp(new_time, phys_in[run].timeseries[0],
-                                                phys_in[run].timeseries[chtrig]))
+                resampled_time = np.linspace(phys_in[run].timeseries[0][0],
+                                             phys_in[run].timeseries[0][-1],
+                                             num=phys_out[key].timeseries[0].shape[0])
+                phys_out[key].timeseries.insert(1, np.interp(resampled_time,
+                                                             phys_in[run].timeseries[0],
+                                                             phys_in[run].timeseries[chtrig]))
             phys_out[key] = BlueprintOutput.init_from_blueprint(phys_out[key])
 
         # Preparing output parameters: name and folder.
