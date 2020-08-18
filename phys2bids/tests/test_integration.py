@@ -45,7 +45,7 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
         assert isfile(join(test_path, 'Test_belt_pulse_samefreq' + suffix))
 
     # Check files in extra are generated
-    for suffix in ['.log']:  # , '_trigger_time.png']:
+    for suffix in ['.log']:
         assert isfile(join(conversion_path, 'Test_belt_pulse_samefreq' + suffix))
 
     # Read log file (note that this file is not the logger file)
