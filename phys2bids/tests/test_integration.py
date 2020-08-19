@@ -234,7 +234,20 @@ def test_integration_multirun(skip_integration, multi_run_file):
     #     assert isfile(join(conversion_path, f'Test2_samefreq_TWOscans_{run}_trigger_time.png'))
     assert isfile(join(conversion_path, 'Test2_samefreq_TWOscans.png'))
 
-def test_integration_matlab(matlab_file):
+
+@pytest.mark.xfail
+def test_integration_matlab(skip_integration, matlab_file):
 
     if skip_integration:
-        pytest.skip('Skipping five-echo integration test')
+        pytest.skip('Skipping integration test')
+
+    test_path, test_filename = split(matlab_file)
+    test_chtrig = 1
+    conversion_path = join(test_path, 'code', 'conversion')
+
+    phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
+              chtrig=test_chtrig, num_timepoints_expected=534, tr=1.2)
+
+    # Check that files are generated in outdir
+    base_filename = 'test_2minRest_'
+    breakpoint()
