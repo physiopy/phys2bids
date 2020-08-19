@@ -39,14 +39,13 @@ def populate_phys_input(filename, chtrig):
     --------
     physio_obj.BlueprintInput
     """
-
     # Load MATLAB file into dictionary.
     mat_dict = loadmat(filename)
 
     # Convert data into 1d numpy array for easier indexing.
     data = np.squeeze(np.asarray(mat_dict['data']))
 
-    # Extract number of channels and tick rate.
+    # Extract number of channels and tick rate.
     n_channels = len(mat_dict['titles'])
     t_freq = mat_dict['tickrate'][0][0]
 
