@@ -5,6 +5,8 @@
 import json
 import os
 from csv import reader
+from pytest import raises
+
 from phys2bids import utils
 
 
@@ -30,6 +32,10 @@ def test_check_input_ext():
 def test_check_input_type(testpath, samefreq_full_acq_file):
     assert utils.check_input_type(samefreq_full_acq_file, testpath)
 
+    with raises(Exception) as errorinfo:
+        utils.check_input_type('nobel_prize.win', testpath)
+    assert 'wasn\'t found' in str(errorinfo.value)
+
 
 # Tests path_exists_or_make_it
 def test_path_exists_or_make_it(tmpdir):
@@ -46,6 +52,10 @@ def test_path_exists_or_make_it(tmpdir):
 # Tests check_file_exists
 def test_check_file_exists(samefreq_full_acq_file):
     utils.check_file_exists(samefreq_full_acq_file)
+
+    with raises(Exception) as errorinfo:
+        utils.check_file_exists('')
+    assert 'does not exist' in str(errorinfo.value)
 
 
 # Tests move_file
@@ -95,6 +105,10 @@ def test_load_heuristics():
     test_heuristic = 'heur_test_acq'
     heuristic_output_filename = utils.load_heuristic(test_heuristic).filename
     assert test_heuristic in heuristic_output_filename
+
+    with raises(Exception) as errorinfo:
+        utils.load_heuristic('')
+    assert 'Failed to import heuristic' in str(errorinfo.value)
 
 
 # Test writing rows util
