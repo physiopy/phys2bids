@@ -222,6 +222,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     elif ftype == 'txt':
         from phys2bids.interfaces.txt import populate_phys_input
     else:
+        # This is never called.
         # #!# We should add a logger here.
         raise NotImplementedError('Currently unsupported file type.')
 
