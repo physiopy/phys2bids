@@ -10,8 +10,8 @@ phys2bids
     :target: https://doi.org/10.5281/zenodo.3653153
     :alt: DOI
 
-.. image:: https://travis-ci.org/physiopy/phys2bids.svg?branch=master
-    :target: https://travis-ci.org/physiopy/phys2bids
+.. image:: https://circleci.com/gh/physiopy/phys2bids.svg?branch=master&style=shield
+    :target: https://circleci.com/gh/physiopy/phys2bids
     :alt: Build status
 
 .. image:: https://badges.gitter.im/phys2bids/community.svg
