@@ -1,5 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+"""Multi-run slicer for phys2bids package."""
 
 import logging
 from copy import deepcopy

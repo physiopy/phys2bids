@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+"""Visualization functions for phys2bids package."""
 import os
 import logging
 
