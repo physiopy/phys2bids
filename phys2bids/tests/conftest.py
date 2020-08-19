@@ -88,3 +88,8 @@ def notime_lab_file(testpath):
 def multi_run_file(testpath):
     return fetch_file('gvy84', testpath,
                       'Test2_samefreq_TWOscans.txt')
+
+@pytest.fixture
+def matlab_file(testpath):
+    return fetch_file('2j43t', testpath,
+                      'test_2minRest.mat')

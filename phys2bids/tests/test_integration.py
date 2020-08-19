@@ -233,3 +233,8 @@ def test_integration_multirun(skip_integration, multi_run_file):
     # for run in ['1', '2']:
     #     assert isfile(join(conversion_path, f'Test2_samefreq_TWOscans_{run}_trigger_time.png'))
     assert isfile(join(conversion_path, 'Test2_samefreq_TWOscans.png'))
+
+def test_integration_matlab(matlab_file):
+
+    if skip_integration:
+        pytest.skip('Skipping five-echo integration test')
