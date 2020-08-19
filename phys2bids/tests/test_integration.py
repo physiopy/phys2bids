@@ -250,4 +250,3 @@ def test_integration_matlab(skip_integration, matlab_file):
 
     # Check that files are generated in outdir
     base_filename = 'test_2minRest_'
-    breakpoint()
