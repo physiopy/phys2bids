@@ -46,20 +46,28 @@ def populate_phys_input(filename, chtrig):
     # Convert data into 1d numpy array for easier indexing.
     data = np.squeeze(np.asarray(mat_dict['data']))
 
-    # Extract number of channels.
+    # Extract number of channels and tick rate.
     n_channels = len(mat_dict['titles'])
+    t_freq = mat_dict['tickrate'][0][0]
 
     # Stores MATLAB data into lists.
-    timeseries = [data[:int(mat_dict['dataend'][0])], ]
-    freq = [mat_dict['samplerate'][ch][0] for ch in range(n_channels)]
-    units = [mat_dict['unittext'][int(mat_dict['unittextmap'][ch][0] - 1)].strip() for ch in range(n_channels)]
-    names = [mat_dict['titles'][ch].strip() for ch in range(n_channels)]
+    timeseries = []
+    freq = [t_freq, ]
+    units = ['s', ]
+    names = ['time', ]
 
-    # Appends data from channels > 1.
-    if n_channels > 1:
-        for ch in range(n_channels - 1):
-            idx_start = int(mat_dict['dataend'][ch]) + 1
-            idx_end = int(mat_dict['dataend'][ch+1])
-            timeseries.append(data[idx_start:idx_end])
+    for ch in range(n_channels):
+        units.append(mat_dict['unittext'][int(mat_dict['unittextmap'][ch][0] - 1)].strip())
+        names.append(mat_dict['titles'][ch].strip())
+        freq.append(mat_dict['samplerate'][ch][0])
+        idx_start = int(mat_dict['datastart'][ch])
+        idx_end = int(mat_dict['dataend'][ch])
+        timeseries.append(data[idx_start:idx_end])
+
+    # Calculate duration based on frequency and create time channel.
+    interval = 1 / t_freq
+    duration = (timeseries[0].shape[0] + 1) * interval
+    t_ch = np.ogrid[0:duration:interval][:-1]
+    timeseries = [t_ch, ] + timeseries
 
     return BlueprintInput(timeseries, freq, names, units, chtrig)

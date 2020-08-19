@@ -235,7 +235,6 @@ def test_integration_multirun(skip_integration, multi_run_file):
     assert isfile(join(conversion_path, 'Test2_samefreq_TWOscans.png'))
 
 
-@pytest.mark.xfail
 def test_integration_matlab(skip_integration, matlab_file):
 
     if skip_integration:
@@ -246,7 +245,72 @@ def test_integration_matlab(skip_integration, matlab_file):
     conversion_path = join(test_path, 'code', 'conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
-              chtrig=test_chtrig, num_timepoints_expected=534, tr=1.2)
+              chtrig=test_chtrig, num_timepoints_expected=100, tr=1.2)
 
-    # Check that files are generated in outdir
+    # Check that files are generated in outdir.
     base_filename = 'test_2minRest_'
+    for suffix in ['.json', '.tsv.gz']:
+        for freq in ['40', '100', '1000']:
+            assert isfile(join(test_path,
+                               f'{base_filename}{freq}Hz{suffix}'))
+
+    # Check that files are generated in conversion path.
+    for freq in ['40', '100', '1000']:
+        assert isfile(join(conversion_path, f'{base_filename}{freq}Hz.log'))
+
+    # Check that plot is generated in conversion path.
+    assert isfile(join(conversion_path, f'{base_filename[:-1]}.png'))
+
+    # ##### Checks for 40 Hz files
+    # Read log file (note that this file is not the logger file)
+    log_filename = f'{base_filename}40Hz.log'
+    with open(join(conversion_path, log_filename)) as log_info:
+        log_info = log_info.readlines()
+
+    # Check timepoints expected
+    assert check_string(log_info, 'Timepoints expected', '100')
+    # Check timepoints found
+    assert check_string(log_info, 'Timepoints found', '100')
+    # Check sampling frequency
+    assert check_string(log_info, 'Sampling Frequency', '40.0')
+    # Check sampling started
+    assert check_string(log_info, 'Sampling started', '37.2960')
+    # Check first trigger
+    assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
+
+    # Checks json file
+    json_filename = f'{base_filename}40Hz.json'
+    with open(join(test_path, json_filename)) as json_file:
+        json_data = json.load(json_file)
+
+    # Compares values in json file with ground truth
+    assert math.isclose(json_data['SamplingFrequency'], 40.0,)
+    assert math.isclose(json_data['StartTime'], 37.296,)
+    assert json_data['Columns'] == ['time', 'O2']
+
+    # ##### Checks for 100 Hz files
+    # Read log file (note that this file is not the logger file)
+    log_filename = f'{base_filename}100Hz.log'
+    with open(join(conversion_path, log_filename)) as log_info:
+        log_info = log_info.readlines()
+
+    # Check timepoints expected
+    assert check_string(log_info, 'Timepoints expected', '100')
+    # Check timepoints found
+    assert check_string(log_info, 'Timepoints found', '100')
+    # Check sampling frequency
+    assert check_string(log_info, 'Sampling Frequency', '100.0')
+    # Check sampling started
+    assert check_string(log_info, 'Sampling started', '37.2960')
+    # Check first trigger
+    assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
+
+    # Checks json file
+    json_filename = f'{base_filename}100Hz.json'
+    with open(join(test_path, json_filename)) as json_file:
+        json_data = json.load(json_file)
+
+    # Compares values in json file with ground truth
+    assert math.isclose(json_data['SamplingFrequency'], 100.0,)
+    assert math.isclose(json_data['StartTime'], 37.296,)
+    assert json_data['Columns'] == ['time', 'CO2']
