@@ -31,7 +31,7 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
     """
 
     if skip_integration:
-        pytest.skip('Skipping five-echo integration test')
+        pytest.skip('Skipping integration test')
 
     test_path, test_filename = split(samefreq_full_acq_file)
     test_chtrig = 3
@@ -87,7 +87,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     """
 
     if skip_integration:
-        pytest.skip('Skipping five-echo integration test')
+        pytest.skip('Skipping integration test')
 
     test_path, test_filename = split(multifreq_lab_file)
     test_full_path = join(test_path, test_filename)
@@ -207,7 +207,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
 def test_integration_multirun(skip_integration, multi_run_file):
 
     if skip_integration:
-        pytest.skip('Skipping five-echo integration test')
+        pytest.skip('Skipping integration test')
 
     test_path, test_filename = split(multi_run_file)
     test_chtrig = 1
