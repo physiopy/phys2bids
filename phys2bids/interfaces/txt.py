@@ -294,8 +294,10 @@ def read_header_and_channels(filename, chtrig):
 
 def populate_phys_input(filename, chtrig):
     """
-    Populate object phys_input, extracts header and deduces from it
-    the format file, afterwards it passes the needed information to
+    Populate object phys_input.
+
+    Extract header and deduce from it the format file,
+    afterwards pass the needed information to
     the corresponding reading function.
 
     Parameters
