@@ -10,13 +10,13 @@ phys2bids
     :target: https://doi.org/10.5281/zenodo.3653153
     :alt: DOI
 
-.. image:: https://travis-ci.org/physiopy/phys2bids.svg?branch=master
-    :target: https://travis-ci.org/physiopy/phys2bids
-    :alt: Build status
-
 .. image:: https://badges.gitter.im/phys2bids/community.svg
     :target: https://badges.gitter.im/phys2bids/community.svg)](https://gitter.im/phys2bids/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
     :alt: Join the chat at https://gitter.im/phys2bids/community
+
+.. image:: https://circleci.com/gh/physiopy/phys2bids.svg?branch=master&style=shield
+    :target: https://circleci.com/gh/physiopy/phys2bids
+    :alt: Build status
 
 .. image:: https://readthedocs.org/projects/phys2bids/badge/?version=latest
     :target: https://phys2bids.readthedocs.io/en/latest/?badge=latest
