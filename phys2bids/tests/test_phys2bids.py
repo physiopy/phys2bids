@@ -48,7 +48,7 @@ def test_raise_exception(samefreq_full_acq_file):
     test_filename = 'input.txt'
 
     with raises(Exception) as errorinfo:
-        phys2bids.phys2bids(filename=test_filename,chtrig=0)
+        phys2bids.phys2bids(filename=test_filename, chtrig=0)
     assert 'Wrong trigger' in str(errorinfo.value)
 
     test_path, test_filename = os.path.split(samefreq_full_acq_file)
