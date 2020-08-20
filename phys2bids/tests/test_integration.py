@@ -31,7 +31,7 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
     """
 
     if skip_integration:
-        pytest.skip('Skipping five-echo integration test')
+        pytest.skip('Skipping integration test')
 
     test_path, test_filename = split(samefreq_full_acq_file)
     test_chtrig = 3
@@ -87,7 +87,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     """
 
     if skip_integration:
-        pytest.skip('Skipping five-echo integration test')
+        pytest.skip('Skipping integration test')
 
     test_path, test_filename = split(multifreq_lab_file)
     test_full_path = join(test_path, test_filename)
@@ -156,7 +156,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '40.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '-157.8535')
+    assert check_string(log_info, 'Sampling started', '3.6960')
     # Check first trigger
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -167,8 +167,8 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 40.0,)
-    assert math.isclose(json_data['StartTime'], -157.8535,)
-    assert json_data['Columns'] == ['O2']
+    assert math.isclose(json_data['StartTime'], 3.6960,)
+    assert json_data['Columns'] == ['time', 'O2']
 
     # ##### Checks for 100 Hz files
     # Read log file (note that this file is not the logger file)
@@ -183,7 +183,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '100.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '-0.3057')
+    assert check_string(log_info, 'Sampling started', '3.6960')
     # Check first trigger
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -194,8 +194,8 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 100.0,)
-    assert math.isclose(json_data['StartTime'], -0.3057,)
-    assert json_data['Columns'] == ['CO2']
+    assert math.isclose(json_data['StartTime'], 3.6960,)
+    assert json_data['Columns'] == ['time', 'CO2']
 
     # Remove generated files
     shutil.rmtree(test_path_output)
@@ -207,7 +207,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
 def test_integration_multirun(skip_integration, multi_run_file):
 
     if skip_integration:
-        pytest.skip('Skipping five-echo integration test')
+        pytest.skip('Skipping integration test')
 
     test_path, test_filename = split(multi_run_file)
     test_chtrig = 1
