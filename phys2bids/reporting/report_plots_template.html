@@ -38,9 +38,14 @@
         </div>
         <div class="bokeh_plots">
             <h2>Channel Plots</h2>
-            $content
+            
         </div>
     </body>
 </html>
 
-$javascript
+<script>
+    item = JSON.parse($bokeh_json)
+    fetch('/plot')
+        .then(function(response) { return response.json(); })
+        .then(function(item) { Bokeh.embed.embed_item(item); })
+</script>

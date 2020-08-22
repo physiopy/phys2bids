@@ -31,7 +31,7 @@ def _save_as_html(log_html_path, log_content, qc_html_path):
     return html
 
 
-def _update_fpage_template(tree_string, bokeh_id, bokeh_js, log_html_path, qc_html_path):
+def _update_fpage_template(tree_string, bokeh_json, log_html_path, qc_html_path):
     """
     Populate a report with content.
     Parameters
@@ -53,8 +53,7 @@ def _update_fpage_template(tree_string, bokeh_id, bokeh_js, log_html_path, qc_ht
     with open(str(body_template_path), 'r') as body_file:
         body_tpl = Template(body_file.read())
     body = body_tpl.substitute(tree=tree_string,
-                               content=bokeh_id,
-                               javascript=bokeh_js,
+                               bokeh_json=bokeh_json,
                                version=_version.get_versions()['version'],
                                log_html_path=log_html_path,
                                qc_html_path=qc_html_path)
@@ -166,8 +165,10 @@ def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750)):
 
         plot_list.append([plots[i]])
     p = gridplot(plot_list, toolbar_location='right', plot_height=250, plot_width=750)
+    bk_json = json_item(p, 'bokeh_plots')
+    
     script,div = components(p)
-    return script, div
+    return bk_json
 
 
 def generate_report(out_dir, log_path, ch_name, timeseries, units, freq):
@@ -218,8 +219,14 @@ def generate_report(out_dir, log_path, ch_name, timeseries, units, freq):
 
     ## Read in output directory structure & create tree 
     tree_string = _generate_file_tree(out_dir)
-    bokeh_div, bokeh_js = _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750))
-    html = _update_fpage_template(tree_string, bokeh_div, bokeh_js, log_html_path, qc_html_path)
+    bokeh_div, bokeh_json = _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750))
+    html = _update_fpage_template(tree_string, bokeh_div, bokeh_json, log_html_path, qc_html_path)
 
     with open(qc_html_path, 'wb') as f:
         f.write(html.encode('utf-8'))
+
+from phys2bids.interfaces.acq import populate_phys_input
+phys = populate_phys_input('/Users/kbottenh/Downloads/sub-Blossom_ses-01.acq', chtrig=3)
+generate_report('/Users/kbottenh/Dropbox/Projects/physio/plotting_test', 
+                '/Users/kbottenh/Dropbox/Projects/physio/plotting_test/sub-Blossom_ses-02.log', 
+                phys.ch_name, phys.timeseries, phys.units, phys.freq)
