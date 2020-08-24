@@ -46,10 +46,10 @@ html, body {
 }
 
 .tree {
-    display: inline-block;
+    display: flex;
     margin-top: 100px;
-    margin-left: 100px;
-    margin-right: 100px;
+    margin-left: 50px;
+    margin-right: 50px;
 }
 
 .tree_text {
@@ -59,14 +59,19 @@ html, body {
 
 .bk-root {
     display: inline-block;
-    margin-top: 50px;
-    margin-left: 100px;
-    margin-right: 100px;
+
     width: 100%;
 }
 
 .bokeh_plots {
-    margin-top: 50px;
-    margin-left: 100px;
-    margin-right: 100px;
+    display: flex;
+    margin-top: 100px;
+    margin-left: 50px;
+    margin-right: 50px;
+
+}
+
+.content {
+    display: flex;
+    width: 100%;
 }

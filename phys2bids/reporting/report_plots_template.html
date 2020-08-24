@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <head>
         <title>phys2bids report</title>
         <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.0.1.min.js"
@@ -32,20 +33,17 @@
                 <a href="https://github.com/physiopy/phys2bids" target="_blank">GitHub</a>
             </div>
         </div>
-        <div class="tree">
-            <h2>phys2BIDS Output Directory</h2>
-            <p class="tree_text">$tree</p>
-        </div>
-        <div class="bokeh_plots">
-            <h2>Channel Plots</h2>
-            
+        <div class="content">
+            <div class="tree">
+                <h2>phys2BIDS Output Directory</h2>
+                <p class="tree_text">$tree</p>
+            </div>
+            <div class="bokeh_plots">
+                <h2>Channel Plots</h2>
+                $content
+            </div>
         </div>
     </body>
 </html>
 
-<script>
-    item = JSON.parse($bokeh_json)
-    fetch('/plot')
-        .then(function(response) { return response.json(); })
-        .then(function(item) { Bokeh.embed.embed_item(item); })
-</script>
+$javascript
