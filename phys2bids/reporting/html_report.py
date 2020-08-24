@@ -157,12 +157,13 @@ def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,500)):
         tools=['wheel_zoom,pan,reset', hovertool]
         if i == 1:
             plots[i] = figure(plot_height=size[0], plot_width=size[1],
-                              tools=tools, title=f' Channel {i}: {ch_name[i]}', r
-                              esponsive=True)
+                              tools=tools, title=f' Channel {i}: {ch_name[i]}', 
+                              sizing_mode='stretch_both')
             plots[i].line(x, y, color=colors[i-1], alpha=0.9)
         if i > 1:
             plots[i] = figure(plot_height=size[0], plot_width=size[1],
-                              tools=tools, title=f' Channel {i}: {ch_name[i]}', x_range=plots[1].x_range)
+                              tools=tools, title=f' Channel {i}: {ch_name[i]}', 
+                              x_range=plots[1].x_range, sizing_mode='stretch_both')
             plots[i].line(x, y, color=colors[i-1], alpha=0.9)
 
         plot_list.append([plots[i]])
