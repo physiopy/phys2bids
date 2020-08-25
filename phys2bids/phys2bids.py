@@ -436,10 +436,10 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                        os.path.splitext(os.path.basename(phys_out[key].filename)
                                                         )[0]))
 
-            ch_name += phys_out[uniq_freq].ch_name
-            timeseries += phys_out[uniq_freq].timeseries.T.tolist()
-            units += phys_out[uniq_freq].units
-            freq += [phys_out[uniq_freq].freq] * len(phys_out[uniq_freq].ch_name)
+            ch_name += phys_out[key].ch_name
+            timeseries += phys_out[key].timeseries.T.tolist()
+            units += phys_out[key].units
+            freq += [phys_out[key].freq] * len(phys_out[key].ch_name)
 
         generate_report(outdir, logname, ch_name, timeseries, units, freq)
 
