@@ -106,7 +106,7 @@ def _generate_file_tree(out_dir):
     return tree_string
 
 
-def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750)):
+def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,500)):
     """
     Plot all the channels for visualizations as linked line plots for dynamic report.
 
@@ -138,7 +138,7 @@ def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750)):
     colors = ['#ff7a3c', '#008eba', '#ff96d3', '#3c376b', '#ffd439']
 
     #only plots the first 30 seconds of data
-    max_time = 30 * freq[0]
+    max_time = 15 * freq[0]
     max_time = int(max_time)
     time = timeseries[0] #assumes first timeseries is time
     x = time[:max_time] 
@@ -157,11 +157,13 @@ def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750)):
         tools=['wheel_zoom,pan,reset', hovertool]
         if i == 1:
             plots[i] = figure(plot_height=size[0], plot_width=size[1],
-                              tools=tools, title=f' Channel {i}: {ch_name[i]}')
+                              tools=tools, title=f' Channel {i}: {ch_name[i]}', 
+                              sizing_mode='stretch_both')
             plots[i].line(x, y, color=colors[i-1], alpha=0.9)
         if i > 1:
             plots[i] = figure(plot_height=size[0], plot_width=size[1],
-                              tools=tools, title=f' Channel {i}: {ch_name[i]}', x_range=plots[1].x_range)
+                              tools=tools, title=f' Channel {i}: {ch_name[i]}', 
+                              x_range=plots[1].x_range, sizing_mode='stretch_both')
             plots[i].line(x, y, color=colors[i-1], alpha=0.9)
 
         plot_list.append([plots[i]])
@@ -218,8 +220,14 @@ def generate_report(out_dir, log_path, ch_name, timeseries, units, freq):
 
     ## Read in output directory structure & create tree 
     tree_string = _generate_file_tree(out_dir)
-    bokeh_div, bokeh_js = _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750))
+    bokeh_js, bokeh_div = _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750))
     html = _update_fpage_template(tree_string, bokeh_div, bokeh_js, log_html_path, qc_html_path)
 
     with open(qc_html_path, 'wb') as f:
         f.write(html.encode('utf-8'))
+
+from phys2bids.interfaces.acq import populate_phys_input
+phys = populate_phys_input('/Users/kbottenh/Downloads/sub-PILOT02_ses-01.acq', chtrig=3)
+generate_report('/Users/kbottenh/Dropbox/Projects/physio/plotting_test', 
+                '/Users/kbottenh/Dropbox/Projects/physio/plotting_test/sub-Blossom_ses-02.log', 
+                phys.ch_name, phys.timeseries, phys.units, phys.freq)
