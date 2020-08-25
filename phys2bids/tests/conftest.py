@@ -91,5 +91,5 @@ def multi_run_file(testpath):
 
 @pytest.fixture
 def matlab_file(testpath):
-    return fetch_file('2j43t', testpath,
-                      'test_2minRest.mat')
+    return fetch_file('mkgzx', testpath,
+                      'CBD.mat')
