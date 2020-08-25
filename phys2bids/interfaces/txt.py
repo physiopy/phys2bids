@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-phys2bids interface for txt files.
-"""
+"""phys2bids interface for txt files."""
 
 import logging
 from collections import Counter
@@ -296,8 +294,10 @@ def read_header_and_channels(filename, chtrig):
 
 def populate_phys_input(filename, chtrig):
     """
-    Populate object phys_input, extracts header and deduces from it
-    the format file, afterwards it passes the needed information to
+    Populate object phys_input.
+
+    Extract header and deduce from it the format file,
+    afterwards pass the needed information to
     the corresponding reading function.
 
     Parameters

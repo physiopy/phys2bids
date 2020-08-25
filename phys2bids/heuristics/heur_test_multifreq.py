@@ -56,10 +56,10 @@ def heur(physinfo, run=''):
     # ##  See example below          ## #
     # ################################# #
 
-    if fnmatch.fnmatchcase(physinfo, '*tutorial*'):
+    if fnmatch.fnmatchcase(physinfo, '*onescan*'):
         info['task'] = 'test'
         info['run'] = '01'
-        info['rec'] = 'labchart'
+        info['rec'] = 'biopac'
     elif physinfo == 'Example':
         info['task'] = 'rest'
         info['run'] = '01'

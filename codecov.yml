@@ -28,6 +28,7 @@ ignore:
   - "**/**/__init__.py"
   - "phys2bids/tests"
   - "phys2bids/heuristics"
+  - "phys2bids/due.py"
 
 comment:
   layout: "reach,diff,flags,tree"

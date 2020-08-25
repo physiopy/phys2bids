@@ -1,0 +1,52 @@
+{
+    "license": "Apache-2.0", 
+    "title": "physiopy/phys2bids: BIDS formatting of physiological recordings",
+    "upload_type": "software",
+    "creators": [
+        {
+            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+            "name": "Daniel Alcal\u00e1"
+        }, 
+        {
+            "affiliation": "Northwestern University", 
+            "name": "Apoorva Ayyagari"
+        }, 
+        {
+            "affiliation": "Northwestern University", 
+            "name": "Molly Bright"
+        }, 
+        {
+            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+            "name": "C\u00e9sar Caballero Gaudes"
+        }, 
+        {
+            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+            "name": "Vicente Ferrer"
+        }, 
+        {
+            "name": "Soichi Hayashi"
+        }, 
+        {
+            "affiliation": "McGill University", 
+            "name": "Ross Markello"
+        }, 
+        {
+            "orcid": "0000-0002-2553-3327", 
+            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+            "name": "Stefano Moia"
+        }, 
+        {
+            "affiliation": "Northwestern University", 
+            "name": "Rachael Stickland"
+        }, 
+        {
+            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+            "name": "Eneko Uru\u00f1uela"
+        }, 
+        {
+            "affiliation": "Northwestern University", 
+            "name": "Kristina Zvolanek"
+        }
+    ], 
+    "access_right": "open"
+}

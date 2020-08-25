@@ -1,9 +1,16 @@
 {
+  "projectName": "phys2bids",
+  "projectOwner": "physiopy",
+  "repoType": "github",
+  "repoHost": "https://github.com",
   "files": [
     "README.md"
   ],
+  "badgeTemplate": "[![All Contributors](https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg?style=flat)](#contributors)",
   "imageSize": 100,
-  "commit": false,
+  "commit": true,
+  "commitConvention": "none",
+  "contributorsPerLine": 4,
   "contributors": [
     {
       "login": "danalclop",
@@ -20,9 +27,9 @@
       "avatar_url": "https://avatars1.githubusercontent.com/u/50453337?v=4",
       "profile": "https://github.com/AyyagariA",
       "contributions": [
+        "content",
         "data",
-        "doc",
-        "content"
+        "doc"
       ]
     },
     {
@@ -31,9 +38,9 @@
       "avatar_url": "https://avatars2.githubusercontent.com/u/32640425?v=4",
       "profile": "http://brightlab.northwestern.edu",
       "contributions": [
+        "content",
         "data",
-        "ideas",
-        "content"
+        "ideas"
       ]
     },
     {
@@ -42,9 +49,9 @@
       "avatar_url": "https://avatars1.githubusercontent.com/u/7611340?v=4",
       "profile": "https://github.com/CesarCaballeroGaudes",
       "contributions": [
+        "content",
         "data",
-        "ideas",
-        "content"
+        "ideas"
       ]
     },
     {
@@ -69,6 +76,16 @@
       ]
     },
     {
+      "login": "sangfrois",
+      "name": "François Lespinasse",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/38385719?v=4",
+      "profile": "https://github.com/sangfrois",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
       "login": "rmarkello",
       "name": "Ross Markello",
       "avatar_url": "https://avatars0.githubusercontent.com/u/14265705?v=4",
@@ -76,6 +93,7 @@
       "contributions": [
         "bug",
         "code",
+        "content",
         "ideas",
         "infra",
         "review",
@@ -89,22 +107,43 @@
       "profile": "https://github.com/smoia",
       "contributions": [
         "code",
+        "content",
         "data",
         "ideas",
         "infra",
         "projectManagement",
         "review",
-        "doc",
-        "content"
+        "doc"
       ]
     },
     {
-      "login": "raystick",
+      "login": "robertoostenveld",
+      "name": "Robert Oostenveld",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/899043?v=4",
+      "profile": "https://github.com/robertoostenveld",
+      "contributions": [
+        "ideas",
+        "review"
+      ]
+    },
+    {
+      "login": "tsalo",
+      "name": "Taylor Salo",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/8228902?v=4",
+      "profile": "https://github.com/tsalo",
+      "contributions": [
+        "ideas",
+        "code"
+      ]
+    },
+    {
+      "login": "RayStick",
       "name": "Rachael Stickland",
       "avatar_url": "https://avatars3.githubusercontent.com/u/50215726?v=4",
       "profile": "https://github.com/RayStick",
       "contributions": [
         "bug",
+        "code",
         "data",
         "doc",
         "userTesting"
@@ -130,15 +169,9 @@
       "profile": "https://github.com/kristinazvolanek",
       "contributions": [
         "data",
-        "doc",
-        "content"
+        "content",
+        "doc"
       ]
     }
-  ],
-  "contributorsPerLine": 5,
-  "projectName": "phys2bids",
-  "projectOwner": "physiopy",
-  "repoType": "github",
-  "repoHost": "https://github.com",
-  "skipCi": true
+  ]
 }
