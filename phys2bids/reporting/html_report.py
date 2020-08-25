@@ -225,9 +225,3 @@ def generate_report(out_dir, log_path, ch_name, timeseries, units, freq):
 
     with open(qc_html_path, 'wb') as f:
         f.write(html.encode('utf-8'))
-
-from phys2bids.interfaces.acq import populate_phys_input
-phys = populate_phys_input('/Users/kbottenh/Downloads/sub-PILOT02_ses-01.acq', chtrig=3)
-generate_report('/Users/kbottenh/Dropbox/Projects/physio/plotting_test', 
-                '/Users/kbottenh/Dropbox/Projects/physio/plotting_test/sub-Blossom_ses-02.log', 
-                phys.ch_name, phys.timeseries, phys.units, phys.freq)
