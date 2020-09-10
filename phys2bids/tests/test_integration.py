@@ -8,6 +8,8 @@ from os import remove
 from os.path import isfile, join, split
 from pkg_resources import resource_filename
 
+import pytest
+
 from phys2bids._version import get_versions
 from phys2bids.phys2bids import phys2bids
 
@@ -23,24 +25,27 @@ def check_string(str_container, str_to_find, str_expected, is_num=True):
         return str_expected in str_found
 
 
-def test_integration_acq(samefreq_full_acq_file):
+def test_integration_acq(skip_integration, samefreq_full_acq_file):
     """
     Does the integration test for an acq file
     """
+
+    if skip_integration:
+        pytest.skip('Skipping integration test')
 
     test_path, test_filename = split(samefreq_full_acq_file)
     test_chtrig = 3
     conversion_path = join(test_path, 'code', 'conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
-              chtrig=test_chtrig, num_timepoints_expected=1, tr=1)
+              chtrig=test_chtrig, num_timepoints_expected=60, tr=1.5)
 
     # Check that files are generated
     for suffix in ['.json', '.tsv.gz']:
         assert isfile(join(test_path, 'Test_belt_pulse_samefreq' + suffix))
 
     # Check files in extra are generated
-    for suffix in ['.log', '_trigger_time.png']:
+    for suffix in ['.log']:  #, '_trigger_time.png']:
         assert isfile(join(conversion_path, 'Test_belt_pulse_samefreq' + suffix))
 
     # Read log file (note that this file is not the logger file)
@@ -48,7 +53,7 @@ def test_integration_acq(samefreq_full_acq_file):
         log_info = log_info.readlines()
 
     # Check timepoints expected
-    assert check_string(log_info, 'Timepoints expected', '1')
+    assert check_string(log_info, 'Timepoints expected', '60')
     # Check timepoints found
     assert check_string(log_info, 'Timepoints found', '60')
     # Check sampling frequency
@@ -76,17 +81,20 @@ def test_integration_acq(samefreq_full_acq_file):
     shutil.rmtree(conversion_path)
 
 
-def test_integration_heuristic(multifreq_lab_file):
+def test_integration_heuristic(skip_integration, multifreq_lab_file):
     """
     Does integration test of tutorial file with heurositics
     """
 
+    if skip_integration:
+        pytest.skip('Skipping integration test')
+
     test_path, test_filename = split(multifreq_lab_file)
     test_full_path = join(test_path, test_filename)
-    test_chtrig = 3
+    test_chtrig = 1
     test_outdir = test_path
     conversion_path = join(test_path, 'code', 'conversion')
-    test_ntp = 158
+    test_ntp = 30
     test_tr = 1.2
     test_thr = 0.735
     heur_path = resource_filename('phys2bids', 'heuristics')
@@ -122,8 +130,8 @@ def test_integration_heuristic(multifreq_lab_file):
         assert isfile(join(conversion_path,
                            'sub-006_ses-01_task-test_rec-biopac_run-01_'
                            f'recording-{freq}Hz_physio.log'))
-    assert isfile(join(conversion_path,
-                       'Test1_multifreq_onescan_sub-006_ses-01_trigger_time.png'))
+    # assert isfile(join(conversion_path,
+    #                    'Test1_multifreq_onescan_sub-006_ses-01_trigger_time.png'))
     assert isfile(join(conversion_path, 'Test1_multifreq_onescan.png'))
     assert isfile(join(conversion_path, 'heur_test_multifreq.py'))
     test_path_output = join(test_path, 'sub-006/ses-01/func')
@@ -142,13 +150,13 @@ def test_integration_heuristic(multifreq_lab_file):
         log_info = log_info.readlines()
 
     # Check timepoints expected
-    assert check_string(log_info, 'Timepoints expected', '158')
+    assert check_string(log_info, 'Timepoints expected', '30')
     # Check timepoints found
-    assert check_string(log_info, 'Timepoints found', '1')
+    assert check_string(log_info, 'Timepoints found', '30')
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '40.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '-157.8535')
+    assert check_string(log_info, 'Sampling started', '3.6960')
     # Check first trigger
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -159,8 +167,8 @@ def test_integration_heuristic(multifreq_lab_file):
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 40.0,)
-    assert math.isclose(json_data['StartTime'], -157.8535,)
-    assert json_data['Columns'] == ['O2']
+    assert math.isclose(json_data['StartTime'], 3.6960,)
+    assert json_data['Columns'] == ['time', 'O2']
 
     # ##### Checks for 100 Hz files
     # Read log file (note that this file is not the logger file)
@@ -169,13 +177,13 @@ def test_integration_heuristic(multifreq_lab_file):
         log_info = log_info.readlines()
 
     # Check timepoints expected
-    assert check_string(log_info, 'Timepoints expected', '158')
+    assert check_string(log_info, 'Timepoints expected', '30')
     # Check timepoints found
-    assert check_string(log_info, 'Timepoints found', '1')
+    assert check_string(log_info, 'Timepoints found', '30')
     # Check sampling frequency
     assert check_string(log_info, 'Sampling Frequency', '100.0')
     # Check sampling started
-    assert check_string(log_info, 'Sampling started', '-0.3057')
+    assert check_string(log_info, 'Sampling started', '3.6960')
     # Check first trigger
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
@@ -186,8 +194,8 @@ def test_integration_heuristic(multifreq_lab_file):
 
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 100.0,)
-    assert math.isclose(json_data['StartTime'], -0.3057,)
-    assert json_data['Columns'] == ['CO2']
+    assert math.isclose(json_data['StartTime'], 3.6960,)
+    assert json_data['Columns'] == ['time', 'CO2']
 
     # Remove generated files
     shutil.rmtree(test_path_output)
@@ -196,7 +204,10 @@ def test_integration_heuristic(multifreq_lab_file):
         remove(filename)
 
 
-def test_integration_multirun(multi_run_file):
+def test_integration_multirun(skip_integration, multi_run_file):
+
+    if skip_integration:
+        pytest.skip('Skipping integration test')
 
     test_path, test_filename = split(multi_run_file)
     test_chtrig = 1
@@ -218,7 +229,7 @@ def test_integration_multirun(multi_run_file):
         assert isfile(join(conversion_path, f'Test2_samefreq_TWOscans_{run}.log'))
 
     # Check that plots are generated in conversion_path
-    base_filename = 'Test2_samefreq_TWOscans_'
-    for run in ['1', '2']:
-        assert isfile(join(conversion_path, f'Test2_samefreq_TWOscans_{run}_trigger_time.png'))
+    # base_filename = 'Test2_samefreq_TWOscans_'
+    # for run in ['1', '2']:
+    #     assert isfile(join(conversion_path, f'Test2_samefreq_TWOscans_{run}_trigger_time.png'))
     assert isfile(join(conversion_path, 'Test2_samefreq_TWOscans.png'))

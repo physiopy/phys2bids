@@ -127,7 +127,7 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
     description='The BIDS specification',
     cite_module=True)
 def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
-              sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=None,
+              sub=None, ses=None, chtrig=1, chsel=None, num_timepoints_expected=None,
               tr=None, thr=None, pad=9, ch_name=[], yml='', debug=False, quiet=False):
     """
     Run main workflow of phys2bids.
@@ -191,6 +191,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
     indir = utils.check_input_dir(indir)
+    if chtrig < 1:
+        raise Exception('Wrong trigger channel. Channel indexing starts with 1!')
+
     filename, ftype = utils.check_input_type(filename,
                                              indir)
 
@@ -218,9 +221,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         from phys2bids.interfaces.acq import populate_phys_input
     elif ftype == 'txt':
         from phys2bids.interfaces.txt import populate_phys_input
-    else:
-        # #!# We should add a logger here.
-        raise NotImplementedError('Currently unsupported file type.')
 
     LGR.info(f'Reading the file {infile}')
     phys_in = populate_phys_input(infile, chtrig)
@@ -370,6 +370,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # Also create a BlueprintOutput object for each unique frequency found.
             # Populate it with the corresponding blueprint input and replace it
             # in the dictionary.
+            # Add time channel in the proper frequency.
+            if uniq_freq != phys_in[run].freq[0]:
+                phys_out[key].ch_name.insert(0, phys_in[run].ch_name[0])
+                phys_out[key].units.insert(0, phys_in[run].units[0])
+                phys_out[key].timeseries.insert(0, np.linspace(phys_in[run].timeseries[0][0],
+                                                phys_in[run].timeseries[0][-1],
+                                                num=phys_out[key].timeseries[0].shape[0]))
             phys_out[key] = BlueprintOutput.init_from_blueprint(phys_out[key])
 
         # Preparing output parameters: name and folder.

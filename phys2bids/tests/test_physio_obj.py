@@ -128,6 +128,10 @@ def test_BlueprintInput():
     # Test __eq__
     assert blueprint_in == blueprint_in
 
+    with raises(IndexError) as errorinfo:
+        blueprint_in.__getitem__(1000)
+    assert 'out of bounds' in str(errorinfo.value)
+
 
 def test_BlueprintInput_slice():
     """Test BlueprintInput_slice.__getitem__ ."""
