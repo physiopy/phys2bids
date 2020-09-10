@@ -221,9 +221,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         from phys2bids.interfaces.acq import populate_phys_input
     elif ftype == 'txt':
         from phys2bids.interfaces.txt import populate_phys_input
-    else:
-        # #!# We should add a logger here.
-        raise NotImplementedError('Currently unsupported file type.')
 
     LGR.info(f'Reading the file {infile}')
     phys_in = populate_phys_input(infile, chtrig)
