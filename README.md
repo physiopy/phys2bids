@@ -37,6 +37,7 @@ Shortcuts:
 - [Developer installation](https://phys2bids.readthedocs.io/en/latest/contributing.html#linux-and-mac-developer-installation)
 - [**Contributor guide**](https://phys2bids.readthedocs.io/en/latest/contributorfile.html)
 - [**Code of Conduct**](https://phys2bids.readthedocs.io/en/latest/conduct.html)
+- [Developer calls calendar](https://calendar.google.com/calendar/u/0?cid=amoycDQ1MTdhMWdpaHNuNzlnOW1ucHJkMjRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 
 ## The BrainWeb
 BrainWeb participants, welcome!
