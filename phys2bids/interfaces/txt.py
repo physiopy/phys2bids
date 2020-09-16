@@ -251,7 +251,7 @@ def process_acq(channel_list, chtrig, header=[]):
     return BlueprintInput(timeseries, freq, names, units, chtrig + 1)
 
 
-def read_header_and_channels(filename, chtrig):
+def read_header_and_channels(filename):
     """
     Read a txt file with a header and channels and separate them.
 
@@ -259,8 +259,6 @@ def read_header_and_channels(filename, chtrig):
     ----------
     filename: str
         path to the txt Labchart file
-    chtrig : int
-        index of trigger channel
 
     Returns
     -------
