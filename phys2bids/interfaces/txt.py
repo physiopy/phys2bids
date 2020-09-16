@@ -149,7 +149,7 @@ def process_labchart(channel_list, chtrig, header=[]):
     units = units + orig_units
     freq = [1 / interval[0]] * len(timeseries)
     freq = check_multifreq(timeseries, freq)
-    return BlueprintInput(timeseries, freq, names, units, chtrig + 1)
+    return BlueprintInput(timeseries, freq, names, units, chtrig)
 
 
 def process_acq(channel_list, chtrig, header=[]):
@@ -248,7 +248,7 @@ def process_acq(channel_list, chtrig, header=[]):
     t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
     timeseries = [t_ch, ] + timeseries
     freq = check_multifreq(timeseries, freq)
-    return BlueprintInput(timeseries, freq, names, units, chtrig + 1)
+    return BlueprintInput(timeseries, freq, names, units, chtrig)
 
 
 def read_header_and_channels(filename):
@@ -319,7 +319,6 @@ def populate_phys_input(filename, chtrig):
     --------
     physio_obj.BlueprintInput
     """
-    chtrig = chtrig - 1  # now for the user channel indexing starts at 1 as it
     # happens in acq call
     header, channel_list = read_header_and_channels(filename, chtrig)
     # check header is not empty and detect if it is in labchart or Acqknoledge format
