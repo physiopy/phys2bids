@@ -320,7 +320,7 @@ def populate_phys_input(filename, chtrig):
     physio_obj.BlueprintInput
     """
     # happens in acq call
-    header, channel_list = read_header_and_channels(filename, chtrig)
+    header, channel_list = read_header_and_channels(filename)
     # check header is not empty and detect if it is in labchart or Acqknoledge format
     if len(header) == 0:
         raise AttributeError('Files without header are not supported yet')
