@@ -76,7 +76,7 @@ def process_labchart(channel_list, chtrig, header=[]):
     channel_list: list
         list with channels only
     chtrig : int
-        index of trigger channel
+        index of trigger channel, starting in 1 for human readability
     header: list
         list with that contains file header
 
@@ -161,7 +161,7 @@ def process_acq(channel_list, chtrig, header=[]):
     channel_list: list
         list with channels only
     chtrig : int
-        index of trigger channel
+        index of trigger channel, starting in 1 for human readability
     header: list
         list with that contains file header
 
@@ -303,7 +303,7 @@ def populate_phys_input(filename, chtrig):
     filename: str
         path to the txt Labchart file
     chtrig : int
-        index of trigger channel
+        index of trigger channel, starting in 1 for human readability
 
     Returns
     -------
