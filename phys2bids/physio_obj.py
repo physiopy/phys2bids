@@ -228,6 +228,17 @@ class BlueprintInput():
     def __init__(self, timeseries, freq, ch_name, units, trigger_idx,
                  num_timepoints_found=None, thr=None, time_offset=0):
         """Initialise BlueprintInput (see class docstring)."""
+        trigger_names_list = ["trig", "trigger", "TRIGGER", "Trigger"]
+        if trigger_idx == 0:
+            name_not_found = True
+            LGR.warning('User did not input chtrig. Trying to find in auto mode by name')
+            for trig_name in trigger_names_list:
+                if trig_name in ch_name:
+                    trigger_idx = ch_name.index(trig_name)
+                    LGR.warning(f'Assigning chtrig to channel {trig_name}')
+                    name_not_found = False
+            if name_not_found:
+                raise Exception('No trigger channel was automaticly found. Exiting program')
         self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
         self.freq = has_size(is_valid(freq, list,
                                       list_type=(int, float)),
