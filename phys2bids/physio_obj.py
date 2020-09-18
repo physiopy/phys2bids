@@ -235,7 +235,7 @@ class BlueprintInput():
             for trig_name in trigger_names_list:
                 if trig_name in ch_name:
                     trigger_idx = ch_name.index(trig_name)
-                    LGR.warning(f'Assigning chtrig to channel {trig_name}.')
+                    LGR.warning(f'{trig_name} selected as trigger channel')
                     name_not_found = False
             if name_not_found:
                 raise Exception('No trigger channel was automatically found. Please run phys2bids specifying the -chtrig argument.')
