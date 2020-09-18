@@ -231,18 +231,18 @@ class BlueprintInput():
         trigger_names_list = ["trig", "trigger", "TRIGGER", "Trigger"]
         if trigger_idx == 0:
             name_not_found = True
-            LGR.warning('User did not input chtrig. Trying to find in auto mode by name')
+            LGR.warning('User did not input chtrig. Trying to find in auto mode by name.')
             for trig_name in trigger_names_list:
                 if trig_name in ch_name:
                     trigger_idx = ch_name.index(trig_name)
-                    LGR.warning(f'Assigning chtrig to channel {trig_name}')
+                    LGR.warning(f'Assigning chtrig to channel {trig_name}.')
                     name_not_found = False
             if name_not_found:
-                raise Exception('No trigger channel was automaticly found. Exiting program')
+                raise Exception('No trigger channel was automaticly found. Exiting program.')
         else:
             if ch_name[trigger_idx] not in trigger_names_list:
-                LGR.warning(f'Trigger channel name is not in our trigger channel name alias list.'
-                            f'Please make sure you are choosing the proper channel')
+                LGR.warning('Trigger channel name is not in our trigger channel name alias list. '
+                            'Please make sure you are choosing the proper channel')
         self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
         self.freq = has_size(is_valid(freq, list,
                                       list_type=(int, float)),
