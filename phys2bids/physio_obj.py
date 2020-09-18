@@ -238,7 +238,7 @@ class BlueprintInput():
                     LGR.warning(f'Assigning chtrig to channel {trig_name}.')
                     name_not_found = False
             if name_not_found:
-                raise Exception('No trigger channel was automaticly found. Exiting program.')
+                raise Exception('No trigger channel was automatically found. Exiting program.')
         else:
             if ch_name[trigger_idx] not in trigger_names_list:
                 LGR.warning('Trigger channel name is not in our trigger channel name alias list. '
