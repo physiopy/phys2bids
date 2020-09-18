@@ -239,6 +239,10 @@ class BlueprintInput():
                     name_not_found = False
             if name_not_found:
                 raise Exception('No trigger channel was automaticly found. Exiting program')
+        else:
+            if ch_name[trigger_idx] not in trigger_names_list:
+                LGR.warning(f'Trigger channel name is not in our trigger channel name alias list.'
+                            f'Please make sure you are choosing the proper channel')
         self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
         self.freq = has_size(is_valid(freq, list,
                                       list_type=(int, float)),
