@@ -238,7 +238,8 @@ class BlueprintInput():
                     LGR.warning(f'{trig_name} selected as trigger channel')
                     name_not_found = False
             if name_not_found:
-                raise Exception('No trigger channel was automatically found. Please run phys2bids specifying the -chtrig argument.')
+                raise Exception('No trigger channel was automatically found. Please run phys2bids'
+                                'specifying the -chtrig argument.')
         else:
             if ch_name[trigger_idx] not in trigger_names_list:
                 LGR.warning('Trigger channel name is not in our trigger channel name alias list. '
