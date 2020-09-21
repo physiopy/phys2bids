@@ -41,9 +41,12 @@ def populate_phys_input(filename, chtrig):
     with warnings.catch_warnings():
         warnings.filterwarnings('ignore', category=DeprecationWarning)
         data = read_file(filename).channels
-
-    freq = [data[chtrig - 1].samples_per_second, ]
-    timeseries = [data[chtrig - 1].time_index, ]
+    # obtain time channel and time channel frequency from one of
+    # the channels with highest frequency
+    frequencies = [x.samples_per_second for x in data]
+    max_index = [i for i, j in enumerate(frequencies) if j == max(frequencies)][0]
+    freq = [data[max_index].samples_per_second, ]
+    timeseries = [data[max_index].time_index, ]
     units = ['s', ]
     names = ['time', ]
 
