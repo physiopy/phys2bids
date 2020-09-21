@@ -7,6 +7,7 @@ import logging
 from itertools import groupby
 
 import numpy as np
+import re
 
 LGR = logging.getLogger(__name__)
 
@@ -228,16 +229,18 @@ class BlueprintInput():
     def __init__(self, timeseries, freq, ch_name, units, trigger_idx,
                  num_timepoints_found=None, thr=None, time_offset=0):
         """Initialise BlueprintInput (see class docstring)."""
-        trigger_names_list = ["trig", "trigger", "TRIGGER", "Trigger"]
+        trigger_names_list = ["trig", "trigger"]
         if trigger_idx == 0:
-            name_not_found = True
             LGR.warning('User did not input chtrig. Trying to find in auto mode by name.')
-            for trig_name in trigger_names_list:
-                if trig_name in ch_name:
-                    trigger_idx = ch_name.index(trig_name)
-                    LGR.warning(f'{trig_name} selected as trigger channel')
-                    name_not_found = False
-            if name_not_found:
+            results = [re.search('|'.join(trigger_names_list), l, re.IGNORECASE) for l in ch_name]
+            indexes = [i for i, v in enumerate(results) if v]
+            if len(indexes) == 1:
+                trigger_idx = indexes[0]
+                LGR.warning(f'{ch_name[trigger_idx]} selected as trigger channel')
+            if len(indexes) > 1:
+                raise Exception('No trigger channel was automatically found. Please run phys2bids'
+                                'specifying the -chtrig argument.')
+            if len(indexes < 1):
                 raise Exception('No trigger channel was automatically found. Please run phys2bids'
                                 'specifying the -chtrig argument.')
         else:
