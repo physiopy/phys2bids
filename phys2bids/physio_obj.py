@@ -232,7 +232,8 @@ class BlueprintInput():
         trigger_names_list = ["trig", "trigger"]
         if trigger_idx == 0:
             LGR.warning('User did not input chtrig. Trying to find in auto mode by name.')
-            results = [re.search('|'.join(trigger_names_list), l, re.IGNORECASE) for l in ch_name]
+            results = [re.search('|'.join(trigger_names_list),
+                                 case, re.IGNORECASE) for case in ch_name]
             indexes = [i for i, v in enumerate(results) if v]
             if len(indexes) == 1:
                 trigger_idx = indexes[0]
@@ -240,7 +241,7 @@ class BlueprintInput():
             if len(indexes) > 1:
                 raise Exception('No trigger channel was automatically found. Please run phys2bids'
                                 'specifying the -chtrig argument.')
-            if len(indexes < 1):
+            if len(indexes) < 1:
                 raise Exception('No trigger channel was automatically found. Please run phys2bids'
                                 'specifying the -chtrig argument.')
         else:
