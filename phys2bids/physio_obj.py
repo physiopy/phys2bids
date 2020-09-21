@@ -11,6 +11,8 @@ import re
 
 LGR = logging.getLogger(__name__)
 
+trigger_names_list = ["trig", "trigger"]
+
 
 def is_valid(var, var_type, list_type=None):
     """
@@ -229,25 +231,6 @@ class BlueprintInput():
     def __init__(self, timeseries, freq, ch_name, units, trigger_idx,
                  num_timepoints_found=None, thr=None, time_offset=0):
         """Initialise BlueprintInput (see class docstring)."""
-        trigger_names_list = ["trig", "trigger"]
-        if trigger_idx == 0:
-            LGR.warning('User did not input chtrig. Trying to find in auto mode by name.')
-            results = [re.search('|'.join(trigger_names_list),
-                                 case, re.IGNORECASE) for case in ch_name]
-            indexes = [i for i, v in enumerate(results) if v]
-            if len(indexes) == 1:
-                trigger_idx = indexes[0]
-                LGR.warning(f'{ch_name[trigger_idx]} selected as trigger channel')
-            if len(indexes) > 1:
-                raise Exception('No trigger channel was automatically found. Please run phys2bids'
-                                'specifying the -chtrig argument.')
-            if len(indexes) < 1:
-                raise Exception('No trigger channel was automatically found. Please run phys2bids'
-                                'specifying the -chtrig argument.')
-        else:
-            if ch_name[trigger_idx] not in trigger_names_list:
-                LGR.warning('Trigger channel name is not in our trigger channel name alias list. '
-                            'Please make sure you are choosing the proper channel')
         self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
         self.freq = has_size(is_valid(freq, list,
                                       list_type=(int, float)),
@@ -258,6 +241,12 @@ class BlueprintInput():
         self.num_timepoints_found = num_timepoints_found
         self.thr = thr
         self.time_offset = time_offset
+        if trigger_idx == 0:
+            self.auto_trigger_selection
+        else:
+            if ch_name[trigger_idx] not in trigger_names_list:
+                LGR.warning('Trigger channel name is not in our trigger channel name alias list. '
+                            'Please make sure you are choosing the proper channel')
 
     @property
     def ch_amount(self):
@@ -551,6 +540,21 @@ class BlueprintInput():
         info = info + '------------------------------------------------\n'
 
         LGR.info(info)
+
+    def auto_trigger_selection(self):
+        LGR.warning('User did not input chtrig. Trying to find in auto mode by name.')
+        results = [re.search('|'.join(trigger_names_list),
+                             case, re.IGNORECASE) for case in self.ch_name]
+        indexes = [i for i, v in enumerate(results) if v]
+        if len(indexes) == 1:
+            self.trigger_idx = indexes[0]
+            LGR.warning(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
+        if len(indexes) > 1:
+            raise Exception('No trigger channel was automatically found. Please run phys2bids'
+                            'specifying the -chtrig argument.')
+        if len(indexes) < 1:
+            raise Exception('No trigger channel was automatically found. Please run phys2bids'
+                            'specifying the -chtrig argument.')
 
 
 class BlueprintOutput():
