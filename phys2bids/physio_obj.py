@@ -543,7 +543,7 @@ class BlueprintInput():
 
     def auto_trigger_selection(self):
         """
-        Finds a trigger index matching the channels with a regular expresion.
+        Find a trigger index matching the channels with a regular expresion.
 
         Parameters
         ----------
