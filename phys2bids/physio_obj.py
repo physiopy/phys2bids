@@ -542,6 +542,18 @@ class BlueprintInput():
         LGR.info(info)
 
     def auto_trigger_selection(self):
+        """
+        Finds a trigger index matching the channels with a regular expresion.
+
+        Parameters
+        ----------
+        self
+
+        Notes
+        -----
+        Outcome:
+        trigger_idx:
+        """
         LGR.warning('User did not input chtrig. Trying to find in auto mode by name.')
         results = [re.search('|'.join(trigger_names_list),
                              case, re.IGNORECASE) for case in self.ch_name]
