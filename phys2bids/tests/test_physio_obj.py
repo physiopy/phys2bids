@@ -2,7 +2,6 @@
 
 import numpy as np
 from pytest import raises
-import logging
 from phys2bids import physio_obj as po
 
 
