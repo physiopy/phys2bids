@@ -242,7 +242,7 @@ class BlueprintInput():
         self.thr = thr
         self.time_offset = time_offset
         if trigger_idx == 0:
-            self.auto_trigger_selection
+            self.auto_trigger_selection()
         else:
             if ch_name[trigger_idx] not in trigger_names_list:
                 LGR.warning('Trigger channel name is not in our trigger channel name alias list. '
@@ -562,7 +562,8 @@ class BlueprintInput():
             self.trigger_idx = indexes[0]
             LGR.warning(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
         if len(indexes) > 1:
-            raise Exception('No trigger channel was automatically found. Please run phys2bids'
+            raise Exception('More than one possible trigger channel was automatically found.'
+                            'Please run phys2bids'
                             'specifying the -chtrig argument.')
         if len(indexes) < 1:
             raise Exception('No trigger channel was automatically found. Please run phys2bids'
