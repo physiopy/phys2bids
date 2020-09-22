@@ -2,7 +2,7 @@
 
 import numpy as np
 from pytest import raises
-
+import logging
 from phys2bids import physio_obj as po
 
 
@@ -236,3 +236,39 @@ def test_BlueprintOutput():
 
     # Test __eq__
     assert blueprint_out == blueprint_out
+
+
+def test_auto_trigger_selection(caplog):
+    """Test auto_trigger_selection."""
+    test_time = np.array([0, 1, 2, 3, 4])
+    test_trigger = np.array([0, 1, 2, 3, 4])
+    test_half = np.array([0, 1, 2])
+    test_twice = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    test_timeseries = [test_time, test_trigger, test_half, test_twice]
+    test_freq = [1, 1, 0.5, 2]
+    test_chn_name = ['time', 'trigger', 'half', 'twice']
+    test_units = ['s', 'V', 'V', 'V']
+
+    # test when trigger is not the name of the channel
+    test_chtrig = 2
+    phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                test_units, test_chtrig)
+    assert 'Trigger channel name is not' in caplog.text
+
+    # test when trigger is 0 and that the trigger channel is recognized by name:
+    test_chtrig = 0
+    phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                test_units, test_chtrig)
+    assert phys_in.trigger_idx == 1
+    # test when no trigger is found
+    test_chn_name = ['time', 'dummy', 'half', 'twice']
+    with raises(Exception) as errorinfo:
+        phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                    test_units, test_chtrig)
+        assert 'No trigger channel was automatically found' in str(errorinfo.value)
+    # test when no trigger is found
+    test_chn_name = ['time', 'trigger', 'TRIGGER', 'twice']
+    with raises(Exception) as errorinfo:
+        phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                    test_units, test_chtrig)
+        assert 'More than one possible trigger channel' in str(errorinfo.value)
