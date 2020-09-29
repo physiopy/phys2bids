@@ -47,7 +47,6 @@ def test_print_json(tmpdir):
 
 def test_raise_exception(samefreq_full_acq_file):
     test_path, test_filename = os.path.split(samefreq_full_acq_file)
-    conversion_path = os.path.join(test_path, 'code')
     with raises(Exception) as errorinfo:
         phys2bids.phys2bids(filename=test_filename, indir=test_path, outdir=test_path, chtrig=0)
     assert 'Wrong trigger' in str(errorinfo.value)
