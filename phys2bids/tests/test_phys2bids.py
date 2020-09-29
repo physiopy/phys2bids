@@ -5,7 +5,6 @@ Tests phys2bids.py
 import json
 import os
 from pytest import raises
-import shutil
 
 from phys2bids import phys2bids
 
