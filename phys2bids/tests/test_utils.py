@@ -112,8 +112,8 @@ def test_load_heuristics():
 
 
 # Test writing rows util
-def test_append_list_as_row():
-    file_name = 'test_row.tsv'
+def test_append_list_as_row(tmpdir):
+    file_name = tmpdir.join('test_row.tsv')
     list_of_elem = ["01", "32", 'some_info', "132.98", 'M']
     utils.append_list_as_row(file_name, list_of_elem)
     with open(file_name, mode='r') as tsv:
