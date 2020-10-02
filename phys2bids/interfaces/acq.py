@@ -12,7 +12,7 @@ from phys2bids.physio_obj import BlueprintInput
 LGR = logging.getLogger(__name__)
 
 
-def populate_phys_input(filename, chtrig):
+def populate_phys_input(filename, chtrig=0):
     """
     Populate object phys_input from acq files.
 
@@ -20,9 +20,6 @@ def populate_phys_input(filename, chtrig):
     ----------
     filename: str
         path to the txt labchart file
-    chtrig : int
-        index of trigger channel.
-        !!! ATTENTION: IT'S MEANT TO REPRESENT AN INDEX STARTING FROM 1 !!!
 
     Returns
     -------
@@ -42,8 +39,8 @@ def populate_phys_input(filename, chtrig):
         warnings.filterwarnings('ignore', category=DeprecationWarning)
         data = read_file(filename).channels
 
-    freq = [data[chtrig - 1].samples_per_second, ]
-    timeseries = [data[chtrig - 1].time_index, ]
+    freq = [data[0].samples_per_second, ]
+    timeseries = [data[0].time_index, ]
     units = ['s', ]
     names = ['time', ]
 
