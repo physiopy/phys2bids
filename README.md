@@ -39,6 +39,12 @@ Shortcuts:
 - [**Code of Conduct**](https://phys2bids.readthedocs.io/en/latest/conduct.html)
 - [Developer calls calendar](https://calendar.google.com/calendar/u/0?cid=amoycDQ1MTdhMWdpaHNuNzlnOW1ucHJkMjRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 
+## Hacktoberfest
+Hacktoberfest participants, welcome!
+We have some issues for you [here](https://github.com/physiopy/phys2bids/issues?q=is%3Aissue+is%3Aopen+label%3Ahacktoberfest)!
+However, feel free to tackle any issue you'd like. Depending on the issue and extent of contribution, Hacktoberfest related PRs might not count toward being listed as contributors and authors (unless there is the specific interest). You can ask about it in the issue itself!
+Feel free to ask help to the contributors over gitter, happy coding and (hopefully) enjoy hour tee (or tree)!
+
 ## The BrainWeb
 BrainWeb participants, welcome!
 We have a milestone [here](https://github.com/physiopy/phys2bids/milestone/5) as a collection of issues you could work on with our help. 
