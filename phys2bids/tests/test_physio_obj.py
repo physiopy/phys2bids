@@ -1,5 +1,7 @@
 """Test physio_obj.py ."""
 
+from copy import deepcopy
+
 import numpy as np
 from pytest import raises
 
@@ -89,7 +91,7 @@ def test_BlueprintInput():
     test_time = np.array([0, 1, 1, 2, 3, 5, 8, 13])
     test_trigger = np.array([0, 1, 0, 0, 0, 0, 0, 0])
     test_chocolate = np.array([1, 0, 0, 1, 0, 0, 1, 0])
-    test_timeseries = [test_time, test_trigger, test_chocolate]
+    test_timeseries = [deepcopy(test_time), test_trigger, test_chocolate]
     test_freq = [42.0, 3.14, 20.0]
     test_chn_name = ['time', 'trigger', 'chocolate']
     test_units = ['s', 's', 'sweetness']
@@ -119,6 +121,9 @@ def test_BlueprintInput():
     # Tests check_trigger_amount
     blueprint_in.check_trigger_amount(thr=0.9, num_timepoints_expected=1)
     assert blueprint_in.num_timepoints_found == 1
+    assert blueprint_in.time_offset == 1
+    test_offset_time = test_time - 1
+    assert np.array_equal(blueprint_in.timeseries[0], test_offset_time)
 
     # Tests delete_at_index with trigger channel
     blueprint_in.delete_at_index(test_chtrig)
