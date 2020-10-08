@@ -512,7 +512,7 @@ class BlueprintInput():
                         'were not provided.')
         self.thr = thr
         self.time_offset = time_offset
-        self.timeseries[0] -= time_offset
+        self.timeseries[0] = self.timeseries[0] - time_offset
         self.num_timepoints_found = num_timepoints_found
 
     def print_info(self, filename):
