@@ -76,7 +76,7 @@ def process_labchart(channel_list, chtrig, header=[]):
     channel_list: list
         list with channels only
     chtrig : int
-        index of trigger channel
+        index of trigger channel, starting in 1 for human readability
     header: list
         list with that contains file header
 
@@ -149,7 +149,7 @@ def process_labchart(channel_list, chtrig, header=[]):
     units = units + orig_units
     freq = [1 / interval[0]] * len(timeseries)
     freq = check_multifreq(timeseries, freq)
-    return BlueprintInput(timeseries, freq, names, units, chtrig + 1)
+    return BlueprintInput(timeseries, freq, names, units, chtrig)
 
 
 def process_acq(channel_list, chtrig, header=[]):
@@ -161,7 +161,7 @@ def process_acq(channel_list, chtrig, header=[]):
     channel_list: list
         list with channels only
     chtrig : int
-        index of trigger channel
+        index of trigger channel, starting in 1 for human readability
     header: list
         list with that contains file header
 
@@ -248,10 +248,10 @@ def process_acq(channel_list, chtrig, header=[]):
     t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
     timeseries = [t_ch, ] + timeseries
     freq = check_multifreq(timeseries, freq)
-    return BlueprintInput(timeseries, freq, names, units, chtrig + 1)
+    return BlueprintInput(timeseries, freq, names, units, chtrig)
 
 
-def read_header_and_channels(filename, chtrig):
+def read_header_and_channels(filename):
     """
     Read a txt file with a header and channels and separate them.
 
@@ -259,8 +259,6 @@ def read_header_and_channels(filename, chtrig):
     ----------
     filename: str
         path to the txt Labchart file
-    chtrig : int
-        index of trigger channel
 
     Returns
     -------
@@ -294,8 +292,10 @@ def read_header_and_channels(filename, chtrig):
 
 def populate_phys_input(filename, chtrig):
     """
-    Populate object phys_input, extracts header and deduces from it
-    the format file, afterwards it passes the needed information to
+    Populate object phys_input.
+
+    Extract header and deduce from it the format file,
+    afterwards pass the needed information to
     the corresponding reading function.
 
     Parameters
@@ -303,7 +303,7 @@ def populate_phys_input(filename, chtrig):
     filename: str
         path to the txt Labchart file
     chtrig : int
-        index of trigger channel
+        index of trigger channel, starting in 1 for human readability
 
     Returns
     -------
@@ -319,9 +319,8 @@ def populate_phys_input(filename, chtrig):
     --------
     physio_obj.BlueprintInput
     """
-    chtrig = chtrig - 1  # now for the user channel indexing starts at 1 as it
     # happens in acq call
-    header, channel_list = read_header_and_channels(filename, chtrig)
+    header, channel_list = read_header_and_channels(filename)
     # check header is not empty and detect if it is in labchart or Acqknoledge format
     if len(header) == 0:
         raise AttributeError('Files without header are not supported yet')

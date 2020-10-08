@@ -1,9 +1,6 @@
-# emacs: at the end of the file
-# ex: set sts=4 ts=4 sw=4 et:
-# ## ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### #
 """
-Stub file for a guaranteed safe import of duecredit constructs:  if duecredit
-is not available.
+Stub file for a guaranteed safe import of duecredit constructs: if duecredit is not available.
+
 To use it, place it into your project codebase to be imported, e.g. copy as
     cp stub.py /path/tomodule/module/due.py
 Note that it might be better to avoid naming it duecredit.py to avoid shadowing
@@ -14,6 +11,10 @@ See  https://github.com/duecredit/duecredit/blob/master/README.md for examples.
 Origin:     Originally a part of the duecredit
 Copyright:  2015-2016  DueCredit developers
 License:    BSD-2
+
+# emacs: at the end of the file
+# ex: set sts=4 ts=4 sw=4 et:
+# ## ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### #
 """
 
 from builtins import str
@@ -22,13 +23,14 @@ __version__ = '0.0.5'
 
 
 class InactiveDueCreditCollector(object):
-    """Just a stub at the Collector which would not do anything"""
+    """Just a stub at the Collector which would not do anything."""
+
     def _donothing(self, *args, **kwargs):
-        """Perform no good and no bad"""
+        """Perform no good and no bad."""
         pass
 
     def dcite(self, *args, **kwargs):
-        """If I could cite I would"""
+        """If I could cite I would."""
         def nondecorating_decorator(func):
             return func
         return nondecorating_decorator
@@ -36,11 +38,12 @@ class InactiveDueCreditCollector(object):
     cite = load = add = _donothing
 
     def __repr__(self):
+        """Return class function."""
         return self.__class__.__name__ + '()'
 
 
 def _donothing_func(*args, **kwargs):
-    """Perform no good and no bad"""
+    """Perform no good and no bad."""
     pass
 
 

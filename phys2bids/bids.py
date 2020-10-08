@@ -1,3 +1,4 @@
+"""BIDS functions for phys2bids package."""
 import logging
 import os
 import re
@@ -135,8 +136,8 @@ def update_bids_name(basename, **kwargs):
 
 def bidsify_units(orig_unit):
     """
-    Read the input unit of measure and use the dictionary of aliases
-    to bidsify its value.
+    Read the input unit of measure and use the dictionary of aliases to bidsify its value.
+
     It is possible to make simple conversions.
 
     Parameters
@@ -261,6 +262,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, run='', record_label=''
 def participants_file(outdir, yml, sub):
     """
     Create participants.tsv file if it does not exist.
+
     If it exists and the subject is missing, then add it.
     Otherwise, do nothing.
 
@@ -331,6 +333,7 @@ def participants_file(outdir, yml, sub):
 def dataset_description_file(outdir):
     """
     Create dataset_description.json file if it does not exist.
+
     If it exists, do nothing.
 
     Parameters
@@ -353,6 +356,7 @@ def dataset_description_file(outdir):
 def readme_file(outdir):
     """
     Create README file if it does not exist.
+
     If it exists, do nothing.
 
     Parameters

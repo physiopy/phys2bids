@@ -4,6 +4,7 @@ Tests phys2bids.py
 
 import json
 import os
+from pytest import raises
 
 from phys2bids import phys2bids
 
@@ -41,3 +42,22 @@ def test_print_json(tmpdir):
         loaded_data = json.load(src)
 
     assert test_json_data == loaded_data
+
+
+def test_raise_exception(samefreq_full_acq_file):
+    test_filename = 'input.txt'
+
+    with raises(Exception) as errorinfo:
+        phys2bids.phys2bids(filename=test_filename, chtrig=0)
+    assert 'Wrong trigger' in str(errorinfo.value)
+
+    test_path, test_filename = os.path.split(samefreq_full_acq_file)
+    with raises(Exception) as errorinfo:
+        phys2bids.phys2bids(filename=test_filename, num_timepoints_expected=[70], tr=[1.3, 2],
+                            indir=test_path, outdir=test_path)
+    assert "doesn't match" in str(errorinfo.value)
+
+    with raises(Exception) as errorinfo:
+        phys2bids.phys2bids(filename=test_filename, num_timepoints_expected=[20, 300], chtrig=3, tr=1.5,
+                            indir=test_path, outdir=test_path)
+    assert 'stop now' in str(errorinfo.value)

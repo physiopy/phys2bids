@@ -9,7 +9,7 @@ phys2bids
 [![Join the chat at Gitter: https://gitter.im/physiopy/phys2bids](https://badges.gitter.im/physiopy/phys2bids.svg)](https://gitter.im/physiopy/phys2bids?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge)
 [![codecov](https://codecov.io/gh/physiopy/phys2bids/branch/master/graph/badge.svg)](https://codecov.io/gh/physiopy/phys2bids)
 
-[![Build Status: Linux](https://travis-ci.org/physiopy/phys2bids.svg?branch=master)](https://travis-ci.org/physiopy/phys2bids)
+[![CircleCI](https://circleci.com/gh/physiopy/phys2bids.svg?branch=master&style=shield)](https://circleci.com/gh/physiopy/phys2bids)
 [![Build Status. Windows](https://dev.azure.com/physiopy/phys2bids/_apis/build/status/physiopy.phys2bids?branchName=master)](https://dev.azure.com/physiopy/phys2bids/_build/latest?definitionId=1&branchName=master)
 [![See the documentation at: https://phys2bids.readthedocs.io](https://readthedocs.org/projects/phys2bids/badge/?version=latest)](https://phys2bids.readthedocs.io/en/latest/?badge=latest)
 [![Requirements Status](https://requires.io/github/physiopy/phys2bids/requirements.svg?branch=master)](https://requires.io/github/physiopy/phys2bids/requirements/?branch=master)
@@ -37,6 +37,13 @@ Shortcuts:
 - [Developer installation](https://phys2bids.readthedocs.io/en/latest/contributing.html#linux-and-mac-developer-installation)
 - [**Contributor guide**](https://phys2bids.readthedocs.io/en/latest/contributorfile.html)
 - [**Code of Conduct**](https://phys2bids.readthedocs.io/en/latest/conduct.html)
+- [Developer calls calendar](https://calendar.google.com/calendar/u/0?cid=amoycDQ1MTdhMWdpaHNuNzlnOW1ucHJkMjRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
+
+## Hacktoberfest
+Hacktoberfest participants, welcome!
+We have some issues for you [here](https://github.com/physiopy/phys2bids/issues?q=is%3Aissue+is%3Aopen+label%3Ahacktoberfest)!
+However, feel free to tackle any issue you'd like. Depending on the issue and extent of contribution, Hacktoberfest related PRs might not count toward being listed as contributors and authors (unless there is the specific interest). You can ask about it in the issue itself!
+Feel free to ask help to the contributors over gitter, happy coding and (hopefully) enjoy hour tee (or tree)!
 
 ## The BrainWeb
 BrainWeb participants, welcome!
