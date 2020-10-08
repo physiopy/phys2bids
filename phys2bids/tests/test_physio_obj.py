@@ -138,6 +138,26 @@ def test_BlueprintInput():
     assert 'out of bounds' in str(errorinfo.value)
 
 
+def test_cta_time_interp():
+    """Test BlueprintInput.check_trigger_amount with time resampling."""
+    test_time = np.array([0, 7])
+    test_trigger = np.array([0, 1, 0, 0, 0, 0, 0, 0])
+    test_timeseries = [deepcopy(test_time), test_trigger]
+    test_freq = [42.0, 3.14]
+    test_chn_name = ['time', 'trigger']
+    test_units = ['s', 's']
+    test_chtrig = 1
+
+    blueprint_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                     test_units, test_chtrig)
+    # Test check_trigger_amount with time resampling
+    blueprint_in.check_trigger_amount(thr=0.9, num_timepoints_expected=1)
+    assert blueprint_in.num_timepoints_found == 1
+    assert blueprint_in.time_offset == 1
+    test_offset_time = test_time - 1
+    assert np.array_equal(blueprint_in.timeseries[0], test_offset_time)
+
+
 def test_BlueprintInput_slice():
     """Test BlueprintInput_slice.__getitem__ ."""
     test_time = np.array([0, 1, 2, 3, 4])
