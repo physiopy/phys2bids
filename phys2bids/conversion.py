@@ -1,6 +1,5 @@
 """
-A small module (to be broken up) with functions for synchronizing multi-run
-physio files with pre-converted BIDS imaging data.
+Functions for synchronizing multi-run physio files with pre-converted BIDS imaging data.
 """
 import os.path as op
 from operator import itemgetter
@@ -83,6 +82,8 @@ def load_scan_data(layout, sub, ses=None):
 
 def determine_scan_durations(layout, scan_df, sub, ses=None):
     """
+    Determine scan durations.
+
     Extract scan durations by loading fMRI files/metadata and
     multiplying TR by number of volumes. This can be used to determine the
     endpoints for the physio files.
@@ -127,8 +128,7 @@ def determine_scan_durations(layout, scan_df, sub, ses=None):
 
 def extract_physio_onsets(trigger_timeseries, freq, threshold=0.5):
     """
-    Collect onsets from physio file, both in terms of seconds and time series
-    indices.
+    Collect onsets from physio file, both in terms of seconds and time series indices.
 
     Parameters
     ----------
@@ -169,9 +169,9 @@ def extract_physio_onsets(trigger_timeseries, freq, threshold=0.5):
 
 def synchronize_onsets(phys_df, scan_df):
     """
-    Find matching scans and physio trigger periods from separate DataFrames,
-    using time differences within each DataFrame.
+    Find matching scans and physio trigger periods from separate DataFrames.
 
+    Uses time differences within each DataFrame.
     There can be fewer physios than scans (task failed to trigger physio)
     or fewer scans than physios (aborted scans are not retained in BIDS dataset).
 
@@ -304,12 +304,12 @@ def plot_sync(scan_df, physio_df):
     func_timeseries = np.zeros(x.shape)
     for i, row in scan_df.iterrows():
         func_timeseries[
-            int(row["onset"] * scalar) : int((row["onset"] + row["duration"]) * scalar)
+            int(row["onset"] * scalar): int((row["onset"] + row["duration"]) * scalar)
         ] = 1
 
     for i, row in physio_df.iterrows():
         physio_timeseries[
-            int(row["onset"] * scalar) : int((row["onset"] + row["duration"]) * scalar)
+            int(row["onset"] * scalar): int((row["onset"] + row["duration"]) * scalar)
         ] = 0.5
 
     axes[0].fill_between(
@@ -336,14 +336,14 @@ def plot_sync(scan_df, physio_df):
     func_timeseries = np.zeros(x.shape)
     for i, row in scan_df.iterrows():
         func_timeseries[
-            int(row["phys_onset"] * scalar) : int(
+            int(row["phys_onset"] * scalar): int(
                 (row["phys_onset"] + row["duration"]) * scalar
             )
         ] = 1
 
     for i, row in physio_df.iterrows():
         physio_timeseries[
-            int(row["onset"] * scalar) : int((row["onset"] + row["duration"]) * scalar)
+            int(row["onset"] * scalar): int((row["onset"] + row["duration"]) * scalar)
         ] = 0.5
 
     axes[1].fill_between(
@@ -374,8 +374,9 @@ def plot_sync(scan_df, physio_df):
 
 def workflow(physio, bids_dir, sub, ses=None, padding=9, update_trigger=False):
     """
-    A potential workflow for running physio/scan onset synchronization and
-    BIDSification. This workflow writes out physio files to a BIDS dataset.
+    Run physio/scan onset synchronization and BIDSification.
+
+    This workflow writes out physio files to a BIDS dataset.
 
     Parameters
     ----------

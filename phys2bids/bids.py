@@ -101,8 +101,7 @@ PREFIX_ALIASES = {
 
 def update_bids_name(basename, **kwargs):
     """
-    Add entities, suffix, and/or extension to a BIDS filename while retaining
-    BIDS compatibility.
+    Add elements to a BIDS filename while retaining BIDS compatibility.
 
     Parameters
     ----------

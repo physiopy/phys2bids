@@ -733,6 +733,13 @@ class BlueprintOutput:
         return cls(timeseries, freq, ch_name, units, start_time)
 
     def save(self):
+        """
+        Save object to BIDS-format pair of files.
+
+        Notes
+        -----
+        Saves a tsv.gz file and a json file.
+        """
         np.savetxt(
             self.filename + ".tsv.gz", self.timeseries, fmt="%.8e", delimiter="\t"
         )
