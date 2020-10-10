@@ -47,34 +47,37 @@ def load_scan_data(layout, sub, ses=None):
 
     # Collect acquisition times
     # NOTE: Will be replaced with scans file when heudiconv makes the change
-    img_files = layout.get(datatype='func', suffix='bold',
-                           extension=['.nii.gz', '.nii'],
-                           subject=sub, session=ses)
+    img_files = layout.get(
+        datatype="func",
+        suffix="bold",
+        extension=[".nii.gz", ".nii"],
+        subject=sub,
+        session=ses,
+    )
     df = pd.DataFrame(
-        columns=['original_filename', 'acq_time'],
+        columns=["original_filename", "acq_time"],
     )
     for i, img_file in enumerate(img_files):
-        df.loc[i, 'original_filename'] = img_file.path
-        df.loc[i, 'acq_time'] = img_file.get_metadata()['AcquisitionTime']
+        df.loc[i, "original_filename"] = img_file.path
+        df.loc[i, "acq_time"] = img_file.get_metadata()["AcquisitionTime"]
 
     # Get generic filenames (without within-acquisition entities like echo)
-    df['filename'] = df['original_filename'].apply(update_bids_name,
-                                                   echo=None, fa=None,
-                                                   inv=None, mt=None, part=None,
-                                                   ch=None)
+    df["filename"] = df["original_filename"].apply(
+        update_bids_name, echo=None, fa=None, inv=None, mt=None, part=None, ch=None
+    )
 
     # Get "first" scan from multi-file acquisitions
-    df['acq_time'] = pd.to_datetime(df['acq_time'])
-    df = df.sort_values(by='acq_time')
-    df = df.drop_duplicates(subset='filename', keep='first', ignore_index=True)
+    df["acq_time"] = pd.to_datetime(df["acq_time"])
+    df = df.sort_values(by="acq_time")
+    df = df.drop_duplicates(subset="filename", keep="first", ignore_index=True)
 
     # Now back to general-purpose code
     df = determine_scan_durations(layout, df, sub=sub, ses=ses)
-    df = df.dropna(subset=['duration'])  # limit to relevant scans
+    df = df.dropna(subset=["duration"])  # limit to relevant scans
 
     # Convert scan times to relative onsets (first scan is at 0 seconds)
-    df['onset'] = (df['acq_time'] - df['acq_time'].min())
-    df['onset'] = df['onset'].dt.total_seconds()
+    df["onset"] = df["acq_time"] - df["acq_time"].min()
+    df["onset"] = df["onset"].dt.total_seconds()
     return df
 
 
@@ -102,19 +105,23 @@ def determine_scan_durations(layout, scan_df, sub, ses=None):
         Updated DataFrame with new "duration" column. Calculated durations are
         in seconds.
     """
-    func_files = layout.get(datatype='func', suffix='bold',
-                            extension=['.nii.gz', '.nii'],
-                            subject=sub, session=ses)
-    scan_df['duration'] = None
+    func_files = layout.get(
+        datatype="func",
+        suffix="bold",
+        extension=[".nii.gz", ".nii"],
+        subject=sub,
+        session=ses,
+    )
+    scan_df["duration"] = None
     for func_file in func_files:
         filename = func_file.path
-        if filename in scan_df['original_filename'].values:
+        if filename in scan_df["original_filename"].values:
             n_vols = nib.load(filename).shape[3]
-            tr = func_file.get_metadata()['RepetitionTime']
+            tr = func_file.get_metadata()["RepetitionTime"]
             duration = n_vols * tr
-            scan_df.loc[scan_df['original_filename'] == filename, 'duration'] = duration
+            scan_df.loc[scan_df["original_filename"] == filename, "duration"] = duration
         else:
-            LGR.info('Skipping {}'.format(op.basename(filename)))
+            LGR.info("Skipping {}".format(op.basename(filename)))
     return scan_df
 
 
@@ -139,7 +146,7 @@ def extract_physio_onsets(trigger_timeseries, freq, threshold=0.5):
         onset (in seconds), index (onsets in index of time series array),
         and duration (in seconds).
     """
-    samplerate = 1. / freq
+    samplerate = 1.0 / freq
     scan_idx = np.where(trigger_timeseries > 0)[0]
     # Get groups of consecutive numbers in index
     groups = []
@@ -152,11 +159,11 @@ def extract_physio_onsets(trigger_timeseries, freq, threshold=0.5):
     durations = np.array([g[-1] - g[0] for g in groups])
     durations_in_sec = durations * samplerate
     df = pd.DataFrame(
-        columns=['onset'],
+        columns=["onset"],
         data=onsets_in_sec,
     )
-    df['index'] = onsets
-    df['duration'] = durations_in_sec
+    df["index"] = onsets
+    df["duration"] = durations_in_sec
     return df
 
 
@@ -190,14 +197,14 @@ def synchronize_onsets(phys_df, scan_df):
         seconds and in indices of the physio trigger channel, as well as scan
         duration in units of the physio trigger channel.
     """
-    phys_df = phys_df.sort_values(by=['onset'])
-    scan_df = scan_df.sort_values(by=['onset'])
+    phys_df = phys_df.sort_values(by=["onset"])
+    scan_df = scan_df.sort_values(by=["onset"])
 
     # Get difference between each physio trigger onset and each scan onset
     onset_diffs = np.zeros((scan_df.shape[0], phys_df.shape[0]))
     for i, i_scan in scan_df.iterrows():
         for j, j_phys in phys_df.iterrows():
-            onset_diff = j_phys['onset'] - i_scan['onset']
+            onset_diff = j_phys["onset"] - i_scan["onset"]
             onset_diffs[i, j] = onset_diff
 
     # Find the delay that gives the smallest difference between scan onsets
@@ -230,17 +237,19 @@ def synchronize_onsets(phys_df, scan_df):
     min_val = min(min_diffs_tmp)
     min_diffs += min_val
     offset += min_val
-    LGR.info('Scan onsets should be adjusted forward by {} seconds to best '
-             'match physio onsets.'.format(offset))
+    LGR.info(
+        "Scan onsets should be adjusted forward by {} seconds to best "
+        "match physio onsets.".format(offset)
+    )
 
     # Get onset of each scan in terms of the physio time series
-    scan_df['phys_onset'] = scan_df['onset'] + offset
-    rise = (phys_df.loc[1, 'index'] - phys_df.loc[0, 'index'])
-    run = (phys_df.loc[1, 'onset'] - phys_df.loc[0, 'onset'])
+    scan_df["phys_onset"] = scan_df["onset"] + offset
+    rise = phys_df.loc[1, "index"] - phys_df.loc[0, "index"]
+    run = phys_df.loc[1, "onset"] - phys_df.loc[0, "onset"]
     samplerate = rise / run
-    scan_df['index_onset'] = (scan_df['phys_onset'] * samplerate).astype(int)
-    scan_df['index_duration'] = (scan_df['duration'] * samplerate).astype(int)
-    scan_df['index_offset'] = scan_df['index_onset'] + scan_df['index_duration']
+    scan_df["index_onset"] = (scan_df["phys_onset"] * samplerate).astype(int)
+    scan_df["index_duration"] = (scan_df["duration"] * samplerate).astype(int)
+    scan_df["index_offset"] = scan_df["index_onset"] + scan_df["index_duration"]
     return scan_df
 
 
@@ -271,11 +280,19 @@ def plot_sync(scan_df, physio_df):
     fig, axes = plt.subplots(nrows=2, figsize=(20, 6), sharex=True)
 
     # get max (onset time + duration) rounded up to nearest 1000
-    max_ = int(1000 * np.ceil(max((
-        (physio_df['onset'] + physio_df['duration']).max(),
-        (scan_df['onset'] + scan_df['duration']).max(),
-        (scan_df['phys_onset'] + scan_df['duration']).max()
-    )) / 1000))
+    max_ = int(
+        1000
+        * np.ceil(
+            max(
+                (
+                    (physio_df["onset"] + physio_df["duration"]).max(),
+                    (scan_df["onset"] + scan_df["duration"]).max(),
+                    (scan_df["phys_onset"] + scan_df["duration"]).max(),
+                )
+            )
+            / 1000
+        )
+    )
 
     # get x-axis values
     scalar = 10
@@ -287,44 +304,70 @@ def plot_sync(scan_df, physio_df):
     func_timeseries = np.zeros(x.shape)
     for i, row in scan_df.iterrows():
         func_timeseries[
-            int(row['onset'] * scalar):int((row['onset'] + row['duration']) * scalar)
+            int(row["onset"] * scalar) : int((row["onset"] + row["duration"]) * scalar)
         ] = 1
 
     for i, row in physio_df.iterrows():
         physio_timeseries[
-            int(row['onset'] * scalar):int((row['onset'] + row['duration']) * scalar)
+            int(row["onset"] * scalar) : int((row["onset"] + row["duration"]) * scalar)
         ] = 0.5
 
-    axes[0].fill_between(x, func_timeseries, where=func_timeseries >= 0,
-                         interpolate=True, color='red', alpha=0.3,
-                         label='Functional scans')
-    axes[0].fill_between(x, physio_timeseries, where=physio_timeseries >= 0,
-                         interpolate=True, color='blue', alpha=0.3,
-                         label='Physio triggers')
+    axes[0].fill_between(
+        x,
+        func_timeseries,
+        where=func_timeseries >= 0,
+        interpolate=True,
+        color="red",
+        alpha=0.3,
+        label="Functional scans",
+    )
+    axes[0].fill_between(
+        x,
+        physio_timeseries,
+        where=physio_timeseries >= 0,
+        interpolate=True,
+        color="blue",
+        alpha=0.3,
+        label="Physio triggers",
+    )
 
     # now plot the adjusted onsets (and original durations) in the bottom axis
     physio_timeseries = np.zeros(x.shape)
     func_timeseries = np.zeros(x.shape)
     for i, row in scan_df.iterrows():
         func_timeseries[
-            int(row['phys_onset'] * scalar):int((row['phys_onset'] + row['duration']) * scalar)
+            int(row["phys_onset"] * scalar) : int(
+                (row["phys_onset"] + row["duration"]) * scalar
+            )
         ] = 1
 
     for i, row in physio_df.iterrows():
         physio_timeseries[
-            int(row['onset'] * scalar):int((row['onset'] + row['duration']) * scalar)
+            int(row["onset"] * scalar) : int((row["onset"] + row["duration"]) * scalar)
         ] = 0.5
 
-    axes[1].fill_between(x, func_timeseries, where=func_timeseries >= 0,
-                         interpolate=True, color='red', alpha=0.3,
-                         label='Functional scans')
-    axes[1].fill_between(x, physio_timeseries, where=physio_timeseries >= 0,
-                         interpolate=True, color='blue', alpha=0.3,
-                         label='Physio triggers')
+    axes[1].fill_between(
+        x,
+        func_timeseries,
+        where=func_timeseries >= 0,
+        interpolate=True,
+        color="red",
+        alpha=0.3,
+        label="Functional scans",
+    )
+    axes[1].fill_between(
+        x,
+        physio_timeseries,
+        where=physio_timeseries >= 0,
+        interpolate=True,
+        color="blue",
+        alpha=0.3,
+        label="Physio triggers",
+    )
 
     axes[0].set_xlim((min(x), max(x)))
     axes[0].set_ylim((0, None))
-    axes[1].set_xlabel('Time (s)')
+    axes[1].set_xlabel("Time (s)")
     axes[0].legend()
     return fig, axes
 
@@ -394,15 +437,17 @@ def workflow(physio, bids_dir, sub, ses=None, padding=9, update_trigger=False):
 
     # we should do something better with this figure, but it's nice to have for QC
     fig, axes = plot_sync(scan_df, physio_df)
-    fig.savefig('synchronization_results.png')
+    fig.savefig("synchronization_results.png")
 
     run_dict = {}
     # could probably be replaced with apply() followed by to_dict()
     for _, row in scan_df.iterrows():
-        base_fname = update_bids_name(row['filename'], suffix='physio', extension='')
-        split_times = (row['index_onset'], row['index_offset'])
+        base_fname = update_bids_name(row["filename"], suffix="physio", extension="")
+        split_times = (row["index_onset"], row["index_offset"])
         run_dict[base_fname] = split_times
-    phys_dict = slice_phys(physio, run_dict, padding=padding, update_trigger=update_trigger)
+    phys_dict = slice_phys(
+        physio, run_dict, padding=padding, update_trigger=update_trigger
+    )
     outputs = []
     for k, v in phys_dict.items():
         output = BlueprintOutput.init_from_blueprint(v)
