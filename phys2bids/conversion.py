@@ -1,6 +1,4 @@
-"""
-Functions for synchronizing multi-run physio files with pre-converted BIDS imaging data.
-"""
+"""Functions for synchronizing multi-run physio files with BIDS imaging data."""
 import os.path as op
 from operator import itemgetter
 from itertools import groupby
