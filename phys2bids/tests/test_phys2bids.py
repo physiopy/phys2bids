@@ -24,26 +24,6 @@ def test_print_summary(tmpdir):
     assert os.path.isfile(str(test_outfile_log))
 
 
-def test_print_json(tmpdir):
-    test_outfile = tmpdir.join('json_test')
-    test_outfile_json = tmpdir.join('json_test.json')
-    test_samp_freq = 0.1
-    test_time_offset = -0.5
-    test_ch_name = 'foo'
-
-    phys2bids.print_json(str(test_outfile), test_samp_freq, test_time_offset, test_ch_name)
-
-    assert os.path.isfile(test_outfile_json)
-
-    test_json_data = dict(SamplingFrequency=0.1,
-                          StartTime=0.5,
-                          Columns='foo')
-    with open(test_outfile_json, 'r') as src:
-        loaded_data = json.load(src)
-
-    assert test_json_data == loaded_data
-
-
 def test_raise_exception(samefreq_full_acq_file):
     test_filename = 'input.txt'
 

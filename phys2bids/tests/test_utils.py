@@ -86,6 +86,26 @@ def test_writefile(tmpdir):
     utils.writefile(test_old_path, ext, test_text)
 
 
+def test_save_json(tmpdir):
+    test_outfile = tmpdir.join('json_test')
+    test_outfile_json = tmpdir.join('json_test.json')
+    test_samp_freq = 0.1
+    test_time_offset = -0.5
+    test_ch_name = 'foo'
+
+    utils.save_json(str(test_outfile), test_samp_freq, test_time_offset, test_ch_name)
+
+    assert os.path.isfile(test_outfile_json)
+
+    test_json_data = dict(SamplingFrequency=0.1,
+                          StartTime=0.5,
+                          Columns='foo')
+    with open(test_outfile_json, 'r') as src:
+        loaded_data = json.load(src)
+
+    assert test_json_data == loaded_data
+
+
 # Tests writejson
 def test_writejson(tmpdir):
     test_json_filename = tmpdir.join('foo')
