@@ -4,7 +4,6 @@
 """I/O objects for phys2bids."""
 
 import logging
-from copy import deepcopy
 from itertools import groupby
 
 import numpy as np
@@ -457,7 +456,7 @@ class BlueprintInput():
         # Use the trigger channel to find the TRs,
         # comparing it to a given threshold.
         trigger = self.timeseries[self.trigger_idx]
-        time = deepcopy(self.timeseries[0])
+        time = self.timeseries[0].copy()
         LGR.info(f'The trigger is in channel {self.trigger_idx}')
         # Check that trigger and time channels have the same length.
         # If not, resample time to the length of the trigger
