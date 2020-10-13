@@ -462,6 +462,9 @@ class BlueprintInput():
         # Check that trigger and time channels have the same length.
         # If not, resample time to the length of the trigger
         if len(time) != len(trigger):
+            LGR.warning('The trigger channel has a different sampling '
+                        'from the registered time. Using a resampled version '
+                        'of time to find the starting time.')
             time = np.linspace(time[0], time[-1], len(trigger))
 
         # Check if thr was given, if not "guess" it.
