@@ -14,13 +14,13 @@ jobs:
     steps:
     - name: Replace reviewer name in message template
       uses: falnyr/replace-env-vars-action@master
-          # This is a wild guess. Probably it's also wrong.
-        env:
-          MAINREV: ${{ github.event.issue.assignees }}
-        with: .github/workflows/main_rev_checklist.md
+      env:
+      # This is a wild guess. Probably it's also wrong.
+        MAINREV: ${{ github.event.issue.assignees }}
+      with: .github/workflows/main_rev_checklist.md
     - name: Post filled template as comment
       uses: harupy/comment-on-pr@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        with:
-          filename: main_rev_checklist.md
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        filename: main_rev_checklist.md
