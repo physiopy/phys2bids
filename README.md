@@ -8,6 +8,7 @@ phys2bids
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3653153.svg)](https://doi.org/10.5281/zenodo.3653153)
 [![Join the chat at Gitter: https://gitter.im/physiopy/phys2bids](https://badges.gitter.im/physiopy/phys2bids.svg)](https://gitter.im/physiopy/phys2bids?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge)
 [![codecov](https://codecov.io/gh/physiopy/phys2bids/branch/master/graph/badge.svg)](https://codecov.io/gh/physiopy/phys2bids)
+[![Auto Release](https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto)](https://github.com/intuit/auto)
 
 [![CircleCI](https://circleci.com/gh/physiopy/phys2bids.svg?branch=master&style=shield)](https://circleci.com/gh/physiopy/phys2bids)
 [![Build Status. Windows](https://dev.azure.com/physiopy/phys2bids/_apis/build/status/physiopy.phys2bids?branchName=master)](https://dev.azure.com/physiopy/phys2bids/_build/latest?definitionId=1&branchName=master)
