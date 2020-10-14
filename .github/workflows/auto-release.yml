@@ -40,4 +40,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         # Run auto release, don't use 'v' prefix, and be ultraverbose
       run: |
-        ~/auto release --no-version-prefix -vv
+        ~/auto release --no-version-prefix -v
