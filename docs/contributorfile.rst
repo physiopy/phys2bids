@@ -188,7 +188,7 @@ Contribution workflow
 There are many descriptions of a good contribution workflow out there. For instance, we suggest to have a look at `tedana's workflow <https://github.com/ME-ICA/tedana/blob/master/CONTRIBUTING.md#making-a-change>`_.
 At ``physiopy``, we follow a very similar workflow. The only three differences are:
 
-- If you see an open issue that you would like to work on, check if it is assigned. If it is, ask the assignee if they need help before starting to work on it.
+- If you see an open issue that you would like to work on, check if it is assigned. If it is, ask the assignee if they need help or want to be substituted before starting to work on it.
 - We ask you to test the code locally before merging it, and then, if possible, write some automatic tests for the code to be run in our Continuous Integration! Check the testing section below to know more.
 - We suggest opening a draft PR as soon as you can - so it’s easier for us to help you!
 
@@ -233,7 +233,7 @@ Don't merge your own pull request! That's a task for the main reviewer of your P
 
 Reviewing PRs
 -------------
-Reviewing PRs is an extremely important task in collaborative development. In fact, it is probably the task that requires the most time in the development, and it can be stressful for both the reviewer and the author. Remember that, as a PR Reviewer, you are granting that the codes works and integrates well with the rest of the repository, hence **you are responsible for the quality of the code and its next version release**. If it doesn't integrate well, later PR reviewers might have to ask for broader changes than expected.
+Reviewing PRs is an extremely important task in collaborative development. In fact, it is probably the task that requires the most time in the development, and it can be stressful for both the reviewer and the author. Remember that, as a PR Reviewer, you are granting that the codes works and integrates well with the rest of the repository, hence **you are responsible for the quality of the repository and its next version release**. If it doesn't integrate well, later PR reviewers might have to ask for broader changes than expected.
 There are many best practices to review code online, for instance `this one <https://medium.com/an-idea/the-code-review-guide-9e793edcd683>`_, but here are some good rules of thumbs that we need to follow while reviewing PRs:
 
 - Be respectful to the PR authors and be clear in what you are asking/suggesting - remember that, like you, they are contributing their spare time and doing their best job!
@@ -241,14 +241,14 @@ There are many best practices to review code online, for instance `this one <htt
 - If the PR graduated from Draft to full PR, check that it follows the sections `Pull requests <#pr>`_ and `Style Guide <#styling>`_ of these guidelines. If not, invite the author to do so before starting a review.
 - **Don't limit your review to the parts that are changed**. Look at the entire file, see if the changes fit well in it, and see if the changes are properly addressed everywhere in the code - in the documentation, in the tests, and in other functions. Sometimes the differences reported don't show the full impact of the PR in the repository!
 - Unless it's for typo fixes or similar, invite the author of the PR to make changes before actually doing them yourself. Request changes via comments or in the message board or by checking out the PR locally, making changes and then submitting a PR to the author's branch.
-- If you're reviewing documentation, build it locally with `sphinx`.
+- If you're reviewing documentation, build it locally with ``sphinx``.
 - If you're asking for changes, **don't approve the PR**. Approve it only after everything was sufficiently addressed. Someone else might merge the PR in taking your word for granted.
 - If you are the main reviewer, and the last reviewer required to approve the PR, merge the PR!
 
 Before approving and/or merging PRs, be sure that:
 
-- All the tests in Travis CI pass without errors.
-- Prefereably, codecov checks pass as well - if they don't, pin the project manager.
+- All the tests in CircleCI/Azure pass without errors.
+- Prefereably, codecov checks pass as well. If they don't, discuss what to do.
 - The title describes the content of the PR clearly enough to be meaningful on its own - remember that it will appear in the version changelog!
 - The PR has the appropriate labels to trigger the appropriate version release and update the contributors table.
 
@@ -256,17 +256,23 @@ Before approving and/or merging PRs, be sure that:
 
 Main reviewer
 ~~~~~~~~~~~~~
-At ``physiopy`` we use the "Assignees" section of a PR to mark the **main reviewer** for that PR.
+At ``physiopy`` we use the "Assignees" section of a PR to mark the **main reviewer** for that PR. The main reviewer is the main responsible **for the quality of the repository and its next version release**, as well as **for the behaviour of the other reviewers**. 
 The main reviewer:
 
 - Takes care of the reviewing process of the PR, in particular:
     - Invites the reviewers to finish their review in a relatively short time.
     - Checks that this document was respected in all its part, especially the part about `Pull Requests <#pr>`_.
-
-- Is the one that is going to merge the PR.
+    - Invites other Reviewers to respect this document, especially the part about `reviews <#reviewing>`_, helps them doing it, and checks that they do.
+    - If a Reviewer keeps not respecting this document, flags them to the project manager.
+- Decides what to do in case of a coverage decrease (in *codecov/patch*).
+- In case of missing tests or updates to user documentation:
+    - Asks for more documentation or tests before approving the PR, *or*
+    - Checks that the adequate issues have been opened to address the lack of documentation or tests (1 issue per item).
+- Double-checks that the title is clear and the labels are correct to trigger an adequate ``auto`` release - feel free to change them. 
+- **Is the one that is going to merge the PR.**
 - After the PR got merged and a new release was triggered, checks that:
     - The documentation was updated correctly (if changed).
-    - The Pipy version of the repository coincides with the new release (if changed).
+    - The Pypi version of the repository coincides with the new release (if changed).
     - New contributors or forms of contributions were correctly added in the README (if changed).
 
 .. _styling:
@@ -275,7 +281,8 @@ Style Guide
 -----------
 Docstrings should follow `numpydoc <https://numpydoc.readthedocs.io/en/latest/format.html>`_ convention. We encourage extensive documentation.
 The python code itself should follow `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ convention whenever possible: there are continuous integration tests checking that!
-You can use linters to help you write your code following style conventions. Linters are add-ons that you can run on the written script file. We suggest the use of **flake8** for Python 3. Many editors (Atoms, VScode, Sublimetext, ...) support addons for online lintering, which means you’ll see warnings and errors while you write the code - check out if your does!
+You can use linters to help you write your code following style conventions. Linters are add-ons that you can run on the written script file. We suggest the use of **flake8** for Python 3. Many editors (Atom, VScode, Sublimetext, ...) support addons for online lintering, which means you’ll see warnings and errors while you write the code - check out if your does!
+
 Since we adopt `auto <https://intuit.github.io/auto/home.html>`_, the PR title will be automatically reported as part of the changelog when updating versions. Try to describe in one (short) sentence what your PR is about - possibly using the imperative and starting with a capital letter. For instance, a good PR title could be: ``Implement support for <randomtype> files`` or ``Reorder dictionary entries``, rather than ``<randomtype> support`` or ``reorders keys``.
 
 .. _testing:
@@ -285,7 +292,7 @@ Automatic Testing
 ``physiopy`` uses Continuous Integration (CI) to make life easier. In particular, we use the `CircleCI <https://circleci.com/>`_ platform to run automatic testing!
 **Automatic tests** are cold, robotic, emotionless, and opinionless tests that check that the program is doing what it is expected to. They are written by the developers and run (by CircleCI) every time they send a Pull Request to ``physiopy`` repositories. They complement the warm, human, emotional and opinionated **user tests**, as they tell us if a piece of code is failing.
 CircleCI uses `pytest <https://docs.pytest.org/en/latest/>`_ to run the tests. The great thing about it is that you can run it in advance on your local version of the code!
-We can measure the amount of code that is tested with [codecov]8https://docs.pytest.org/en/latest/), which is an indication of how reliable our packages are! We try to maintain a 90% code coverage, and for this reason, PR should contain tests!
+We can measure the amount of code that is tested with `codecov <https://docs.pytest.org/en/latest/>`_, which is an indication of how reliable our packages are! We try to maintain a 90% code coverage, and for this reason, PR should contain tests!
 The four main type of tests we use are:
 
 1. Unit tests
