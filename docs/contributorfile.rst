@@ -234,7 +234,7 @@ Don't merge your own pull request! That's a task for the main reviewer of your P
 Reviewing PRs
 -------------
 Reviewing PRs is an extremely important task in collaborative development. In fact, it is probably the task that requires the most time in the development, and it can be stressful for both the reviewer and the author. Remember that, as a PR Reviewer, you are granting that the codes works and integrates well with the rest of the repository, hence **you are responsible for the quality of the code and its next version release**. If it doesn't integrate well, later PR reviewers might have to ask for broader changes than expected.
-Due to its importance, there are some good rules of thumbs that we need to follow while reviewing PRs:
+There are many best practices to review code online, for instance `this one <https://medium.com/an-idea/the-code-review-guide-9e793edcd683>`_, but here are some good rules of thumbs that we need to follow while reviewing PRs:
 
 - Be respectful to the PR authors and be clear in what you are asking/suggesting - remember that, like you, they are contributing their spare time and doing their best job!
 - If there is a Draft PR, you can comment on its development in the message board or making "Comment" reviews. Don't ask for changes, and especially, **don't approve the PR**
