@@ -1,0 +1,25 @@
+# This workflows print a message to give the Main Reviewer a checklist (before merge)
+
+name: Main Reviewer
+
+on:
+  pull_request:
+    types: [assigned]
+
+jobs:
+  deploy:
+    # Not totally sure we need this
+    runs-on: ubuntu-18.04
+
+    steps:
+    - name: Replace reviewer name in message template
+      uses: falnyr/replace-env-vars-action@master
+        env:
+          MAINREV: ${{ github.event.issue.assignees }}
+        with: .github/workflows/main_rev_checklist.md
+    - name: Post filled template as comment
+      uses: harupy/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          filename: main_rev_checklist.md
