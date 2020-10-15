@@ -95,3 +95,8 @@ html, body {
         flex-basis: 100%;
     }
 }
+
+.main{
+    margin-top: 100px;
+    margin-left: 100px;
+}
