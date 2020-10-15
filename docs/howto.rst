@@ -22,11 +22,11 @@ In order to follow the tutorial, you need a very quick setup: download or clone 
 
     For instance, if you are planning to process AcqKnowledge files, install the interface dependencies as described `here <installation.html#>`_.
 
-For the tutorial, we will assume the repository was downloaded in ``/home/arthurdent/git``. Let's get there right now:
+For the tutorial, we will assume the repository was downloaded in ``/home/vferrer``. Let's get there right now:
 
 .. code-block:: shell
 
-    cd /home/arthurdent/git/
+    cd /home/vferrer
 
 What is in the tutorial text file?
 ##################################
@@ -46,31 +46,34 @@ Using the -info option
 First, we can see what information ``phys2bids`` reads from the file, and make sure this is correct before processing the file.
 
 The simplest way of calling ``phys2bids`` is moving to the folder containing the physiological file and typing:
-
+For this tutorial we will copy the data to a new directory so we don't mess with the repo:
 .. code-block:: shell
-
-    cd phys2bids/phys2bids/tests/data/
-    phys2bids -in tutorial_file
+    mkdir test_dir
+    cp -r phys2bids/phys2bids/tests/data/* test_dir
+    cd test_dir
+    mkdir physio
 
 ``phys2bids`` will try to get the extension for you.
-However, we’ll use one more argument to have a sneak peak into the content of the file:
+However, we’ll use -info to have a sneak peak into the content of the file and -outdir to direct all the files to the same directory:
 
 .. code-block:: shell
 
-    phys2bids -in tutorial_file.txt -info
+    phys2bids -in tutorial_file.txt -info -outdir physio
 
 This ``-info`` argument means ``phys2bids`` does not process the file, but only outputs information it reads from the file, by printing to the terminal and outputting a png plot of the data in the current directory:
 
 .. code-block:: shell
-
-    INFO:phys2bids.phys2bids:Currently running phys2bids version v1.3.0-beta+149.ge4a3c87
-    INFO:phys2bids.phys2bids:Input file is tutorial_file.txt
-    INFO:phys2bids.utils:File extension is .txt
-    WARNING:phys2bids.utils:If both acq and txt files exist in the path, acq will be selected.
-    INFO:phys2bids.phys2bids:Reading the file ./tutorial_file.txt
-    INFO:phys2bids.interfaces.txt:phys2bids detected that your file is in Labchart format
-    INFO:phys2bids.phys2bids:Reading infos
-    INFO:phys2bids.physio_obj:
+    INFO       Currently running phys2bids version 0.4.0+1464.g4a56c2a.dirty
+    INFO       Input file is tutorial_file.txt
+    INFO       File extension is .txt
+    WARNING    If both acq and txt files exist in the path, acq will be selected.
+    INFO       Reading the file ./tutorial_file.txt
+    INFO       phys2bids detected that your file is in Labchart format
+    INFO       Checking that units of measure are BIDS compatible
+    WARNING    The given unit mmHg does not have aliases, passing it as is
+    WARNING    The given unit mmHg does not have aliases, passing it as is
+    INFO       Reading infos
+    INFO
     ------------------------------------------------
     File tutorial_file.txt contains:
     01. Trigger; sampled at 1000.0 Hz
@@ -79,7 +82,7 @@ This ``-info`` argument means ``phys2bids`` does not process the file, but only 
     04. Pulse; sampled at 1000.0 Hz
     ------------------------------------------------
 
-    INFO:phys2bids.viz:saving channel plot to ./code/conversion/tutorial_file.png
+    INFO       saving channel plot to physio/code/conversion/tutorial_file.png
 
 .. image:: _static/tutorial_file.png
    :alt: tutorial_file_channels
@@ -101,20 +104,21 @@ When calling ``phys2bids`` without the ``-info`` argument, it will generate file
 
 .. code-block:: shell
 
-    phys2bids -in tutorial_file.txt -indir /home/arthurdent/git/phys2bids/phys2bids/tests/data/ -outdir /home/arthurdent/physio
-
+    phys2bids -in tutorial_file.txt -outdir physio
 This is outputted to the terminal:
 
 .. code-block:: shell
-
-    INFO:phys2bids.phys2bids:Currently running phys2bids version v1.3.0-beta+149.ge4a3c87.dirty
-    INFO:phys2bids.phys2bids:Input file is tutorial_file.txt
-    INFO:phys2bids.utils:File extension is .txt
-    WARNING:phys2bids.utils:If both acq and txt files exist in the path, acq will be selected.
-    INFO:phys2bids.phys2bids:Reading the file /home/arthurdent/git/phys2bids/phys2bids/tests/data/tutorial_file.txt
-    INFO:phys2bids.interfaces.txt:phys2bids detected that your file is in Labchart format
-    INFO:phys2bids.phys2bids:Reading infos
-    INFO:phys2bids.physio_obj:
+    INFO       Currently running phys2bids version 0.4.0+1464.g4a56c2a.dirty
+    INFO       Input file is tutorial_file.txt
+    INFO       File extension is .txt
+    WARNING    If both acq and txt files exist in the path, acq will be selected.
+    INFO       Reading the file ./tutorial_file.txt
+    INFO       phys2bids detected that your file is in Labchart format
+    INFO       Checking that units of measure are BIDS compatible
+    WARNING    The given unit mmHg does not have aliases, passing it as is
+    WARNING    The given unit mmHg does not have aliases, passing it as is
+    INFO       Reading infos
+    INFO
     ------------------------------------------------
     File tutorial_file.txt contains:
     01. Trigger; sampled at 1000.0 Hz
@@ -123,17 +127,18 @@ This is outputted to the terminal:
     04. Pulse; sampled at 1000.0 Hz
     ------------------------------------------------
 
-    WARNING:phys2bids.phys2bids:Skipping trigger pulse count. If you want to run it, call phys2bids using "-ntp" and "-tr" arguments
-    INFO:phys2bids.phys2bids:Preparing 1 output files.
-    INFO:phys2bids.phys2bids:Exporting files for freq 1000.0
-    INFO:phys2bids.phys2bids:
+    INFO       saving channel plot to physio/code/conversion/tutorial_file.png
+    WARNING    Skipping trigger pulse count. If you want to run it, call phys2bids using both "-ntp" and "-tr" arguments
+    INFO       Preparing 1 output files.
+    INFO       Exporting files for run 1 freq 1000.0
+    INFO
     ------------------------------------------------
     Filename:            tutorial_file.txt
 
-    Timepoints expected: 0
+    Timepoints expected: None
     Timepoints found:    None
     Sampling Frequency:  1000.0 Hz
-    Sampling started at: -1398.0 s
+    Sampling started at: -1398.0000 s
     Tip: Time 0 is the time of first trigger
     ------------------------------------------------
 
@@ -166,29 +171,29 @@ Look back at the last command line output, from the section above. It said "Skip
 
 .. code-block:: shell
 
-    phys2bids -in tutorial_file.txt -indir /home/arthurdent/git/phys2bids/phys2bids/tests/data/ -chtrig 1 -ntp 158 -tr 1.2 -outdir /home/arthurdent/physio
+    phys2bids -in tutorial_file.txt -chtrig 1 -ntp 158 -tr 1.2 -outdir physio
 
 Now the output says:
 
 .. code-block:: shell
+    INFO       Counting trigger points
+    INFO       The trigger is in channel 1
+    INFO       The number of timepoints according to the std_thr method is 158. The computed threshold is 1.1524
+    INFO       Checking number of timepoints
+    INFO       Found just the right amount of timepoints!
+    INFO       Plot trigger
+    INFO       Preparing 1 output files.
+    INFO       Exporting files for run 1 freq 1000.0
+    INFO
+    ------------------------------------------------
+    Filename:            tutorial_file.txt
 
-   INFO:phys2bids.physio_obj:Counting trigger points
-   INFO:phys2bids.physio_obj:The number of timepoints according to the std_thr method is 158. The computed threshold is 1.1523587407910223
-   INFO:phys2bids.physio_obj:Checking number of timepoints
-   INFO:phys2bids.physio_obj:Found just the right amount of timepoints!
-   INFO:phys2bids.phys2bids:Plot trigger
-   INFO:phys2bids.phys2bids:Preparing 1 output files.
-   INFO:phys2bids.phys2bids:Exporting files for freq 1000.0
-   INFO:phys2bids.phys2bids:
-   ------------------------------------------------
-   Filename:            tutorial_file.txt
-
-   Timepoints expected: 158
-   Timepoints found:    158
-   Sampling Frequency:  1000.0 Hz
-   Sampling started at: 0.2460000000000946 s
-   Tip: Time 0 is the time of first trigger
-  ------------------------------------------------
+    Timepoints expected: [158]
+    Timepoints found:    158
+    Sampling Frequency:  1000.0 Hz
+    Sampling started at: 0.2460 s
+    Tip: Time 0 is the time of first trigger
+    ------------------------------------------------
 
 ``phys2bids`` has an automatic way of finding the right threshold, in order to find the correct number of timepoints, by using the mean and standard deviation of the trigger channel. If "Found just the right amount of timepoints!" appears everything should be working properly!
 
@@ -220,7 +225,7 @@ Let's go through an example where the number of timepoints automatically found i
 
 .. code-block:: shell
 
-    phys2bids -in tutorial_file_v2.txt -indir /home/arthurdent/git/phys2bids/phys2bids/tests/data/ -chtrig 1 -ntp 158 -tr 1.2 -outdir /home/arthurdent/physio_v2
+    phys2bids -in tutorial_file_v2.txt -chtrig 1 -ntp 158 -tr 1.2 -outdir physio_v2
 
 The output:
 
@@ -234,22 +239,24 @@ The output:
     04. Pulse; sampled at 1000.0 Hz
     ------------------------------------------------
 
-    INFO:phys2bids.physio_obj:Counting trigger points
-    INFO:phys2bids.physio_obj:The number of timepoints according to the std_thr method is 157. The computed threshold is 1.1506959325294588
-    INFO:phys2bids.physio_obj:Checking number of timepoints
-    WARNING:phys2bids.physio_obj:Found 1 timepoints less than expected!
-    WARNING:phys2bids.physio_obj:Correcting time offset, assuming missing timepoints are at the beginning (try again with a more conservative thr)
-    INFO:phys2bids.phys2bids:Plot trigger
-    INFO:phys2bids.phys2bids:Preparing 1 output files.
-    INFO:phys2bids.phys2bids:Exporting files for freq 1000.0
-    INFO:phys2bids.phys2bids:
+    INFO       saving channel plot to physio_v2/code/conversion/tutorial_file_v2.png
+    INFO       Counting trigger points
+    INFO       The trigger is in channel 1
+    INFO       The number of timepoints according to the std_thr method is 157. The computed threshold is 1.1507
+    INFO       Checking number of timepoints
+    WARNING    Found 1 timepoints less than expected!
+    WARNING    Correcting time offset, assuming missing timepoints are at the beginning (try again with a more conservative thr)
+    INFO       Plot trigger
+    INFO       Preparing 1 output files.
+    INFO       Exporting files for run 1 freq 1000.0
+    INFO
     ------------------------------------------------
     Filename:            tutorial_file_v2.txt
 
-    Timepoints expected: 158
+    Timepoints expected: [158]
     Timepoints found:    157
     Sampling Frequency:  1000.0 Hz
-    Sampling started at: -0.9539999999999509 s
+    Sampling started at: -0.9540 s
     Tip: Time 0 is the time of first trigger
     ------------------------------------------------
 
@@ -263,23 +270,25 @@ By looking at this figure, we can work out that we need a smaller threshold in o
 
 .. code-block:: shell
 
-    phys2bids -in tutorial_file_v2.txt -indir /home/arthurdent/git/phys2bids/phys2bids/tests/data/ -chtrig 1 -ntp 158 -tr 1.2 -thr 1.04 -outdir /home/arthurdent/physio_v2
+    phys2bids -in tutorial_file_v2.txt -chtrig 1 -ntp 158 -tr 1.2 -thr 1.04 -outdir physio_v2
 
-    INFO:phys2bids.physio_obj:Counting trigger points
-    INFO:phys2bids.physio_obj:The number of timepoints found with the manual threshold of 1.04 is 158.
-    INFO:phys2bids.physio_obj:Checking number of timepoints
-    INFO:phys2bids.physio_obj:Found just the right amount of timepoints!
-    INFO:phys2bids.phys2bids:Plot trigger
-    INFO:phys2bids.phys2bids:Preparing 1 output files.
-    INFO:phys2bids.phys2bids:Exporting files for freq 1000.0
-    INFO:phys2bids.phys2bids:
+    INFO       Counting trigger points
+    INFO       The trigger is in channel 1
+    INFO       The number of timepoints according to the std_thr method is 157. The computed threshold is 1.1507
+    INFO       Checking number of timepoints
+    WARNING    Found 1 timepoints less than expected!
+    WARNING    Correcting time offset, assuming missing timepoints are at the beginning (try again with a more conservative thr)
+    INFO       Plot trigger
+    INFO       Preparing 1 output files.
+    INFO       Exporting files for run 1 freq 1000.0
+    INFO
     ------------------------------------------------
     Filename:            tutorial_file_v2.txt
 
-    Timepoints expected: 158
-    Timepoints found:    158
+    Timepoints expected: [158]
+    Timepoints found:    157
     Sampling Frequency:  1000.0 Hz
-    Sampling started at: 0.2460000000000946 s
+    Sampling started at: -0.9540 s
     Tip: Time 0 is the time of first trigger
     ------------------------------------------------
 
@@ -370,20 +379,20 @@ As there might not be a link between the physiological file and the subject (and
 
 .. code-block:: shell
 
-    phys2bids -in tutorial_file.txt -indir /home/arthurdent/git/phys2bids/phys2bids/tests/data/ -chtrig 1 -ntp 158 -tr 1.2 -outdir /home/arthurdent/physio -heur /home/arthurdent/git/phys2bids/phys2bids/heuristics/heur_tutorial.py -sub 006 -ses 01
+    phys2bids -in tutorial_file.txt -chtrig 1 -ntp 158 -tr 1.2 -outdir physio_bids -heur /home/vferrer/phys2bids/phys2bids/heuristics/heur_tutorial.py -sub 006 -ses 01
 
 The output will look very similar to our previous calls, when we did not use the ``-heur``, ``-sub`` and ``-ses`` arguments. However, there is one extra line in command line output:
 
 .. code-block:: shell
 
-    INFO:phys2bids.phys2bids:Preparing BIDS output using /home/arthurdent/git/phys2bids/phys2bids/heuristics/heur_tutorial.py
+    INFO       Preparing BIDS output using /home/vferrer/phys2bids/phys2bids/heuristics/heur_tutorial.pyy
 
 Now let's check the outputs it has generated. In the ``-outdir`` you will see a png file and tsv logger file, like before (now with some different file names).
 You will also see a folder for the specified subject, that (optionally) contains a folder for the session, containing a folder for the functional data, containing the log file and the required BIDs files with the right name!
 
 .. code-block:: none
 
-    - /home/arthurdent/physio_bids /
+    - /home/vferrer/test_dir/physio_bids /
         participants.tsv
         README.md
         dataset_description.json
