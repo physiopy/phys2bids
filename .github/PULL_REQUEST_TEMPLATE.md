@@ -21,7 +21,7 @@ Closes #
 - [ ] `documentation` (no version update)
 
 ## Checklist before review
-<!-- If this section is not clear, please read this part of the dodcs: https://phys2bids.readthedocs.io/en/latest/contributorfile.html#pr -->
+<!-- If this section is not clear, please read this part of the docs: https://phys2bids.readthedocs.io/en/latest/contributorfile.html#pr -->
 <!-- You're invited to open a draft PR ASAP, but before marking it "open" for Reviews, check that you did the following: -->
 - [ ] I added everything I wanted to add to this PR.
 - [ ] \[Code or tests only\] I wrote/updated the necessary docstrings.
