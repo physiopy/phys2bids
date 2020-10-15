@@ -3,6 +3,7 @@
   "projectOwner": "physiopy",
   "repoType": "github",
   "repoHost": "https://github.com",
+  "skipCi": true,
   "files": [
     "README.md"
   ],
@@ -133,7 +134,8 @@
       "profile": "https://github.com/tsalo",
       "contributions": [
         "ideas",
-        "code"
+        "code",
+        "review"
       ]
     },
     {
@@ -146,7 +148,8 @@
         "code",
         "data",
         "doc",
-        "userTesting"
+        "userTesting",
+        "review"
       ]
     },
     {
