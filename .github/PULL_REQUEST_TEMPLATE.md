@@ -3,7 +3,7 @@
 <!-- If you just want to reference them without closing them, you can add something like "References #112" -->
 Closes #
 
-<!-- Add here a short description of the PR content -->
+<!-- Add a short description of the PR content here-->
 
 
 ## Proposed Changes
