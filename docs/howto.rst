@@ -46,11 +46,11 @@ Using the -info option
 First, we can see what information ``phys2bids`` reads from the file, and make sure this is correct before processing the file.
 
 The simplest way of calling ``phys2bids`` is moving to the folder containing the physiological file and typing:
-For this tutorial we will copy the data to a new directory so we don't mess with the repo:
 .. code-block:: shell
     mkdir test_dir
-    cp -r phys2bids/phys2bids/tests/data/* test_dir
     cd test_dir
+    wget https://osf.io/j842e/download -O tutorial_file.txt
+    wget https://osf.io/pzfxb/download -O tutorial_file_v2.txt
     mkdir physio
 
 ``phys2bids`` will try to get the extension for you.
