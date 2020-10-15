@@ -1,6 +1,6 @@
 <!-- Write all the issues that are linked to this one. -->
 <!-- If this PR is enough to close them you can write something like "Closes #314 and closes #42" -->
-<!-- If it just reference them without solving them, you can add something like "References #112" -->
+<!-- If you just want to reference them without closing them, you can add something like "References #112" -->
 Closes #
 
 <!-- Add here a short description of the PR content -->
