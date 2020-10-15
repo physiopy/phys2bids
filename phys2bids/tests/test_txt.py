@@ -9,7 +9,7 @@ from phys2bids.interfaces import txt
 @pytest.fixture(scope='function')
 def loaded_acq_file(samefreq_short_txt_file):
     chtrig = 2
-    header_acq, channels_acq = txt.read_header_and_channels(samefreq_short_txt_file, chtrig)
+    header_acq, channels_acq = txt.read_header_and_channels(samefreq_short_txt_file)
 
     # just a few quick checks to make sure the data loaded correctly
     assert len(header_acq) == 8  # check proper header lenght
@@ -23,7 +23,7 @@ def loaded_acq_file(samefreq_short_txt_file):
 @pytest.fixture(scope='function')
 def loaded_lab_file(multifreq_lab_file):
     chtrig = 1
-    header_lab, channels_lab = txt.read_header_and_channels(multifreq_lab_file, chtrig)
+    header_lab, channels_lab = txt.read_header_and_channels(multifreq_lab_file)
 
     # just a few quick checks to make sure the data loaded correctly
     assert len(channels_lab[0]) == 5
@@ -55,7 +55,7 @@ def test_process_labchart(loaded_lab_file, units, expected):
 
 def test_process_labchart_notime(notime_lab_file):
     chtrig = 0
-    header, channels = txt.read_header_and_channels(notime_lab_file, chtrig)
+    header, channels = txt.read_header_and_channels(notime_lab_file)
     phys_obj = txt.process_labchart(channels, chtrig=chtrig, header=header)
     assert len(phys_obj.timeseries) == len(channels[0]) + 1
 
@@ -115,7 +115,7 @@ def test_noheader_acq_error(samefreq_noheader_txt_file):
     assert 'not supported' in str(errorinfo.value)
 
     # test file without header for process_acq
-    header, channels = txt.read_header_and_channels(samefreq_noheader_txt_file, chtrig)
+    header, channels = txt.read_header_and_channels(samefreq_noheader_txt_file)
     with raises(AttributeError) as errorinfo:
         txt.process_acq(channels, chtrig=chtrig)
     assert 'not supported' in str(errorinfo.value)

@@ -45,7 +45,7 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
         assert isfile(join(test_path, 'Test_belt_pulse_samefreq' + suffix))
 
     # Check files in extra are generated
-    for suffix in ['.log']:  #, '_trigger_time.png']:
+    for suffix in ['.log']:
         assert isfile(join(conversion_path, 'Test_belt_pulse_samefreq' + suffix))
 
     # Read log file (note that this file is not the logger file)
@@ -168,7 +168,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 40.0,)
     assert math.isclose(json_data['StartTime'], 3.6960,)
-    assert json_data['Columns'] == ['time', 'O2']
+    assert json_data['Columns'] == ['time', 'Trigger', 'O2']
 
     # ##### Checks for 100 Hz files
     # Read log file (note that this file is not the logger file)
@@ -195,7 +195,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     # Compares values in json file with ground truth
     assert math.isclose(json_data['SamplingFrequency'], 100.0,)
     assert math.isclose(json_data['StartTime'], 3.6960,)
-    assert json_data['Columns'] == ['time', 'CO2']
+    assert json_data['Columns'] == ['time', 'Trigger', 'CO2']
 
     # Remove generated files
     shutil.rmtree(test_path_output)

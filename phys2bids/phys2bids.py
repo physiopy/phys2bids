@@ -170,13 +170,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     if quiet:
         logging.basicConfig(level=logging.WARNING,
-                            handlers=[log_handler, sh])
+                            handlers=[log_handler, sh], format='%(levelname)-10s %(message)s')
     elif debug:
         logging.basicConfig(level=logging.DEBUG,
-                            handlers=[log_handler, sh])
+                            handlers=[log_handler, sh], format='%(levelname)-10s %(message)s')
     else:
         logging.basicConfig(level=logging.INFO,
-                            handlers=[log_handler, sh])
+                            handlers=[log_handler, sh], format='%(levelname)-10s %(message)s')
 
     version_number = _version.get_versions()['version']
     LGR.info(f'Currently running phys2bids version {version_number}')
@@ -378,6 +378,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                 phys_out[key].timeseries.insert(0, np.linspace(phys_in[run].timeseries[0][0],
                                                 phys_in[run].timeseries[0][-1],
                                                 num=phys_out[key].timeseries[0].shape[0]))
+            # Add trigger channel in the proper frequency.
+            if uniq_freq != phys_in[run].freq[chtrig]:
+                phys_out[key].ch_name.insert(1, phys_in[run].ch_name[chtrig])
+                phys_out[key].units.insert(1, phys_in[run].units[chtrig])
+                phys_out[key].timeseries.insert(1, np.interp(phys_out[key].timeseries[0],
+                                                             phys_in[run].timeseries[0],
+                                                             phys_in[run].timeseries[chtrig]))
             phys_out[key] = BlueprintOutput.init_from_blueprint(phys_out[key])
 
         # Initiate lists for reports

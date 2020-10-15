@@ -29,6 +29,8 @@ ignore:
   - "phys2bids/tests"
   - "phys2bids/heuristics"
   - "phys2bids/due.py"
+  - ".*rc"
+  - ".github"
 
 comment:
   layout: "reach,diff,flags,tree"
