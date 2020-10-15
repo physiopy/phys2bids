@@ -77,7 +77,8 @@ def _get_parser():
                           type=int,
                           help='The column number of the trigger channel. '
                                'Channel numbering starts with 1. '
-                               'Default is 0.',
+                               'Default is 0.if chtrig is left as zero the'
+                               'automic trigger channel search by name will be executed',
                           default=0)
     optional.add_argument('-chsel', '--channel-selection',
                           dest='chsel',
