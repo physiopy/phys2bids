@@ -22,11 +22,11 @@ In order to follow the tutorial, you need a very quick setup: download or clone 
 
     For instance, if you are planning to process AcqKnowledge files, install the interface dependencies as described `here <installation.html#>`_.
 
-For the tutorial, we will assume the repository was downloaded in ``/home/vferrer``. Let's get there right now:
+For the tutorial, we will assume the repository was downloaded in ``/home/arthurdent``. Let's get there right now:
 
 .. code-block:: shell
 
-    cd /home/vferrer
+    cd /home/arthurdent
 
 What is in the tutorial text file?
 ##################################
@@ -379,20 +379,20 @@ As there might not be a link between the physiological file and the subject (and
 
 .. code-block:: shell
 
-    phys2bids -in tutorial_file.txt -chtrig 1 -ntp 158 -tr 1.2 -outdir physio_bids -heur /home/vferrer/phys2bids/phys2bids/heuristics/heur_tutorial.py -sub 006 -ses 01
+    phys2bids -in tutorial_file.txt -chtrig 1 -ntp 158 -tr 1.2 -outdir physio_bids -heur /home/arthurdent/phys2bids/phys2bids/heuristics/heur_tutorial.py -sub 006 -ses 01
 
 The output will look very similar to our previous calls, when we did not use the ``-heur``, ``-sub`` and ``-ses`` arguments. However, there is one extra line in command line output:
 
 .. code-block:: shell
 
-    INFO       Preparing BIDS output using /home/vferrer/phys2bids/phys2bids/heuristics/heur_tutorial.pyy
+    INFO       Preparing BIDS output using /home/arthurdent/phys2bids/phys2bids/heuristics/heur_tutorial.pyy
 
 Now let's check the outputs it has generated. In the ``-outdir`` you will see a png file and tsv logger file, like before (now with some different file names).
 You will also see a folder for the specified subject, that (optionally) contains a folder for the session, containing a folder for the functional data, containing the log file and the required BIDs files with the right name!
 
 .. code-block:: none
 
-    - /home/vferrer/test_dir/physio_bids /
+    - /home/arthurdent/test_dir/physio_bids /
         participants.tsv
         README.md
         dataset_description.json
