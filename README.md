@@ -25,7 +25,7 @@ It was born for AcqKnowledge files (BIOPAC), and at the moment it supports
 (ADInstruments).
 It doesn't support physiological files recorded with the MRI, as you can find a software for it [here](https://github.com/tarrlab/physio2bids).
 
-> If you use ``phys2bids`` in your work, please cite it with the zenodo DOI. You can check it [here](https://zenodo.org/record/3903920)
+> If you use ``phys2bids`` in your work, please cite it with the zenodo DOI of the version you used. You can find the latest version [here](https://doi.org/10.5281/zenodo.3470091)
 
 [Read the latest documentation](https://phys2bids.readthedocs.io/en/latest/) for more information on phys2bids!
 
