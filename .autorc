@@ -6,9 +6,6 @@
     "first-time-contributor",
     "released"
   ],
-  "release": {
-    "prerelease": true
-  },
   "owner": "physiopy",
   "repo": "phys2bids",
   "name": "Stefano Moia",
