@@ -1,3 +1,15 @@
+# 2.2.2 (Mon Oct 19 2020)
+
+#### 🐛 Bug Fix
+
+- Fix auto release workflow settings [#323](https://github.com/physiopy/phys2bids/pull/323) ([@smoia](https://github.com/smoia))
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
 # 2.2.1 (Mon Oct 19 2020)
 
 #### 🐛 Bug Fix
