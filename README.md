@@ -31,6 +31,8 @@ It doesn't support physiological files recorded with the MRI, as you can find a 
 
 > If you use ``phys2bids`` in your work, please cite it with the zenodo DOI. You can check it [here](https://zenodo.org/record/3903920)
 
+> We also support gathering all relevant citations via [DueCredit](http://duecredit.org).
+
 [Read the latest documentation](https://phys2bids.readthedocs.io/en/latest/) for more information on phys2bids!
 
 Shortcuts:
