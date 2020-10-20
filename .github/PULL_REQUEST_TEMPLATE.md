@@ -27,7 +27,7 @@ Closes #
 - [ ] \[Code or tests only\] I wrote/updated the necessary docstrings.
 - [ ] \[Code or tests only\] I ran and passed tests locally.
 - [ ] \[Documentation only\] I built the docs locally.
-- [ ] My contribution is harmonious with the rest of the code: I'm not introducing repetitions and I respect the general style.
+- [ ] My contribution is harmonious with the rest of the code: I'm not introducing repetitions.
 <!-- "General style" indicate those non-mandatory rules such as `'` instead of `"` and these sort of things -->
 - [ ] My code respects the adopted style, especially linting conventions.
 - [ ] The title of this PR is explicative on its own, enough to be understood as part of a changelog.
