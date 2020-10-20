@@ -206,7 +206,7 @@ However, if it’s an incomplete PR, please open a **Draft PR**. That helps us p
 Reviewing PRs is a time consuming task, that can be stressful for both the reviewer and the author. Avoiding wasting time and the need of little fixes - such as fixing grammar mistakes and typos, styling code, or adopting conventions - is a good start for a successful (and quick) review. Before graduating a Draft PR to a PR ready for review, please check that:
 
 - You did all you wanted to include in your PR. If at a later stage you realise something is missing and it's not a minor thing, you will need to open a new PR.
-- If your contribution contains code or tests, you run and passed all the tests locally with `pytest`.
+- If your contribution contains code or tests, you ran and passed all of the tests locally with `pytest`.
 - If you're writing documentation, you built it locally with `sphinx` and the format is what you intended.
 - Your code is harmonious with the rest of the code - no repetitions of any sort!
 - Your code respects the `adopted Style <#styling>`_, especially:
