@@ -33,4 +33,4 @@ Closes #
 - [ ] The title of this PR is explicative on its own, enough to be understood as part of a changelog.
 - [ ] I added or indicated the right labels.
 <!-- If you want, you can ask for reviews on a draft PR -->
-- [ ] Please, comment my PR while it's a draft and give me feedback on the development!
+- [ ] Please, comment on my PR while it's a draft and give me feedback on the development!
