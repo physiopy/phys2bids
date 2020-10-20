@@ -38,6 +38,6 @@ jobs:
     - name: Create release without version prefix
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        # Run auto release, don't use 'v' prefix, and be ultraverbose
+        # Run auto release, don't use 'v' prefix, and be verbose
       run: |
-        ~/auto release --no-version-prefix -v
+        ~/auto shipit --no-version-prefix -v
