@@ -29,7 +29,9 @@ Closes #
 - [ ] \[Documentation only\] I built the docs locally.
 - [ ] My contribution is harmonious with the rest of the code: I'm not introducing repetitions.
 - [ ] My code respects the adopted style, especially linting conventions.
-- [ ] The title of this PR is explicative on its own, enough to be understood as part of a changelog.
+- [ ] The title of this PR is explanatory on its own, enough to be understood as part of a changelog.
 - [ ] I added or indicated the right labels.
+<!-- If relevant, you can add a milestone label or indicate an ideal timeline for this PR, including whether the progress of this PR is linked to other PRs being completed before or after it. -->
+- [ ] I added information regarding the timeline of completion for this PR.
 <!-- If you want, you can ask for reviews on a draft PR -->
 - [ ] Please, comment on my PR while it's a draft and give me feedback on the development!

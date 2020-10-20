@@ -98,7 +98,7 @@ We use `readthedocs <https://readthedocs.org/>`_ to create our documentation. Ev
 Contributing code through GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This section covers 90% of the contributions a project like ``physiopy`` receives - code, documentation and tests.
-The best way to make this kind of contributions, in a nutshell, is to:
+The best way to make this kind of contribution, in a nutshell, is to:
 1. Open an issue with the intended modifications.
 2. Label it, discuss it, (self-)assign it.
 3. Open a Pull Request (PR) to resolve the issue and label it.
@@ -126,7 +126,7 @@ At ``physiopy``, we use Issues and Milestones to keep track of and organise our 
 Labels
 ------
 The current list of labels are `here <https://github.com/physiopy/phys2bids/labels>`_. They can be used for **Issues**, **PRs**, or both.
-We use `auto <https://github.com/intuit/auto>`_ to automatise our semantic versioning and Pypi upload, so **it's extremely important to use the right PR labels**!
+We use `auto <https://github.com/intuit/auto>`_ to automate our semantic versioning and Pypi upload, so **it's extremely important to use the right PR labels**!
 
 .. _issueprlabels:
 
@@ -145,7 +145,7 @@ Issue & PR labels
 Issue-only labels
 ~~~~~~~~~~~~~~~~~~
 -  Bug: Something isn’t working. It either breaks the code or has an unexpected outcome.
--  Community: This issue contains information about the `physiopy` community (e.g. the next developer call)
+-  Community: This issue contains information about the ``physiopy`` community (e.g. the next developer call)
 -  Discussion: Discussion of a concept or implementation. These Issues are prone to be open ad infinitum. Jump in the conversation if you want!
 -  Good first issue: Good for newcomers. These issues calls for a **fairly** easy enhancement, or for a change that helps/requires getting to know the code better. They have educational value, and for this reason, unless urgent, experts in the topic should refrain from closing them - but help newcomers closing them.
 -  Hacktoberfest: Dedicated to the hacktoberfest event, so that people can help and feel good about it (and show it with a T-shirt!). **Such commits will not be recognised in the all-contributor table, unless otherwise specified**.
@@ -262,13 +262,13 @@ The main reviewer:
 - Takes care of the reviewing process of the PR, in particular:
     - Invites the reviewers to finish their review in a relatively short time.
     - Checks that this document was respected in all its part, especially the part about `Pull Requests <#pr>`_.
-    - Invites other Reviewers to respect this document, especially the part about `reviews <#reviewing>`_, helps them doing it, and checks that they do.
+    - Invites other Reviewers to respect this document, especially the part about `reviews <#reviewing>`_, helps them in doing so, and checks that they do.
     - If a Reviewer keeps not respecting this document, flags them to the project manager.
 - Decides what to do in case of a coverage decrease (in *codecov/patch*).
 - In case of missing tests or updates to user documentation:
     - Asks for more documentation or tests before approving the PR, *or*
     - Checks that the adequate issues have been opened to address the lack of documentation or tests (1 issue per item).
-- Double-checks that the title is clear and the labels are correct to trigger an adequate ``auto`` release - feel free to change them. 
+- Double-checks that the title is clear and the labels are correct to trigger an adequate ``auto`` release - feel free to change them.
 - **Is the one that is going to merge the PR.**
 - After the PR got merged and a new release was triggered, checks that:
     - The documentation was updated correctly (if changed).
