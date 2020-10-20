@@ -29,7 +29,7 @@ Closes #
 - [ ] \[Documentation only\] I built the docs locally.
 - [ ] My contribution is harmonious with the rest of the code: I'm not introducing repetitions and I respect the general style.
 <!-- "General style" indicate those non-mandatory rules such as `'` instead of `"` and these sort of things -->
-- [ ] My code respects the adopted style, especially lintering conventions.
+- [ ] My code respects the adopted style, especially linting conventions.
 - [ ] The title of this PR is explicative on its own, enough to be understood as part of a changelog.
 - [ ] I added or indicated the right labels.
 <!-- If you want, you can ask for reviews on a draft PR -->
