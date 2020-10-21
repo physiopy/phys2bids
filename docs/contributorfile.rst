@@ -197,7 +197,7 @@ At ``physiopy``, we follow a very similar workflow. The only three differences a
 Pull Requests
 -------------
 To improve understanding pull requests "at a glance", we use the labels listed above. Multiple labels can be assigned, but it's a good idea to keep different types of contributions separated, unless they are minimal - for instance, you might want to open a PR for code, one for documentation and one for testing.
-We also strongly advice to keep your narrow the changes you're introducing with your PR to your real aim. Little corrections here and there in the code that you're already modifying are a great help, but they risk to complicate the nature of the PR and the reviewing process. It is much better to open another PR with the objective of doing such corrections!
+We also strongly advise to keep the changes you're introducing with your PR limited to your original goal. Little corrections here and there in the code that you're already modifying are a great help, but they risk complicating the nature of the PR and the reviewing process. It is much better to open another PR with the objective of doing such corrections!
 In general, if you're tempted to assign more than one label that would trigger a release, you might want to split your PR instead.
 When opening a pull request, assign it at least one label.
 
