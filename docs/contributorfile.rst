@@ -271,7 +271,7 @@ The main reviewer:
     - Checks that the adequate issues have been opened to address the lack of documentation or tests (1 issue per item).
 - Double-checks that the title is clear and the labels are correct to trigger an appropriate ``auto`` release - feel free to change them.
 - **Is the one that is going to merge the PR.**
-- After the PR got merged and a new release was triggered, checks that:
+- After the PR has been merged and a new release has been triggered, checks that:
     - The documentation was updated correctly (if changed).
     - The Pypi version of the repository coincides with the new release (if changed).
     - New contributors or forms of contributions were correctly added in the README (if changed).
