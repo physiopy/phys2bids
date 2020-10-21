@@ -128,15 +128,11 @@ def process_labchart(channel_list, chtrig, header=[]):
     orig_units = []
     for item in range_list:
         orig_units.append(item.split(" ")[1])
-    units = [
-        "s",
-    ]
+    units = ["s"]
     # get names
     orig_names = header[4][1:]
     orig_names_len = len(orig_names)
-    names = [
-        "time",
-    ]
+    names = ["time"]
     # get channels
     # this transposes the channel_list from a list of samples x channels to
     # a list of channels x samples
@@ -257,22 +253,16 @@ def process_acq(channel_list, chtrig, header=[]):
         # since units are in the line imediately after we get the units at the same time
         orig_units.append(header[index1 + 1][0])
     # reorder channels names
-    names = [
-        "time",
-    ]
+    names = ["time"]
     names = names + orig_names
     # reoder channels units
-    units = [
-        "s",
-    ]
+    units = ["s"]
     units = units + orig_units
     # get channels
     timeseries = [np.array(darray) for darray in timeseries]
     duration = (timeseries[0].shape[0] + 1) * interval[0]
     t_ch = np.ogrid[0 : duration : interval[0]][:-1]  # create time channel
-    timeseries = [
-        t_ch,
-    ] + timeseries
+    timeseries = [t_ch] + timeseries
     freq = check_multifreq(timeseries, freq)
     return BlueprintInput(timeseries, freq, names, units, chtrig)
 
