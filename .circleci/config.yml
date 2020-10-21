@@ -139,7 +139,7 @@ jobs:
             mkdir /tmp/src/coverage
             mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integration37
       - store_artifacts:
-          path: /tmp/data/phys2bids
+          path: /tmp/data
       - persist_to_workspace:
           root: /tmp
           paths:
