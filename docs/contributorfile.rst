@@ -268,7 +268,7 @@ The main reviewer:
 - Decides what to do in case of a coverage decrease (in *codecov/patch*).
 - In case of missing tests or updates to user documentation:
     - Asks for more documentation or tests before approving the PR, *or*
-    - Checks that the adequate issues have been opened to address the lack of documentation or tests (1 issue per item).
+    - Checks that the appropriate issues have been opened to address the lack of documentation or tests (1 issue per item).
 - Double-checks that the title is clear and the labels are correct to trigger an appropriate ``auto`` release - feel free to change them.
 - **Is the one that is going to merge the PR.**
 - After the PR has been merged and a new release has been triggered, checks that:
