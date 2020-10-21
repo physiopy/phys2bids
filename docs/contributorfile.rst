@@ -49,7 +49,7 @@ Our main goal is to help collect, analyse and share physiological data, interfac
 
 Joining the conversation
 ------------------------
-We’re trying to keep all the conversation related to the project development in GitHub `issues <https://github.com/physiopy/phys2bids/issues>`_.
+We’re trying to keep all conversation related to project development in GitHub `issues <https://github.com/physiopy/phys2bids/issues>`_.
 We maintain a `gitter chat room <https://gitter.im/physiopy/community>`_ for more informal conversations and general project updates.
 We also have a dev call once a month - specifically the second Thursday of the month! If you want to participate, drop a line in gitter!
 When interacting in the common channels, please adhere to our `code of conduct <conduct.html>`_.
