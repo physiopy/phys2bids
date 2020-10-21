@@ -300,46 +300,74 @@ If your file contains more than one (f)MRI acquisition (or runs), you can provid
 By specifying the number of timepoints in each acquisition, ``phys2bids`` will recursively cut the input file by detecting the first trigger of the entire session and the ones after the number of timepoints you specified.
 
 .. code-block:: shell
-
-    phys2bids -in two_scans_samefreq_all.txt -chtrig 2 -ntp 536 398 -tr 1.2 -thr 2
+    wget https://osf.io/gvy84/download -O Test2_samefreq_TWOscans.txt
+    phys2bids -in Test2_samefreq_TWOscans.txt -chtrig 1 -ntp 534 513 -tr 1.2 1.2 -thr 2 -outdir physio_two_scans
 
 Now, instead of counting the trigger timepoints once, ``physbids`` will check the trigger channel recursively with all the values listed in ``-ntp``. The logger will inform you about the number of timepoints left at each iteration.
 
 .. code-block:: shell
 
-    INFO:phys2bids.physio_obj:Counting trigger points
-    INFO:phys2bids.physio_obj:The trigger is in channel 2
-    INFO:phys2bids.physio_obj:The number of timepoints found with the manual threshold of 2.0000 is 934
-    INFO:phys2bids.physio_obj:Checking number of timepoints
-    INFO:phys2bids.physio_obj:Found just the right amount of timepoints!
-    WARNING:phys2bids.slice4phys:
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    phys2bids will split the input file according to the given -tr and -ntp arguments
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    INFO:phys2bids.physio_obj:Counting trigger points
-    INFO:phys2bids.physio_obj:The trigger is in channel 2
-    INFO:phys2bids.physio_obj:The number of timepoints found with the manual threshold of 2.0000 is 934
-    INFO:phys2bids.physio_obj:Checking number of timepoints
-    WARNING:phys2bids.physio_obj:Found 398 timepoints more than expected!
-    Assuming extra timepoints are at the end (try again with a more liberal thr)
-    INFO:phys2bids.slice4phys:
-    --------------------------------------------------------------
-    Slicing between 0.0 seconds and 961.381 seconds
-    --------------------------------------------------------------
-    INFO:phys2bids.physio_obj:Counting trigger points
-    INFO:phys2bids.physio_obj:The trigger is in channel 2
-    INFO:phys2bids.physio_obj:The number of timepoints found with the manual threshold of 2.0000 is 400
-    INFO:phys2bids.physio_obj:Checking number of timepoints
-    WARNING:phys2bids.physio_obj:Found 2 timepoints more than expected!
-    Assuming extra timepoints are at the end (try again with a more liberal thr)
-    INFO:phys2bids.slice4phys:
-    --------------------------------------------------------------
-    Slicing between 952.381 seconds and 1817.96 seconds
-    --------------------------------------------------------------
-    INFO:phys2bids.viz:Plot trigger
-    INFO:phys2bids.viz:Plot trigger
-    INFO:phys2bids.phys2bids:Preparing 2 output files.
-    INFO:phys2bids.phys2bids:Exporting files for run 1 freq 1000.0
+    Test2_samefreq_TWOscans.txt -chtrig 1 -ntp 534 513 -tr 1.2 1.2 -thr 2 -outdir physio_two_scans
+INFO       Currently running phys2bids version 0.4.0+1487.g88f97d1.dirty
+INFO       Input file is Test2_samefreq_TWOscans.txt
+INFO       File extension is .txt
+WARNING    If both acq and txt files exist in the path, acq will be selected.
+INFO       Reading the file .\Test2_samefreq_TWOscans.txt
+INFO       phys2bids detected that your file is in Labchart format
+INFO       Checking that units of measure are BIDS compatible
+WARNING    The given unit mmHg does not have aliases, passing it as is
+INFO       Reading infos
+INFO
+------------------------------------------------
+File Test2_samefreq_TWOscans.txt contains:
+01. Trigger; sampled at 100.0 Hz
+02. CO2; sampled at 100.0 Hz
+------------------------------------------------
+
+INFO       saving channel plot to physio_two_scans\code\conversion\Test2_samefreq_TWOscans.png
+INFO       Counting trigger points
+INFO       The trigger is in channel 1
+INFO       The number of timepoints found with the manual threshold of 2.0000 is 1047
+INFO       Checking number of timepoints
+INFO       Found just the right amount of timepoints!
+WARNING
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+phys2bids will split the input file according to the given -tr and -ntp arguments
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+INFO       Counting trigger points
+INFO       The trigger is in channel 1
+INFO       The number of timepoints found with the manual threshold of 2.0000 is 1047
+INFO       Checking number of timepoints
+WARNING    Found 513 timepoints more than expected!
+Assuming extra timepoints are at the end (try again with a more liberal thr)
+INFO
+--------------------------------------------------------------
+Slicing between 0.0 seconds and 710.43 seconds
+--------------------------------------------------------------
+INFO       Counting trigger points
+INFO       The trigger is in channel 1
+INFO       The number of timepoints found with the manual threshold of 2.0000 is 513
+INFO       Checking number of timepoints
+INFO       Found just the right amount of timepoints!
+INFO
+--------------------------------------------------------------
+Slicing between 1056.81 seconds and 1690.42 seconds
+--------------------------------------------------------------
+INFO       Counting trigger points
+INFO       The trigger is in channel 1
+INFO       The number of timepoints found with the manual threshold of 2.0000 is 534
+INFO       Checking number of timepoints
+INFO       Found just the right amount of timepoints!
+INFO       Counting trigger points
+INFO       The trigger is in channel 1
+INFO       The number of timepoints found with the manual threshold of 2.0000 is 513
+INFO       Checking number of timepoints
+INFO       Found just the right amount of timepoints!
+INFO       Plot trigger
+INFO       Plot trigger
+INFO       Found 2 different scans in input!
+INFO       Preparing 2 output files.
+INFO       Exporting files for run 1 freq 100.0
 
 The logger also notifies you about the slicing points used (the first always being from the beginning of session, until the specified number of timepoints after the first trigger). The user can also check the resulting slice by looking at the plot of the trigger channel for each run. Each slice is adjusted with a padding after the last trigger. Such padding can be specified while calling ``phys2bids`` with ``-pad``. If nothing is specified, the default value of 9 seconds will be used. This padding is also applied at the beginning (before the first trigger of the run) of the 2nd to last run.
 
