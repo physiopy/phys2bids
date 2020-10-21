@@ -1,3 +1,39 @@
+# 2.2.2 (Mon Oct 19 2020)
+
+#### 🐛 Bug Fix
+
+- Fix auto release workflow settings [#323](https://github.com/physiopy/phys2bids/pull/323) ([@smoia](https://github.com/smoia))
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
+# 2.2.1 (Mon Oct 19 2020)
+
+#### 🐛 Bug Fix
+
+- Make sure we delete testing files after finishing tests [#307](https://github.com/physiopy/phys2bids/pull/307) ([@vinferrer](https://github.com/vinferrer))
+- Add label colours to set auto labels [#318](https://github.com/physiopy/phys2bids/pull/318) ([@smoia](https://github.com/smoia))
+- Reduce `auto` verbosity [#317](https://github.com/physiopy/phys2bids/pull/317) ([@smoia](https://github.com/smoia))
+
+#### 📝 Documentation
+
+- Update badges in README and documentation [#322](https://github.com/physiopy/phys2bids/pull/322) ([@smoia](https://github.com/smoia))
+- Update zenodo info [#321](https://github.com/physiopy/phys2bids/pull/321) ([@smoia](https://github.com/smoia))
+
+#### 🏠 Internal
+
+- Setup auto release workflow [#313](https://github.com/physiopy/phys2bids/pull/313) ([@smoia](https://github.com/smoia))
+
+#### Authors: 2
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
 # v2.2.0 (Wed Oct 14 2020)
 
 #### 🚀 Enhancement
