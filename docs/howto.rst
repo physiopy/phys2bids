@@ -148,7 +148,7 @@ Five files have been generated in the output directory:
     Compressed file in ``tsv`` format containing your data without header information.
 - **tutorial_file.json**
     As phys2bids is designed to be BIDs compatible, this is one of the two necessary BIDs files. It describes the content of your ``tsv.gz`` file.
-Inside the ``code/coverage folder:
+Inside the ``code/coverage`` folder:
 - **tutorial_file.log**
     The same information outputted to the terminal at the end of the call.
 - **phys2bids_yyyy-mm-ddThh:mm:ss.tsv**
