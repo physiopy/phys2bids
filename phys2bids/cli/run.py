@@ -58,9 +58,9 @@ def _get_parser():
         help=(
             "Folder where output should be placed. "
             "Default is current folder. "
-            'If "-heur" is used, it will become '
-            'the site folder. Requires "-sub". '
-            'Optional to specify "-ses".'
+            "If '-heur' is used, it will become "
+            "the site folder. Requires '-sub'. "
+            "Optional to specify '-ses'."
         ),
         default=".",
     )
@@ -84,7 +84,7 @@ def _get_parser():
         "--subject",
         dest="sub",
         type=str,
-        help='Specify alongside "-heur". Code of subject to process.',
+        help="Specify alongside '-heur'. Code of subject to process.",
         default=None,
     )
     optional.add_argument(
@@ -92,7 +92,7 @@ def _get_parser():
         "--session",
         dest="ses",
         type=str,
-        help='Specify alongside "-heur". Code of session to process.',
+        help="Specify alongside '-heur'. Code of session to process.",
         default=None,
     )
     optional.add_argument(
@@ -155,10 +155,10 @@ def _get_parser():
         type=float,
         help=(
             "Threshold to use for trigger detection. "
-            'If "ntp" and "TR" are specified, phys2bids '
+            "If 'ntp' and 'TR' are specified, phys2bids "
             "automatically computes a threshold to detect "
             "the triggers. Use this parameter to set it manually. "
-            "This parameter is necessary for multi-run recordings. "
+            "This parameter is necessary for multi-run recordings."
         ),
         default=None,
     )
@@ -188,7 +188,7 @@ def _get_parser():
         "--participant-yml",
         dest="yml",
         type=str,
-        help="full path to file with info needed to generate participant.tsv file ",
+        help="full path to file with info needed to generate participant.tsv file",
         default="",
     )
     optional.add_argument(
