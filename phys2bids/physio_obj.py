@@ -390,9 +390,7 @@ class BlueprintInput:
         if "time" in new_names:
             del new_names[new_names.index("time")]
 
-        new_names = [
-            "time",
-        ] + new_names
+        new_names = ["time"] + new_names
 
         self.ch_name = has_size(
             is_valid(new_names, list, list_type=str), self.ch_amount, "unknown"
