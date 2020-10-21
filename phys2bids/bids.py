@@ -10,92 +10,49 @@ from phys2bids import utils
 
 LGR = logging.getLogger(__name__)
 
+# fmt: off
 UNIT_ALIASES = {
     # kelvin: thermodynamic temperature
-    "kelvin": "K",
-    "kelvins": "K",
+    "kelvin": "K", "kelvins": "K",
     # mole: amount of substance
-    "mol": "mol",
-    "mole": "mol",
+    "mol": "mol", "mole": "mol",
     # newton: force, weight
-    "newton": "N",
-    "newtons": "N",
+    "newton": "N", "newtons": "N",
     # pascal: pressure, stress
-    "pascal": "Pa",
-    "pascals": "Pa",
-    "pa": "Pa",
+    "pascal": "Pa", "pascals": "Pa", "pa": "Pa",
     # volt: voltage (electrical potential), emf
-    "volt": "V",
-    "volts": "V",
+    "volt": "V", "volts": "V",
     # degree Celsius: temperature relative to 273.15 K
-    "°c": "°C",
-    "°celsius": "°C",
-    "celsius": "°C",
+    "°c": "°C", "°celsius": "°C", "celsius": "°C",
     # ampere: electric current
-    "ampere": "A",
-    "amp": "A",
-    "amps": "A",
+    "ampere": "A", "amp": "A", "amps": "A",
     # second: time and hertzs: frequency
     # siemens: electric conductance (e.g. EDA)
     "siemens": "S",
     # second: time and hertzs
-    "1/hz": "s",
-    "1/hertz": "s",
-    "hz": "Hz",
-    "1/s": "Hz",
-    "1/second": "Hz",
-    "1/seconds": "Hz",
-    "1/sec": "Hz",
-    "1/secs": "Hz",
-    "hertz": "Hz",
-    "second": "s",
-    "seconds": "s",
-    "sec": "s",
+    "1/hz": "s", "1/hertz": "s", "hz": "Hz",
+    "1/s": "Hz", "1/second": "Hz", "1/seconds": "Hz",
+    "1/sec": "Hz", "1/secs": "Hz", "hertz": "Hz",
+    "second": "s", "seconds": "s", "sec": "s",
     "secs": "s",
     # All the aliases with one letter (to avoid issues)
-    "k": "K",
-    "n": "N",
-    "v": "V",
-    "c": "°C",
-    "a": "A",
-    "s": "s",
+    "k": "K", "n": "N", "v": "V", "c": "°C", "a": "A", "s": "s",
 }
 
 # Init dictionary of aliases for multipliers. Entries are still lowercase
 PREFIX_ALIASES = {
     # Multiples - skip "mega" and only up to "tera"
-    "da": "da",
-    "deca": "da",
-    "h": "h",
-    "hecto": "h",
-    "k": "k",
-    "kilo": "k",
-    "g": "G",
-    "giga": "G",
-    "t": "T",
+    "da": "da", "deca": "da", "h": "h", "hecto": "h",
+    "k": "k", "kilo": "k", "g": "G", "giga": "G", "t": "T",
     "tera": "T",
     # Submultipliers
-    "d": "d",
-    "deci": "d",
-    "c": "c",
-    "centi": "c",
-    "milli": "m",
-    "m": "m",
-    "µ": "µ",
-    "micro": "µ",
-    "n": "n",
-    "nano": "n",
-    "p": "p",
-    "pico": "p",
-    "f": "f",
-    "femto": "f",
-    "a": "a",
-    "atto": "a",
-    "z": "z",
-    "zepto": "z",
-    "y": "y",
-    "yocto": "y",
+    "d": "d", "deci": "d", "c": "c", "centi": "c",
+    "milli": "m", "m": "m", "µ": "µ", "micro": "µ",
+    "n": "n", "nano": "n", "p": "p", "pico": "p",
+    "f": "f", "femto": "f", "a": "a", "atto": "a",
+    "z": "z", "zepto": "z", "y": "y", "yocto": "y",
 }
+# fmt: on
 
 
 def bidsify_units(orig_unit):
