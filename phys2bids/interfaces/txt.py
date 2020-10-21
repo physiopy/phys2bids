@@ -146,9 +146,7 @@ def process_labchart(channel_list, chtrig, header=[]):
     if not (orig_names_len < len(timeseries)):
         duration = (timeseries[0].shape[0] + 1) * interval[0]
         t_ch = np.ogrid[0 : duration : interval[0]][:-1]  # create time channel
-        timeseries = [
-            t_ch,
-        ] + timeseries
+        timeseries = [t_ch] + timeseries
     names = names + orig_names
     units = units + orig_units
     freq = [1 / interval[0]] * len(timeseries)
