@@ -13,7 +13,7 @@ Closes #
   -
 
 ## Change Type
-<!-- You can indicate the type of change you think your pull request is -->
+<!-- Indicate the type of change you think your pull request is -->
 - [ ] `bugfix` (+0.0.1)
 - [ ] `minor` (+0.1.0)
 - [ ] `major`  (+1.0.0)
