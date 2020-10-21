@@ -38,16 +38,24 @@ def populate_phys_input(filename, chtrig=0):
     physio_obj.BlueprintInput
     """
     with warnings.catch_warnings():
-        warnings.filterwarnings('ignore', category=DeprecationWarning)
+        warnings.filterwarnings("ignore", category=DeprecationWarning)
         data = read_file(filename).channels
 
-    freq = [data[0].samples_per_second, ]
-    timeseries = [data[0].time_index, ]
-    units = ['s', ]
-    names = ['time', ]
+    freq = [
+        data[0].samples_per_second,
+    ]
+    timeseries = [
+        data[0].time_index,
+    ]
+    units = [
+        "s",
+    ]
+    names = [
+        "time",
+    ]
 
     for k, ch in enumerate(data):
-        LGR.info(f'{k:02d}. {ch}')
+        LGR.info(f"{k:02d}. {ch}")
         timeseries.append(ch.data)
         freq.append(ch.samples_per_second)
         units.append(ch.units)

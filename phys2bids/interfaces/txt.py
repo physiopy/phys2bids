@@ -53,7 +53,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
                     # save this number when the next sample is not equal
                     eq_list.append(eq_samples)
                     # remove the samples that where equal
-                    chann = chann[idx2 + 1:]
+                    chann = chann[idx2 + 1 :]
                     if max_equal < eq_samples:
                         max_equal = eq_samples
                     break
@@ -98,39 +98,45 @@ def process_labchart(channel_list, chtrig, header=[]):
     # get frequency
     # check header has some length
     if len(header) == 0:
-        raise AttributeError('Files without header are not supported yet')
+        raise AttributeError("Files without header are not supported yet")
     interval = header[0][1].split(" ")
     # check the interval is in some of the correct labchart units
-    if interval[-1] not in ['hr', 'min', 's', 'ms', 'µs']:
-        raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid LabChart'
-                             'time unit, this probably means your file is not in Labchart format')
+    if interval[-1] not in ["hr", "min", "s", "ms", "µs"]:
+        raise AttributeError(
+            f'Interval unit "{interval[-1]}" is not in a valid LabChart'
+            "time unit, this probably means your file is not in Labchart format"
+        )
     # check if interval is in seconds, if not change the units to seconds
-    if interval[-1] != 's':
-        LGR.warning('Interval is not in seconds. Converting its value.')
-        if interval[-1] == 'hr':
+    if interval[-1] != "s":
+        LGR.warning("Interval is not in seconds. Converting its value.")
+        if interval[-1] == "hr":
             interval[0] = float(interval[0]) * 3600
-            interval[-1] = 's'
-        elif interval[-1] == 'min':
+            interval[-1] = "s"
+        elif interval[-1] == "min":
             interval[0] = float(interval[0]) * 60
-            interval[-1] = 's'
-        elif interval[-1] == 'ms':
+            interval[-1] = "s"
+        elif interval[-1] == "ms":
             interval[0] = float(interval[0]) / 1000
-            interval[-1] = 's'
-        elif interval[-1] == 'µs':
+            interval[-1] = "s"
+        elif interval[-1] == "µs":
             interval[0] = float(interval[0]) / 1000000
-            interval[-1] = 's'
+            interval[-1] = "s"
     else:
         interval[0] = float(interval[0])
     # get units
     range_list = header[5][1:]
     orig_units = []
     for item in range_list:
-        orig_units.append(item.split(' ')[1])
-    units = ['s', ]
+        orig_units.append(item.split(" ")[1])
+    units = [
+        "s",
+    ]
     # get names
     orig_names = header[4][1:]
     orig_names_len = len(orig_names)
-    names = ['time', ]
+    names = [
+        "time",
+    ]
     # get channels
     # this transposes the channel_list from a list of samples x channels to
     # a list of channels x samples
@@ -143,8 +149,10 @@ def process_labchart(channel_list, chtrig, header=[]):
     # ...otherwise, create the time channel
     if not (orig_names_len < len(timeseries)):
         duration = (timeseries[0].shape[0] + 1) * interval[0]
-        t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
-        timeseries = [t_ch, ] + timeseries
+        t_ch = np.ogrid[0 : duration : interval[0]][:-1]  # create time channel
+        timeseries = [
+            t_ch,
+        ] + timeseries
     names = names + orig_names
     units = units + orig_units
     freq = [1 / interval[0]] * len(timeseries)
@@ -182,7 +190,7 @@ def process_acq(channel_list, chtrig, header=[]):
     """
     # check header is not empty
     if len(header) == 0:
-        raise AttributeError('Files without header are not supported yet')
+        raise AttributeError("Files without header are not supported yet")
     header.append(channel_list[0])
     del channel_list[0]  # delete sample size from channel list
     # this transposes the channel_list from a list of samples x channels to
@@ -191,40 +199,52 @@ def process_acq(channel_list, chtrig, header=[]):
 
     interval = header[1][0].split()
     # check the interval is in some of the correct AcqKnowledge units
-    if interval[-1].split('/')[0] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz']:
-        raise AttributeError(f'Interval unit "{interval[-1]}" is not in a '
-                             'valid AcqKnowledge format time unit, this probably'
-                             'means your file is not in min, sec, msec, µsec, Mhz, KHz or Hz')
-    interval[-1] = interval[-1].split('/')[0]
+    if interval[-1].split("/")[0] not in [
+        "min",
+        "sec",
+        "µsec",
+        "msec",
+        "MHz",
+        "kHz",
+        "Hz",
+    ]:
+        raise AttributeError(
+            f'Interval unit "{interval[-1]}" is not in a '
+            "valid AcqKnowledge format time unit, this probably"
+            "means your file is not in min, sec, msec, µsec, Mhz, KHz or Hz"
+        )
+    interval[-1] = interval[-1].split("/")[0]
     # Check if the header is in frequency or sampling interval
-    if 'Hz' in interval[-1].split('/')[0]:
-        print('frequency is given in the header, calculating sample Interval'
-              ' and standarizing to Hz if needed')
+    if "Hz" in interval[-1].split("/")[0]:
+        print(
+            "frequency is given in the header, calculating sample Interval"
+            " and standarizing to Hz if needed"
+        )
         freq = float(interval[0])
         freq_unit = interval[-1]
-        if freq_unit == 'MHz':
+        if freq_unit == "MHz":
             freq = freq * (1000000)
-        elif freq_unit == 'kHz':
+        elif freq_unit == "kHz":
             freq = freq * 1000
         interval[0] = 1 / freq
         freq = [freq] * (len(timeseries) + 1)
     else:
         # check if interval is in seconds, if not change the units to seconds and
         # calculate frequency
-        if interval[-1].split('/')[0] != 'sec':
-            LGR.warning('Interval is not in seconds. Converting its value.')
-            if interval[-1].split('/')[0] == 'min':
+        if interval[-1].split("/")[0] != "sec":
+            LGR.warning("Interval is not in seconds. Converting its value.")
+            if interval[-1].split("/")[0] == "min":
                 interval[0] = float(interval[0]) * 60
-                interval[-1] = 's'
-            elif interval[-1].split('/')[0] == 'msec':
+                interval[-1] = "s"
+            elif interval[-1].split("/")[0] == "msec":
                 interval[0] = float(interval[0]) / 1000
-                interval[-1] = 's'
-            elif interval[-1].split('/')[0] == 'µsec':
+                interval[-1] = "s"
+            elif interval[-1].split("/")[0] == "µsec":
                 interval[0] = float(interval[0]) / 1000000
-                interval[-1] = 's'
+                interval[-1] = "s"
         else:
             interval[0] = float(interval[0])
-            interval[-1] = 's'
+            interval[-1] = "s"
         freq = [1 / interval[0]] * (len(timeseries) + 1)
     # get units and names
     orig_units = []
@@ -237,16 +257,22 @@ def process_acq(channel_list, chtrig, header=[]):
         # since units are in the line imediately after we get the units at the same time
         orig_units.append(header[index1 + 1][0])
     # reorder channels names
-    names = ['time', ]
+    names = [
+        "time",
+    ]
     names = names + orig_names
     # reoder channels units
-    units = ['s', ]
+    units = [
+        "s",
+    ]
     units = units + orig_units
     # get channels
     timeseries = [np.array(darray) for darray in timeseries]
     duration = (timeseries[0].shape[0] + 1) * interval[0]
-    t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
-    timeseries = [t_ch, ] + timeseries
+    t_ch = np.ogrid[0 : duration : interval[0]][:-1]  # create time channel
+    timeseries = [
+        t_ch,
+    ] + timeseries
     freq = check_multifreq(timeseries, freq)
     return BlueprintInput(timeseries, freq, names, units, chtrig)
 
@@ -270,16 +296,16 @@ def read_header_and_channels(filename):
     """
     header = []
     channel_list = []
-    with open(filename, 'r') as f:
+    with open(filename, "r") as f:
         for line in f:
-            line = line.rstrip('\n').split('\t')
-            while line[-1] == '':
-                line.remove('')  # sometimes there is an extra space
+            line = line.rstrip("\n").split("\t")
+            while line[-1] == "":
+                line.remove("")  # sometimes there is an extra space
             for item in line:
-                if '#' == item[0]:  # detecting comments
+                if "#" == item[0]:  # detecting comments
                     line.remove(item)
-            if line[-1] == '':
-                line.remove('')
+            if line[-1] == "":
+                line.remove("")
             try:
                 float(line[0])
             except ValueError:
@@ -323,13 +349,13 @@ def populate_phys_input(filename, chtrig=0):
     header, channel_list = read_header_and_channels(filename)
     # check header is not empty and detect if it is in labchart or Acqknoledge format
     if len(header) == 0:
-        raise AttributeError('Files without header are not supported yet')
-    elif 'Interval=' in header[0]:
-        LGR.info('phys2bids detected that your file is in Labchart format')
+        raise AttributeError("Files without header are not supported yet")
+    elif "Interval=" in header[0]:
+        LGR.info("phys2bids detected that your file is in Labchart format")
         phys_in = process_labchart(channel_list, chtrig, header)
-    elif 'acq' in header[0][0]:
-        LGR.info('phys2bids detected that your file is in AcqKnowledge format')
+    elif "acq" in header[0][0]:
+        LGR.info("phys2bids detected that your file is in AcqKnowledge format")
         phys_in = process_acq(channel_list, chtrig, header)
     else:
-        raise AttributeError('This file format is not supported yet for txt files')
+        raise AttributeError("This file format is not supported yet for txt files")
     return phys_in

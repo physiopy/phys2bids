@@ -52,8 +52,9 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
     for run_idx, run_tps in enumerate(ntp_list):
 
         # correct time offset for this iteration's object
-        phys_in.check_trigger_amount(thr=thr, num_timepoints_expected=run_tps,
-                                     tr=tr_list[run_idx])
+        phys_in.check_trigger_amount(
+            thr=thr, num_timepoints_expected=run_tps, tr=tr_list[run_idx]
+        )
         # If it's the very first run, start the run at sample 0,
         # otherwise start is first trigger (adjust with padding later)
         if run_idx == 0:
@@ -90,14 +91,19 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
         # Save *start* and *end_index* in dictionary along with *time_offset* and *ntp found*
         # dict key must be readable by human
         # LGRinfo
-        LGR.info('\n--------------------------------------------------------------\n'
-                 f'Slicing between {(run_start/phys_in.freq[phys_in.trigger_idx])} seconds and '
-                 f'{run_end/phys_in.freq[phys_in.trigger_idx]} seconds\n'
-                 '--------------------------------------------------------------')
+        LGR.info(
+            "\n--------------------------------------------------------------\n"
+            f"Slicing between {(run_start/phys_in.freq[phys_in.trigger_idx])} seconds and "
+            f"{run_end/phys_in.freq[phys_in.trigger_idx]} seconds\n"
+            "--------------------------------------------------------------"
+        )
 
-        run_timestamps[run_idx + 1] = (run_start, run_end,
-                                       phys_in.time_offset,
-                                       phys_in.num_timepoints_found)
+        run_timestamps[run_idx + 1] = (
+            run_start,
+            run_end,
+            phys_in.time_offset,
+            phys_in.num_timepoints_found,
+        )
 
         # update the object so that next iteration will look for the first trigger
         # after previous run's last trigger. maybe padding extends to next run
@@ -133,10 +139,12 @@ def slice4phys(phys_in, ntp_list, tr_list, thr, padding=9):
     """
     phys_in_slices = {}
     # inform the user
-    LGR.warning('\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-                '\nphys2bids will split the input file according to the given -tr and -ntp'
-                ' arguments'
-                '\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    LGR.warning(
+        "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        "\nphys2bids will split the input file according to the given -tr and -ntp"
+        " arguments"
+        "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    )
     # Find the timestamps
     run_timestamps = find_runs(phys_in, ntp_list, tr_list, thr, padding)
     for n, run in enumerate(run_timestamps.keys()):
@@ -144,11 +152,11 @@ def slice4phys(phys_in, ntp_list, tr_list, thr, padding=9):
         # tmp variable to collect run's info
         run_attributes = run_timestamps[run]
 
-        phys_in_slices[run] = deepcopy(phys_in[run_attributes[0]:run_attributes[1]])
+        phys_in_slices[run] = deepcopy(phys_in[run_attributes[0] : run_attributes[1]])
 
         # Run check_trigger amount
-        phys_in_slices[run].check_trigger_amount(thr=thr,
-                                                 num_timepoints_expected=ntp_list[n],
-                                                 tr=tr_list[n])
+        phys_in_slices[run].check_trigger_amount(
+            thr=thr, num_timepoints_expected=ntp_list[n], tr=tr_list[n]
+        )
 
     return phys_in_slices
