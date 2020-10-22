@@ -33,7 +33,8 @@ Be sure to have ``git`` and ``pip`` installed. Fork the phys2bids repository to 
 	# or in case you have an ssh key set up:
 	git clone git@github.com:{username}/phys2bids.git
 
-	# we also recommend to set up the phys2bids original repo as upstream:
+	# we also recommend to set up the phys2bids original repo as upstream.
+	# this way you can always sync your branches with the command git pull upstream master.
 
 	git remote add upstream https://github.com/physiopy/phys2bids.git
 	# this way you can always sync your branches with the command git pull upstream master 
