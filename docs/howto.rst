@@ -27,10 +27,12 @@ For the tutorial, we will assume the repository was downloaded in ``/home/arthur
 .. code-block:: shell
 
     cd /home/arthurdent
-    mkdir test_dir
+    mkdir test_dir # create test directory
     cd test_dir
+    # Download tutorial files
     wget https://osf.io/j842e/download -O tutorial_file.txt
     wget https://osf.io/pzfxb/download -O tutorial_file_v2.txt
+    # create output directory
     mkdir physio
 
 What is in the tutorial text file?
