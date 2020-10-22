@@ -24,7 +24,7 @@ This will let you run the program with the latest modification, without requirin
     If you want to check, type ``python --version`` in a terminal.
 
 
-Linux and mac developer installation
+Linux, mac  and Windows developer installation
 ------------------------------------
 
 Be sure to have ``git`` and ``pip`` installed, then open a terminal and run::
@@ -59,3 +59,35 @@ This will install:
 	- All the **style** modules, such as ``flake8``, to help you linter the code!
 	- All the **documentation** modules, like ``sphinx``, so that you can build the docs locally before submitting them.
 	- All the **test** modules, like ``pytest``, in order for you to test your code locally before committing it!
+
+Check your installation!
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Type the commands::
+
+	cd phys2bids/tests
+    pytest
+
+This will execute locally all test and check your phys2bids installation works properly
+
+.. code-block:: shell
+
+	pytest
+	=================================================================== test session starts ===================================================================
+	platform win32 -- Python 3.8.6, pytest-6.1.1, py-1.9.0, pluggy-0.13.1
+	rootdir: C:\Users\sento\phys2bids, configfile: setup.cfg
+	plugins: cov-2.10.1
+	collected 61 items
+
+	test_acq.py .                                                                                                                                        [  1%]
+	test_bids.py ................                                                                                                                        [ 27%]
+	test_integration.py ...                                                                                                                              [ 32%]
+	test_phys2bids.py ...                                                                                                                                [ 37%]
+	test_physio_obj.py .......                                                                                                                           [ 49%]
+	test_txt.py ..................                                                                                                                       [ 78%]
+	test_utils.py ...........                                                                                                                            [ 96%]
+	test_viz.py .x                                                                                                                                       [100%]
+
+	================================================================= short test summary info =================================================================
+	XFAIL test_viz.py::test_plot_trigger
+	======================================================== 60 passed, 1 xfailed in 142.58s (0:02:22) ========================================================
