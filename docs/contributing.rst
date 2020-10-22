@@ -27,9 +27,17 @@ This will let you run the program with the latest modification, without requirin
 Linux, mac  and Windows developer installation
 ------------------------------------
 
-Be sure to have ``git`` and ``pip`` installed, then open a terminal and run::
+Be sure to have ``git`` and ``pip`` installed. Fork the phys2bids repository to yours,then open a terminal and run::
 
-	git clone https://github.com/physiopy/phys2bids.git
+	git clone https://github.com/{username}/phys2bids.git
+	# or in case you have ssh key:
+	git clone git@github.com:{username}/phys2bids.git
+
+	# we also recommend to set up the phys2bids original repo as upstream:
+
+	git remote add upstream https://github.com/physiopy/phys2bids.git
+	# this way you can always sync your branches with the command git pull upstream master 
+
 
 Basic installation
 ^^^^^^^^^^^^^^^^^^
