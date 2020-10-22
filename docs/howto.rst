@@ -411,7 +411,7 @@ The output will look very similar to our previous calls, when we did not use the
 
 .. code-block:: shell
 
-    INFO       Preparing BIDS output using /home/arthurdent/phys2bids/phys2bids/heuristics/heur_tutorial.pyy
+    INFO       Preparing BIDS output using /home/arthurdent/phys2bids/phys2bids/heuristics/heur_tutorial.py
 
 Now let's check the outputs it has generated. In the ``-outdir`` you will see a png file and tsv logger file, like before (now with some different file names).
 You will also see a folder for the specified subject, that (optionally) contains a folder for the session, containing a folder for the functional data, containing the log file and the required BIDs files with the right name!
