@@ -99,7 +99,7 @@ If your output is: ``phys2bids 1.3.0-beta`` or similar, ``phys2bids`` is ready t
 Windows installation
 --------------------------
 
-First of all let's check you have python installed, open a windows power shell window  in ADMIN MODE and type::
+First of all let's check you have python installed. Open a windows power shell window in ADMIN MODE and type::
 
     python --version
 
