@@ -22,20 +22,25 @@ In order to follow the tutorial, you need a very quick setup: download or clone 
 
     For instance, if you are planning to process AcqKnowledge files, install the interface dependencies as described `here <installation.html#>`_.
 
-For the tutorial, we will assume the repository was downloaded in ``/home/arthurdent``. Let's get there right now:
+For the tutorial, we will assume the repository was downloaded in ``/home/arthurdent``. Let's get there right now and download the tutorial data:
 
 .. code-block:: shell
 
     cd /home/arthurdent
+    mkdir test_dir
+    cd test_dir
+    wget https://osf.io/j842e/download -O tutorial_file.txt
+    wget https://osf.io/pzfxb/download -O tutorial_file_v2.txt
+    mkdir physio
 
 What is in the tutorial text file?
 ##################################
 
-The file can be found in ``phys2bids/phys2bids/tests/data/tutorial_file.txt``. This file has header information (first 9 lines) which phys2bids will use to process this file, alongside information directly inputted by the user. Following this header information, the data in the file is stored in a column format. In this example, we have time (column 1), MRI volume trigger pulse (column 2), CO2 (column 3), O2 (column 4) and cardiac pulse (column 5) recordings. Each column was sampled at 1000Hz (Interval = 0.001 s).
+This file has header information (first 9 lines) which phys2bids will use to process this file, alongside information directly inputted by the user. Following this header information, the data in the file is stored in a column format. In this example, we have time (column 1), MRI volume trigger pulse (column 2), CO2 (column 3), O2 (column 4) and cardiac pulse (column 5) recordings. Each column was sampled at 1000Hz (Interval = 0.001 s).
 
-.. literalinclude:: ../phys2bids/tests/data/tutorial_file.txt
-   :linenos:
-   :lines: 1-15
+.. image:: _static/tutorial_header.png
+   :alt: tutorial_file_channels
+   :align: center
 
 .. note::
     time is not a "real" channel recorded by LabChart or AcqKnowledge. For this reason, ``phys2bids`` treats it as a hidden channel, always in position 0. Channel 1 will be classed as the first channel recorded in either software.
@@ -46,12 +51,6 @@ Using the -info option
 First, we can see what information ``phys2bids`` reads from the file, and make sure this is correct before processing the file.
 
 The simplest way of calling ``phys2bids`` is moving to the folder containing the physiological file and typing:
-.. code-block:: shell
-    mkdir test_dir
-    cd test_dir
-    wget https://osf.io/j842e/download -O tutorial_file.txt
-    wget https://osf.io/pzfxb/download -O tutorial_file_v2.txt
-    mkdir physio
 
 ``phys2bids`` will try to get the extension for you.
 However, we’ll use -info to have a sneak peak into the content of the file and -outdir to direct all the files to the same directory:
