@@ -95,3 +95,38 @@ Type the command::
     phys2bids -v
 
 If your output is: ``phys2bids 1.3.0-beta`` or similar, ``phys2bids`` is ready to be used.
+
+Windows installation
+--------------------------
+
+First of all let's check you have python installed, open a windows power shell window  in ADMIN MODE and type::
+
+    python --version
+
+In case you don't have it, either install it from this link https://www.microsoft.com/en-us/p/python-38/9mssztt1n39l?activetab=pivot:overviewtab or type the command::
+
+    python
+
+It will redirect you to the windows store python install (in the creation of this tutorial the newest version of python was 3.8).
+
+Once python is installed, you can either install phys2bids directly with pip::
+
+    pip install phys2bids
+
+If you want the latest development version of the program, download the package from `github <https://github.com/physiopy/phys2bids>`_ and uncompress it.
+Alternatively, if you have ``git``, use the command::
+
+    git clone https://github.com/physiopy/phys2bids.git
+
+Open a terminal in the ``phys2bids`` folder in ADMIN MODE and execute the command::
+
+    pip install .
+    # or this one if you want all the extra dependencies installed
+    pip install .[all]
+
+Check your installation!
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Type the command::
+
+    phys2bids -v
