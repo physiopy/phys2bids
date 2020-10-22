@@ -77,7 +77,7 @@ Type the commands::
 	cd phys2bids/tests
     pytest
 
-This will execute locally all test and check your phys2bids installation works properly
+This will execute the tests locally and check that your phys2bids installation works properly.
 
 .. code-block:: shell
 
