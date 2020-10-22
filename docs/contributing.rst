@@ -30,7 +30,7 @@ Linux, mac  and Windows developer installation
 Be sure to have ``git`` and ``pip`` installed. Fork the phys2bids repository to yours,then open a terminal and run::
 
 	git clone https://github.com/{username}/phys2bids.git
-	# or in case you have ssh key:
+	# or in case you have an ssh key set up:
 	git clone git@github.com:{username}/phys2bids.git
 
 	# we also recommend to set up the phys2bids original repo as upstream:
