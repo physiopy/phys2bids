@@ -121,7 +121,7 @@ Alternatively, if you have ``git``, use the command::
 Open a terminal in the ``phys2bids`` folder in ADMIN MODE and execute the command::
 
     pip install .
-    # or this one if you want all the extra dependencies installed
+    # or if you want all the extra dependencies installed:
     pip install .[all]
 
 Check your installation!
