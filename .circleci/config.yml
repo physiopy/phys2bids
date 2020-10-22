@@ -140,7 +140,6 @@ jobs:
             mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integration37
       - store_artifacts:
           path: /tmp/src/phys2bids/reporting
-          destination: reports
       - persist_to_workspace:
           root: /tmp
           paths:
