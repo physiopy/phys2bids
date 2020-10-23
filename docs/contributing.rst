@@ -38,7 +38,6 @@ In this way you can always keep your main branch up to date with the command `gi
 
 	cd phys2bids
 	git remote add upstream https://github.com/physiopy/phys2bids.git
-	# this way you can always sync your branches with the command: 
 	git pull upstream master 
 
 
