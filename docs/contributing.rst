@@ -24,8 +24,8 @@ This will let you run the program with the latest modification, without requirin
     If you want to check, type ``python --version`` in a terminal.
 
 
-Linux, Mac  and Windows developer installation
-----------------------------------------------
+Linux, Mac and Windows developer installation
+---------------------------------------------
 
 Be sure to have ``git`` and ``pip`` installed. Fork the phys2bids repository in GitHub, then open a terminal and run the following code to clone the forked repository and set it as your `origin`::
 

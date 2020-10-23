@@ -35,7 +35,7 @@ Install with ``pip``
 Install ``phys2bids`` alone
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Pypi has the latest stable release of ``phys2bids`` as a package. Since we use ``auto`` to publish the latest features as soon as they are ready, it will _really_ be the latest release. Just run::
+Pypi has the latest stable release of ``phys2bids`` as a package. Since we use ``auto`` to publish the latest features as soon as they are ready, it will *really* be the latest release. Just run::
 
     pip3 install phys2bids
 
