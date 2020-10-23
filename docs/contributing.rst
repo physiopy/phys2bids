@@ -101,3 +101,6 @@ This will execute the tests locally and check that your phys2bids installation w
 	================================================================= short test summary info =================================================================
 	XFAIL test_viz.py::test_plot_trigger
 	======================================================== 60 passed, 1 xfailed in 142.58s (0:02:22) ========================================================
+
+Do Not worry about the xfail error in the test_viz.py, this is only happening because at the moment we cannot run this test in our Continous integration workflow.
+However if you do encounter any other error, check that you have all the extra dependencies install and contact us if necessary.
