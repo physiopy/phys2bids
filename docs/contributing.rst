@@ -27,7 +27,7 @@ This will let you run the program with the latest modification, without requirin
 Linux, Mac  and Windows developer installation
 ------------------------------------
 
-Be sure to have ``git`` and ``pip`` installed. Fork the phys2bids repository to yours,then open a terminal and run::
+Be sure to have ``git`` and ``pip`` installed. Fork the phys2bids repository in GitHub, then open a terminal and run the following code to clone the forked repository and set it as your `origin`::
 
 	git clone https://github.com/{username}/phys2bids.git
 	# or in case you have an ssh key set up:
