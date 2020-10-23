@@ -36,6 +36,7 @@ Be sure to have ``git`` and ``pip`` installed. Fork the phys2bids repository in 
 We also recommend to set up the physiopy/phys2bids repository as `upstream`.
 	# this way you can always sync your branches with the command git pull upstream master.
 
+	cd phys2bids
 	git remote add upstream https://github.com/physiopy/phys2bids.git
 	# this way you can always sync your branches with the command: 
 	git pull upstream master 
