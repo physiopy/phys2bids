@@ -264,7 +264,7 @@ There is one trigger that ``phys2bids`` couldn't find automatically. We can work
    :alt: tutorial_file_channels
    :align: center
 
-By looking at this figure, we can work out that we need a smaller threshold in order to include the first time point. This can be implemented with the ``-thr`` argument:
+By looking at this figure, we can work out that we need a smaller threshold in order to include the middle time point. This can be implemented with the ``-thr`` argument:
 
 .. code-block:: shell
 
