@@ -52,15 +52,12 @@ Using the -info option
 
 First, we can see what information ``phys2bids`` reads from the file, and make sure this is correct before processing the file.
 
-The simplest way of calling ``phys2bids`` is moving to the folder containing the physiological file and typing:
-
-``phys2bids`` will try to get the extension for you.
-However, we’ll use -info to have a sneak peak into the content of the file and -outdir to direct all the files to the same directory:
-
+We’ll use -info to have a sneak peak into the content of the file and -outdir to direct all the files to the same directory:
 .. code-block:: shell
 
     phys2bids -in tutorial_file.txt -info -outdir physio
 
+``phys2bids`` will try to get the extension for you.
 This ``-info`` argument means ``phys2bids`` does not process the file, but only outputs information it reads from the file, by printing to the terminal and outputting a png plot of the data in the current directory:
 
 .. code-block:: shell
