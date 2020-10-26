@@ -1,3 +1,15 @@
+# 2.2.3 (Fri Oct 23 2020)
+
+#### 🐛 Bug Fix
+
+- Update PyYAML minimal requirements to avoid "FullLoader" attribute errors. [#330](https://github.com/physiopy/phys2bids/pull/330) ([@smoia](https://github.com/smoia))
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
 # 2.2.2 (Mon Oct 19 2020)
 
 #### 🐛 Bug Fix
