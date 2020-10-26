@@ -61,16 +61,16 @@ We’ll use -info to have a sneak peak into the content of the file and -outdir 
 This ``-info`` argument means ``phys2bids`` does not process the file, but only outputs information it reads from the file, by printing to the terminal and outputting a png plot of the data in the current directory:
 
 .. code-block:: shell
-    INFO       Currently running phys2bids version 0.4.0+1464.g4a56c2a.dirty
-    INFO       Input file is tutorial_file.txt
-    INFO       File extension is .txt
-    WARNING    If both acq and txt files exist in the path, acq will be selected.
-    INFO       Reading the file ./tutorial_file.txt
-    INFO       phys2bids detected that your file is in Labchart format
-    INFO       Checking that units of measure are BIDS compatible
-    WARNING    The given unit mmHg does not have aliases, passing it as is
-    WARNING    The given unit mmHg does not have aliases, passing it as is
-    INFO       Reading infos
+    INFO          Currently running phys2bids version 0.4.0+1464.g4a56c2a.dirty
+    INFO          Input file is tutorial_file.txt
+    INFO          File extension is .txt
+    WARNING       If both acq and txt files exist in the path, acq will be selected.
+    INFO          Reading the file ./tutorial_file.txt
+    INFO          phys2bids detected that your file is in Labchart format
+    INFO          Checking that units of measure are BIDS compatible
+    WARNING       The given unit mmHg does not have aliases, passing it as is
+    WARNING       The given unit mmHg does not have aliases, passing it as is
+    INFO          Reading infos
     INFO
     ------------------------------------------------
     File tutorial_file.txt contains:
@@ -80,7 +80,7 @@ This ``-info`` argument means ``phys2bids`` does not process the file, but only 
     04. Pulse; sampled at 1000.0 Hz
     ------------------------------------------------
 
-    INFO       saving channel plot to physio/code/conversion/tutorial_file.png
+    INFO          saving channel plot to physio/code/conversion/tutorial_file.png
 
 .. image:: _static/tutorial_file.png
    :alt: tutorial_file_channels
@@ -106,16 +106,16 @@ When calling ``phys2bids`` without the ``-info`` argument, it will generate file
 This is outputted to the terminal:
 
 .. code-block:: shell
-    INFO       Currently running phys2bids version 0.4.0+1464.g4a56c2a.dirty
-    INFO       Input file is tutorial_file.txt
-    INFO       File extension is .txt
-    WARNING    If both acq and txt files exist in the path, acq will be selected.
-    INFO       Reading the file ./tutorial_file.txt
-    INFO       phys2bids detected that your file is in Labchart format
-    INFO       Checking that units of measure are BIDS compatible
-    WARNING    The given unit mmHg does not have aliases, passing it as is
-    WARNING    The given unit mmHg does not have aliases, passing it as is
-    INFO       Reading infos
+    INFO          Currently running phys2bids version 0.4.0+1464.g4a56c2a.dirty
+    INFO          Input file is tutorial_file.txt
+    INFO          File extension is .txt
+    WARNING       If both acq and txt files exist in the path, acq will be selected.
+    INFO          Reading the file ./tutorial_file.txt
+    INFO          phys2bids detected that your file is in Labchart format
+    INFO          Checking that units of measure are BIDS compatible
+    WARNING       The given unit mmHg does not have aliases, passing it as is
+    WARNING       The given unit mmHg does not have aliases, passing it as is
+    INFO          Reading infos
     INFO
     ------------------------------------------------
     File tutorial_file.txt contains:
@@ -125,16 +125,16 @@ This is outputted to the terminal:
     04. Pulse; sampled at 1000.0 Hz
     ------------------------------------------------
 
-    INFO       saving channel plot to physio/code/conversion/tutorial_file.png
-    WARNING    Skipping trigger pulse count. If you want to run it, call phys2bids using both "-ntp" and "-tr" arguments
-    INFO       Preparing 1 output files.
-    INFO       Exporting files for run 1 freq 1000.0
+    INFO          saving channel plot to physio/code/conversion/tutorial_file.png
+    WARNING       Skipping trigger pulse count. If you want to run it, call phys2bids using both "-ntp" and "-tr" arguments
+    INFO          Preparing 1 output files.
+    INFO          Exporting files for run 1 freq 1000.0
     INFO
     ------------------------------------------------
-    Filename:            tutorial_file.txt
+    Filename:       tutorial_file.txt
 
     Timepoints expected: None
-    Timepoints found:    None
+    Timepoints found:       None
     Sampling Frequency:  1000.0 Hz
     Sampling started at: -1398.0000 s
     Tip: Time 0 is the time of first trigger
@@ -174,20 +174,20 @@ Look back at the last command line output, from the section above. It said "Skip
 Now the output says:
 
 .. code-block:: shell
-    INFO       Counting trigger points
-    INFO       The trigger is in channel 1
-    INFO       The number of timepoints according to the std_thr method is 158. The computed threshold is 1.1524
-    INFO       Checking number of timepoints
-    INFO       Found just the right amount of timepoints!
-    INFO       Plot trigger
-    INFO       Preparing 1 output files.
-    INFO       Exporting files for run 1 freq 1000.0
+    INFO          Counting trigger points
+    INFO          The trigger is in channel 1
+    INFO          The number of timepoints according to the std_thr method is 158. The computed threshold is 1.1524
+    INFO          Checking number of timepoints
+    INFO          Found just the right amount of timepoints!
+    INFO          Plot trigger
+    INFO          Preparing 1 output files.
+    INFO          Exporting files for run 1 freq 1000.0
     INFO
     ------------------------------------------------
-    Filename:            tutorial_file.txt
+    Filename:       tutorial_file.txt
 
     Timepoints expected: [158]
-    Timepoints found:    158
+    Timepoints found:       158
     Sampling Frequency:  1000.0 Hz
     Sampling started at: 0.2460 s
     Tip: Time 0 is the time of first trigger
@@ -237,22 +237,22 @@ The output:
     04. Pulse; sampled at 1000.0 Hz
     ------------------------------------------------
 
-    INFO       saving channel plot to physio_v2/code/conversion/tutorial_file_v2.png
-    INFO       Counting trigger points
-    INFO       The trigger is in channel 1
-    INFO       The number of timepoints according to the std_thr method is 157. The computed threshold is 1.1507
-    INFO       Checking number of timepoints
-    WARNING    Found 1 timepoints less than expected!
-    WARNING    Correcting time offset, assuming missing timepoints are at the beginning (try again with a more conservative thr)
-    INFO       Plot trigger
-    INFO       Preparing 1 output files.
-    INFO       Exporting files for run 1 freq 1000.0
+    INFO          saving channel plot to physio_v2/code/conversion/tutorial_file_v2.png
+    INFO          Counting trigger points
+    INFO          The trigger is in channel 1
+    INFO          The number of timepoints according to the std_thr method is 157. The computed threshold is 1.1507
+    INFO          Checking number of timepoints
+    WARNING       Found 1 timepoints less than expected!
+    WARNING       Correcting time offset, assuming missing timepoints are at the beginning (try again with a more conservative thr)
+    INFO          Plot trigger
+    INFO          Preparing 1 output files.
+    INFO          Exporting files for run 1 freq 1000.0
     INFO
     ------------------------------------------------
-    Filename:            tutorial_file_v2.txt
+    Filename:       tutorial_file_v2.txt
 
     Timepoints expected: [158]
-    Timepoints found:    157
+    Timepoints found:       157
     Sampling Frequency:  1000.0 Hz
     Sampling started at: -0.9540 s
     Tip: Time 0 is the time of first trigger
@@ -270,21 +270,21 @@ By looking at this figure, we can work out that we need a smaller threshold in o
 
     phys2bids -in tutorial_file_v2.txt -chtrig 1 -ntp 158 -tr 1.2 -thr 1.04 -outdir physio_v2
 
-    INFO       Counting trigger points
-    INFO       The trigger is in channel 1
-    INFO       The number of timepoints according to the std_thr method is 157. The computed threshold is 1.1507
-    INFO       Checking number of timepoints
-    WARNING    Found 1 timepoints less than expected!
-    WARNING    Correcting time offset, assuming missing timepoints are at the beginning (try again with a more conservative thr)
-    INFO       Plot trigger
-    INFO       Preparing 1 output files.
-    INFO       Exporting files for run 1 freq 1000.0
+    INFO          Counting trigger points
+    INFO          The trigger is in channel 1
+    INFO          The number of timepoints according to the std_thr method is 157. The computed threshold is 1.1507
+    INFO          Checking number of timepoints
+    WARNING       Found 1 timepoints less than expected!
+    WARNING       Correcting time offset, assuming missing timepoints are at the beginning (try again with a more conservative thr)
+    INFO          Plot trigger
+    INFO          Preparing 1 output files.
+    INFO          Exporting files for run 1 freq 1000.0
     INFO
     ------------------------------------------------
-    Filename:            tutorial_file_v2.txt
+    Filename:       tutorial_file_v2.txt
 
     Timepoints expected: [158]
-    Timepoints found:    157
+    Timepoints found:       157
     Sampling Frequency:  1000.0 Hz
     Sampling started at: -0.9540 s
     Tip: Time 0 is the time of first trigger
@@ -306,15 +306,15 @@ Now, instead of counting the trigger timepoints once, ``physbids`` will check th
 .. code-block:: shell
 
     Test2_samefreq_TWOscans.txt -chtrig 1 -ntp 534 513 -tr 1.2 1.2 -thr 2 -outdir physio_two_scans
-INFO       Currently running phys2bids version 0.4.0+1487.g88f97d1.dirty
-INFO       Input file is Test2_samefreq_TWOscans.txt
-INFO       File extension is .txt
-WARNING    If both acq and txt files exist in the path, acq will be selected.
-INFO       Reading the file .\Test2_samefreq_TWOscans.txt
-INFO       phys2bids detected that your file is in Labchart format
-INFO       Checking that units of measure are BIDS compatible
-WARNING    The given unit mmHg does not have aliases, passing it as is
-INFO       Reading infos
+INFO          Currently running phys2bids version 0.4.0+1487.g88f97d1.dirty
+INFO          Input file is Test2_samefreq_TWOscans.txt
+INFO          File extension is .txt
+WARNING       If both acq and txt files exist in the path, acq will be selected.
+INFO          Reading the file .\Test2_samefreq_TWOscans.txt
+INFO          phys2bids detected that your file is in Labchart format
+INFO          Checking that units of measure are BIDS compatible
+WARNING       The given unit mmHg does not have aliases, passing it as is
+INFO          Reading infos
 INFO
 ------------------------------------------------
 File Test2_samefreq_TWOscans.txt contains:
@@ -322,50 +322,50 @@ File Test2_samefreq_TWOscans.txt contains:
 02. CO2; sampled at 100.0 Hz
 ------------------------------------------------
 
-INFO       saving channel plot to physio_two_scans\code\conversion\Test2_samefreq_TWOscans.png
-INFO       Counting trigger points
-INFO       The trigger is in channel 1
-INFO       The number of timepoints found with the manual threshold of 2.0000 is 1047
-INFO       Checking number of timepoints
-INFO       Found just the right amount of timepoints!
+INFO          saving channel plot to physio_two_scans\code\conversion\Test2_samefreq_TWOscans.png
+INFO          Counting trigger points
+INFO          The trigger is in channel 1
+INFO          The number of timepoints found with the manual threshold of 2.0000 is 1047
+INFO          Checking number of timepoints
+INFO          Found just the right amount of timepoints!
 WARNING
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 phys2bids will split the input file according to the given -tr and -ntp arguments
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-INFO       Counting trigger points
-INFO       The trigger is in channel 1
-INFO       The number of timepoints found with the manual threshold of 2.0000 is 1047
-INFO       Checking number of timepoints
-WARNING    Found 513 timepoints more than expected!
+INFO          Counting trigger points
+INFO          The trigger is in channel 1
+INFO          The number of timepoints found with the manual threshold of 2.0000 is 1047
+INFO          Checking number of timepoints
+WARNING       Found 513 timepoints more than expected!
 Assuming extra timepoints are at the end (try again with a more liberal thr)
 INFO
 --------------------------------------------------------------
 Slicing between 0.0 seconds and 710.43 seconds
 --------------------------------------------------------------
-INFO       Counting trigger points
-INFO       The trigger is in channel 1
-INFO       The number of timepoints found with the manual threshold of 2.0000 is 513
-INFO       Checking number of timepoints
-INFO       Found just the right amount of timepoints!
+INFO          Counting trigger points
+INFO          The trigger is in channel 1
+INFO          The number of timepoints found with the manual threshold of 2.0000 is 513
+INFO          Checking number of timepoints
+INFO          Found just the right amount of timepoints!
 INFO
 --------------------------------------------------------------
 Slicing between 1056.81 seconds and 1690.42 seconds
 --------------------------------------------------------------
-INFO       Counting trigger points
-INFO       The trigger is in channel 1
-INFO       The number of timepoints found with the manual threshold of 2.0000 is 534
-INFO       Checking number of timepoints
-INFO       Found just the right amount of timepoints!
-INFO       Counting trigger points
-INFO       The trigger is in channel 1
-INFO       The number of timepoints found with the manual threshold of 2.0000 is 513
-INFO       Checking number of timepoints
-INFO       Found just the right amount of timepoints!
-INFO       Plot trigger
-INFO       Plot trigger
-INFO       Found 2 different scans in input!
-INFO       Preparing 2 output files.
-INFO       Exporting files for run 1 freq 100.0
+INFO          Counting trigger points
+INFO          The trigger is in channel 1
+INFO          The number of timepoints found with the manual threshold of 2.0000 is 534
+INFO          Checking number of timepoints
+INFO          Found just the right amount of timepoints!
+INFO          Counting trigger points
+INFO          The trigger is in channel 1
+INFO          The number of timepoints found with the manual threshold of 2.0000 is 513
+INFO          Checking number of timepoints
+INFO          Found just the right amount of timepoints!
+INFO          Plot trigger
+INFO          Plot trigger
+INFO          Found 2 different scans in input!
+INFO          Preparing 2 output files.
+INFO          Exporting files for run 1 freq 100.0
 
 The logger also notifies you about the slicing points used (the first always being from the beginning of session, until the specified number of timepoints after the first trigger). The user can also check the resulting slice by looking at the plot of the trigger channel for each run. Each slice is adjusted with a padding after the last trigger. Such padding can be specified while calling ``phys2bids`` with ``-pad``. If nothing is specified, the default value of 9 seconds will be used. This padding is also applied at the beginning (before the first trigger of the run) of the 2nd to last run.
 
@@ -408,7 +408,7 @@ The output will look very similar to our previous calls, when we did not use the
 
 .. code-block:: shell
 
-    INFO       Preparing BIDS output using /home/arthurdent/phys2bids/phys2bids/heuristics/heur_tutorial.py
+    INFO          Preparing BIDS output using /home/arthurdent/phys2bids/phys2bids/heuristics/heur_tutorial.py
 
 Now let's check the outputs it has generated. In the ``-outdir`` you will see a png file and tsv logger file, like before (now with some different file names).
 You will also see a folder for the specified subject, that (optionally) contains a folder for the session, containing a folder for the functional data, containing the log file and the required BIDs files with the right name!
@@ -416,21 +416,21 @@ You will also see a folder for the specified subject, that (optionally) contains
 .. code-block:: none
 
     - /home/arthurdent/test_dir/physio_bids /
-        participants.tsv
-        README.md
-        dataset_description.json
-        - sub-006 /
-            - ses-01 /
-                - func /
-                    - sub-006_ses-01_task-test_rec-labchart_run-00_physio.json
-                    - sub-006_ses-01_task-test_rec-labchart_run-00_physio.tsv.gz
-        - code /
-            - coverage/
-                - phys2bids_yyyy-mm-ddThh:mm:ss.tsv
-                - call.sh
-                - tutorial_file.png
-                - tutorial_file_sub-006_sub-01_trigger_time.png
-                - sub-006_ses-01_task-test_rec-labchart_run-01_physio.log
+    participants.tsv
+    README.md
+    dataset_description.json
+    - sub-006 /
+    - ses-01 /
+    - func /
+    - sub-006_ses-01_task-test_rec-labchart_run-00_physio.json
+    - sub-006_ses-01_task-test_rec-labchart_run-00_physio.tsv.gz
+    - code /
+    - coverage/
+    - phys2bids_yyyy-mm-ddThh:mm:ss.tsv
+    - call.sh
+    - tutorial_file.png
+    - tutorial_file_sub-006_sub-01_trigger_time.png
+    - sub-006_ses-01_task-test_rec-labchart_run-01_physio.log
 
 .. note::
     The main idea is that ``phys2bids`` should be called through a loop that can process all the files of your dataset. It's still a bit cranky, but we're looking to implement *smarter* solutions.
