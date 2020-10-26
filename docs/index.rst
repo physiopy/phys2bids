@@ -6,29 +6,43 @@ phys2bids
     :alt: phys2bids logo
     :align: center
 
-.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3653153.svg
-    :target: https://doi.org/10.5281/zenodo.3653153
+.. image:: https://img.shields.io/pypi/v/phys2bids
+    :alt: Latest version
+    :target: https://pypi.org/project/phys2bids/
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3470091.svg
     :alt: DOI
-
-.. image:: https://badges.gitter.im/phys2bids/community.svg
-    :target: https://badges.gitter.im/phys2bids/community.svg)](https://gitter.im/phys2bids/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
-    :alt: Join the chat at https://gitter.im/phys2bids/community
-
-.. image:: https://circleci.com/gh/physiopy/phys2bids.svg?branch=master&style=shield
-    :target: https://circleci.com/gh/physiopy/phys2bids
-    :alt: Build status
-
-.. image:: https://readthedocs.org/projects/phys2bids/badge/?version=latest
-    :target: https://phys2bids.readthedocs.io/en/latest/?badge=latest
-    :alt: Documentation Status
+    :target: https://doi.org/10.5281/zenodo.3470091
+.. image:: https://img.shields.io/github/license/physiopy/phys2bids
+    :alt: Licensed Apache 2.0
+    :target: https://github.com/physiopy/phys2bids/blob/master/LICENSE
 
 .. image:: https://codecov.io/gh/physiopy/phys2bids/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/physiopy/phys2bids
     :alt: codecov
+    :target: https://codecov.io/gh/physiopy/phys2bids
+.. image:: https://circleci.com/gh/physiopy/phys2bids.svg?branch=master&style=shield
+    :alt: CircleCI
+    :target: https://circleci.com/gh/physiopy/phys2bids
+.. image:: https://dev.azure.com/physiopy/phys2bids/_apis/build/status/physiopy.phys2bids?branchName=master
+    :alt: Build Status. Windows
+    :target: https://dev.azure.com/physiopy/phys2bids/_build/latest?definitionId=1&branchName=master
+.. image:: https://readthedocs.org/projects/phys2bids/badge/?version=latest
+    :alt: See the documentation at: https://phys2bids.readthedocs.io
+    :target: https://phys2bids.readthedocs.io/en/latest/?badge=latest
 
+.. image:: https://badges.gitter.im/physiopy/phys2bids.svg
+    :alt: Join the chat at Gitter: https://gitter.im/physiopy/phys2bids
+    :target: https://gitter.im/physiopy/phys2bids?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge
 .. image:: https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto
-    :target: https://github.com/intuit/auto
     :alt: Auto Release
+    :target: https://github.com/intuit/auto
+.. image:: https://img.shields.io/pypi/pyversions/phys2bids
+    :alt: Supports python version
+    :target: https://pypi.org/project/phys2bids/
+.. image:: https://requires.io/github/physiopy/phys2bids/requirements.svg?branch=master
+    :alt: Requirements Status
+    :target: https://requires.io/github/physiopy/phys2bids/requirements/?branch=master
+
+
 
 ``phys2bids`` is a python3 library meant to format physiological files in BIDS.
 It was born for AcqKnowledge files (BIOPAC), and at the moment it supports
@@ -36,15 +50,17 @@ It was born for AcqKnowledge files (BIOPAC), and at the moment it supports
 (ADInstruments).
 It doesn't support physiological files recorded with the MRI, as you can find a software for it `here <https://github.com/tarrlab/physio2bids>`_.
 
-**The project is currently under development**.
-Any suggestion/bug report is welcome! Feel free to open an issue.
+**We're looking for code contributors,** and any suggestion/bug report is welcome! Feel free to open issues!
+
+This project follows the `all contributors <https://github.com/all-contributors/all-contributors>`_ specification. Contributions of any kind welcome!
+
 
 Citing ``phys2bids``
 --------------------
 
-If you use ``phys2bids``, please cite it using the Zenodo DOI as:
+If you use ``phys2bids``, please cite it using the Zenodo DOI that you can find here:
 
-    The phys2bids contributors, Daniel Alcalá, Apoorva Ayyagari, Molly Bright, César Caballero-Gaudes, Vicente Ferrer Gallardo, Soichi Hayashi, Ross Markello, Stefano Moia, Rachael Stickland, Eneko Uruñuela, & Kristina Zvolanek (2020, February 6). physiopy/phys2bids: BIDS formatting of physiological recordings v1.3.0-beta (Version v1.3.0-beta). Zenodo. http://doi.org/10.5281/zenodo.3653153
+    https://doi.org/10.5281/zenodo.3470091
 
 We also support gathering all relevant citations via `DueCredit <http://duecredit.org>`_.
 

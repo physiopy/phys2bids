@@ -9,8 +9,9 @@ Requirements
 
 ``phys2bids`` requires python 3.6 or above, as well as the modules:
 
-- ``numpy >= 1.9.3``
-- ``matplotlib >= 3.1.1``
+.. literalinclude:: ../setup.cfg
+   :lines: 25-27
+   :dedent: 4
 
 Depending on the processed files, it might require the **manual installation** of extra modules.
 At the moment, those modules are:
