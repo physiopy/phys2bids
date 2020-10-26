@@ -143,8 +143,11 @@ def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250, 500)):
     """
     colors = ['#ff7a3c', '#008eba', '#ff96d3', '#3c376b', '#ffd439']
 
+    # only plots the first 50 samples of data
+    max_time = 50 * freq[0]
+    max_time = int(max_time)
     time = timeseries[0]  # assumes first timeseries is time
-    x = time
+    x = time[:max_time]
     ch_num = len(ch_name)
     if ch_num > len(colors):
         colors *= 2
@@ -152,7 +155,7 @@ def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250, 500)):
     plots = {}
     plot_list = []
     for row, timeser in enumerate(timeseries[1:]):
-        y = timeser
+        y = timeser[:max_time]
         i = row + 1
 
         hovertool = HoverTool(tooltips=[(ch_name[i], '@y{0.00}' + units[i]),
