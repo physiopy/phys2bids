@@ -29,7 +29,7 @@ For the tutorial, we will assume the repository was downloaded in ``/home/arthur
     cd /home/arthurdent
     mkdir test_dir # create test directory
     cd test_dir
-    # Download tutorial files
+    # Download tutorial files, install wget or copy the link to your browser and download manually
     wget https://osf.io/j842e/download -O tutorial_file.txt
     wget https://osf.io/pzfxb/download -O tutorial_file_v2.txt
     # create output directory
