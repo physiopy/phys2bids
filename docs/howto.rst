@@ -144,7 +144,7 @@ This is outputted to the terminal:
     Tip: Time 0 is the time of first trigger
     ------------------------------------------------
 
-Five files have been generated in the output directory:
+Six files have been generated in the output directory:
 
 - **tutorial_file.tsv.gz**
     Compressed file in ``tsv`` format containing your data without header information.
