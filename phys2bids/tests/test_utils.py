@@ -4,6 +4,7 @@
 
 import json
 import os
+import shutil
 from csv import reader
 from pytest import raises
 
@@ -66,7 +67,7 @@ def test_move_file(tmpdir):
         pass
     test_old_path = str(test_old_path)[:-4]
     test_new_path = tmpdir.join('mrmeeseeks')
-    utils.move_file(test_old_path, test_new_path, ext)
+    shutil.move(test_old_path, test_new_path, ext)
 
 
 # Tests copy_file
