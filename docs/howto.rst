@@ -53,6 +53,7 @@ Using the -info option
 First, we can see what information ``phys2bids`` reads from the file, and make sure this is correct before processing the file.
 
 We’ll use -info to have a sneak peak into the content of the file and -outdir to direct all the files to the same directory:
+
 .. code-block:: shell
 
     phys2bids -in tutorial_file.txt -info -outdir physio
@@ -61,16 +62,17 @@ We’ll use -info to have a sneak peak into the content of the file and -outdir 
 This ``-info`` argument means ``phys2bids`` does not process the file, but only outputs information it reads from the file, by printing to the terminal and outputting a png plot of the data in the current directory:
 
 .. code-block:: shell
-    INFO          Currently running phys2bids version 0.4.0+1464.g4a56c2a.dirty
-    INFO          Input file is tutorial_file.txt
-    INFO          File extension is .txt
+
+    INFO      Currently running phys2bids version 0.4.0+1464.g4a56c2a.dirty
+    INFO      Input file is tutorial_file.txt
+    INFO      File extension is .txt
     WARNING       If both acq and txt files exist in the path, acq will be selected.
-    INFO          Reading the file ./tutorial_file.txt
-    INFO          phys2bids detected that your file is in Labchart format
-    INFO          Checking that units of measure are BIDS compatible
+    INFO      Reading the file ./tutorial_file.txt
+    INFO      phys2bids detected that your file is in Labchart format
+    INFO      Checking that units of measure are BIDS compatible
     WARNING       The given unit mmHg does not have aliases, passing it as is
     WARNING       The given unit mmHg does not have aliases, passing it as is
-    INFO          Reading infos
+    INFO      Reading infos
     INFO
     ------------------------------------------------
     File tutorial_file.txt contains:
@@ -80,7 +82,7 @@ This ``-info`` argument means ``phys2bids`` does not process the file, but only 
     04. Pulse; sampled at 1000.0 Hz
     ------------------------------------------------
 
-    INFO          saving channel plot to physio/code/conversion/tutorial_file.png
+    INFO      saving channel plot to physio/code/conversion/tutorial_file.png
 
 .. image:: _static/tutorial_file.png
    :alt: tutorial_file_channels
@@ -106,6 +108,7 @@ When calling ``phys2bids`` without the ``-info`` argument, it will generate file
 This is outputted to the terminal:
 
 .. code-block:: shell
+
     INFO          Currently running phys2bids version 0.4.0+1464.g4a56c2a.dirty
     INFO          Input file is tutorial_file.txt
     INFO          File extension is .txt
@@ -174,6 +177,7 @@ Look back at the last command line output, from the section above. It said "Skip
 Now the output says:
 
 .. code-block:: shell
+
     INFO          Counting trigger points
     INFO          The trigger is in channel 1
     INFO          The number of timepoints according to the std_thr method is 158. The computed threshold is 1.1524
@@ -298,6 +302,7 @@ If your file contains more than one (f)MRI acquisition (or runs), you can provid
 By specifying the number of timepoints in each acquisition, ``phys2bids`` will recursively cut the input file by detecting the first trigger of the entire session and the ones after the number of timepoints you specified.
 
 .. code-block:: shell
+
     wget https://osf.io/gvy84/download -O Test2_samefreq_TWOscans.txt
     phys2bids -in Test2_samefreq_TWOscans.txt -chtrig 1 -ntp 534 513 -tr 1.2 1.2 -thr 2 -outdir physio_two_scans
 
@@ -420,17 +425,17 @@ You will also see a folder for the specified subject, that (optionally) contains
     README.md
     dataset_description.json
     - sub-006 /
-    - ses-01 /
-    - func /
-    - sub-006_ses-01_task-test_rec-labchart_run-00_physio.json
-    - sub-006_ses-01_task-test_rec-labchart_run-00_physio.tsv.gz
-    - code /
-    - coverage/
-    - phys2bids_yyyy-mm-ddThh:mm:ss.tsv
-    - call.sh
-    - tutorial_file.png
-    - tutorial_file_sub-006_sub-01_trigger_time.png
-    - sub-006_ses-01_task-test_rec-labchart_run-01_physio.log
+        - ses-01 /
+            - func /
+                - sub-006_ses-01_task-test_rec-labchart_run-00_physio.json
+                - sub-006_ses-01_task-test_rec-labchart_run-00_physio.tsv.gz
+            - code /
+                - coverage/
+                - phys2bids_yyyy-mm-ddThh:mm:ss.tsv
+                - call.sh
+                - tutorial_file.png
+                - tutorial_file_sub-006_sub-01_trigger_time.png
+                - sub-006_ses-01_task-test_rec-labchart_run-01_physio.log
 
 .. note::
     The main idea is that ``phys2bids`` should be called through a loop that can process all the files of your dataset. It's still a bit cranky, but we're looking to implement *smarter* solutions.
