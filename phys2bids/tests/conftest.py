@@ -4,6 +4,16 @@ from urllib.request import urlretrieve
 import pytest
 
 
+def pytest_addoption(parser):
+    parser.addoption('--skipintegration', action='store_true',
+                     default=False, help='Skip integration tests.')
+
+
+@pytest.fixture
+def skip_integration(request):
+    return request.config.getoption('--skipintegration')
+
+
 def fetch_file(osf_id, path, filename):
     """
     Fetches file located on OSF and downloads to `path`/`filename`1
@@ -72,3 +82,9 @@ def multifreq_lab_file(testpath):
 def notime_lab_file(testpath):
     return fetch_file('cv5zr', testpath,
                       'Test2_samefreq_onescan_notime.txt')
+
+
+@pytest.fixture
+def multi_run_file(testpath):
+    return fetch_file('gvy84', testpath,
+                      'Test2_samefreq_TWOscans.txt')

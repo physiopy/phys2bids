@@ -34,7 +34,7 @@ html, body {
     height: 50px;
     top: 0;
     left: 0;
-    padding-top: 10px;
+    padding-top: 15px;
 }
 
 .header_links {
@@ -94,4 +94,9 @@ html, body {
     .bokeh_plots {
         flex-basis: 100%;
     }
+}
+
+.main{
+    margin-top: 100px;
+    margin-left: 100px;
 }

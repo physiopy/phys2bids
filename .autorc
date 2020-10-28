@@ -1,0 +1,93 @@
+{
+  "plugins": [
+    "git-tag",
+    "all-contributors",
+    "conventional-commits",
+    "first-time-contributor",
+    "released"
+  ],
+  "owner": "physiopy",
+  "repo": "phys2bids",
+  "name": "Stefano Moia",
+  "email": "s.moia@bcbl.eu",
+  "labels": [
+    {
+      "name": "Majormod",
+      "changelogTitle": "💥 Breaking Change",
+      "description": "This PR breaks compatibility, and increments the major version (+1.0.0)",
+      "releaseType": "major",
+      "overwrite": true,
+      "color": "#05246d"
+    },
+    {
+      "name": "Minormod",
+      "changelogTitle": "🚀 Enhancement",
+      "description": "This PR generally closes an `Enhancement` issue. It increments the minor version (0.+1.0)",
+      "releaseType": "minor",
+      "overwrite": true,
+      "color": "#05246d"
+    },
+    {
+      "name": "Minormod-breaking",
+      "changelogTitle": "💥 Breaking Change during development",
+      "description": "For development only, this PR increments the minor version (0.+1.0) but breaks compatibility",
+      "releaseType": "minor",
+      "overwrite": true,
+      "color": "#05246d"
+    },
+    {
+      "name": "BugFIX",
+      "changelogTitle": "🐛 Bug Fix",
+      "description": "This PR generally closes a `Bug` issue, and increments the patch version (0.0.+1)",
+      "releaseType": "patch",
+      "overwrite": true,
+      "color": "#d73a4a"
+    },
+    {
+      "name": "Documentation",
+      "changelogTitle": "📝 Documentation",
+      "description": "This issue or PR is about the documentation ",
+      "releaseType": "none",
+      "overwrite": true,
+      "color": "#1D70CF"
+    },
+    {
+      "name": "Testing",
+      "changelogTitle": "⚠️ Tests",
+      "description": "This is for testing features, writing tests or producing testing code",
+      "releaseType": "none",
+      "overwrite": true,
+      "color": "#ffb5b4"
+    },
+    {
+      "name": "Internal",
+      "changelogTitle": "🏠 Internal",
+      "description": "Changes affect the internal API. It doesn't increase the version, but produces a changelog",
+      "releaseType": "none",
+      "overwrite": true,
+      "color": "#ffffff"
+    },
+    {
+      "name": "Outreach",
+      "changelogTitle": "🖋️  Outreach",
+      "description": "Issue about outreaching of any form",
+      "releaseType": "none",
+      "overwrite": true,
+      "color": "#0e8a16"
+    },
+    {
+      "name": "Skip release",
+      "description": "This PR preserves the current version when merged, and doesn't appear in the changelog",
+      "releaseType": "skip",
+      "overwrite": true,
+      "color": "#ffffff"
+    },
+    {
+      "name": "Release",
+      "description": "For PR only, trigger a release at the merge",
+      "releaseType": "release",
+      "overwrite": true,
+      "color": "#FFFFFF"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+"""Reporting functionality for phys2bids."""
 import sys
 from distutils.dir_util import copy_tree
 from os.path import join as opj
@@ -14,6 +15,7 @@ from phys2bids import _version
 def _save_as_html(log_html_path, log_content, qc_html_path):
     """
     Save an HTML report out to a file.
+
     Parameters
     ----------
     body : str
@@ -34,6 +36,7 @@ def _save_as_html(log_html_path, log_content, qc_html_path):
 def _update_fpage_template(tree_string, bokeh_id, bokeh_js, log_html_path, qc_html_path):
     """
     Populate a report with content.
+
     Parameters
     ----------
     bokeh_id : str
@@ -64,6 +67,7 @@ def _update_fpage_template(tree_string, bokeh_id, bokeh_js, log_html_path, qc_ht
 def _generate_file_tree(out_dir):
     """
     Populate a report with content.
+
     Parameters
     ----------
     bokeh_id : str
@@ -77,36 +81,38 @@ def _generate_file_tree(out_dir):
     HTMLReport : an instance of a populated HTML report
     """
     # prefix components:
-    space =  '&emsp;'
+    space = '&emsp;'
     branch = '│   '
     # pointers:
-    tee =    '├── '
-    last =   '└── '
+    tee = '├── '
+    last = '└── '
 
+    def tree(dir_path: Path, prefix: str = ''):
+        """Generate tree structure.
 
-    def tree(dir_path: Path, prefix: str=''):
-        """A recursive generator, given a directory Path object
+        Given a directory Path object
         will yield a visual tree structure line by line
         with each line prefixed by the same characters
 
         from https://stackoverflow.com/questions/9727673/list-directory-tree-structure-in-python
-        """    
+        """
         contents = list(dir_path.iterdir())
         # contents each get pointers that are ├── with a final └── :
         pointers = [tee] * (len(contents) - 1) + [last]
         for pointer, path in zip(pointers, contents):
             yield prefix + pointer + path.name
-            if path.is_dir(): # extend the prefix and recurse:
-                extension = branch if pointer == tee else space 
+            if path.is_dir():  # extend the prefix and recurse:
+                extension = branch if pointer == tee else space
                 # i.e. space because last, └── , above so no more |
-                yield from tree(path, prefix=prefix+extension)
+                yield from tree(path, prefix=prefix + extension)
+
     tree_string = ''
     for line in tree(Path(out_dir)):
         tree_string += line + '<br>'
     return tree_string
 
 
-def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,500)):
+def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250, 500)):
     """
     Plot all the channels for visualizations as linked line plots for dynamic report.
 
@@ -137,11 +143,11 @@ def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,500)):
     """
     colors = ['#ff7a3c', '#008eba', '#ff96d3', '#3c376b', '#ffd439']
 
-    #only plots the first 30 seconds of data
-    max_time = 15 * freq[0]
+    # only plots the first 50 samples of data
+    max_time = 50 * freq[0]
     max_time = int(max_time)
-    time = timeseries[0] #assumes first timeseries is time
-    x = time[:max_time] 
+    time = timeseries[0]  # assumes first timeseries is time
+    x = time[:max_time]
     ch_num = len(ch_name)
     if ch_num > len(colors):
         colors *= 2
@@ -152,23 +158,23 @@ def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,500)):
         y = timeser[:max_time]
         i = row + 1
 
-        hovertool = HoverTool(tooltips=[(ch_name[i], '@y{0.00}'+units[i]),
-                                        ('time', '@x{0.00}s')])
-        tools=['wheel_zoom,pan,reset', hovertool]
+        hovertool = HoverTool(tooltips=[(ch_name[i], '@y{0.00} ' + units[i]),
+                                        ('time', '@x{0.00} s')])
+        tools = ['wheel_zoom,pan,reset', hovertool]
         if i == 1:
             plots[i] = figure(plot_height=size[0], plot_width=size[1],
-                              tools=tools, title=f' Channel {i}: {ch_name[i]}', 
+                              tools=tools, title=f' Channel {i}: {ch_name[i]}',
                               sizing_mode='stretch_both')
-            plots[i].line(x, y, color=colors[i-1], alpha=0.9)
+            plots[i].line(x, y, color=colors[i - 1], alpha=0.9)
         if i > 1:
             plots[i] = figure(plot_height=size[0], plot_width=size[1],
-                              tools=tools, title=f' Channel {i}: {ch_name[i]}', 
+                              tools=tools, title=f' Channel {i}: {ch_name[i]}',
                               x_range=plots[1].x_range, sizing_mode='stretch_both')
-            plots[i].line(x, y, color=colors[i-1], alpha=0.9)
+            plots[i].line(x, y, color=colors[i - 1], alpha=0.9)
 
         plot_list.append([plots[i]])
     p = gridplot(plot_list, toolbar_location='right', plot_height=250, plot_width=750)
-    script,div = components(p)
+    script, div = components(p)
     return script, div
 
 
@@ -218,9 +224,9 @@ def generate_report(out_dir, log_path, ch_name, timeseries, units, freq):
     with open(log_html_path, 'wb') as f:
         f.write(html.encode('utf-8'))
 
-    ## Read in output directory structure & create tree 
+    # Read in output directory structure & create tree
     tree_string = _generate_file_tree(out_dir)
-    bokeh_js, bokeh_div = _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250,750))
+    bokeh_js, bokeh_div = _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250, 750))
     html = _update_fpage_template(tree_string, bokeh_div, bokeh_js, log_html_path, qc_html_path)
 
     with open(qc_html_path, 'wb') as f:

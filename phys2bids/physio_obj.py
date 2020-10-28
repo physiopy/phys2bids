@@ -298,8 +298,15 @@ class BlueprintInput():
 
             idx = slice(idx, idx + 1)
 
+        # If idx.start or stop are None, make them 0 or trigger length.
+        if idx.start is None:
+            idx = slice(0, idx.stop)
+        if idx.stop is None:
+            idx = slice(idx.start, trigger_length)
+
+        # Check that the indexes are not out of bounds
         if idx.start >= trigger_length or idx.stop > trigger_length:
-            raise IndexError(f'slice ({idx.start}, {idx.stop}) is out of '
+            raise IndexError(f'Slice ({idx.start}, {idx.stop}) is out of '
                              f'bounds for channel {self.trigger_idx} '
                              f'with size {trigger_length}')
 
@@ -449,7 +456,17 @@ class BlueprintInput():
         # Use the trigger channel to find the TRs,
         # comparing it to a given threshold.
         trigger = self.timeseries[self.trigger_idx]
+        time = self.timeseries[0].copy()
         LGR.info(f'The trigger is in channel {self.trigger_idx}')
+        # Check that trigger and time channels have the same length.
+        # If not, resample time to the length of the trigger
+        if len(time) != len(trigger):
+            LGR.warning('The trigger channel has a different sampling '
+                        'from the registered time. Using a resampled version '
+                        'of time to find the starting time.')
+            time = np.linspace(time[0], time[-1], len(trigger))
+
+        # Check if thr was given, if not "guess" it.
         flag = 0
         if thr is None:
             thr = np.mean(trigger) + 2 * np.std(trigger)
@@ -463,7 +480,7 @@ class BlueprintInput():
         else:
             LGR.info(f'The number of timepoints found with the manual threshold of {thr:.4f} '
                      f'is {num_timepoints_found}')
-        time_offset = self.timeseries[0][timepoints.argmax()]
+        time_offset = time[timepoints.argmax()]
 
         if num_timepoints_expected:
             LGR.info('Checking number of timepoints')
@@ -497,7 +514,7 @@ class BlueprintInput():
                         'were not provided.')
         self.thr = thr
         self.time_offset = time_offset
-        self.timeseries[0] -= time_offset
+        self.timeseries[0] = self.timeseries[0] - time_offset
         self.num_timepoints_found = num_timepoints_found
 
     def print_info(self, filename):
@@ -549,6 +566,9 @@ class BlueprintOutput():
     start_time : float
         Starting time of acquisition (equivalent to first TR,
         or to the opposite sign of the time offset).
+    filename : string
+        Filename the object will be saved with. Init as empty string
+
 
     Methods
     -------
@@ -564,13 +584,14 @@ class BlueprintOutput():
         method to populate from input blueprint instead of init
     """
 
-    def __init__(self, timeseries, freq, ch_name, units, start_time):
+    def __init__(self, timeseries, freq, ch_name, units, start_time, filename=''):
         """Initialise BlueprintOutput (see class docstring)."""
         self.timeseries = is_valid(timeseries, np.ndarray)
         self.freq = is_valid(freq, (int, float))
         self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
         self.units = has_size(units, self.ch_amount, '[]')
         self.start_time = start_time
+        self.filename = is_valid(filename, str)
 
     @property
     def ch_amount(self):
