@@ -66,7 +66,7 @@ This will install:
     - ``phys2bids`` as an editable package, which means that you can modify the program and run it without having to reinstall it every time!
     - All ``phys2bids`` dependencies.
     - All **interface** modules, that deal with the interfaces for all the file formats.
-    - All the **style** modules, such as ``flake8``, to help you linter the code!
+    - All **style** modules, such as ``flake8``, to help you linter the code!
     - All **documentation** modules, like ``sphinx``, so that you can build the docs locally before submitting them.
     - All **test** modules, like ``pytest``, in order for you to test your code locally before committing it!
 
