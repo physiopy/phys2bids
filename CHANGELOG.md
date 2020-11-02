@@ -1,37 +1,3 @@
-# 2.2.4 (Mon Nov 02 2020)
-
-:tada: This release contains work from a new contributor! :tada:
-
-Thank you, null[@victox5](https://github.com/victox5), for all your work!
-
-#### 🐛 Bug Fix
-
-- Updated versions required [#7](https://github.com/physiopy/phys2bids/pull/7) (vic188m@hotmail.com [@victox5](https://github.com/victox5))
-
-#### ⚠️ Pushed to `master`
-
-- Update README.md ([@smoia](https://github.com/smoia))
-
-#### 📝 Documentation
-
-- Add Windows installation to the documentation [#329](https://github.com/physiopy/phys2bids/pull/329) ([@vinferrer](https://github.com/vinferrer) [@smoia](https://github.com/smoia))
-- Update tutorial with latest CLI options and new folder organisation (`output/code/conversion`) [#320](https://github.com/physiopy/phys2bids/pull/320) ([@vinferrer](https://github.com/vinferrer) [@RayStick](https://github.com/RayStick))
-
-#### ⚠️ Tests
-
-- Fix typo in artifact_path [#331](https://github.com/physiopy/phys2bids/pull/331) ([@tsalo](https://github.com/tsalo))
-
-#### Authors: 6
-
-- [@victox5](https://github.com/victox5)
-- Rachael Stickland ([@RayStick](https://github.com/RayStick))
-- Stefano Moia ([@smoia](https://github.com/smoia))
-- Taylor Salo ([@tsalo](https://github.com/tsalo))
-- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
-- Victor (vic188m@hotmail.com)
-
----
-
 # 2.2.3 (Fri Oct 23 2020)
 
 #### 🐛 Bug Fix
