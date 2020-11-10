@@ -196,8 +196,8 @@ At ``physiopy``, we follow a very similar workflow. The only three differences a
 
 Pull Requests
 -------------
-To improve understanding pull requests "at a glance", we use the labels listed above. Multiple labels can be assigned, but it's a good idea to keep different types of contributions separated, unless they are minimal - for instance, you might want to open a PR for code, one for documentation and one for testing.
-We also strongly advise to keep the changes you're introducing with your PR limited to your original goal. Little corrections here and there in the code that you're already modifying are a great help, but they risk complicating the nature of the PR and the reviewing process. It is much better to open another PR with the objective of doing such corrections!
+To improve understanding pull requests "at a glance" and use the power of ``auto``, we use the labels listed above. Multiple labels can be assigned to a PR - in fact, all those that you think are relevant.
+We strongly advise to keep the changes you're introducing with your PR limited to your original goal. Little corrections here and there in the code that you're already modifying are a great help, but they risk complicating the nature of the PR and the reviewing process. It is much better to open another PR with the objective of doing such corrections!
 In general, if you're tempted to assign more than one label that would trigger a release, you might want to split your PR instead.
 When opening a pull request, assign it at least one label.
 
@@ -242,7 +242,7 @@ There are many best practices to review code online, for instance `this one <htt
 - If the PR graduated from Draft to full PR, check that it follows the sections `Pull requests <#pr>`_ and `Style Guide <#styling>`_ of these guidelines. If not, invite the author to do so before starting a review.
 - **Don't limit your review to the parts that are changed**. Look at the entire file, see if the changes fit well in it, and see if the changes are properly addressed everywhere in the code - in the documentation, in the tests, and in other functions. Sometimes the differences reported don't show the full impact of the PR in the repository!
 - If your want to make Pull Requests an educational process, invite the author of the PR to make changes before actually doing them yourself. Request changes via comments or in the message board or by checking out the PR locally, making changes and then submitting a PR to the author's branch.
-- If you decide to use the suggestion tool in reviews, or to start a PR to the branch in review, please alert the Project Manager. Bots might automatically assign you contribution types that will have to be removed (remember, your contribution in this case is "Reviewer").
+- If you decide to use the suggestion tool in reviews, or to start a PR to the branch under review, please alert the Project Manager. Bots might automatically assign you contribution types that will have to be removed (remember, your contribution in this case is "Reviewer"). Instead of starting a PR to the branch under review, think about opening a new PR with those modifications (unless they are needed to pass tests), and alert the Main Reviewer. In any case **don't commit directly to the branch under review**! 
 - If you're reviewing documentation, build it locally with ``sphinx``.
 - If you're asking for changes, **don't approve the PR**. Approve it only after everything was sufficiently addressed. Someone else might merge the PR in taking your word for granted.
 - If you are the main reviewer, and the last reviewer required to approve the PR, merge the PR!
