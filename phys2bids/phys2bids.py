@@ -169,13 +169,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     if quiet:
         logging.basicConfig(level=logging.WARNING,
-                            handlers=[log_handler, sh])
+                            handlers=[log_handler, sh], format='%(levelname)-10s %(message)s')
     elif debug:
         logging.basicConfig(level=logging.DEBUG,
-                            handlers=[log_handler, sh])
+                            handlers=[log_handler, sh], format='%(levelname)-10s %(message)s')
     else:
         logging.basicConfig(level=logging.INFO,
-                            handlers=[log_handler, sh])
+                            handlers=[log_handler, sh], format='%(levelname)-10s %(message)s')
 
     version_number = _version.get_versions()['version']
     LGR.info(f'Currently running phys2bids version {version_number}')
