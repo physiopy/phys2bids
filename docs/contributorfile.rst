@@ -204,7 +204,7 @@ When opening a pull request, assign it at least one label.
 We encourage you to open a PR as soon as possible - even before you finish working on them. This is useful especially to you - so that you can receive comments and suggestions early on, rather than having to process a lot of comments in the final review step!
 However, if it’s an incomplete PR, please open a **Draft PR**. That helps us process PRs by knowing which one to have a look first - and how picky to be when doing so.
 
-Reviewing PRs is a time consuming task, that can be stressful for both the reviewer and the author. Avoiding wasting time and the need of little fixes - such as fixing grammar mistakes and typos, styling code, or adopting conventions - is a good start for a successful (and quick) review. Before graduating a Draft PR to a PR ready for review, please check that:
+Reviewing PRs is a time consuming task and it can be stressful for both the reviewer and the author. Avoiding wasting time and the need of little fixes - such as fixing grammar mistakes and typos, styling code, or adopting conventions - is a good start for a successful (and quick) review. Before graduating a Draft PR to a PR ready for review, please check that:
 
 - You did all you wanted to include in your PR. If at a later stage you realise something is missing and it's not a minor thing, you will need to open a new PR.
 - If your contribution contains code or tests, you ran and passed all of the tests locally with `pytest`.
@@ -213,7 +213,7 @@ Reviewing PRs is a time consuming task, that can be stressful for both the revie
 - Your code respects the `adopted Style <#styling>`_, especially:
     - Your code is lintered adequately and respects the `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ convention.
     - Your docstrings follow the `numpydoc <https://numpydoc.readthedocs.io/en/latest/format.html>`_ convention.
-    - There is no grammar mistake or typo and the text is fluid.
+    - There are no typos or grammatical mistakes and the text is fluid.
     - The code is sufficiently commented and the comments are clear.
     - Your PR title is clear enough to be meaningful when appended to the version changelog.
 - You have the correct labels.
@@ -226,7 +226,7 @@ To be merged, PRs have to:
 4. Have a short title that clearly explains in one sentence the aim of the PR.
 5. Contain at least a unit test for your contribution, if the PR contains code (it would be better if it contains an integration or function test and all the breaking tests necessary). If you’re not confident about writing tests, it is possible to refer to an issue that asks for the test to be written, or another (Draft) PR that contains the tests required.
 
-As we’re trying to maintain at least a 90% code coverage, you’re strongly encouraged to write all the necessary tests not to drop below the threshold. If our coverage becomes too low, you might be asked to add more tests and/or your PR might be rejected. See the `Automatic Testing <#testing>`_ section.
+As we’re trying to maintain at least 90% code coverage, you’re strongly encouraged to write all of the tests necessary to keep coverage above that threshold. If coverage drops too low, you might be asked to add more tests and/or your PR might be rejected. See the `Automatic Testing <#testing>`_ section.
 
 Don't merge your own pull request! That's a task for the main reviewer of your PR or the project manager. Remember that the project manager doesn't have to be a reviewer of your PR!
 
@@ -234,7 +234,10 @@ Don't merge your own pull request! That's a task for the main reviewer of your P
 
 Reviewing PRs
 -------------
-Reviewing PRs is an extremely important task in collaborative development. In fact, it is probably the task that requires the most time in the development, and it can be stressful for both the reviewer and the author. Remember that, as a PR Reviewer, you are granting that the codes works and integrates well with the rest of the repository, hence **you are responsible for the quality of the repository and its next version release**. If it doesn't integrate well, later PR reviewers might have to ask for broader changes than expected.
+Reviewing PRs is an extremely important task in collaborative development.
+In fact, it is probably the task that requires the most time in the development, and it can be stressful for both the reviewer and the author.
+Remember that, as a PR Reviewer, you are guaranteeing that the changes work and integrate well with the rest of the repository, hence **you are responsible for the quality of the repository and its next version release**.
+If they don't integrate well, later PR reviewers might have to ask for broader changes than expected.
 There are many best practices to review code online, for instance `this one <https://medium.com/an-idea/the-code-review-guide-9e793edcd683>`_, but here are some good rules of thumbs that we need to follow while reviewing PRs:
 
 - Be respectful to the PR authors and be clear in what you are asking/suggesting - remember that, like you, they are contributing their spare time and doing their best job!
@@ -258,12 +261,12 @@ Before approving and/or merging PRs, be sure that:
 
 Main reviewer
 ~~~~~~~~~~~~~
-At ``physiopy`` we use the "Assignees" section of a PR to mark the **main reviewer** for that PR. The main reviewer is the main responsible **for the quality of the repository and its next version release**, as well as **for the behaviour of the other reviewers**. 
+At ``physiopy`` we use the "Assignees" section of a PR to mark the **main reviewer** for that PR. The main reviewer is the primary person responsible **for the quality of the repository and its next version release**, as well as **for the behaviour of the other reviewers**. 
 The main reviewer:
 
 - Takes care of the reviewing process of the PR, in particular:
     - Invites the reviewers to finish their review in a relatively short time.
-    - Checks that this document was respected in all its part, especially the part about `Pull Requests <#pr>`_.
+    - Checks that all elements of this document were respected, especially the part about `Pull Requests <#pr>`_.
     - Invites other Reviewers to respect this document, especially the part about `reviews <#reviewing>`_, helps them in doing so, and checks that they do.
     - If a Reviewer keeps not respecting this document, flags them to the project manager.
 - Decides what to do in case of a coverage decrease (in *codecov/patch*).
