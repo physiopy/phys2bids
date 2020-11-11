@@ -148,36 +148,6 @@ def check_file_exists(filename):
     if not os.path.isfile(filename) and filename is not None:
         raise FileNotFoundError(f'The file {filename} does not exist!')
 
-
-def move_file(oldpath, newpath, ext=''):
-    """
-    Move file from oldpath to newpath.
-
-    If file already exists, removes it first.
-
-    Parameters
-    ----------
-    oldpath: str or path
-        A string or a fullpath to a file that has to be moved
-    newpath: str or path
-        A string or a fullpath to the new destination of the file
-    ext: str
-        Possible extension to add to the oldpath and newpath. Not necessary.
-
-    Notes
-    -----
-    Outcome:
-    newpath + ext:
-        Moves file to new destination
-    """
-    check_file_exists(oldpath + ext)
-
-    if os.path.isfile(newpath + ext):
-        os.remove(newpath + ext)
-
-    os.rename(oldpath + ext, newpath + ext)
-
-
 def copy_file(oldpath, newpath, ext=''):
     """
     Copy file from oldpath to newpath.
