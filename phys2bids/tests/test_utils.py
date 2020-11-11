@@ -58,17 +58,6 @@ def test_check_file_exists(samefreq_full_acq_file):
     assert 'does not exist' in str(errorinfo.value)
 
 
-# Tests move_file
-def test_move_file(tmpdir):
-    ext = '.txt'
-    test_old_path = tmpdir.join('foo.txt')
-    with open(test_old_path, 'a'):
-        pass
-    test_old_path = str(test_old_path)[:-4]
-    test_new_path = tmpdir.join('mrmeeseeks')
-    utils.move_file(test_old_path, test_new_path, ext)
-
-
 # Tests copy_file
 def test_copy_file(tmpdir):
     ext = '.txt'
