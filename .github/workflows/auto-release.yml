@@ -1,0 +1,43 @@
+# This workflows will create a release using auto when a PR is merged in master.
+
+name: Auto-release on PR merge
+
+on:
+  # ATM, this is the closest trigger to a PR merging
+  push:
+    branches:
+      - master
+
+jobs:
+  auto-release:
+    runs-on: ubuntu-18.04
+    # Set skip ci to avoid loops
+    if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
+    # Set bash as default shell for jobs
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v2
+      with:
+        # Fetch all history for all branches and tags
+        fetch-depth: 0
+        # Use token with write access to the repo
+        token: ${{ secrets.GH_TOKEN }}
+    - name: Download and install latest auto
+      env:
+        # OS can be linux, macos, or win
+        OS: linux
+        # Retrieve URL of latest auto, download it, unzip it, and give exec permissions.
+      run: |
+        curl -vkL -o - $( curl -s https://api.github.com/repos/intuit/auto/releases/latest \
+        | grep browser_download_url | grep ${OS} | awk -F'"' '{print $4}') \
+        | gunzip > ~/auto
+        chmod a+x ~/auto
+    - name: Create release without version prefix
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        # Run auto release, don't use 'v' prefix, and be verbose
+      run: |
+        ~/auto shipit --no-version-prefix -v

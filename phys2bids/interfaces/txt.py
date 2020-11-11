@@ -290,7 +290,7 @@ def read_header_and_channels(filename):
     return header, channel_list
 
 
-def populate_phys_input(filename, chtrig):
+def populate_phys_input(filename, chtrig=0):
     """
     Populate object phys_input.
 

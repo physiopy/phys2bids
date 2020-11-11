@@ -456,7 +456,17 @@ class BlueprintInput():
         # Use the trigger channel to find the TRs,
         # comparing it to a given threshold.
         trigger = self.timeseries[self.trigger_idx]
+        time = self.timeseries[0].copy()
         LGR.info(f'The trigger is in channel {self.trigger_idx}')
+        # Check that trigger and time channels have the same length.
+        # If not, resample time to the length of the trigger
+        if len(time) != len(trigger):
+            LGR.warning('The trigger channel has a different sampling '
+                        'from the registered time. Using a resampled version '
+                        'of time to find the starting time.')
+            time = np.linspace(time[0], time[-1], len(trigger))
+
+        # Check if thr was given, if not "guess" it.
         flag = 0
         if thr is None:
             thr = np.mean(trigger) + 2 * np.std(trigger)
@@ -470,7 +480,7 @@ class BlueprintInput():
         else:
             LGR.info(f'The number of timepoints found with the manual threshold of {thr:.4f} '
                      f'is {num_timepoints_found}')
-        time_offset = self.timeseries[0][timepoints.argmax()]
+        time_offset = time[timepoints.argmax()]
 
         if num_timepoints_expected:
             LGR.info('Checking number of timepoints')
@@ -504,7 +514,7 @@ class BlueprintInput():
                         'were not provided.')
         self.thr = thr
         self.time_offset = time_offset
-        self.timeseries[0] -= time_offset
+        self.timeseries[0] = self.timeseries[0] - time_offset
         self.num_timepoints_found = num_timepoints_found
 
     def print_info(self, filename):

@@ -9,8 +9,9 @@ Requirements
 
 ``phys2bids`` requires python 3.6 or above, as well as the modules:
 
-- ``numpy >= 1.9.3``
-- ``matplotlib >= 3.1.1``
+.. literalinclude:: ../setup.cfg
+   :lines: 25-27
+   :dedent: 4
 
 Depending on the processed files, it might require the **manual installation** of extra modules.
 At the moment, those modules are:
@@ -35,18 +36,9 @@ Install with ``pip``
 Install ``phys2bids`` alone
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Pypi has the latest stable release of ``phys2bids`` as a package. Just run::
+Pypi has the latest stable release of ``phys2bids`` as a package. Since we use ``auto`` to publish the latest features as soon as they are ready, it will *really* be the latest release. Just run::
 
     pip3 install phys2bids
-
-If you want the latest development version of the program, download the package from `github <https://github.com/physiopy/phys2bids>`_ and uncompress it.
-Alternatively, if you have ``git``, use the command::
-
-    git clone https://github.com/physiopy/phys2bids.git
-
-Open a terminal in the ``phys2bids`` folder and execute the command::
-
-    pip3 install .
 
 Install extra modules
 ~~~~~~~~~~~~~~~~~~~~~
@@ -54,20 +46,20 @@ Install extra modules
 If you are planning to use file formats other than plain ``txt``, you need to install extra modules to have the right interface.
 Extra modules installation can be done with the syntax::
 
-    pip3 install <package>[<extra>]
+    pip3 install phys2bids[<extra>]
 
-Where ``<package>>`` is either ``phys2bids`` or ``.``, depending on whether you want to use ``pip`` or ``git`` for the installation, and ``<extra>`` is one of the following:
+Where ``<extra>`` is one of the following:
 
     - ``acq``: if you plan to use native AcqKnowledge files (``.acq`` extension)
     - ``interfaces``: for all the interfaces above.
 
-For instance, if you plan to install ``phys2bids`` and use all the interfaces, run::
+For instance, if you plan to install ``phys2bids`` and use all of the interfaces, run::
 
     pip3 install phys2bids[interfaces]
 
 .. note::
     If you "missed" or skipped this trick when you installed ``phys2bids`` the first time, don't worry!
-    You can do it any time - this will update ``phys2bids`` and install all the extra modules you want. 
+    You can do it any time - this will update ``phys2bids`` and install all extra modules you want. 
 
 
 Install without ``pip``
@@ -94,4 +86,25 @@ Type the command::
 
     phys2bids -v
 
-If your output is: ``phys2bids 1.3.0-beta`` or similar, ``phys2bids`` is ready to be used.
+If your output is: ``phys2bids 2.2.2`` or similar, ``phys2bids`` is ready to be used.
+
+Windows installation
+--------------------
+
+First of all let's check you have python installed. Open a windows power shell window in **admin mode** and type::
+
+    python --version
+
+In case you don't have it, either install it from `here <https://www.microsoft.com/en-us/p/python-38/9mssztt1n39l?activetab=pivot:overviewtab>`_ or type the command::
+
+    python
+
+It will redirect you to the windows store python install (in the creation of this tutorial the newest version of python was 3.8).
+
+.. warning::
+    ``phys2bids`` supports Python 3.6 and later versions. We can't guarantee it will work if you use python 2.
+
+Once python is installed, you can follow the instructions to install ``phys2bids`` reported `above <#install-with-pip>`_
+
+.. note::
+    Remember to open a terminal in **admin mode** to install libraries!
