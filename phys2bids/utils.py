@@ -209,7 +209,7 @@ def copy_file(oldpath, newpath, ext=''):
     cp(oldpath + ext, newpath + ext)
 
 
-def writefile(filename, ext, text):
+def write_file(filename, ext, text):
     """
     Produce a textfile of the specified extension `ext`.
 

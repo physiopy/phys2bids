@@ -78,12 +78,12 @@ def test_copy_file(tmpdir):
     utils.copy_file(test_old_path, test_new_path, ext)
 
 
-# Tests writefile
-def test_writefile(tmpdir):
+# Tests write_file
+def test_write_file(tmpdir):
     ext = '.txt'
     test_old_path = tmpdir.join('foo.txt')
     test_text = 'Wubba lubba dub dub!'
-    utils.writefile(test_old_path, ext, test_text)
+    utils.write_file(test_old_path, ext, test_text)
 
 
 # Tests writejson

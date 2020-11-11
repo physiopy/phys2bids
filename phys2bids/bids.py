@@ -289,4 +289,4 @@ def readme_file(outdir):
         text = 'Empty README, please fill in describing the dataset in more detail.'
         LGR.warning('phys2bids could not find README,'
                     'generating it EMPTY, please fill in the necessary info')
-        utils.writefile(file_path, '', text)
+        utils.write_file(file_path, '', text)
