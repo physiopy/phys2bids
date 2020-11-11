@@ -147,6 +147,7 @@ def check_file_exists(filename):
     """
     if not os.path.isfile(filename) and filename is not None:
         raise FileNotFoundError(f'The file {filename} does not exist!')
+        
 
 def copy_file(oldpath, newpath, ext=''):
     """
