@@ -84,7 +84,7 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
                f'Tip: Time 0 is the time of first trigger\n'
                f'------------------------------------------------\n')
     LGR.info(summary)
-    utils.writefile(outfile, '.log', summary)
+    utils.write_file(outfile, '.log', summary)
 
 
 def print_json(outfile, samp_freq, time_offset, ch_name):
