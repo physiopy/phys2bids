@@ -109,7 +109,7 @@ Issues and PR chats are great to maintain track of the conversation on the contr
 
 Contributing with Pull Requests Reviews
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-One big challenge in this kind of software development is merging code accurately but without waiting too much time.
+A big challenge of software development is merging code accurately without having to wait too much time.
 For this reason, Reviewers for PRs are more than welcome! It is a task that requires some experience, but it's very necessary!
 Read the `related section below <#reviewing>`_ to start!
 
@@ -197,8 +197,8 @@ At ``physiopy``, we follow a very similar workflow. The only three differences a
 Pull Requests
 -------------
 To improve understanding pull requests "at a glance" and use the power of ``auto``, we use the labels listed above. Multiple labels can be assigned to a PR - in fact, all those that you think are relevant.
-We strongly advise to keep the changes you're introducing with your PR limited to your original goal. Little corrections here and there in the code that you're already modifying are a great help, but they risk complicating the nature of the PR and the reviewing process. It is much better to open another PR with the objective of doing such corrections!
-In general, if you're tempted to assign more than one label that would trigger a release, you might want to split your PR instead.
+We strongly advise to keep the changes you're introducing with your PR limited to your original goal. Adding to the scope of your PR little style corrections or code refactoring here and there in the code that you're already modifying is a great help, but when they become too much (and they are not relevant to your PR) they risk complicating the nature of the PR and the reviewing process. It is much better to open another PR with the objective of doing such corrections!
+Moreover, if you're tempted to assign more than one label that would trigger a release (e.g. `bug` and `minormod`, or `bug` and `majormod`, etc. etc.), you might want to split your PR instead.
 When opening a pull request, assign it at least one label.
 
 We encourage you to open a PR as soon as possible - even before you finish working on them. This is useful especially to you - so that you can receive comments and suggestions early on, rather than having to process a lot of comments in the final review step!

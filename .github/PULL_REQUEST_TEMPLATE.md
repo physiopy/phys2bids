@@ -7,7 +7,7 @@ Closes #
 
 
 ## Proposed Changes
-<!-- List here major points of changes, so that the reviewers can have a bit more context while looking at your work! -->
+<!-- List major points of changes here, so that the reviewers can have a bit more context while looking at your work! -->
   -
   -
   -
