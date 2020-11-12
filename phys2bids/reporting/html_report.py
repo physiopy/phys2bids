@@ -138,7 +138,7 @@ def _generate_bokeh_plots(phys_in, size=(250, 500)):
     if ch_num > len(colors):
         colors *= 2
 
-    downsample = phys_in.freq / 100
+    downsample = int(phys_in.freq / 100)
     plots = {}
     plot_list = []
     for row, timeser in enumerate(phys_in.timeseries.T[1:]):
