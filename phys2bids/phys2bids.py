@@ -112,7 +112,7 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
     summary = dict(SamplingFrequency=samp_freq,
                    StartTime=round(start_time, 4),
                    Columns=ch_name)
-    utils.writejson(outfile, summary, indent=4, sort_keys=False)
+    utils.write_json(outfile, summary, indent=4, sort_keys=False)
 
 
 @due.dcite(

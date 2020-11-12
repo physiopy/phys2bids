@@ -269,7 +269,7 @@ def dataset_description_file(outdir):
     if not os.path.exists(file_path):
         LGR.warning('phys2bids could not find dataset_description.json,'
                     'generating it with provided info')
-        utils.writejson(file_path, data_dict)
+        utils.write_json(file_path, data_dict)
 
 
 def readme_file(outdir):
