@@ -1,11 +1,13 @@
 html, body {
-    max-width: 100%;
     margin: 0;
     padding: 0;
     font-family: 'Lato', sans-serif;
     overflow-x: hidden;
     overflow-y: scroll;
 }
+* {
+    box-sizing: border-box;
+  }
 
 .header {
     background: linear-gradient(90deg, rgba(0,240,141,1) 0%, rgba(0,73,133,1) 100%);
@@ -14,6 +16,7 @@ html, body {
     position: fixed;
     overflow: hidden;
     margin: 0;
+    z-index: 100;
 }
 
 .header a, span {
@@ -31,7 +34,7 @@ html, body {
     height: 50px;
     top: 0;
     left: 0;
-    padding-top: 10px;
+    padding-top: 15px;
 }
 
 .header_links {
@@ -43,11 +46,57 @@ html, body {
     float: left;
     display: inline-block;
 }
+.clear {
+    clear: both;
+}
 
-.main {
-    display: inline-block;
-    margin-top: 150px;
-    margin-left: 100px;
-    margin-right: 100px;
+.content {
+    margin-top: 100px;
+    display: flex;
     width: 100%;
+}
+
+.tree {
+    margin-left: 50px;
+    margin-right: 50px;
+    flex: 0.5;
+    min-width: 300px;
+    float: left;
+}
+
+.tree_text {
+    margin-top: 10px;
+    margin-bottom: 70px;
+    width: 100%;
+}
+
+.bk-root {
+    display: inline-block;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.bokeh_plots {
+    margin-left: 50px;
+    margin-right: 50px;
+    flex: 1;
+    min-width: 500px;
+    float: left;
+}
+
+@media screen and (max-width: 600px) {
+    .content {
+        flex-wrap: wrap;
+    }
+    .tree {
+        flex-basis: 100%;
+    }
+    .bokeh_plots {
+        flex-basis: 100%;
+    }
+}
+
+.main{
+    margin-top: 100px;
+    margin-left: 100px;
 }

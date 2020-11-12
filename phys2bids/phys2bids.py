@@ -38,6 +38,7 @@ import numpy as np
 from phys2bids import utils, viz, _version, bids
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
+from phys2bids.reporting.html_report import generate_report
 from phys2bids.slice4phys import slice4phys
 
 from . import __version__
@@ -145,7 +146,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     """
     # Check options to make them internally coherent pt. I
     # #!# This can probably be done while parsing?
-    outdir = utils.check_input_dir(outdir)
+    outdir = os.path.abspath(outdir)
     utils.path_exists_or_make_it(outdir)
     utils.path_exists_or_make_it(os.path.join(outdir, 'code'))
     conversion_path = os.path.join(outdir, 'code', 'conversion')
@@ -386,6 +387,12 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                                              phys_in[run].timeseries[chtrig]))
             phys_out[key] = BlueprintOutput.init_from_blueprint(phys_out[key])
 
+        # Initiate lists for reports
+        ch_name = []
+        timeseries = []
+        units = []
+        freq = []
+
         # Preparing output parameters: name and folder.
         for uniq_freq in uniq_freq_list:
             key = f'{run}_{uniq_freq}'
@@ -435,6 +442,10 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                           os.path.join(conversion_path,
                                        os.path.splitext(os.path.basename(phys_out[key].filename)
                                                         )[0]))
+
+
+        generate_report(outdir, logname, phys_out[key])
+    return timeseries
 
 
 def _main(argv=None):
