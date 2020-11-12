@@ -134,32 +134,35 @@ def _generate_bokeh_plots(phys_in, size=(250, 500)):
     colors = ['#ff7a3c', '#008eba', '#ff96d3', '#3c376b', '#ffd439']
 
     time = phys_in.timeseries.T[0]  # assumes first phys_in.timeseries is time
-    #x = time[:max_time]
     ch_num = len(phys_in.ch_name)
     if ch_num > len(colors):
         colors *= 2
-    #data = pd.DataFrame(data=phys_in.timeseries.T, columns=phys_in.ch_name)
 
+    downsample = phys_in.freq / 100
     plots = {}
     plot_list = []
     for row, timeser in enumerate(phys_in.timeseries.T[1:]):
+        #build a data source for each plot, with only the data + index (time)
+        #for the purpose of reporting, data is downsampled 10x
+        #doesn't make much of a difference to the naked eye, fine for reports
         source = ColumnDataSource(data=dict(
-            x=time[::20],
-            y=timeser[::20]))
+            x=time[::downsample],
+            y=timeser[::downsample]))
         
         i = row + 1
 
         tools = ['wheel_zoom,pan,reset']
-
         q = figure(plot_height=size[0], plot_width=size[1],
                    tools=tools, 
                    title=f' Channel {i}: {phys_in.ch_name[i]}',
                    sizing_mode='stretch_both',
                    x_range=(0,100))
         q.line('x', 'y', color=colors[i - 1], alpha=0.9, source=source)
+        #hovertool commented for posterity because I (KB) will be triumphant
+        #eventually
         #q.add_tools(HoverTool(tooltips=[
         #    (phys_in.ch_name[i], '@y{0.000} ' + phys_in.units[i]),
-         #   ('HELP', '100 :D')
+        #    ('HELP', '100 :D')
         #], mode='vline'))
         plot_list.append([q])
     p = gridplot(plot_list, toolbar_location='right', plot_height=250, plot_width=750, merge_tools=True)
