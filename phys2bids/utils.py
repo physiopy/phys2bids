@@ -110,26 +110,6 @@ def check_input_type(filename, indir):
                         f' {", ".join(SUPPORTED_FTYPES)}')
 
 
-def path_exists_or_make_it(fldr):
-    """
-    Check if folder exists, if not make it.
-
-    Parameters
-    ----------
-    fldr: str or path
-        A string representing a folder,
-        or a fullpath to such folder
-
-    Notes
-    -----
-    Outcome:
-    fldr:
-        Creates the fullpath to `fldr` if it doesn't exists.
-    """
-    if not os.path.isdir(fldr):
-        os.makedirs(fldr)
-
-
 def check_file_exists(filename):
     """
     Check if file exists.

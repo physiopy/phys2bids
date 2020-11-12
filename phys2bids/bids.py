@@ -171,7 +171,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, run='', record_label=''
 
     # Finish path, create it, add filename, export
     fldr = os.path.join(fldr, 'func')
-    utils.path_exists_or_make_it(fldr)
+    os.makedirs(fldr, exist_ok=True)
 
     heurpath = os.path.join(fldr, f'{name}physio')
 
