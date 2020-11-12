@@ -37,18 +37,6 @@ def test_check_input_type(testpath, samefreq_full_acq_file):
     assert "wasn't found" in str(errorinfo.value)
 
 
-# Tests path_exists_or_make_it
-def test_path_exists_or_make_it(tmpdir):
-    # test_folder = '/home/travis/build/physiopy/phys2bids/tests/foo'
-    test_folder = tmpdir.mkdir('foo')
-    utils.path_exists_or_make_it(test_folder)
-    os.path.isdir(test_folder)
-
-    # Checking again with already existing folder
-    utils.path_exists_or_make_it(test_folder)
-    os.rmdir(test_folder)  # Removes the created folder
-
-
 # Tests check_file_exists
 def test_check_file_exists(samefreq_full_acq_file):
     utils.check_file_exists(samefreq_full_acq_file)
