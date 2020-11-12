@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-phys2bids interface for acqknowledge files.
-"""
+"""phys2bids interface for acqknowledge files."""
 import logging
 import warnings
 
@@ -14,7 +12,7 @@ from phys2bids.physio_obj import BlueprintInput
 LGR = logging.getLogger(__name__)
 
 
-def populate_phys_input(filename, chtrig):
+def populate_phys_input(filename, chtrig=0):
     """
     Populate object phys_input from acq files.
 
@@ -22,24 +20,29 @@ def populate_phys_input(filename, chtrig):
     ----------
     filename: str
         path to the txt labchart file
-    chtrig : int
-        index of trigger channel
+    chtrig : int, optional
+          index of trigger channel. Default is 0.
 
     Returns
     -------
     BlueprintInput
 
+    Note
+    ----
+    chtrig is not a 0-based Python index - instead, it's human readable (i.e., 1-based).
+    This is handy because, when initialising the class, a new channel corresponding
+    to time is added at the beginning - that is already taken into account!
+
     See Also
     --------
     physio_obj.BlueprintInput
     """
-
     with warnings.catch_warnings():
         warnings.filterwarnings('ignore', category=DeprecationWarning)
         data = read_file(filename).channels
 
-    freq = [data[chtrig].samples_per_second, ]
-    timeseries = [data[chtrig].time_index, ]
+    freq = [data[0].samples_per_second, ]
+    timeseries = [data[0].time_index, ]
     units = ['s', ]
     names = ['time', ]
 

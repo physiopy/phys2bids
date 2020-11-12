@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-Parser for phys2bids
-"""
+"""Parser for phys2bids."""
+
 
 import argparse
 
@@ -10,7 +9,7 @@ from phys2bids import __version__
 
 def _get_parser():
     """
-    Parses command line inputs for this function
+    Parse command line inputs for this function.
 
     Returns
     -------
@@ -27,8 +26,8 @@ def _get_parser():
     required.add_argument('-in', '--input-file',
                           dest='filename',
                           type=str,
-                          help='The name of the file containing physiological data, with or '
-                               'without extension.',
+                          help='The name of the file containing physiological '
+                               'data, with or without extension.',
                           required=True)
     optional.add_argument('-info', '--info',
                           dest='info',
@@ -61,11 +60,6 @@ def _get_parser():
                                'in the current folder. Edit the heur_ex.py file in '
                                'heuristics folder.',
                           default=None)
-    # optional.add_argument('-hdir', '--heur-dir',
-    #                       dest='heurdir',
-    #                       type=str,
-    #                       help='Folder containing heuristic file.',
-    #                       default='.')
     optional.add_argument('-sub', '--subject',
                           dest='sub',
                           type=str,
@@ -82,9 +76,9 @@ def _get_parser():
                           dest='chtrig',
                           type=int,
                           help='The column number of the trigger channel. '
-                               'Channel numbering starts with 0. '
-                               'Default is 0.',
-                          default=0)
+                               'Channel numbering starts with 1. '
+                               'Default is 1.',
+                          default=1)
     optional.add_argument('-chsel', '--channel-selection',
                           dest='chsel',
                           nargs='*',
@@ -94,36 +88,50 @@ def _get_parser():
                           default=None)
     optional.add_argument('-ntp', '--numtps',
                           dest='num_timepoints_expected',
+                          nargs='*',
                           type=int,
-                          help='Number of expected timepoints (TRs). '
-                               'Default is 0. Note: the estimation of when the '
-                               'neuroimaging acquisition started cannot take place '
-                               'with this default.',
-                          default=0)
+                          help='Number of expected trigger timepoints (TRs). '
+                               'Default is None. Note: the estimation of beggining of '
+                               'neuroimaging acquisition cannot take place with this default. '
+                               'If you\'re running phys2bids on a multi-run recording, '
+                               'give a list of each expected ntp for each run.',
+                          default=None)
     optional.add_argument('-tr', '--tr',
                           dest='tr',
+                          nargs='*',
                           type=float,
                           help='TR of sequence in seconds. '
-                               'Default is 0 second.',
-                          default=0)
+                               'If you\'re running phys2bids on a multi-run recording, '
+                               'you can give a list of each expected ntp for each run, '
+                               'or just one TR if it is consistent throughout the session.',
+                          default=None)
     optional.add_argument('-thr', '--threshold',
                           dest='thr',
                           type=float,
                           help='Threshold to use for trigger detection. '
-                               'If "ntp" and "TR" are specified, phys2bids automatically computes '
-                               'a threshold to detect the triggers. Use this parameter to set it '
-                               'manually',
-                               default=None)
+                               'If "ntp" and "TR" are specified, phys2bids '
+                               'automatically computes a threshold to detect '
+                               'the triggers. Use this parameter to set it manually. '
+                               'This parameter is necessary for multi-run recordings. ',
+                          default=None)
+    optional.add_argument('-pad', '--padding',
+                          dest='pad',
+                          type=float,
+                          help='Padding in seconds used around a single run '
+                               'when separating multi-run session files. '
+                               'Default is 9 seconds.',
+                          default=9)
     optional.add_argument('-chnames', '--channel-names',
                           dest='ch_name',
                           nargs='*',
                           type=str,
                           help='Column header (for json file output).',
                           default=[])
-    optional.add_argument('-chplot', '--channels-plot',
-                          dest='chplot',
+    optional.add_argument('-yml', '--participant-yml',
+                          dest='yml',
                           type=str,
-                          help='full path to store channels plot ',
+                          help='full path to file with info needed to generate '
+                               'participant.tsv file ',
                           default='')
     optional.add_argument('-debug', '--debug',
                           dest='debug',

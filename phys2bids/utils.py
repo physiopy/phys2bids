@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
-
+"""Utilities for phys2bids package."""
 import json
 import logging
 import os
 import sys
+from csv import writer
 from pathlib import Path
 
 LGR = logging.getLogger(__name__)
@@ -13,7 +13,8 @@ SUPPORTED_FTYPES = ('acq', 'txt')  # 'mat', ...
 
 def check_input_dir(indir):
     """
-    Checks that the given indir doesn't have a trailing `/`
+    Check that the given indir doesn't have a trailing `/`.
+
     Possibly useless if better way to handle this in Python.
 
     Parameters
@@ -34,7 +35,8 @@ def check_input_dir(indir):
 
 def check_input_ext(filename, ext):
     """
-    Checks that the given file has the given extension.
+    Check that the given file has the given extension.
+
     It also treats composite extensions such as `.tsv.gz`,
     common in BIDS formats.
 
@@ -63,6 +65,7 @@ def check_input_ext(filename, ext):
 def check_input_type(filename, indir):
     """
     Check which supported type is the filename.
+
     Alternatively, raise an error if file not found or type not supported.
 
     Parameters
@@ -109,7 +112,7 @@ def check_input_type(filename, indir):
 
 def path_exists_or_make_it(fldr):
     """
-    Check if folder exists, if not make it
+    Check if folder exists, if not make it.
 
     Parameters
     ----------
@@ -146,37 +149,10 @@ def check_file_exists(filename):
         raise FileNotFoundError(f'The file {filename} does not exist!')
 
 
-def move_file(oldpath, newpath, ext=''):
-    """
-    Moves file from oldpath to newpath.
-    If file already exists, removes it first.
-
-    Parameters
-    ----------
-    oldpath: str or path
-        A string or a fullpath to a file that has to be moved
-    newpath: str or path
-        A string or a fullpath to the new destination of the file
-    ext: str
-        Possible extension to add to the oldpath and newpath. Not necessary.
-
-    Notes
-    -----
-    Outcome:
-    newpath + ext:
-        Moves file to new destination
-    """
-    check_file_exists(oldpath + ext)
-
-    if os.path.isfile(newpath + ext):
-        os.remove(newpath + ext)
-
-    os.rename(oldpath + ext, newpath + ext)
-
-
 def copy_file(oldpath, newpath, ext=''):
     """
     Copy file from oldpath to newpath.
+
     If file already exists, remove it first.
 
     Parameters
@@ -204,10 +180,11 @@ def copy_file(oldpath, newpath, ext=''):
     cp(oldpath + ext, newpath + ext)
 
 
-def writefile(filename, ext, text):
+def write_file(filename, ext, text):
     """
-    Produces a textfile of the specified extension `ext`,
-    containing the given content `text`.
+    Produce a textfile of the specified extension `ext`.
+
+    The textfile containis the given content `text`.
 
     Parameters
     ----------
@@ -231,7 +208,7 @@ def writefile(filename, ext, text):
 
 def writejson(filename, data, **kwargs):
     """
-    Outputs a json file with the given data inside.
+    Output a json file with the given data inside.
 
     Parameters
     ----------
@@ -254,7 +231,8 @@ def writejson(filename, data, **kwargs):
 
 
 def load_heuristic(heuristic):
-    """ Loads `heuristic`, returning a callable Python module
+    """
+    Load `heuristic`, returning a callable Python module.
 
     References
     ----------
@@ -280,3 +258,23 @@ def load_heuristic(heuristic):
         except Exception as exc:
             raise ImportError(f'Failed to import heuristic {heuristic}: {exc}')
     return mod
+
+
+def append_list_as_row(file_name, list_of_elem):
+    """
+    Append list as row.
+
+    Parameters
+    ----------
+    filename: str or path
+        A string representing a file name or a fullpath
+        to a file
+    list_of_elem: list
+        The list to be appended to the file.
+    """
+    # Open file in append mode
+    with open(file_name, 'a+', newline='') as write_obj:
+        # Create a writer object from csv module
+        csv_writer = writer(write_obj, delimiter='\t')
+        # Add contents of list as last row in the csv file
+        csv_writer.writerow(list_of_elem)
