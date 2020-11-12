@@ -4,8 +4,8 @@ from distutils.dir_util import copy_tree
 from os.path import join as opj
 from pathlib import Path
 from string import Template
-from bokeh.models import HoverTool
-from bokeh.plotting import figure
+#from bokeh.models import HoverTool
+from bokeh.plotting import figure, ColumnDataSource
 from bokeh.embed import components
 from bokeh.layouts import gridplot
 
