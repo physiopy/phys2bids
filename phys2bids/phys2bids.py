@@ -146,7 +146,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     """
     # Check options to make them internally coherent pt. I
     # #!# This can probably be done while parsing?
-    outdir = utils.check_input_dir(outdir)
+    outdir = os.path.abspath(outdir)
     utils.path_exists_or_make_it(outdir)
     utils.path_exists_or_make_it(os.path.join(outdir, 'code'))
     conversion_path = os.path.join(outdir, 'code', 'conversion')
@@ -445,7 +445,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
 
         generate_report(outdir, logname, phys_out[key])
-        print(timeseries.shape)
     return timeseries
 
 
