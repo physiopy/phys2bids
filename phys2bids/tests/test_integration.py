@@ -5,11 +5,12 @@ import re
 import shutil
 import subprocess
 from os import remove
-from os.path import isfile, join, split
+from os.path import isfile, join, split, dirname
 from pkg_resources import resource_filename
 
 import pytest
 
+import phys2bids as p2b
 from phys2bids._version import get_versions
 from phys2bids.phys2bids import phys2bids
 
@@ -74,9 +75,9 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
     shutil.copy(join(test_path, 'phys2bids_report.html'),
-                '/Users/enekourunuela/phys2bids/phys2bids/reporting/phys2bids_report.html')
+                join(dirname(p2b.__file__), 'reporting', 'phys2bids_report.html'))
     shutil.copy(join(test_path, 'phys2bids_report_log.html'),
-                '/Users/enekourunuela/phys2bids/phys2bids/reporting/phys2bids_report_log.html')
+                join(dirname(p2b.__file__), 'reporting', 'phys2bids_report_log.html'))
 
     # Remove generated files
     for filename in glob.glob(join(conversion_path, 'phys2bids*')):
