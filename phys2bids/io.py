@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""phys2bids interface for acqknowledge files."""
 import logging
 from collections import Counter
 import numpy as np
@@ -14,7 +13,7 @@ from phys2bids.physio_obj import BlueprintInput
 
 LGR = logging.getLogger(__name__)
 
-"""phys2bids interface for txt files."""
+"""phys2bids interfaces for txt  and acq extension files."""
 
 
 def check_multifreq(timeseries, freq, start=0, leftout=0):
