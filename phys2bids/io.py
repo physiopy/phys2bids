@@ -145,6 +145,35 @@ def process_labchart(channel_list, chtrig, interval, orig_units, orig_names):
     return BlueprintInput(timeseries, freq, names, units, chtrig)
 
 
+def process_items(channel_list, chtrig, interval, orig_units, orig_names):
+    """
+    Process items header and channel_list and make a physio_obj.BlueprintInput.
+
+    Parameters
+    ----------
+    channel_list: list
+        list with channels only
+    chtrig : int
+        index of trigger channel, starting in 1 for human readability
+    header: list
+        list with that contains file header
+
+    Returns
+    -------
+    BlueprintInput
+
+    Raises
+    ------
+    ValueError
+        If len(header) == 0 and therefore there is no header
+        If sampling is not in ['hr', 'min', 's', 'ms', 'µs'] reference:
+        https://www.adinstruments.com/support/knowledge-base/how-can-channel-titles-ranges-intervals-etc-text-file-be-imported-labchart
+
+    See Also
+    --------
+    physio_obj.BlueprintInput
+    """
+
 def process_acq(channel_list, chtrig, interval, orig_units, orig_names):
     """
     Process AcqKnowledge header and channel_list to make a physio_obj.BlueprintInput.
@@ -179,13 +208,13 @@ def process_acq(channel_list, chtrig, interval, orig_units, orig_names):
     timeseries = list(map(list, zip(*channel_list)))
 
     # check the interval is in some of the correct AcqKnowledge units
-    if interval[-1].split('/')[0] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz']:
+    if interval[-1] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a '
                              'valid AcqKnowledge format time unit, this probably'
                              'means your file is not in min, sec, msec, µsec, Mhz, KHz or Hz')
-    interval[-1] = interval[-1].split('/')[0]
+    interval[-1] = interval[-1]
     # Check if the header is in frequency or sampling interval
-    if 'Hz' in interval[-1].split('/')[0]:
+    if 'Hz' in interval[-1]:
         print('frequency is given in the header, calculating sample Interval'
               ' and standarizing to Hz if needed')
         freq = float(interval[0])
@@ -199,15 +228,15 @@ def process_acq(channel_list, chtrig, interval, orig_units, orig_names):
     else:
         # check if interval is in seconds, if not change the units to seconds and
         # calculate frequency
-        if interval[-1].split('/')[0] != 'sec':
+        if interval[-1] != 'sec':
             LGR.warning('Interval is not in seconds. Converting its value.')
-            if interval[-1].split('/')[0] == 'min':
+            if interval[-1] == 'min':
                 interval[0] = float(interval[0]) * 60
                 interval[-1] = 's'
-            elif interval[-1].split('/')[0] == 'msec':
+            elif interval[-1] == 'msec':
                 interval[0] = float(interval[0]) / 1000
                 interval[-1] = 's'
-            elif interval[-1].split('/')[0] == 'µsec':
+            elif interval[-1] == 'µsec':
                 interval[0] = float(interval[0]) / 1000000
                 interval[-1] = 's'
         else:
@@ -316,6 +345,7 @@ def load_txt_ext(filename, chtrig=0):
         header.append(channel_list[0])
         del channel_list[0]  # delete sample size from channel list
         interval = header[1][0].split()
+        interval[-1] = interval[-1].split('/')[0]
         # get units and names
         orig_units = []
         orig_names = []
