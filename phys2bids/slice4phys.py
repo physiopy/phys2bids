@@ -52,11 +52,8 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
     for run_idx, run_tps in enumerate(ntp_list):
 
         # correct time offset for this iteration's object
-        (phys_in.thr, phys_in.time_offset, phys_in.timeseries[0],
-         phys_in.num_timepoints_found
-         ) = phys_in.check_trigger_amount(thr=thr,
-                                          num_timepoints_expected=run_tps,
-                                          tr=tr_list[run_idx])
+        phys_in.check_trigger_amount(thr=thr, num_timepoints_expected=run_tps,
+                                     tr=tr_list[run_idx])
         # If it's the very first run, start the run at sample 0,
         # otherwise start is first trigger (adjust with padding later)
         if run_idx == 0:
@@ -148,12 +145,10 @@ def slice4phys(phys_in, ntp_list, tr_list, thr, padding=9):
         run_attributes = run_timestamps[run]
 
         phys_in_slices[run] = deepcopy(phys_in[run_attributes[0]:run_attributes[1]])
+
         # Run check_trigger amount
-        (phys_in_slices[run].thr, phys_in_slices[run].time_offset,
-         phys_in_slices[run].timeseries[0],
-         phys_in_slices[run].num_timepoints_found
-         ) = phys_in_slices[run].check_trigger_amount(thr=thr,
-                                                      num_timepoints_expected=ntp_list[n],
-                                                      tr=tr_list[n])
+        phys_in_slices[run].check_trigger_amount(thr=thr,
+                                                 num_timepoints_expected=ntp_list[n],
+                                                 tr=tr_list[n])
 
     return phys_in_slices
