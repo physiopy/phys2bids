@@ -277,11 +277,7 @@ def extract_header_items(channel_list, header=[]):
 
 def load_txt_ext(filename, chtrig=0):
     """
-    Populate object phys_input.
-
-    Extract header and deduce from it the format file,
-    afterwards pass the needed information to
-    the corresponding reading function.
+    Get txt extension file and processes with different subfunctions.
 
     Parameters
     ----------
@@ -296,7 +292,6 @@ def load_txt_ext(filename, chtrig=0):
 
     Raises
     ------
-
     ValueError
         If len(header) == 0 and therefore there is no header
         If files are not in acq or txt format
