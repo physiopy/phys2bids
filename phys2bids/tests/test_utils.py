@@ -63,13 +63,13 @@ def test_write_file(tmpdir):
     utils.write_file(test_old_path, ext, test_text)
 
 
-# Tests writejson
-def test_writejson(tmpdir):
+# Tests write_json
+def test_write_json(tmpdir):
     test_json_filename = tmpdir.join('foo')
     test_json_data = dict(SamplingFrequency=42,
                           StartTime='00:00 ET',
                           Columns='Rick')
-    utils.writejson(str(test_json_filename), test_json_data, indent=4, sort_keys=False)
+    utils.write_json(str(test_json_filename), test_json_data, indent=4, sort_keys=False)
     test_json_filename += '.json'
     assert os.path.isfile(test_json_filename)
     with open(test_json_filename, 'r') as src:

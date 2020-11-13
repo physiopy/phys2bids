@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""phys2bids interface for txt files."""
-
 import logging
 from collections import Counter
-from operator import itemgetter
-
 import numpy as np
+from operator import itemgetter
+import warnings
+
+from bioread import read_file
 
 from phys2bids.physio_obj import BlueprintInput
 
 LGR = logging.getLogger(__name__)
+
+"""phys2bids interfaces for txt  and acq extension files."""
 
 
 def check_multifreq(timeseries, freq, start=0, leftout=0):
@@ -290,7 +292,7 @@ def read_header_and_channels(filename):
     return header, channel_list
 
 
-def populate_phys_input(filename, chtrig=0):
+def load_txt_ext(filename, chtrig=0):
     """
     Populate object phys_input.
 
@@ -333,3 +335,47 @@ def populate_phys_input(filename, chtrig=0):
     else:
         raise AttributeError('This file format is not supported yet for txt files')
     return phys_in
+
+
+def load_acq_ext(filename, chtrig=0):
+    """
+    Populate object phys_input from acq extension files.
+
+    Parameters
+    ----------
+    filename: str
+        path to the txt labchart file
+    chtrig : int, optional
+          index of trigger channel. Default is 0.
+
+    Returns
+    -------
+    BlueprintInput
+
+    Note
+    ----
+    chtrig is not a 0-based Python index - instead, it's human readable (i.e., 1-based).
+    This is handy because, when initialising the class, a new channel corresponding
+    to time is added at the beginning - that is already taken into account!
+
+    See Also
+    --------
+    physio_obj.BlueprintInput
+    """
+    with warnings.catch_warnings():
+        warnings.filterwarnings('ignore', category=DeprecationWarning)
+        data = read_file(filename).channels
+
+    freq = [data[0].samples_per_second, ]
+    timeseries = [data[0].time_index, ]
+    units = ['s', ]
+    names = ['time', ]
+
+    for k, ch in enumerate(data):
+        LGR.info(f'{k:02d}. {ch}')
+        timeseries.append(ch.data)
+        freq.append(ch.samples_per_second)
+        units.append(ch.units)
+        names.append(ch.name)
+
+    return BlueprintInput(timeseries, freq, names, units, chtrig)
