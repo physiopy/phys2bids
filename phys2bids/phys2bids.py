@@ -439,7 +439,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
 
         generate_report(outdir, logname, phys_out[key])
-    return timeseries
 
 
 def _main(argv=None):
