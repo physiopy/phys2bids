@@ -37,18 +37,6 @@ def test_check_input_type(testpath, samefreq_full_acq_file):
     assert "wasn't found" in str(errorinfo.value)
 
 
-# Tests path_exists_or_make_it
-def test_path_exists_or_make_it(tmpdir):
-    # test_folder = '/home/travis/build/physiopy/phys2bids/tests/foo'
-    test_folder = tmpdir.mkdir('foo')
-    utils.path_exists_or_make_it(test_folder)
-    os.path.isdir(test_folder)
-
-    # Checking again with already existing folder
-    utils.path_exists_or_make_it(test_folder)
-    os.rmdir(test_folder)  # Removes the created folder
-
-
 # Tests check_file_exists
 def test_check_file_exists(samefreq_full_acq_file):
     utils.check_file_exists(samefreq_full_acq_file)
@@ -56,17 +44,6 @@ def test_check_file_exists(samefreq_full_acq_file):
     with raises(Exception) as errorinfo:
         utils.check_file_exists('')
     assert 'does not exist' in str(errorinfo.value)
-
-
-# Tests move_file
-def test_move_file(tmpdir):
-    ext = '.txt'
-    test_old_path = tmpdir.join('foo.txt')
-    with open(test_old_path, 'a'):
-        pass
-    test_old_path = str(test_old_path)[:-4]
-    test_new_path = tmpdir.join('mrmeeseeks')
-    utils.move_file(test_old_path, test_new_path, ext)
 
 
 # Tests copy_file
@@ -78,12 +55,12 @@ def test_copy_file(tmpdir):
     utils.copy_file(test_old_path, test_new_path, ext)
 
 
-# Tests writefile
-def test_writefile(tmpdir):
+# Tests write_file
+def test_write_file(tmpdir):
     ext = '.txt'
     test_old_path = tmpdir.join('foo.txt')
     test_text = 'Wubba lubba dub dub!'
-    utils.writefile(test_old_path, ext, test_text)
+    utils.write_file(test_old_path, ext, test_text)
 
 
 # Tests writejson
