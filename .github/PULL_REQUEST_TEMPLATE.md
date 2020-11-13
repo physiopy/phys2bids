@@ -17,8 +17,11 @@ Closes #
 - [ ] `bugfix` (+0.0.1)
 - [ ] `minor` (+0.1.0)
 - [ ] `major`  (+1.0.0)
-- [ ] `internal` (no version update)
+- [ ] `refactoring` (no version update)
+- [ ] `test` (no version update)
+- [ ] `infrastructure` (no version update)
 - [ ] `documentation` (no version update)
+- [ ] `other`
 
 ## Checklist before review
 <!-- If this section is not clear, please read this part of the docs: https://phys2bids.readthedocs.io/en/latest/contributorfile.html#pr -->
