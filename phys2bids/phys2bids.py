@@ -262,9 +262,12 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                 tr = np.ones(len(num_timepoints_expected)) * tr[0]
 
             # Sum of values in ntp_list should be equivalent to num_timepoints_found
-            phys_in.check_trigger_amount(thr=thr,
-                                         num_timepoints_expected=sum(num_timepoints_expected),
-                                         tr=1)
+            sum_timepoints = sum(num_timepoints_expected)
+            (phys_in.thr, phys_in.time_offset, phys_in.timeseries[0],
+             phys_in.num_timepoints_found
+             ) = phys_in.check_trigger_amount(thr=thr,
+                                              num_timepoints_expected=sum_timepoints,
+                                              tr=1)
 
             # Check that sum of tp expected is equivalent to num_timepoints_found,
             # if it passes call slice4phys
@@ -278,7 +281,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             phys_in = slice4phys(phys_in, num_timepoints_expected, tr,
                                  phys_in.thr, pad)
             # returns a dictionary in the form {run_idx: phys_in[startpoint, endpoint]}
-
             # save a figure for each run | give the right acquisition parameters for runs
             fileprefix = os.path.join(conversion_path,
                                       os.path.splitext(os.path.basename(filename))[0])
@@ -292,8 +294,12 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         else:
             # Run analysis on trigger channel to get first timepoint
             # and the time offset.
-            phys_in.check_trigger_amount(thr, num_timepoints_expected[0], tr[0])
-            # save a figure of the trigger
+            (phys_in.thr, phys_in.time_offset, phys_in.timeseries[0],
+             phys_in.num_timepoints_found
+             ) = phys_in.check_trigger_amount(thr=thr,
+                                              num_timepoints_expected=num_timepoints_expected
+                                              [0], tr=tr[0])
+            # save a figure of the triggers
             fileprefix = os.path.join(conversion_path,
                                       os.path.splitext(os.path.basename(filename))[0])
             viz.export_trigger_plot(phys_in, chtrig, fileprefix, tr[0],
