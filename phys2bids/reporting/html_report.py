@@ -4,7 +4,7 @@ from distutils.dir_util import copy_tree
 from os.path import join as opj
 from pathlib import Path
 from string import Template
-#from bokeh.models import HoverTool
+# from bokeh.models import HoverTool
 from bokeh.plotting import figure, ColumnDataSource
 from bokeh.embed import components
 from bokeh.layouts import gridplot
@@ -139,33 +139,34 @@ def _generate_bokeh_plots(phys_in, size=(250, 500)):
         colors *= 2
 
     downsample = int(phys_in.freq / 100)
-    plots = {}
     plot_list = []
     for row, timeser in enumerate(phys_in.timeseries.T[1:]):
-        #build a data source for each plot, with only the data + index (time)
-        #for the purpose of reporting, data is downsampled 10x
-        #doesn't make much of a difference to the naked eye, fine for reports
+        # build a data source for each plot, with only the data + index (time)
+        # for the purpose of reporting, data is downsampled 10x
+        # doesn't make much of a difference to the naked eye, fine for reports
         source = ColumnDataSource(data=dict(
             x=time[::downsample],
             y=timeser[::downsample]))
-        
+
         i = row + 1
 
         tools = ['wheel_zoom,pan,reset']
         q = figure(plot_height=size[0], plot_width=size[1],
-                   tools=tools, 
+                   tools=tools,
                    title=f' Channel {i}: {phys_in.ch_name[i]}',
                    sizing_mode='stretch_both',
-                   x_range=(0,100))
+                   x_range=(0, 100))
         q.line('x', 'y', color=colors[i - 1], alpha=0.9, source=source)
-        #hovertool commented for posterity because I (KB) will be triumphant
-        #eventually
-        #q.add_tools(HoverTool(tooltips=[
+        # hovertool commented for posterity because I (KB) will be triumphant
+        # eventually
+        # q.add_tools(HoverTool(tooltips=[
         #    (phys_in.ch_name[i], '@y{0.000} ' + phys_in.units[i]),
         #    ('HELP', '100 :D')
-        #], mode='vline'))
+        # ], mode='vline'))
         plot_list.append([q])
-    p = gridplot(plot_list, toolbar_location='right', plot_height=250, plot_width=750, merge_tools=True)
+    p = gridplot(plot_list, toolbar_location='right',
+                 plot_height=250, plot_width=750,
+                 merge_tools=True)
     script, div = components(p)
     return script, div
 
@@ -207,7 +208,7 @@ def generate_report(out_dir, log_path, phys_in):
 
     with open(log_html_path, 'wb') as f:
         f.write(html.encode('utf-8'))
-    
+
     # Read in output directory structure & create tree
     tree_string = _generate_file_tree(out_dir)
     bokeh_js, bokeh_div = _generate_bokeh_plots(phys_in, size=(250, 750))
