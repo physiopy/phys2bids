@@ -175,10 +175,12 @@ def process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_nam
     # this transposes the channel_list from a list of samples x channels to
     # a list of channels x samples
     timeseries = list(map(list, zip(*channel_list)))
-    if interval[-1] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz','hr', 'min', 's', 'ms', 'µs']:
+    if interval[-1] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz', 'hr', 'min', 's',
+                            'ms', 'µs']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a '
                              'valid format time unit, this probably'
-                             'means your file is not in min, sec, msec, µsec, hr, min, s, ms, µs, Mhz, KHz or Hz')
+                             'means your file is not in min, sec, msec, µsec, hr, min, s, ms, µs,'
+                             'Mhz, KHz or Hz')
     # Check if the header is in frequency or sampling interval
     if 'Hz' in interval[-1]:
         print('frequency is given in the header, calculating sample Interval'
