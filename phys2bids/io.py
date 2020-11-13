@@ -140,9 +140,6 @@ def process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_nam
             if interval[-1] == 'hr':
                 interval[0] = float(interval[0]) * 3600
                 interval[-1] = 's'
-            elif interval[-1] == 'min':
-                interval[0] = float(interval[0]) * 60
-                interval[-1] = 's'
             elif interval[-1] == 'ms':
                 interval[0] = float(interval[0]) / 1000
                 interval[-1] = 's'
