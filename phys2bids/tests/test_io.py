@@ -1,4 +1,4 @@
-from phys2bids.interfaces import io
+from phys2bids import io
 
 import math
 

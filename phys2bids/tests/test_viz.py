@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from phys2bids.interfaces import io
+from phys2bids import io
 from phys2bids import viz
 
 

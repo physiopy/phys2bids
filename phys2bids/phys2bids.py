@@ -219,10 +219,10 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # Read file!
     LGR.info(f'Reading the file {infile}')
     if ftype == 'acq':
-        from phys2bids.interfaces.io import load_acq_ext
+        from phys2bids.io import load_acq_ext
         phys_in = load_acq_ext(infile, chtrig)
     elif ftype == 'txt':
-        from phys2bids.interfaces.io import load_txt_ext
+        from phys2bids.io import load_txt_ext
         phys_in = load_txt_ext(infile, chtrig)
 
     LGR.info('Checking that units of measure are BIDS compatible')
