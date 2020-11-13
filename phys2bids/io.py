@@ -370,6 +370,39 @@ def read_header_and_channels(filename):
     return header, channel_list
 
 
+def extract_header_items(channel_list, header=[]):
+    # check header is not empty and detect if it is in labchart or Acqknoledge format
+    if len(header) == 0:
+        raise AttributeError('Files without header are not supported yet')
+    elif 'Interval=' in header[0]:
+        LGR.info('phys2bids detected that your file is in Labchart format')
+        interval = header[0][1].split(" ")
+        range_list = header[5][1:]
+        orig_units = []
+        for item in range_list:
+            orig_units.append(item.split(' ')[1])
+        orig_names = header[4][1:]
+    elif 'acq' in header[0][0]:
+        LGR.info('phys2bids detected that your file is in AcqKnowledge format')
+        header.append(channel_list[0])
+        del channel_list[0]  # delete sample size from channel list
+        interval = header[1][0].split()
+        interval[-1] = interval[-1].split('/')[0]
+        # get units and names
+        orig_units = []
+        orig_names = []
+        # the for loop starts at index1 at 3 because that's the first line of the header
+        # with channel name info and ends in 2 + twice the number of channels because
+        # that should be the last channel name
+        for index1 in range(3, 3 + len(header[-1]) * 2, 2):
+            orig_names.append(header[index1][0])
+            # since units are in the line imediately after we get the units at the same time
+            orig_units.append(header[index1 + 1][0])
+    else:
+        raise AttributeError('This file format is not supported yet for txt files')
+    return interval, orig_units, orig_names
+
+
 def load_txt_ext(filename, chtrig=0):
     """
     Populate object phys_input.
@@ -401,37 +434,8 @@ def load_txt_ext(filename, chtrig=0):
     """
     # happens in acq call
     header, channel_list = read_header_and_channels(filename)
-    # check header is not empty and detect if it is in labchart or Acqknoledge format
-    if len(header) == 0:
-        raise AttributeError('Files without header are not supported yet')
-    elif 'Interval=' in header[0]:
-        LGR.info('phys2bids detected that your file is in Labchart format')
-        interval = header[0][1].split(" ")
-        range_list = header[5][1:]
-        orig_units = []
-        for item in range_list:
-            orig_units.append(item.split(' ')[1])
-        orig_names = header[4][1:]
-        phys_in = process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_names)
-    elif 'acq' in header[0][0]:
-        LGR.info('phys2bids detected that your file is in AcqKnowledge format')
-        header.append(channel_list[0])
-        del channel_list[0]  # delete sample size from channel list
-        interval = header[1][0].split()
-        interval[-1] = interval[-1].split('/')[0]
-        # get units and names
-        orig_units = []
-        orig_names = []
-        # the for loop starts at index1 at 3 because that's the first line of the header
-        # with channel name info and ends in 2 + twice the number of channels because
-        # that should be the last channel name
-        for index1 in range(3, 3 + len(header[-1]) * 2, 2):
-            orig_names.append(header[index1][0])
-            # since units are in the line imediately after we get the units at the same time
-            orig_units.append(header[index1 + 1][0])
-        phys_in = process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_names)
-    else:
-        raise AttributeError('This file format is not supported yet for txt files')
+    interval, orig_units, orig_names = extract_header_items(channel_list, header)
+    phys_in = process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_names)
     return phys_in
 
 
