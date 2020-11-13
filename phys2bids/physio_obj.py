@@ -439,16 +439,16 @@ class BlueprintInput():
         tr: float
             The Repetition Time of the fMRI data.
 
-        Returns
-        -------
-        :
-        thr: float
+        Notes
+        -----
+        Outcome:
+        self.thr: float
             Threshold used by the function to detect trigger points.
-        num_timepoints_found: int
+        self.num_timepoints_found: int
             Property of the `BlueprintInput` class.
             Contains the number of timepoints found
             with the automatic estimation.
-        shited_timeseries:
+        self.timeseries:
             The property `timeseries` is shifted with the 0 being
             the time of first trigger.
         """
@@ -512,8 +512,10 @@ class BlueprintInput():
         else:
             LGR.warning('The necessary options to find the amount of timepoints '
                         'were not provided.')
-        shifted_timeseries = self.timeseries[0] - time_offset
-        return (thr, time_offset, shifted_timeseries, num_timepoints_found)
+        self.thr = thr
+        self.time_offset = time_offset
+        self.timeseries[0] = self.timeseries[0] - time_offset
+        self.num_timepoints_found = num_timepoints_found
 
     def print_info(self, filename):
         """
