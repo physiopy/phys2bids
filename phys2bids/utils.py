@@ -186,7 +186,7 @@ def write_file(filename, ext, text):
         print(text, file=text_file)
 
 
-def writejson(filename, data, **kwargs):
+def write_json(filename, data, **kwargs):
     """
     Output a json file with the given data inside.
 
