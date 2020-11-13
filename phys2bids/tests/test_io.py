@@ -92,15 +92,15 @@ def test_process__blueprint_items_errors(loaded_lab_file):
     assert 'valid format frequency or time unit' in str(errorinfo.value)
 
 
-def extract_header_items_errors(loaded_lab_file):
+def test_extract_header_items_errors(loaded_lab_file):
     header, channels, chtrig = loaded_lab_file
     # test file without header
     with raises(AttributeError) as errorinfo:
         io.extract_header_items(channels, header=[])
-    assert 'not supported' in str(errorinfo.value)
+    assert 'without header' in str(errorinfo.value)
     # test when header is not valid
     with raises(AttributeError) as errorinfo:
-        io.extract_header_items(channels, header=[0])
+        io.extract_header_items(channels, header=['hello', 'bye'])
     assert 'supported yet for txt files' in str(errorinfo.value)
 
 
