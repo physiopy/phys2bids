@@ -67,9 +67,10 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
         mfreq.append(freq[idx] / n_inter_samples)
     return mfreq
 
+
 def process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_names):
     """
-    Process items header and channel_list and make a physio_obj.BlueprintInput.
+    Process items header items and channel_list and make a physio_obj.BlueprintInput.
 
     Parameters
     ----------
@@ -77,8 +78,12 @@ def process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_nam
         list with channels only
     chtrig : int
         index of trigger channel, starting in 1 for human readability
-    header: list
-        list with that contains file header
+    interval: list
+        contains interval or frequency value and units
+    orig_units: list
+        contains original channels units
+    orig_names: list
+        contains original channels name
 
     Returns
     -------
@@ -88,8 +93,10 @@ def process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_nam
     ------
     ValueError
         If len(header) == 0 and therefore there is no header
-        If sampling is not in ['hr', 'min', 's', 'ms', 'µs'] reference:
+        If sampling is not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz', 'hr', 'min', 's',
+        'ms', 'µs'] reference:
         https://www.adinstruments.com/support/knowledge-base/how-can-channel-titles-ranges-intervals-etc-text-file-be-imported-labchart
+        https://www.biopac.com/wp-content/uploads/acqknowledge_software_guide.pdf page 194
 
     See Also
     --------
@@ -211,6 +218,31 @@ def read_header_and_channels(filename):
 
 
 def extract_header_items(channel_list, header=[]):
+    """
+    Process items header and channel_list depending on the format (acqKnowledge and labchart).
+
+    Parameters
+    ----------
+    channel_list: list
+        list with channels. For one of the formats it contains header information
+    header: list
+        list with that contains file header
+
+    Returns
+    -------
+    interval: list
+        contains interval or frequency value and units
+    orig_units: list
+        contains original channels units
+    orig_names: list
+        contains original channels name
+
+    Raises
+    ------
+    ValueError
+        If len(header) == 0 and therefore there is no header
+        If files are not in acq or txt format
+    """
     # check header is not empty and detect if it is in labchart or Acqknoledge format
     if len(header) == 0:
         raise AttributeError('Files without header are not supported yet')
@@ -261,7 +293,8 @@ def load_txt_ext(filename, chtrig=0):
     Returns
     -------
     phys_in
-        Raises
+
+    Raises
     ------
 
     ValueError
