@@ -69,7 +69,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
     return mfreq
 
 
-def process_labchart(channel_list, chtrig, header=[]):
+def process_labchart(channel_list, chtrig, interval, orig_units, orig_names):
     """
     Process labchart header and channel_list and make a physio_obj.BlueprintInput.
 
@@ -99,9 +99,6 @@ def process_labchart(channel_list, chtrig, header=[]):
     """
     # get frequency
     # check header has some length
-    if len(header) == 0:
-        raise AttributeError('Files without header are not supported yet')
-    interval = header[0][1].split(" ")
     # check the interval is in some of the correct labchart units
     if interval[-1] not in ['hr', 'min', 's', 'ms', 'µs']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid LabChart'
@@ -124,14 +121,8 @@ def process_labchart(channel_list, chtrig, header=[]):
     else:
         interval[0] = float(interval[0])
     # get units
-    range_list = header[5][1:]
-    orig_units = []
-    for item in range_list:
-        orig_units.append(item.split(' ')[1])
     units = ['s', ]
     # get names
-    orig_names = header[4][1:]
-    orig_names_len = len(orig_names)
     names = ['time', ]
     # get channels
     # this transposes the channel_list from a list of samples x channels to
@@ -143,7 +134,7 @@ def process_labchart(channel_list, chtrig, header=[]):
     # As the "time" doesn't have a column header, if the number of header names
     # is less than the number of timesieries, then "time" is column 0...
     # ...otherwise, create the time channel
-    if not (orig_names_len < len(timeseries)):
+    if not (len(orig_names) < len(timeseries)):
         duration = (timeseries[0].shape[0] + 1) * interval[0]
         t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
         timeseries = [t_ch, ] + timeseries
@@ -154,7 +145,7 @@ def process_labchart(channel_list, chtrig, header=[]):
     return BlueprintInput(timeseries, freq, names, units, chtrig)
 
 
-def process_acq(channel_list, chtrig, header=[]):
+def process_acq(channel_list, chtrig, interval, orig_units, orig_names):
     """
     Process AcqKnowledge header and channel_list to make a physio_obj.BlueprintInput.
 
@@ -183,15 +174,10 @@ def process_acq(channel_list, chtrig, header=[]):
     physio_obj.BlueprintInput
     """
     # check header is not empty
-    if len(header) == 0:
-        raise AttributeError('Files without header are not supported yet')
-    header.append(channel_list[0])
-    del channel_list[0]  # delete sample size from channel list
     # this transposes the channel_list from a list of samples x channels to
     # a list of channels x samples
     timeseries = list(map(list, zip(*channel_list)))
 
-    interval = header[1][0].split()
     # check the interval is in some of the correct AcqKnowledge units
     if interval[-1].split('/')[0] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a '
@@ -228,16 +214,6 @@ def process_acq(channel_list, chtrig, header=[]):
             interval[0] = float(interval[0])
             interval[-1] = 's'
         freq = [1 / interval[0]] * (len(timeseries) + 1)
-    # get units and names
-    orig_units = []
-    orig_names = []
-    # the for loop starts at index1 at 3 because that's the first line of the header
-    # with channel name info and ends in 2 + twice the number of channels because
-    # that should be the last channel name
-    for index1 in range(3, 3 + len(header[-1]) * 2, 2):
-        orig_names.append(header[index1][0])
-        # since units are in the line imediately after we get the units at the same time
-        orig_units.append(header[index1 + 1][0])
     # reorder channels names
     names = ['time', ]
     names = names + orig_names
@@ -328,10 +304,29 @@ def load_txt_ext(filename, chtrig=0):
         raise AttributeError('Files without header are not supported yet')
     elif 'Interval=' in header[0]:
         LGR.info('phys2bids detected that your file is in Labchart format')
-        phys_in = process_labchart(channel_list, chtrig, header)
+        interval = header[0][1].split(" ")
+        range_list = header[5][1:]
+        orig_units = []
+        for item in range_list:
+            orig_units.append(item.split(' ')[1])
+        orig_names = header[4][1:]
+        phys_in = process_labchart(channel_list, chtrig, interval, orig_units, orig_names)
     elif 'acq' in header[0][0]:
         LGR.info('phys2bids detected that your file is in AcqKnowledge format')
-        phys_in = process_acq(channel_list, chtrig, header)
+        header.append(channel_list[0])
+        del channel_list[0]  # delete sample size from channel list
+        interval = header[1][0].split()
+        # get units and names
+        orig_units = []
+        orig_names = []
+        # the for loop starts at index1 at 3 because that's the first line of the header
+        # with channel name info and ends in 2 + twice the number of channels because
+        # that should be the last channel name
+        for index1 in range(3, 3 + len(header[-1]) * 2, 2):
+            orig_names.append(header[index1][0])
+            # since units are in the line imediately after we get the units at the same time
+            orig_units.append(header[index1 + 1][0])
+        phys_in = process_acq(channel_list, chtrig, interval, orig_units, orig_names)
     else:
         raise AttributeError('This file format is not supported yet for txt files')
     return phys_in
