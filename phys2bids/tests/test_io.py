@@ -121,6 +121,56 @@ def test_noheader_acq_error(samefreq_noheader_txt_file):
     assert 'not supported' in str(errorinfo.value)
 
 
+@pytest.mark.parametrize('units, expected', [
+    ('1 µsec/sample', 1000000),
+    ('1 msec/sample', 1000),
+    ('0.01 sec/sample', 100),
+    ('0.001 min/sample', 100 / 6),
+    ('100 Hz', 100),
+    ('1 kHz', 1000),
+    ('1 MHz', 1000000)
+])
+def test_process_blueprint_items_for_acq(loaded_acq_file, units, expected):
+    header, channels, chtrig = loaded_acq_file
+
+    # set units to test that expected frequency is generated correctly
+    header[1][0] = units
+    interval, orig_units, orig_names = io.extract_header_items(channels, header)
+    phys_obj = io.process_blueprint_items(channels, chtrig, interval, orig_units, orig_names)
+    assert math.isclose(phys_obj.freq[0], expected)
+
+
+@pytest.mark.parametrize('units, expected', [
+    ('0.001 s', 1000),
+    ('0.001 min', 16.666666666666668),
+    ('0.001 hr', 0.2777777777777778),
+    ('1 ms', 1000),
+    ('1000 µs', 1000)
+])
+def test_process_blueprint_items_for_labchart(loaded_lab_file, units, expected):
+    header, channels, chtrig = loaded_lab_file
+    header[0][1] = units
+    interval, orig_units, orig_names = io.extract_header_items(channels, header)
+    phys_obj = io.process_blueprint_items(channels, chtrig, interval, orig_units, orig_names)
+    assert math.isclose(phys_obj.freq[0], expected)
+
+
+def test_process_blueprint_items_notime(notime_lab_file):
+    chtrig = 0
+    header, channels = io.read_header_and_channels(notime_lab_file)
+    interval, orig_units, orig_names = io.extract_header_items(channels, header)
+    phys_obj = io.process_blueprint_items(channels, chtrig, interval, orig_units, orig_names)
+    assert len(phys_obj.timeseries) == len(channels[0]) + 1
+
+
+def test_process__blueprint_items_errors(loaded_lab_file):
+    header, channels, chtrig = loaded_lab_file
+    # test file without header
+    with raises(AttributeError) as errorinfo:
+        io.extract_header_items(channels, header=[])
+    assert 'not supported' in str(errorinfo.value)
+
+
 def test_multifreq(loaded_lab_file):
     header, channels, chtrig = loaded_lab_file
     phys_obj = io.process_labchart(channels, chtrig=chtrig, header=header)
