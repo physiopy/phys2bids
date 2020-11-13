@@ -91,7 +91,8 @@ def test_process__blueprint_items_errors(loaded_lab_file):
 
 def test_multifreq(loaded_lab_file):
     header, channels, chtrig = loaded_lab_file
-    phys_obj = io.process_labchart(channels, chtrig=chtrig, header=header)
+    interval, orig_units, orig_names = io.extract_header_items(channels, header)
+    phys_obj = io.process_blueprint_items(channels, chtrig, interval, orig_units, orig_names)
     new_freq = io.check_multifreq(phys_obj.timeseries, [phys_obj.freq[0]] * len(phys_obj.freq))
     assert new_freq[-3:] == [100, 40, 500]
 
