@@ -87,6 +87,10 @@ def test_process__blueprint_items_errors(loaded_lab_file):
     with raises(AttributeError) as errorinfo:
         io.extract_header_items(channels, header=[])
     assert 'not supported' in str(errorinfo.value)
+    # test when header is not valid
+    with raises(AttributeError) as errorinfo:
+        io.extract_header_items(channels, header=[0])
+    assert 'supported yet for txt files' in str(errorinfo.value)
     # test when units are not valid
     header[0][1] = ' 1 gHz'
     interval, orig_units, orig_names = io.extract_header_items(channels, header)
