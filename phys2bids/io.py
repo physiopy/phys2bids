@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""phys2bids interfaces for txt  and acq extension files."""
 
 import logging
 from collections import Counter
@@ -12,8 +13,6 @@ from bioread import read_file
 from phys2bids.physio_obj import BlueprintInput
 
 LGR = logging.getLogger(__name__)
-
-"""phys2bids interfaces for txt  and acq extension files."""
 
 
 def check_multifreq(timeseries, freq, start=0, leftout=0):
