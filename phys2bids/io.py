@@ -431,7 +431,6 @@ def load_txt_ext(filename, chtrig=0):
     --------
     physio_obj.BlueprintInput
     """
-    # happens in acq call
     header, channel_list = read_header_and_channels(filename)
     interval, orig_units, orig_names = extract_header_items(channel_list, header)
     phys_in = process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_names)
