@@ -140,12 +140,11 @@ def process_labchart(channel_list, chtrig, interval, orig_units, orig_names):
         timeseries = [t_ch, ] + timeseries
     names = names + orig_names
     units = units + orig_units
-    freq = [1 / interval[0]] * len(timeseries)
     freq = check_multifreq(timeseries, freq)
     return BlueprintInput(timeseries, freq, names, units, chtrig)
 
 
-def process_items(channel_list, chtrig, interval, orig_units, orig_names):
+def process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_names):
     """
     Process items header and channel_list and make a physio_obj.BlueprintInput.
 
@@ -173,6 +172,79 @@ def process_items(channel_list, chtrig, interval, orig_units, orig_names):
     --------
     physio_obj.BlueprintInput
     """
+    # this transposes the channel_list from a list of samples x channels to
+    # a list of channels x samples
+    timeseries = list(map(list, zip(*channel_list)))
+    if interval[-1] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz','hr', 'min', 's', 'ms', 'µs']:
+        raise AttributeError(f'Interval unit "{interval[-1]}" is not in a '
+                             'valid format time unit, this probably'
+                             'means your file is not in min, sec, msec, µsec, hr, min, s, ms, µs, Mhz, KHz or Hz')
+    # Check if the header is in frequency or sampling interval
+    if 'Hz' in interval[-1]:
+        print('frequency is given in the header, calculating sample Interval'
+              ' and standarizing to Hz if needed')
+        freq = float(interval[0])
+        freq_unit = interval[-1]
+        if freq_unit == 'MHz':
+            freq = freq * (1000000)
+        elif freq_unit == 'kHz':
+            freq = freq * 1000
+        interval[0] = 1 / freq
+        freq = [freq] * len(timeseries)
+    else:
+        # check if interval is in seconds, if not change the units to seconds and
+        # calculate frequency
+        if interval[-1] != 's':
+            LGR.warning('Interval is not in seconds. Converting its value and unit.')
+            if interval[-1] == 'min':
+                interval[0] = float(interval[0]) * 60
+                interval[-1] = 's'
+            elif interval[-1] == 'msec':
+                interval[0] = float(interval[0]) / 1000
+                interval[-1] = 's'
+            elif interval[-1] == 'µsec':
+                interval[0] = float(interval[0]) / 1000000
+                interval[-1] = 's'
+            if interval[-1] == 'hr':
+                interval[0] = float(interval[0]) * 3600
+                interval[-1] = 's'
+            elif interval[-1] == 'min':
+                interval[0] = float(interval[0]) * 60
+                interval[-1] = 's'
+            elif interval[-1] == 'ms':
+                interval[0] = float(interval[0]) / 1000
+                interval[-1] = 's'
+            elif interval[-1] == 'µs':
+                interval[0] = float(interval[0]) / 1000000
+                interval[-1] = 's'
+            elif interval[-1] == 'sec':
+                interval[0] = float(interval[0])
+                interval[-1] = 's'
+        else:
+            interval[0] = float(interval[0])
+        # get frequency
+        freq = [1 / interval[0]] * len(timeseries)
+    # reorder channels names
+    names = ['time', ]
+    names = names + orig_names
+    # reoder channels units
+    units = ['s', ]
+    units = units + orig_units
+    timeseries = list(map(list, zip(*channel_list)))
+    freq = [1 / interval[0]] * len(timeseries)
+    timeseries = [np.array(darray) for darray in timeseries]
+    # check the file has a time channel if not create it and add it
+    # As the "time" doesn't have a column header, if the number of header names
+    # is less than the number of timesieries, then "time" is column 0...
+    # ...otherwise, create the time channel
+    if not (len(orig_names) < len(timeseries)):
+        duration = (timeseries[0].shape[0] + 1) * interval[0]
+        t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
+        timeseries = [t_ch, ] + timeseries
+        freq = [max(freq)] + freq
+    freq = check_multifreq(timeseries, freq)
+    return BlueprintInput(timeseries, freq, names, units, chtrig)
+
 
 def process_acq(channel_list, chtrig, interval, orig_units, orig_names):
     """
@@ -212,7 +284,6 @@ def process_acq(channel_list, chtrig, interval, orig_units, orig_names):
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a '
                              'valid AcqKnowledge format time unit, this probably'
                              'means your file is not in min, sec, msec, µsec, Mhz, KHz or Hz')
-    interval[-1] = interval[-1]
     # Check if the header is in frequency or sampling interval
     if 'Hz' in interval[-1]:
         print('frequency is given in the header, calculating sample Interval'
@@ -339,7 +410,7 @@ def load_txt_ext(filename, chtrig=0):
         for item in range_list:
             orig_units.append(item.split(' ')[1])
         orig_names = header[4][1:]
-        phys_in = process_labchart(channel_list, chtrig, interval, orig_units, orig_names)
+        phys_in = process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_names)
     elif 'acq' in header[0][0]:
         LGR.info('phys2bids detected that your file is in AcqKnowledge format')
         header.append(channel_list[0])
@@ -356,7 +427,7 @@ def load_txt_ext(filename, chtrig=0):
             orig_names.append(header[index1][0])
             # since units are in the line imediately after we get the units at the same time
             orig_units.append(header[index1 + 1][0])
-        phys_in = process_acq(channel_list, chtrig, interval, orig_units, orig_names)
+        phys_in = process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_names)
     else:
         raise AttributeError('This file format is not supported yet for txt files')
     return phys_in
