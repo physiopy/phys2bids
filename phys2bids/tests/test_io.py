@@ -84,6 +84,17 @@ def test_process_blueprint_items_notime(notime_lab_file):
 def test_process__blueprint_items_errors(loaded_lab_file):
     header, channels, chtrig = loaded_lab_file
     # test file without header
+    # test when units are not valid
+    header[0][1] = ' 1 gHz'
+    interval, orig_units, orig_names = io.extract_header_items(channels, header)
+    with raises(AttributeError) as errorinfo:
+        io.process_blueprint_items(channels, chtrig, interval, orig_units, orig_names)
+    assert 'valid format frequency or time unit' in str(errorinfo.value)
+
+
+def extract_header_items_errors(loaded_lab_file):
+    header, channels, chtrig = loaded_lab_file
+    # test file without header
     with raises(AttributeError) as errorinfo:
         io.extract_header_items(channels, header=[])
     assert 'not supported' in str(errorinfo.value)
@@ -91,12 +102,6 @@ def test_process__blueprint_items_errors(loaded_lab_file):
     with raises(AttributeError) as errorinfo:
         io.extract_header_items(channels, header=[0])
     assert 'supported yet for txt files' in str(errorinfo.value)
-    # test when units are not valid
-    header[0][1] = ' 1 gHz'
-    interval, orig_units, orig_names = io.extract_header_items(channels, header)
-    with raises(AttributeError) as errorinfo:
-        io.process_blueprint_items(channels, chtrig, interval, orig_units, orig_names)
-    assert 'valid format frequency or time unit' in str(errorinfo.value)
 
 
 def test_multifreq(loaded_lab_file):
