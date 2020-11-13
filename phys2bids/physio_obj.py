@@ -469,7 +469,7 @@ class BlueprintInput():
         # Check if thr was given, if not "guess" it.
         flag = 0
         if thr is None:
-            thr = np.mean(trigger) + 2 * np.std(trigger)
+            thr = np.mean(trigger) + np.std(trigger)
             flag = 1
         timepoints = trigger > thr
         num_timepoints_found = len([is_true for is_true, _ in groupby(timepoints,
