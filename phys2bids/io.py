@@ -79,7 +79,7 @@ def process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_nam
     chtrig : int
         index of trigger channel, starting in 1 for human readability
     interval : list of strings
-        maximun sampling frequency or interval value and unit for the recording
+        maximum sampling frequency or interval value and unit for the recording
     orig_units : list of strings
         contains original channels units
     orig_names : list of strings
