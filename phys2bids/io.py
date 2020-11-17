@@ -21,7 +21,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
 
     Parameters
     ----------
-    timeseries : list
+    timeseries : list of arrays
         list with channels only in np array format
     freq : list
         list with the maximun frequency
@@ -74,15 +74,15 @@ def process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_nam
 
     Parameters
     ----------
-    channel_list : list
+    channel_list : list of strings
         list with channels only
     chtrig : int
         index of trigger channel, starting in 1 for human readability
-    interval : list
-        contains interval or frequency value and units
-    orig_units : list
+    interval : list of strings
+         maximun sampling frequency or interval value and unit for the recording
+    orig_units : list of strings
         contains original channels units
-    orig_names : list
+    orig_names : list of strings
         contains original channels name
 
     Returns
@@ -186,10 +186,10 @@ def read_header_and_channels(filename):
 
     Returns
     -------
-    header : list
+    header : list of strings
         header lines
-    channel_list : list
-        channel lines in list
+    channel_list : list of strings
+        The channels of the recording
 
     """
     header = []
@@ -220,18 +220,18 @@ def extract_header_items(channel_list, header=[]):
 
     Parameters
     ----------
-    channel_list : list
-        list with channels. For one of the formats it contains header information
+    channel_list : list of strings
+        The channels of the recording
     header: list
-        list with that contains file header
+        list that contains file header
 
     Returns
     -------
     interval : list of strings
-        contains interval or frequency value and units
-    orig_units : list
+        maximun sampling frequency or interval value and unit for the recording
+    orig_units : list of strings
         contains original channels units
-    orig_names : list
+    orig_names : list of strings
         contains original channels name
 
     Raises
