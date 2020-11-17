@@ -169,19 +169,19 @@ workflows:
           name: makeenv-<< matrix.python-version >>
           matrix:
             parameters:
-              python-version: ["3.6", "3.7"]
+              python-version: ["3.6", "3.7", "3.8", "3.9"]
       - unittest:
           name: unittest-<< matrix.python-version >>
           matrix:
             parameters:
-              python-version: ["3.6", "3.7"]
+              python-version: ["3.6", "3.7", "3.8", "3.9"]
           requires:
             - makeenv-<< matrix.python-version >>
       - integrationtest:
           name: integrationtest-<< matrix.python-version >>
           matrix:
             parameters:
-              python-version: ["3.6", "3.7"]
+              python-version: ["3.6", "3.7", "3.8", "3.9"]
           requires:
             - makeenv-<< matrix.python-version >>
       - style_check:
