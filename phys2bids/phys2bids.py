@@ -437,7 +437,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                        os.path.splitext(os.path.basename(phys_out[key].filename)
                                                         )[0]))
 
-
         generate_report(outdir, logname, phys_out[key])
 
 
