@@ -274,7 +274,7 @@ def extract_header_items(channel_list, header=[]):
 
 def load_txt_ext(filename, chtrig=0):
     """
-    Get txt extension file and processes with different subfunctions.
+    Read .txt file into a BlueprintInput object.
 
     Parameters
     ----------
