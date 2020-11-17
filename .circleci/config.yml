@@ -6,144 +6,102 @@ version: 2.1
 orbs:
   codecov: codecov/codecov@1.0.5
 jobs:
-
-  makeenv_37:
+  makeenv:
+    parameters:
+      python-version:
+        type: string
     docker:
       - image: continuumio/miniconda3
     working_directory: /tmp/src/phys2bids
     steps:
       - checkout
+      - run:
+          name: "Setup convenience short env var PYVER"
+          command: echo "export PYVER=\"<< parameters.python-version >>\"" >> $BASH_ENV
       - persist_to_workspace:
           root: /tmp
           paths:
               - src/phys2bids
       - restore_cache:
-          key: conda-py37-v1-{{ checksum "setup.cfg" }}
+          key: conda-<< parameters.python-version >>-v1-{{ checksum "setup.cfg" }}
       - run:
           name: Generate environment
           command: |
-            if [[ -e /opt/conda/envs/py36_env ]]; then
+            if [[ -e /opt/conda/envs/${PYVER} ]]; then
               echo "Restoring environment from cache"
-                source activate phys2bids_py37
+                source activate $PYVER
             else
-              conda create -yq -n phys2bids_py37 python=3.7
-              source activate phys2bids_py37
+              conda create -yq -n $PYVER python=$PYVER
+              source activate $PYVER
               pip install -e ".[test,doc]"
             fi
       - save_cache:
-          key: conda-py37-v1-{{ checksum "setup.cfg" }}
+          key: conda-<< parameters.python-version >>-v1-{{ checksum "setup.cfg" }}
           paths:
-              - /opt/conda/envs/phys2bids_py37
+              - /opt/conda/envs/<< parameters.python-version >>
 
-  unittest_36:
+  unittest:
+    parameters:
+      python-version:
+        type: string
     docker:
       - image: continuumio/miniconda3
     working_directory: /tmp/src/phys2bids
     steps:
       - checkout
-      - restore_cache:
-          key: conda-py36-v1-{{ checksum "setup.cfg" }}
       - run:
-          name: Generate environment
+          name: "Setup convenience short env var PYVER"
+          command: echo "export PYVER=\"<< parameters.python-version >>\"" >> $BASH_ENV
+      - restore_cache:
+          key: conda-<< parameters.python-version >>-v1-{{ checksum "setup.cfg" }}
+      - run:
+          name: Install extra dependencies
           command: |
             apt-get install -yqq make
-            if [ ! -d /opt/conda/envs/phys2bids_py36 ]; then
-              conda create -yq -n phys2bids_py36 python=3.6
-              source activate phys2bids_py36
-              pip install -e ".[test]"
-            fi
       - run:
-          name: Running unit tests
+          name: Run unit tests
           command: |
-            source activate phys2bids_py36
+            source activate $PYVER
             make unittest
             mkdir /tmp/src/coverage
-            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.py36
-      - save_cache:
-          key: conda-py36-v1-{{ checksum "setup.cfg" }}
-          paths:
-              - /opt/conda/envs/phys2bids_py36
+            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.py$PYVER
       - persist_to_workspace:
           root: /tmp
           paths:
-              - src/coverage/.coverage.py36
+              - src/coverage/.coverage.py<< parameters.python-version >>
 
-  unittest_37:
+  integrationtest:
+    parameters:
+      python-version:
+        type: string
     docker:
       - image: continuumio/miniconda3
     working_directory: /tmp/src/phys2bids
     steps:
       - checkout
-      - restore_cache:
-          key: conda-py37-v1-{{ checksum "setup.cfg" }}
       - run:
-          name: Running unit tests
-          command: |
-            apt-get install -y make
-            source activate phys2bids_py37  # depends on makeenv_37
-            make unittest
-            mkdir /tmp/src/coverage
-            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.py37
-      - persist_to_workspace:
-          root: /tmp
-          paths:
-              - src/coverage/.coverage.py37
-
-  integrationtest_36:
-    docker:
-      - image: continuumio/miniconda3
-    working_directory: /tmp/src/phys2bids
-    steps:
-      - checkout
+          name: "Setup convenience short env var PYVER"
+          command: echo "export PYVER=\"<< parameters.python-version >>\"" >> $BASH_ENV
       - restore_cache:
-          key: conda-py36-v1-{{ checksum "setup.cfg" }}
+          key: conda-<< parameters.python-version >>-v1-{{ checksum "setup.cfg" }}
       - run:
-          name: Generate environment
+          name: Install extra dependencies
           command: |
             apt-get install -yqq make
-            if [ ! -d /opt/conda/envs/phys2bids_py36 ]; then
-              conda create -yq -n phys2bids_py36 python=3.6
-              source activate phys2bids_py36
-              pip install -e ".[test]"
-            fi
       - run:
           name: Run integration tests
           no_output_timeout: 10m
           command: |
-            source activate phys2bids_py36
+            source activate $PYVER
             make integration
             mkdir /tmp/src/coverage
-            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integration36
+            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integration$PYVER
       - store_artifacts:
           path: /tmp/data
       - persist_to_workspace:
           root: /tmp
           paths:
-              - src/coverage/.coverage.integration36
-
-  integrationtest_37:
-    docker:
-      - image: continuumio/miniconda3
-    working_directory: /tmp/src/phys2bids
-    steps:
-      - checkout
-      - restore_cache:
-          key: conda-py37-v1-{{ checksum "setup.cfg" }}
-      - run:
-          name: Run integration tests
-          no_output_timeout: 10m
-          command: |
-            apt-get install -yqq make
-            source activate phys2bids_py37  # depends on makeenv_37
-            make integration
-            mkdir /tmp/src/coverage
-            mv /tmp/src/phys2bids/.coverage /tmp/src/coverage/.coverage.integration37
-      - store_artifacts:
-          path: /tmp/data
-      - persist_to_workspace:
-          root: /tmp
-          paths:
-              - src/coverage/.coverage.integration37
+              - src/coverage/.coverage.integration<< parameters.python-version >>
 
   style_check:
     docker:
@@ -152,12 +110,12 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: conda-py37-v1-{{ checksum "setup.cfg" }}
+          key: conda-3.7-v1-{{ checksum "setup.cfg" }}
       - run:
           name: Style check
           command: |
             apt-get install -yqq make
-            source activate phys2bids_py37  # depends on makeenv37
+            source activate 3.7
             make lint
       - store_artifacts:
           path: /tmp/data/lint
@@ -170,12 +128,12 @@ jobs:
       - attach_workspace:  # get phys2bids
           at: /tmp
       - restore_cache:  # load environment
-          key: conda-py37-v1-{{ checksum "setup.cfg" }}
+          key: conda-3.7-v1-{{ checksum "setup.cfg" }}
       - run:
           name: Build documentation
           command: |
             apt-get install -yqq make
-            source activate phys2bids_py37  # depends on makeenv_37
+            source activate 3.7
             make -C docs html
       - store_artifacts:
           path: /tmp/src/phys2bids/docs/_build/html
@@ -189,12 +147,12 @@ jobs:
           at: /tmp
       - checkout
       - restore_cache:
-          key: conda-py37-v1-{{ checksum "setup.cfg" }}
+          key: conda-3.7-v1-{{ checksum "setup.cfg" }}
       - run:
           name: Merge coverage files
           command: |
             apt-get install -yqq curl
-            source activate phys2bids_py37  # depends on makeenv37
+            source activate 3.7
             cd /tmp/src/coverage/
             coverage combine
             coverage xml
@@ -207,25 +165,33 @@ workflows:
   version: 2.1
   build_test:
     jobs:
-      - makeenv_37
-      - unittest_36
-      - unittest_37:
+      - makeenv:
+          name: makeenv-<< matrix.python-version >>
+          matrix:
+            parameters:
+              python-version: ["3.6", "3.7"]
+      - unittest:
+          name: unittest-<< matrix.python-version >>
+          matrix:
+            parameters:
+              python-version: ["3.6", "3.7"]
           requires:
-            - makeenv_37
-      - integrationtest_36
-      - integrationtest_37:
+            - makeenv-<< matrix.python-version >>
+      - integrationtest:
+          name: integrationtest-<< matrix.python-version >>
+          matrix:
+            parameters:
+              python-version: ["3.6", "3.7"]
           requires:
-            - makeenv_37
+            - makeenv-<< matrix.python-version >>
       - style_check:
           requires:
-            - makeenv_37
+            - makeenv-3.7
       - build_docs:
           requires:
-            - makeenv_37
+            - makeenv-3.7
       - merge_coverage:
           requires:
-            - unittest_36
-            - unittest_37
-            - integrationtest_36
-            - integrationtest_37
+            - unittest
+            - integrationtest
             - style_check
