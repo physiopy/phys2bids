@@ -4,8 +4,8 @@ from distutils.dir_util import copy_tree
 from os.path import join as opj
 from pathlib import Path
 from string import Template
-from bokeh.models import HoverTool
-from bokeh.plotting import figure
+# from bokeh.models import HoverTool
+from bokeh.plotting import figure, ColumnDataSource
 from bokeh.embed import components
 from bokeh.layouts import gridplot
 
@@ -112,24 +112,14 @@ def _generate_file_tree(out_dir):
     return tree_string
 
 
-def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250, 500)):
+def _generate_bokeh_plots(phys_in, size=(250, 500)):
     """
     Plot all the channels for visualizations as linked line plots for dynamic report.
 
     Parameters
     ----------
-    ch_name: (ch) list of strings
-        List of names of the channels - can be the header of the columns
-        in the output files.
-    timeseries: (ch, [tps]) list
-        List of numpy 1d arrays - one for channel, plus one for time.
-        Time channel has to be the first, trigger the second.
-        Contains all the timeseries recorded.
-    units: (ch) list of strings
-        List of the units of the channels.
-    freq: (ch) list of floats
-        List of floats - one per channel.
-        Contains all the frequencies of the recorded channel.
+    phys_in: BlueprintInput object
+        Object returned by BlueprintInput class
     figsize: tuple
         Size of the figure expressed as (size_x, size_y),
         Default is 250x750px
@@ -143,42 +133,46 @@ def _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250, 500)):
     """
     colors = ['#ff7a3c', '#008eba', '#ff96d3', '#3c376b', '#ffd439']
 
-    # only plots the first 50 samples of data
-    max_time = 50 * freq[0]
-    max_time = int(max_time)
-    time = timeseries[0]  # assumes first timeseries is time
-    x = time[:max_time]
-    ch_num = len(ch_name)
+    time = phys_in.timeseries.T[0]  # assumes first phys_in.timeseries is time
+    ch_num = len(phys_in.ch_name)
     if ch_num > len(colors):
         colors *= 2
 
-    plots = {}
+    downsample = int(phys_in.freq / 100)
     plot_list = []
-    for row, timeser in enumerate(timeseries[1:]):
-        y = timeser[:max_time]
+    for row, timeser in enumerate(phys_in.timeseries.T[1:]):
+        # build a data source for each plot, with only the data + index (time)
+        # for the purpose of reporting, data is downsampled 10x
+        # doesn't make much of a difference to the naked eye, fine for reports
+        source = ColumnDataSource(data=dict(
+            x=time[::downsample],
+            y=timeser[::downsample]))
+
         i = row + 1
 
-        hovertool = HoverTool(tooltips=[(ch_name[i], '@y{0.00} ' + units[i]),
-                                        ('time', '@x{0.00} s')])
-        tools = ['wheel_zoom,pan,reset', hovertool]
-        if i == 1:
-            plots[i] = figure(plot_height=size[0], plot_width=size[1],
-                              tools=tools, title=f' Channel {i}: {ch_name[i]}',
-                              sizing_mode='stretch_both')
-            plots[i].line(x, y, color=colors[i - 1], alpha=0.9)
-        if i > 1:
-            plots[i] = figure(plot_height=size[0], plot_width=size[1],
-                              tools=tools, title=f' Channel {i}: {ch_name[i]}',
-                              x_range=plots[1].x_range, sizing_mode='stretch_both')
-            plots[i].line(x, y, color=colors[i - 1], alpha=0.9)
-
-        plot_list.append([plots[i]])
-    p = gridplot(plot_list, toolbar_location='right', plot_height=250, plot_width=750)
+        tools = ['wheel_zoom,pan,reset']
+        q = figure(plot_height=size[0], plot_width=size[1],
+                   tools=tools,
+                   title=f' Channel {i}: {phys_in.ch_name[i]}',
+                   sizing_mode='stretch_both',
+                   x_range=(0, 100))
+        q.line('x', 'y', color=colors[i - 1], alpha=0.9, source=source)
+        q.xaxis.axis_label = 'Time (s)'
+        # hovertool commented for posterity because I (KB) will be triumphant
+        # eventually
+        # q.add_tools(HoverTool(tooltips=[
+        #    (phys_in.ch_name[i], '@y{0.000} ' + phys_in.units[i]),
+        #    ('HELP', '100 :D')
+        # ], mode='vline'))
+        plot_list.append([q])
+    p = gridplot(plot_list, toolbar_location='right',
+                 plot_height=250, plot_width=750,
+                 merge_tools=True)
     script, div = components(p)
     return script, div
 
 
-def generate_report(out_dir, log_path, ch_name, timeseries, units, freq):
+def generate_report(out_dir, log_path, phys_in):
     """
     Plot all the channels for visualizations as linked line plots for dynamic report.
 
@@ -186,18 +180,10 @@ def generate_report(out_dir, log_path, ch_name, timeseries, units, freq):
     ----------
     out_dir : str
         File path to a completed phys2bids output directory
-    ch_name: (ch) list of strings
-        List of names of the channels - can be the header of the columns
-        in the output files.
-    timeseries: (ch, [tps]) list
-        List of numpy 1d arrays - one for channel, plus one for time.
-        Time channel has to be the first, trigger the second.
-        Contains all the timeseries recorded.
-    units: (ch) list of strings
-        List of the units of the channels.
-    freq: (ch) list of floats
-        List of floats - one per channel.
-        Contains all the frequencies of the recorded channel.
+    log_path: path
+        Path to the logged output of phys2bids
+    phys_in: BlueprintInput object
+        Object returned by BlueprintInput class
     -----
     outcome:
         Creates new plot with path specified in outfile.
@@ -226,7 +212,7 @@ def generate_report(out_dir, log_path, ch_name, timeseries, units, freq):
 
     # Read in output directory structure & create tree
     tree_string = _generate_file_tree(out_dir)
-    bokeh_js, bokeh_div = _generate_bokeh_plots(ch_name, timeseries, units, freq, size=(250, 750))
+    bokeh_js, bokeh_div = _generate_bokeh_plots(phys_in, size=(250, 750))
     html = _update_fpage_template(tree_string, bokeh_div, bokeh_js, log_html_path, qc_html_path)
 
     with open(qc_html_path, 'wb') as f:
