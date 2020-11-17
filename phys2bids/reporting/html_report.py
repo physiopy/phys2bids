@@ -194,7 +194,7 @@ def generate_report(out_dir, log_path, phys_in):
     """
     # Copy assets into output folder
     pkgdir = sys.modules['phys2bids'].__path__[0]
-    assets_path = opj(pkgdir, 'reporting/assets')
+    assets_path = opj(pkgdir, 'reporting', 'assets')
     copy_tree(assets_path, opj(out_dir, 'assets'))
 
     # Read log
