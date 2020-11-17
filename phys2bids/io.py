@@ -21,7 +21,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
 
     Parameters
     ----------
-    timeseries: list
+    timeseries : list
         list with channels only in np array format
     freq : list
         list with the maximun frequency
@@ -74,15 +74,15 @@ def process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_nam
 
     Parameters
     ----------
-    channel_list: list
+    channel_list : list
         list with channels only
     chtrig : int
         index of trigger channel, starting in 1 for human readability
-    interval: list
+    interval : list
         contains interval or frequency value and units
-    orig_units: list
+    orig_units : list
         contains original channels units
-    orig_names: list
+    orig_names : list
         contains original channels name
 
     Returns
@@ -181,14 +181,14 @@ def read_header_and_channels(filename):
 
     Parameters
     ----------
-    filename: str
+    filename : str
         path to the txt Labchart file
 
     Returns
     -------
-    header: list
+    header : list
         header lines
-    channel_list:list
+    channel_list : list
         channel lines in list
 
     """
@@ -220,18 +220,18 @@ def extract_header_items(channel_list, header=[]):
 
     Parameters
     ----------
-    channel_list: list
+    channel_list : list
         list with channels. For one of the formats it contains header information
     header: list
         list with that contains file header
 
     Returns
     -------
-    interval: list
+    interval : list of strings
         contains interval or frequency value and units
-    orig_units: list
+    orig_units : list
         contains original channels units
-    orig_names: list
+    orig_names : list
         contains original channels name
 
     Raises
@@ -278,7 +278,7 @@ def load_txt_ext(filename, chtrig=0):
 
     Parameters
     ----------
-    filename: str
+    filename : str
         path to the txt Labchart file
     chtrig : int
         index of trigger channel, starting in 1 for human readability
@@ -309,7 +309,7 @@ def load_acq_ext(filename, chtrig=0):
 
     Parameters
     ----------
-    filename: str
+    filename : str
         path to the txt labchart file
     chtrig : int, optional
           index of trigger channel. Default is 0.
