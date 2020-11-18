@@ -154,8 +154,7 @@ jobs:
             apt-get install -yqq curl
             source activate 3.7
             cd /tmp/src/coverage/
-            coverage combine
-            coverage xml
+            bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: /tmp/src/coverage
       - codecov/upload:
