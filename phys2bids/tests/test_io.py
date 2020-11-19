@@ -48,13 +48,13 @@ def test_load_txt(samefreq_short_txt_file, multifreq_lab_file):
     ('1 kHz', 1000),
     ('1 MHz', 1000000)
 ])
-def test_process_blueprint_items_for_acq(loaded_acq_file, units, expected):
+def test_generate_blueprint_for_acq(loaded_acq_file, units, expected):
     header, channels, chtrig = loaded_acq_file
 
     # set units to test that expected frequency is generated correctly
     header[1][0] = units
     interval, orig_units, orig_names = io.extract_header_items(channels, header)
-    phys_obj = io.process_blueprint_items(channels, chtrig, interval, orig_units, orig_names)
+    phys_obj = io.generate_blueprint(channels, chtrig, interval, orig_units, orig_names)
     assert math.isclose(phys_obj.freq[0], expected)
 
 
@@ -65,31 +65,31 @@ def test_process_blueprint_items_for_acq(loaded_acq_file, units, expected):
     ('1 ms', 1000),
     ('1000 µs', 1000)
 ])
-def test_process_blueprint_items_for_labchart(loaded_lab_file, units, expected):
+def test_generate_blueprint_for_labchart(loaded_lab_file, units, expected):
     header, channels, chtrig = loaded_lab_file
     header[0][1] = units
     interval, orig_units, orig_names = io.extract_header_items(channels, header)
-    phys_obj = io.process_blueprint_items(channels, chtrig, interval, orig_units, orig_names)
+    phys_obj = io.generate_blueprint(channels, chtrig, interval, orig_units, orig_names)
     assert math.isclose(phys_obj.freq[0], expected)
 
 
-def test_process_blueprint_items_notime(notime_lab_file):
+def test_generate_blueprint_notime(notime_lab_file):
     chtrig = 0
     header, channels = io.read_header_and_channels(notime_lab_file)
     interval, orig_units, orig_names = io.extract_header_items(channels, header)
-    phys_obj = io.process_blueprint_items(channels, chtrig, interval, orig_units, orig_names)
+    phys_obj = io.generate_blueprint(channels, chtrig, interval, orig_units, orig_names)
     assert len(phys_obj.timeseries) == len(channels[0]) + 1
 
 
-def test_process__blueprint_items_errors(loaded_lab_file):
+def test_generate_blueprint_items_errors(loaded_lab_file):
     header, channels, chtrig = loaded_lab_file
     # test file without header
     # test when units are not valid
     header[0][1] = ' 1 gHz'
     interval, orig_units, orig_names = io.extract_header_items(channels, header)
     with raises(AttributeError) as errorinfo:
-        io.process_blueprint_items(channels, chtrig, interval, orig_units, orig_names)
-    assert 'valid format frequency or time unit' in str(errorinfo.value)
+        io.generate_blueprint(channels, chtrig, interval, orig_units, orig_names)
+    assert 'Interval unit "gHz" is not in a valid frequency' in str(errorinfo.value)
 
 
 def test_extract_header_items_errors(loaded_lab_file):
@@ -107,7 +107,7 @@ def test_extract_header_items_errors(loaded_lab_file):
 def test_multifreq(loaded_lab_file):
     header, channels, chtrig = loaded_lab_file
     interval, orig_units, orig_names = io.extract_header_items(channels, header)
-    phys_obj = io.process_blueprint_items(channels, chtrig, interval, orig_units, orig_names)
+    phys_obj = io.generate_blueprint(channels, chtrig, interval, orig_units, orig_names)
     new_freq = io.check_multifreq(phys_obj.timeseries, [phys_obj.freq[0]] * len(phys_obj.freq))
     assert new_freq[-3:] == [100, 40, 500]
 
