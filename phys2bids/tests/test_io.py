@@ -32,11 +32,11 @@ def loaded_lab_file(multifreq_lab_file):
     return header_lab, channels_lab, chtrig
 
 
-def test_load_txt_ext(samefreq_short_txt_file, multifreq_lab_file):
+def test_load_txt(samefreq_short_txt_file, multifreq_lab_file):
     # testing for AcqKnowledge files
-    io.load_txt_ext(samefreq_short_txt_file, chtrig=2)
+    io.load_txt(samefreq_short_txt_file, chtrig=2)
     # testing for LabChart files
-    io.load_txt_ext(multifreq_lab_file, chtrig=1)
+    io.load_txt(multifreq_lab_file, chtrig=1)
 
 
 @pytest.mark.parametrize('units, expected', [
@@ -112,10 +112,10 @@ def test_multifreq(loaded_lab_file):
     assert new_freq[-3:] == [100, 40, 500]
 
 
-def test_load_acq_ext(samefreq_full_acq_file):
+def test_load_acq(samefreq_full_acq_file):
     # Read data to test
     chtrig = 3
-    phys_obj = io.load_acq_ext(samefreq_full_acq_file, chtrig)
+    phys_obj = io.load_acq(samefreq_full_acq_file, chtrig)
 
     # checks that the outputs make sense
     assert phys_obj.ch_name[0] == 'time'

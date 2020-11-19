@@ -272,7 +272,7 @@ def extract_header_items(channel_list, header=[]):
     return interval, orig_units, orig_names
 
 
-def load_txt_ext(filename, chtrig=0):
+def load_txt(filename, chtrig=0):
     """
     Read .txt file into a BlueprintInput object.
 
@@ -303,7 +303,7 @@ def load_txt_ext(filename, chtrig=0):
     return phys_in
 
 
-def load_acq_ext(filename, chtrig=0):
+def load_acq(filename, chtrig=0):
     """
     Populate object phys_input from acq extension files.
 
