@@ -68,7 +68,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
     return mfreq
 
 
-def process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_names):
+def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     """
     Process items header items and channel_list and make a physio_obj.BlueprintInput.
 
@@ -299,7 +299,7 @@ def load_txt(filename, chtrig=0):
     """
     header, channel_list = read_header_and_channels(filename)
     interval, orig_units, orig_names = extract_header_items(channel_list, header)
-    phys_in = process_blueprint_items(channel_list, chtrig, interval, orig_units, orig_names)
+    phys_in = generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names)
     return phys_in
 
 
