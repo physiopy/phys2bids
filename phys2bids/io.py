@@ -33,7 +33,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
 
     Returns
     -------
-    mfreq: list
+    mfreq : list
         new list with the actual frequency of the channels
     """
     mfreq = []
