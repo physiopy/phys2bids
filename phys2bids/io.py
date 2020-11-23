@@ -126,7 +126,8 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
         # check if interval is in seconds, if not change the units to seconds and
         # calculate frequency
         if interval[-1] != 's':
-            LGR.warning('Sampling interval not expressed in seconds. Converting its value and unit.')
+            LGR.warning('Sampling interval not expressed in seconds. '
+                        'Converting its value and unit.')
             if interval[-1] == 'min':
                 interval[0] = float(interval[0]) * 60
                 interval[-1] = 's'
