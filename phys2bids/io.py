@@ -235,7 +235,7 @@ def extract_header_items(channel_list, header=[]):
 
     Raises
     ------
-    ValueError
+    AttributeError
         If len(header) == 0 and therefore there is no header
         If files are not in acq or txt format
     """
