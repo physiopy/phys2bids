@@ -69,7 +69,10 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
 
 def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     """
-    Process items header items and channel_list and make a physio_obj.BlueprintInput.
+    Standarize channel_list, chtrig interval orig_units and orig_names.
+
+    Standarize channel_list, chtrig interval orig_units and orig_names in the correct units and
+    format and generate a physio_obj.BlueprintInput.
 
     Parameters
     ----------
@@ -216,7 +219,10 @@ def read_header_and_channels(filename):
 
 def extract_header_items(channel_list, header=[]):
     """
-    Process items header and channel_list depending on the format (AcqKnowledge and labchart).
+    Extract interval, orig_units and orig_names from header and channel_list.
+
+    Extract interval, orig_units and orig_names from header and channel_list
+    depending on the format (AcqKnowledge and labchart)
 
     Parameters
     ----------
