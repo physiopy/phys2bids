@@ -79,7 +79,8 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     chtrig : int
         index of trigger channel, starting in 1 for human readability
     interval : list of strings
-        maximum sampling frequency or interval value and unit for the recording
+        maximum sampling frequency or interval value and unit for the recording.
+        Example: ["400", "Hz"]
     orig_units : list of strings
         contains original channels units
     orig_names : list of strings
