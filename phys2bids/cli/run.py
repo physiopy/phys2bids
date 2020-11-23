@@ -134,7 +134,7 @@ def _get_parser():
                                'participant.tsv file ',
                           default='')
     optional.add_argument('-report', '--report',
-                          dest='generate_report',
+                          dest='make_report',
                           action='store_true',
                           help='Generate a report with the data and generated folder structure. '
                                'Default is False.',
