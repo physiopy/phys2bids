@@ -136,7 +136,7 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
             elif interval[-1] == 'µsec':
                 interval[0] = float(interval[0]) / 1000000
                 interval[-1] = 's'
-            if interval[-1] == 'hr':
+           elif interval[-1] == 'hr':
                 interval[0] = float(interval[0]) * 3600
                 interval[-1] = 's'
             elif interval[-1] == 'ms':
