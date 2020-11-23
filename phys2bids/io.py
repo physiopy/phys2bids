@@ -312,7 +312,7 @@ def load_acq(filename, chtrig=0):
     filename : str
         path to the txt labchart file
     chtrig : int, optional
-          index of trigger channel. Default is 0.
+        index of trigger channel. Default is 0.
 
     Returns
     -------
