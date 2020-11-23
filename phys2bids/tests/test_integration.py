@@ -39,7 +39,8 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
     conversion_path = join(test_path, 'code', 'conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
-              chtrig=test_chtrig, num_timepoints_expected=60, tr=1.5)
+              chtrig=test_chtrig, num_timepoints_expected=60, tr=1.5,
+              generate_report=True)
 
     # Check that files are generated
     for suffix in ['.json', '.tsv.gz']:
