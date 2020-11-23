@@ -8,7 +8,6 @@ import numpy as np
 from operator import itemgetter
 import warnings
 
-from bioread import read_file
 
 from phys2bids.physio_obj import BlueprintInput
 
@@ -323,6 +322,7 @@ def load_acq(filename, chtrig=0):
     --------
     physio_obj.BlueprintInput
     """
+    from bioread import read_file
     with warnings.catch_warnings():
         warnings.filterwarnings('ignore', category=DeprecationWarning)
         data = read_file(filename).channels
