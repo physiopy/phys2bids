@@ -92,7 +92,6 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     Raises
     ------
     ValueError
-        If len(header) == 0 and therefore there is no header
         If sampling is not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz', 'hr', 'min', 's',
         'ms', 'µs'] reference:
         https://www.adinstruments.com/support/knowledge-base/how-can-channel-titles-ranges-intervals-etc-text-file-be-imported-labchart
