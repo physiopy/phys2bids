@@ -273,7 +273,7 @@ def extract_header_items(channel_list, header=[]):
 
 def load_txt(filename, chtrig=0):
     """
-    Read  acqknowledge and labchart files in .txt format into a BlueprintInput object.
+    Read AcqKnowledge and labchart files in .txt format into a BlueprintInput object.
 
     Parameters
     ----------
