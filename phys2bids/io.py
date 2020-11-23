@@ -288,12 +288,6 @@ def load_txt(filename, chtrig=0):
     phys_in
         BlueprintInput object
 
-    Raises
-    ------
-    ValueError
-        If len(header) == 0 and therefore there is no header
-        If files are not in acq or txt format
-
     See Also
     --------
     physio_obj.BlueprintInput
