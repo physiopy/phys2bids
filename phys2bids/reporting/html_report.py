@@ -221,7 +221,7 @@ def generate_report(out_dir, log_path, phys_in):
 
     # Read in output directory structure & create tree
     tree_string = _generate_file_tree(out_dir)
-    bokeh_js, bokeh_div = _generate_bokeh_plots(phys_in, size=(250, 750))
+    bokeh_js, bokeh_div = _generate_bokeh_plots(phys_in, figsize=(250, 750))
     html = _update_fpage_template(tree_string, bokeh_div, bokeh_js, log_html_path, qc_html_path)
 
     with open(qc_html_path, 'wb') as f:
