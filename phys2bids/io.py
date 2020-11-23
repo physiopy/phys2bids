@@ -285,6 +285,7 @@ def load_txt(filename, chtrig=0):
     Returns
     -------
     phys_in
+        BlueprintInput object
 
     Raises
     ------
