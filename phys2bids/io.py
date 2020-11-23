@@ -215,7 +215,7 @@ def read_header_and_channels(filename):
 
 def extract_header_items(channel_list, header=[]):
     """
-    Process items header and channel_list depending on the format (acqKnowledge and labchart).
+    Process items header and channel_list depending on the format (AcqKnowledge and labchart).
 
     Parameters
     ----------
