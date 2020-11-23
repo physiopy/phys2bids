@@ -121,7 +121,7 @@ def _generate_file_tree(out_dir):
     return tree_string
 
 
-def _generate_bokeh_plots(phys_in, size=(250, 500)):
+def _generate_bokeh_plots(phys_in, figsize=(250, 500)):
     """
     Plot all the channels for visualizations as linked line plots for dynamic report.
 
@@ -129,7 +129,7 @@ def _generate_bokeh_plots(phys_in, size=(250, 500)):
     ----------
     phys_in: BlueprintInput object
         Object returned by BlueprintInput class
-    size: tuple
+    figsize: tuple
         Size of the figure expressed as (size_x, size_y),
         Default is 250x750px
     Outcome
@@ -160,7 +160,7 @@ def _generate_bokeh_plots(phys_in, size=(250, 500)):
         i = row + 1
 
         tools = ['wheel_zoom,pan,reset']
-        q = figure(plot_height=size[0], plot_width=size[1],
+        q = figure(plot_height=figsize[0], plot_width=figsize[1],
                    tools=tools,
                    title=f' Channel {i}: {phys_in.ch_name[i]}',
                    sizing_mode='stretch_both',
