@@ -129,7 +129,8 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
     cite_module=True)
 def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
               sub=None, ses=None, chtrig=1, chsel=None, num_timepoints_expected=None,
-              tr=None, thr=None, pad=9, ch_name=[], yml='', debug=False, quiet=False):
+              tr=None, thr=None, pad=9, ch_name=[], yml='', generate_report=False,
+              debug=False, quiet=False):
     """
     Run main workflow of phys2bids.
 
@@ -437,7 +438,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                        os.path.splitext(os.path.basename(phys_out[key].filename)
                                                         )[0]))
 
-        generate_report(outdir, logname, phys_out[key])
+        if generate_report:
+            generate_report(outdir, logname, phys_out[key])
 
 
 def _main(argv=None):
