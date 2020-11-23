@@ -108,7 +108,7 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
                             'ms', 'µs']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a '
                              'valid frequency or time unit format, this probably '
-                             'means your file is not in min, sec, msec, µsec, hr, min, s, ms, µs,'
+                             'means your file is not in min, sec, msec, µsec, hr, min, s, ms, µs, '
                              'Mhz, KHz or Hz')
     # Check if the header is in frequency or sampling interval
     if 'Hz' in interval[-1]:
