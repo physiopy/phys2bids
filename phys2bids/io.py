@@ -72,7 +72,7 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     Standarize channel_list, chtrig interval orig_units and orig_names.
 
     Standarize channel_list, chtrig interval orig_units and orig_names in the correct units and
-    format and generate a physio_obj.BlueprintInput.
+    format and generate a physio_obj.BlueprintInput object.
 
     Parameters
     ----------
