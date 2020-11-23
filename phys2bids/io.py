@@ -221,7 +221,7 @@ def extract_header_items(channel_list, header=[]):
     ----------
     channel_list : list of strings
         The channels of the recording
-    header: list
+    header : list
         list that contains file header
 
     Returns
