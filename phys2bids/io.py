@@ -113,7 +113,7 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     # Check if the header is in frequency or sampling interval
     if 'Hz' in interval[-1]:
         LGR.info('Retrieving frequency from file header, calculating sample interval, '
-              ' and standarizing to Hz if needed')
+                 ' and standarizing to Hz if needed')
         freq = float(interval[0])
         freq_unit = interval[-1]
         if freq_unit == 'MHz':
