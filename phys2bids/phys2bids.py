@@ -84,7 +84,7 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
                f'Tip: Time 0 is the time of first trigger\n'
                f'------------------------------------------------\n')
     LGR.info(summary)
-    utils.writefile(outfile, '.log', summary)
+    utils.write_file(outfile, '.log', summary)
 
 
 def print_json(outfile, samp_freq, time_offset, ch_name):
@@ -112,7 +112,7 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
     summary = dict(SamplingFrequency=samp_freq,
                    StartTime=round(start_time, 4),
                    Columns=ch_name)
-    utils.writejson(outfile, summary, indent=4, sort_keys=False)
+    utils.write_json(outfile, summary, indent=4, sort_keys=False)
 
 
 @due.dcite(
@@ -146,10 +146,10 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # Check options to make them internally coherent pt. I
     # #!# This can probably be done while parsing?
     outdir = utils.check_input_dir(outdir)
-    utils.path_exists_or_make_it(outdir)
-    utils.path_exists_or_make_it(os.path.join(outdir, 'code'))
+    os.makedirs(outdir, exist_ok=True)
+    os.makedirs(os.path.join(outdir, 'code'), exist_ok=True)
     conversion_path = os.path.join(outdir, 'code', 'conversion')
-    utils.path_exists_or_make_it(conversion_path)
+    os.makedirs(conversion_path, exist_ok=True)
 
     # Create logfile name
     basename = 'phys2bids_'
@@ -217,13 +217,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                             'the session')
 
     # Read file!
-    if ftype == 'acq':
-        from phys2bids.interfaces.acq import populate_phys_input
-    elif ftype == 'txt':
-        from phys2bids.interfaces.txt import populate_phys_input
-
     LGR.info(f'Reading the file {infile}')
-    phys_in = populate_phys_input(infile, chtrig)
+    if ftype == 'acq':
+        from phys2bids.io import load_acq_ext
+        phys_in = load_acq_ext(infile, chtrig)
+    elif ftype == 'txt':
+        from phys2bids.io import load_txt_ext
+        phys_in = load_txt_ext(infile, chtrig)
 
     LGR.info('Checking that units of measure are BIDS compatible')
     for index, unit in enumerate(phys_in.units):

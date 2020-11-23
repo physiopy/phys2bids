@@ -5,18 +5,22 @@
 phys2bids
 =========
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3653153.svg)](https://doi.org/10.5281/zenodo.3653153)
-[![Join the chat at Gitter: https://gitter.im/physiopy/phys2bids](https://badges.gitter.im/physiopy/phys2bids.svg)](https://gitter.im/physiopy/phys2bids?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge)
-[![codecov](https://codecov.io/gh/physiopy/phys2bids/branch/master/graph/badge.svg)](https://codecov.io/gh/physiopy/phys2bids)
-[![Auto Release](https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto)](https://github.com/intuit/auto)
+[![Latest version](https://img.shields.io/pypi/v/phys2bids)](https://pypi.org/project/phys2bids/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3470091.svg)](https://doi.org/10.5281/zenodo.3470091)
+[![Licensed Apache 2.0](https://img.shields.io/github/license/physiopy/phys2bids)](https://github.com/physiopy/phys2bids/blob/master/LICENSE)
 
+[![codecov](https://codecov.io/gh/physiopy/phys2bids/branch/master/graph/badge.svg)](https://codecov.io/gh/physiopy/phys2bids)
 [![CircleCI](https://circleci.com/gh/physiopy/phys2bids.svg?branch=master&style=shield)](https://circleci.com/gh/physiopy/phys2bids)
 [![Build Status. Windows](https://dev.azure.com/physiopy/phys2bids/_apis/build/status/physiopy.phys2bids?branchName=master)](https://dev.azure.com/physiopy/phys2bids/_build/latest?definitionId=1&branchName=master)
 [![See the documentation at: https://phys2bids.readthedocs.io](https://readthedocs.org/projects/phys2bids/badge/?version=latest)](https://phys2bids.readthedocs.io/en/latest/?badge=latest)
+
+[![Join the chat at Gitter: https://gitter.im/physiopy/phys2bids](https://badges.gitter.im/physiopy/phys2bids.svg)](https://gitter.im/physiopy/phys2bids?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge)
+[![Auto Release](https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto)](https://github.com/intuit/auto)
+[![Supports python version](https://img.shields.io/pypi/pyversions/phys2bids)](https://pypi.org/project/phys2bids/)
 [![Requirements Status](https://requires.io/github/physiopy/phys2bids/requirements.svg?branch=master)](https://requires.io/github/physiopy/phys2bids/requirements/?branch=master)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-14-orange.svg?style=flat)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-15-orange.svg?style=flat)](#contributors)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ``phys2bids`` is a python3 library meant to format physiological files in BIDS.
@@ -25,7 +29,9 @@ It was born for AcqKnowledge files (BIOPAC), and at the moment it supports
 (ADInstruments).
 It doesn't support physiological files recorded with the MRI, as you can find a software for it [here](https://github.com/tarrlab/physio2bids).
 
-> If you use ``phys2bids`` in your work, please cite it with the zenodo DOI. You can check it [here](https://zenodo.org/record/3903920)
+> If you use ``phys2bids`` in your work, please cite it with the zenodo DOI of the version you used. You can find the latest version [here](https://doi.org/10.5281/zenodo.3470091)
+
+> We also support gathering all relevant citations via [DueCredit](http://duecredit.org).
 
 [Read the latest documentation](https://phys2bids.readthedocs.io/en/latest/) for more information on phys2bids!
 
@@ -40,12 +46,12 @@ Shortcuts:
 - [**Code of Conduct**](https://phys2bids.readthedocs.io/en/latest/conduct.html)
 - [Developer calls calendar](https://calendar.google.com/calendar/u/0?cid=amoycDQ1MTdhMWdpaHNuNzlnOW1ucHJkMjRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 
-## Hacktoberfest
+<!-- ## Hacktoberfest
 Hacktoberfest participants, welcome!
 We have some issues for you [here](https://github.com/physiopy/phys2bids/issues?q=is%3Aissue+is%3Aopen+label%3Ahacktoberfest)!
 However, feel free to tackle any issue you'd like. Depending on the issue and extent of contribution, Hacktoberfest related PRs might not count toward being listed as contributors and authors (unless there is the specific interest). You can ask about it in the issue itself!
 Feel free to ask help to the contributors over gitter, happy coding and (hopefully) enjoy hour tee (or tree)!
-
+-->
 ## The BrainWeb
 BrainWeb participants, welcome!
 We have a milestone [here](https://github.com/physiopy/phys2bids/milestone/5) as a collection of issues you could work on with our help. 
@@ -84,8 +90,6 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://github.com/eurunuela"><img src="https://avatars0.githubusercontent.com/u/13706448?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Eneko Uruñuela</b></sub></a><br /><a href="https://github.com/physiopy/phys2bids/issues?q=author%3Aeurunuela" title="Bug reports">🐛</a> <a href="https://github.com/physiopy/phys2bids/commits?author=eurunuela" title="Code">💻</a> <a href="#infra-eurunuela" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/physiopy/phys2bids/pulls?q=is%3Apr+reviewed-by%3Aeurunuela" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/physiopy/phys2bids/commits?author=eurunuela" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/kristinazvolanek"><img src="https://avatars3.githubusercontent.com/u/54590158?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Kristina Zvolanek</b></sub></a><br /><a href="#data-kristinazvolanek" title="Data">🔣</a> <a href="#content-kristinazvolanek" title="Content">🖋</a> <a href="https://github.com/physiopy/phys2bids/commits?author=kristinazvolanek" title="Documentation">📖</a></td>
-  </tr>
-</table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
