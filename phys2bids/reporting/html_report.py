@@ -1,7 +1,7 @@
 """Reporting functionality for phys2bids."""
 import sys
 from distutils.dir_util import copy_tree
-from os.path import join as opj
+from os.path import join
 from pathlib import Path
 from string import Template
 from bokeh.plotting import figure, ColumnDataSource
@@ -203,16 +203,16 @@ def generate_report(out_dir, log_path, phys_in):
     """
     # Copy assets into output folder
     pkgdir = sys.modules['phys2bids'].__path__[0]
-    assets_path = opj(pkgdir, 'reporting', 'assets')
-    copy_tree(assets_path, opj(out_dir, 'assets'))
+    assets_path = join(pkgdir, 'reporting', 'assets')
+    copy_tree(assets_path, join(out_dir, 'assets'))
 
     # Read log
     with open(log_path, 'r+') as f:
         log_content = f.read()
 
     log_content = log_content.replace('\n', '<br>')
-    log_html_path = opj(out_dir, 'phys2bids_report_log.html')
-    qc_html_path = opj(out_dir, 'phys2bids_report.html')
+    log_html_path = join(out_dir, 'phys2bids_report_log.html')
+    qc_html_path = join(out_dir, 'phys2bids_report.html')
 
     html = _save_as_html(log_html_path, log_content, qc_html_path)
 
