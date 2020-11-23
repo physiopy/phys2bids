@@ -163,7 +163,7 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     timeseries = [np.array(darray) for darray in timeseries]
     # Check if the file has a time channel, otherwise create it.
     # As the "time" doesn't have a column header, if the number of header names
-    # is less than the number of timesieries, then "time" is column 0...
+    # is less than the number of timeseries, then "time" is column 0...
     # ...otherwise, create the time channel
     if not (len(orig_names) < len(timeseries)):
         duration = (timeseries[0].shape[0] + 1) * interval[0]
