@@ -9,8 +9,8 @@ from operator import itemgetter
 import warnings
 
 
+from phys2bids.bids import bidsify_units
 from phys2bids.physio_obj import BlueprintInput
-
 LGR = logging.getLogger(__name__)
 
 
@@ -128,32 +128,22 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     else:
         # check if interval is in seconds, if not change the units to seconds and
         # calculate frequency
-        if interval[-1] != 's':
+        if interval[-1] != 's' or interval[-1] != 'sec':
             LGR.warning('Sampling interval not expressed in seconds. '
                         'Converting its value and unit.')
             if interval[-1] == 'min':
                 interval[0] = float(interval[0]) * 60
-                interval[-1] = 's'
             elif interval[-1] == 'msec':
                 interval[0] = float(interval[0]) / 1000
-                interval[-1] = 's'
             elif interval[-1] == 'µsec':
                 interval[0] = float(interval[0]) / 1000000
-                interval[-1] = 's'
             elif interval[-1] == 'hr':
                 interval[0] = float(interval[0]) * 3600
-                interval[-1] = 's'
             elif interval[-1] == 'ms':
                 interval[0] = float(interval[0]) / 1000
-                interval[-1] = 's'
             elif interval[-1] == 'µs':
                 interval[0] = float(interval[0]) / 1000000
-                interval[-1] = 's'
-            elif interval[-1] == 'sec':
-                interval[0] = float(interval[0])
-                interval[-1] = 's'
-        else:
-            interval[0] = float(interval[0])
+        interval[0] = float(interval[0])
         # get frequency
         freq = [1 / interval[0]] * len(timeseries)
     # reorder channels names
