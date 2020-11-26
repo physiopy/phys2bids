@@ -7,6 +7,7 @@ import logging
 from itertools import groupby
 
 import numpy as np
+from copy import deepcopy
 
 LGR = logging.getLogger(__name__)
 
@@ -228,16 +229,16 @@ class BlueprintInput():
     def __init__(self, timeseries, freq, ch_name, units, trigger_idx,
                  num_timepoints_found=None, thr=None, time_offset=0):
         """Initialise BlueprintInput (see class docstring)."""
-        self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
-        self.freq = has_size(is_valid(freq, list,
+        self.timeseries = deepcopy(is_valid(timeseries, list, list_type=np.ndarray))
+        self.freq = deepcopy(has_size(is_valid(freq, list,
                                       list_type=(int, float)),
-                             self.ch_amount, 0.0)
-        self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
-        self.units = has_size(units, self.ch_amount, '[]')
-        self.trigger_idx = is_valid(trigger_idx, int)
-        self.num_timepoints_found = num_timepoints_found
-        self.thr = thr
-        self.time_offset = time_offset
+                             self.ch_amount, 0.0))
+        self.ch_name = deepcopy(has_size(ch_name, self.ch_amount, 'unknown'))
+        self.units = deepcopy(has_size(units, self.ch_amount, '[]'))
+        self.trigger_idx = deepcopy(is_valid(trigger_idx, int))
+        self.num_timepoints_found = deepcopy(num_timepoints_found)
+        self.thr = deepcopy(thr)
+        self.time_offset = deepcopy(time_offset)
 
     @property
     def ch_amount(self):
