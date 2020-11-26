@@ -448,7 +448,7 @@ class BlueprintInput():
             Property of the `BlueprintInput` class.
             Contains the number of timepoints found
             with the automatic estimation.
-        shited_timeseries:
+        shifted_timeseries:
             The property `timeseries` is shifted with the 0 being
             the time of first trigger.
         """
