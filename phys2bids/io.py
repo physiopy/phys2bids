@@ -9,7 +9,6 @@ from operator import itemgetter
 import warnings
 
 
-from phys2bids.bids import bidsify_units
 from phys2bids.physio_obj import BlueprintInput
 LGR = logging.getLogger(__name__)
 
@@ -128,7 +127,7 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     else:
         # check if interval is in seconds, if not change the units to seconds and
         # calculate frequency
-        if interval[-1] != 's' or interval[-1] != 'sec':
+        if interval[-1] not in ('s', 'sec'):
             LGR.warning('Sampling interval not expressed in seconds. '
                         'Converting its value and unit.')
             if interval[-1] == 'min':
