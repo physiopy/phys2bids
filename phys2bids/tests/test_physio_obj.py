@@ -104,7 +104,7 @@ def test_BlueprintInput():
     blueprint_in.rename_channels(new_names)
     test_index = blueprint_in.return_index(1)
     assert blueprint_in.ch_name == ['time', 'trigger', 'lindt']
-    assert test_index[0] is  test_trigger
+    assert test_index[0] is not test_trigger
 
     # Tests return_index
     assert (test_index[0] == test_trigger).all()
