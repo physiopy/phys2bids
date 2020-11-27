@@ -4,10 +4,10 @@
 """I/O objects for phys2bids."""
 
 import logging
+from copy import deepcopy
 from itertools import groupby
 
 import numpy as np
-from copy import deepcopy
 
 LGR = logging.getLogger(__name__)
 
