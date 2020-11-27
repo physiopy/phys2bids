@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""phys2bids interfaces for txt  and acq extension files."""
 
 import logging
 from collections import Counter
@@ -7,13 +8,9 @@ import numpy as np
 from operator import itemgetter
 import warnings
 
-from bioread import read_file
 
 from phys2bids.physio_obj import BlueprintInput
-
 LGR = logging.getLogger(__name__)
-
-"""phys2bids interfaces for txt  and acq extension files."""
 
 
 def check_multifreq(timeseries, freq, start=0, leftout=0):
@@ -22,7 +19,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
 
     Parameters
     ----------
-    timeseries: list
+    timeseries : list of arrays
         list with channels only in np array format
     freq : list
         list with the maximun frequency
@@ -34,7 +31,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
 
     Returns
     -------
-    mfreq: list
+    mfreq : list
         new list with the actual frequency of the channels
     """
     mfreq = []
@@ -69,18 +66,26 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
     return mfreq
 
 
-def process_labchart(channel_list, chtrig, header=[]):
+def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     """
-    Process labchart header and channel_list and make a physio_obj.BlueprintInput.
+    Standarize channel_list, chtrig interval orig_units and orig_names.
+
+    Standarize channel_list, chtrig interval orig_units and orig_names in the correct units and
+    format and generate a physio_obj.BlueprintInput object.
 
     Parameters
     ----------
-    channel_list: list
+    channel_list : list of strings
         list with channels only
     chtrig : int
         index of trigger channel, starting in 1 for human readability
-    header: list
-        list with that contains file header
+    interval : list of strings
+        maximum sampling frequency or interval value and unit for the recording.
+        Example: ["400", "Hz"]
+    orig_units : list of strings
+        contains original channels units
+    orig_names : list of strings
+        contains original channels name
 
     Returns
     -------
@@ -88,120 +93,29 @@ def process_labchart(channel_list, chtrig, header=[]):
 
     Raises
     ------
-    ValueError
-        If len(header) == 0 and therefore there is no header
-        If sampling is not in ['hr', 'min', 's', 'ms', 'µs'] reference:
+    AttributeError
+        If sampling is not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz', 'hr', 'min', 's',
+        'ms', 'µs'] reference:
         https://www.adinstruments.com/support/knowledge-base/how-can-channel-titles-ranges-intervals-etc-text-file-be-imported-labchart
-
-    See Also
-    --------
-    physio_obj.BlueprintInput
-    """
-    # get frequency
-    # check header has some length
-    if len(header) == 0:
-        raise AttributeError('Files without header are not supported yet')
-    interval = header[0][1].split(" ")
-    # check the interval is in some of the correct labchart units
-    if interval[-1] not in ['hr', 'min', 's', 'ms', 'µs']:
-        raise AttributeError(f'Interval unit "{interval[-1]}" is not in a valid LabChart'
-                             'time unit, this probably means your file is not in Labchart format')
-    # check if interval is in seconds, if not change the units to seconds
-    if interval[-1] != 's':
-        LGR.warning('Interval is not in seconds. Converting its value.')
-        if interval[-1] == 'hr':
-            interval[0] = float(interval[0]) * 3600
-            interval[-1] = 's'
-        elif interval[-1] == 'min':
-            interval[0] = float(interval[0]) * 60
-            interval[-1] = 's'
-        elif interval[-1] == 'ms':
-            interval[0] = float(interval[0]) / 1000
-            interval[-1] = 's'
-        elif interval[-1] == 'µs':
-            interval[0] = float(interval[0]) / 1000000
-            interval[-1] = 's'
-    else:
-        interval[0] = float(interval[0])
-    # get units
-    range_list = header[5][1:]
-    orig_units = []
-    for item in range_list:
-        orig_units.append(item.split(' ')[1])
-    units = ['s', ]
-    # get names
-    orig_names = header[4][1:]
-    orig_names_len = len(orig_names)
-    names = ['time', ]
-    # get channels
-    # this transposes the channel_list from a list of samples x channels to
-    # a list of channels x samples
-    timeseries = list(map(list, zip(*channel_list)))
-    freq = [1 / interval[0]] * len(timeseries)
-    timeseries = [np.array(darray) for darray in timeseries]
-    # check the file has a time channel if not create it and add it
-    # As the "time" doesn't have a column header, if the number of header names
-    # is less than the number of timesieries, then "time" is column 0...
-    # ...otherwise, create the time channel
-    if not (orig_names_len < len(timeseries)):
-        duration = (timeseries[0].shape[0] + 1) * interval[0]
-        t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
-        timeseries = [t_ch, ] + timeseries
-    names = names + orig_names
-    units = units + orig_units
-    freq = [1 / interval[0]] * len(timeseries)
-    freq = check_multifreq(timeseries, freq)
-    return BlueprintInput(timeseries, freq, names, units, chtrig)
-
-
-def process_acq(channel_list, chtrig, header=[]):
-    """
-    Process AcqKnowledge header and channel_list to make a physio_obj.BlueprintInput.
-
-    Parameters
-    ----------
-    channel_list: list
-        list with channels only
-    chtrig : int
-        index of trigger channel, starting in 1 for human readability
-    header: list
-        list with that contains file header
-
-    Returns
-    -------
-    BlueprintInput
-
-    Raises
-    ------
-    ValueError
-        If len(header) == 0 and therefore there is no header
-        If sampling is not in ['min', 'sec', 'µsec', 'msec','MHz', 'kHz', 'Hz'] reference:
         https://www.biopac.com/wp-content/uploads/acqknowledge_software_guide.pdf page 194
 
     See Also
     --------
     physio_obj.BlueprintInput
     """
-    # check header is not empty
-    if len(header) == 0:
-        raise AttributeError('Files without header are not supported yet')
-    header.append(channel_list[0])
-    del channel_list[0]  # delete sample size from channel list
     # this transposes the channel_list from a list of samples x channels to
     # a list of channels x samples
     timeseries = list(map(list, zip(*channel_list)))
-
-    interval = header[1][0].split()
-    # check the interval is in some of the correct AcqKnowledge units
-    if interval[-1].split('/')[0] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz']:
+    if interval[-1] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz', 'hr', 'min', 's',
+                            'ms', 'µs']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a '
-                             'valid AcqKnowledge format time unit, this probably'
-                             'means your file is not in min, sec, msec, µsec, Mhz, KHz or Hz')
-    interval[-1] = interval[-1].split('/')[0]
+                             'valid frequency or time unit format, this probably '
+                             'means your file is not in min, sec, msec, µsec, hr, min, s, ms, µs, '
+                             'Mhz, KHz or Hz')
     # Check if the header is in frequency or sampling interval
-    if 'Hz' in interval[-1].split('/')[0]:
-        print('frequency is given in the header, calculating sample Interval'
-              ' and standarizing to Hz if needed')
+    if 'Hz' in interval[-1]:
+        LGR.info('Retrieving frequency from file header, calculating sample interval, '
+                 'and standarizing to Hz if needed')
         freq = float(interval[0])
         freq_unit = interval[-1]
         if freq_unit == 'MHz':
@@ -209,46 +123,47 @@ def process_acq(channel_list, chtrig, header=[]):
         elif freq_unit == 'kHz':
             freq = freq * 1000
         interval[0] = 1 / freq
-        freq = [freq] * (len(timeseries) + 1)
+        freq = [freq] * len(timeseries)
     else:
         # check if interval is in seconds, if not change the units to seconds and
         # calculate frequency
-        if interval[-1].split('/')[0] != 'sec':
-            LGR.warning('Interval is not in seconds. Converting its value.')
-            if interval[-1].split('/')[0] == 'min':
+        if interval[-1] not in ('s', 'sec'):
+            LGR.warning('Sampling interval not expressed in seconds. '
+                        'Converting its value and unit.')
+            if interval[-1] == 'min':
                 interval[0] = float(interval[0]) * 60
-                interval[-1] = 's'
-            elif interval[-1].split('/')[0] == 'msec':
+            elif interval[-1] == 'msec':
                 interval[0] = float(interval[0]) / 1000
-                interval[-1] = 's'
-            elif interval[-1].split('/')[0] == 'µsec':
+            elif interval[-1] == 'µsec':
                 interval[0] = float(interval[0]) / 1000000
-                interval[-1] = 's'
+            elif interval[-1] == 'hr':
+                interval[0] = float(interval[0]) * 3600
+            elif interval[-1] == 'ms':
+                interval[0] = float(interval[0]) / 1000
+            elif interval[-1] == 'µs':
+                interval[0] = float(interval[0]) / 1000000
         else:
             interval[0] = float(interval[0])
-            interval[-1] = 's'
-        freq = [1 / interval[0]] * (len(timeseries) + 1)
-    # get units and names
-    orig_units = []
-    orig_names = []
-    # the for loop starts at index1 at 3 because that's the first line of the header
-    # with channel name info and ends in 2 + twice the number of channels because
-    # that should be the last channel name
-    for index1 in range(3, 3 + len(header[-1]) * 2, 2):
-        orig_names.append(header[index1][0])
-        # since units are in the line imediately after we get the units at the same time
-        orig_units.append(header[index1 + 1][0])
+        # get frequency
+        freq = [1 / interval[0]] * len(timeseries)
     # reorder channels names
     names = ['time', ]
     names = names + orig_names
     # reoder channels units
     units = ['s', ]
     units = units + orig_units
-    # get channels
+    timeseries = list(map(list, zip(*channel_list)))
+    freq = [1 / interval[0]] * len(timeseries)
     timeseries = [np.array(darray) for darray in timeseries]
-    duration = (timeseries[0].shape[0] + 1) * interval[0]
-    t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
-    timeseries = [t_ch, ] + timeseries
+    # Check if the file has a time channel, otherwise create it.
+    # As the "time" doesn't have a column header, if the number of header names
+    # is less than the number of timeseries, then "time" is column 0...
+    # ...otherwise, create the time channel
+    if not (len(orig_names) < len(timeseries)):
+        duration = (timeseries[0].shape[0] + 1) * interval[0]
+        t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
+        timeseries = [t_ch, ] + timeseries
+        freq = [max(freq)] + freq
     freq = check_multifreq(timeseries, freq)
     return BlueprintInput(timeseries, freq, names, units, chtrig)
 
@@ -259,15 +174,15 @@ def read_header_and_channels(filename):
 
     Parameters
     ----------
-    filename: str
+    filename : str
         path to the txt Labchart file
 
     Returns
     -------
-    header: list
+    header : list of strings
         header lines
-    channel_list:list
-        channel lines in list
+    channel_list : list of strings
+        The channels of the recording
 
     """
     header = []
@@ -292,17 +207,74 @@ def read_header_and_channels(filename):
     return header, channel_list
 
 
-def load_txt_ext(filename, chtrig=0):
+def extract_header_items(channel_list, header=[]):
     """
-    Populate object phys_input.
+    Extract interval, orig_units and orig_names from header and channel_list.
 
-    Extract header and deduce from it the format file,
-    afterwards pass the needed information to
-    the corresponding reading function.
+    Extract interval, orig_units and orig_names from header and channel_list
+    depending on the format (AcqKnowledge and labchart)
 
     Parameters
     ----------
-    filename: str
+    channel_list : list of strings
+        The channels of the recording
+    header : list
+        list that contains file header
+
+    Returns
+    -------
+    interval : list of strings
+        maximun sampling frequency or interval value and unit for the recording
+    orig_units : list of strings
+        contains original channels units
+    orig_names : list of strings
+        contains original channels name
+
+    Raises
+    ------
+    AttributeError
+        If len(header) == 0 and therefore there is no header
+        If files are not in acq or txt format
+    """
+    # check header is not empty and detect if it is in labchart or Acqknoledge format
+    if len(header) == 0:
+        raise AttributeError('Files without header are not supported yet')
+    elif 'Interval=' in header[0]:
+        LGR.info('phys2bids detected that your file is in Labchart format')
+        interval = header[0][1].split(" ")
+        range_list = header[5][1:]
+        orig_units = []
+        for item in range_list:
+            orig_units.append(item.split(' ')[1])
+        orig_names = header[4][1:]
+    elif 'acq' in header[0][0]:
+        LGR.info('phys2bids detected that your file is in AcqKnowledge format')
+        header.append(channel_list[0])
+        del channel_list[0]  # delete sample size from channel list
+        interval = header[1][0].split()
+        interval[-1] = interval[-1].split('/')[0]
+        # get units and names
+        orig_units = []
+        orig_names = []
+        # the for loop starts at index1 at 3 because that's the first line of the header
+        # with channel name info and ends in 2 + twice the number of channels because
+        # that should be the last channel name
+        for index1 in range(3, 3 + len(header[-1]) * 2, 2):
+            orig_names.append(header[index1][0])
+            # since units are in the line imediately after we get the units at the same time
+            orig_units.append(header[index1 + 1][0])
+    else:
+        raise AttributeError('This file format is not supported yet for txt files')
+    return interval, orig_units, orig_names
+
+
+def load_txt(filename, chtrig=0):
+    """
+    Read AcqKnowledge and labchart files in .txt format into a BlueprintInput object.
+
+    Parameters
+    ----------
+    filename : str
         path to the txt Labchart file
     chtrig : int
         index of trigger channel, starting in 1 for human readability
@@ -310,43 +282,28 @@ def load_txt_ext(filename, chtrig=0):
     Returns
     -------
     phys_in
-        Raises
-    ------
-
-    ValueError
-        If len(header) == 0 and therefore there is no header
-        If files are not in acq or txt format
+        BlueprintInput object
 
     See Also
     --------
     physio_obj.BlueprintInput
     """
-    # happens in acq call
     header, channel_list = read_header_and_channels(filename)
-    # check header is not empty and detect if it is in labchart or Acqknoledge format
-    if len(header) == 0:
-        raise AttributeError('Files without header are not supported yet')
-    elif 'Interval=' in header[0]:
-        LGR.info('phys2bids detected that your file is in Labchart format')
-        phys_in = process_labchart(channel_list, chtrig, header)
-    elif 'acq' in header[0][0]:
-        LGR.info('phys2bids detected that your file is in AcqKnowledge format')
-        phys_in = process_acq(channel_list, chtrig, header)
-    else:
-        raise AttributeError('This file format is not supported yet for txt files')
+    interval, orig_units, orig_names = extract_header_items(channel_list, header)
+    phys_in = generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names)
     return phys_in
 
 
-def load_acq_ext(filename, chtrig=0):
+def load_acq(filename, chtrig=0):
     """
     Populate object phys_input from acq extension files.
 
     Parameters
     ----------
-    filename: str
+    filename : str
         path to the txt labchart file
     chtrig : int, optional
-          index of trigger channel. Default is 0.
+        index of trigger channel. Default is 0.
 
     Returns
     -------
@@ -362,6 +319,7 @@ def load_acq_ext(filename, chtrig=0):
     --------
     physio_obj.BlueprintInput
     """
+    from bioread import read_file
     with warnings.catch_warnings():
         warnings.filterwarnings('ignore', category=DeprecationWarning)
         data = read_file(filename).channels
