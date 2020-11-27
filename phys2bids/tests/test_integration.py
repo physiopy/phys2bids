@@ -75,6 +75,8 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
     assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'PULSE - Custom, DA100C',
                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
+    print(f'Conversion path is {conversion_path}')
+
     shutil.copy(join(test_path, 'phys2bids_report.html'),
                 join(dirname(p2b.__file__), 'reporting', 'phys2bids_report.html'))
     shutil.copy(join(test_path, 'phys2bids_report_log.html'),

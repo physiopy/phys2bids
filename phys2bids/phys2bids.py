@@ -440,7 +440,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
         # Only generate report if specified by the user
         if make_report:
-            generate_report(outdir, logname, phys_out[key])
+            generate_report(conversion_path, logname, phys_out[key])
 
 
 def _main(argv=None):
