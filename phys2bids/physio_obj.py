@@ -587,12 +587,12 @@ class BlueprintOutput():
 
     def __init__(self, timeseries, freq, ch_name, units, start_time, filename=''):
         """Initialise BlueprintOutput (see class docstring)."""
-        self.timeseries = is_valid(timeseries, np.ndarray)
-        self.freq = is_valid(freq, (int, float))
-        self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
-        self.units = has_size(units, self.ch_amount, '[]')
-        self.start_time = start_time
-        self.filename = is_valid(filename, str)
+        self.timeseries = deepcopy(is_valid(timeseries, np.ndarray))
+        self.freq = deepcopy(is_valid(freq, (int, float)))
+        self.ch_name = deepcopy(has_size(ch_name, self.ch_amount, 'unknown'))
+        self.units = deepcopy(has_size(units, self.ch_amount, '[]'))
+        self.start_time = deepcopy(start_time)
+        self.filename = deepcopy(is_valid(filename, str))
 
     @property
     def ch_amount(self):
