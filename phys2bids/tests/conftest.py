@@ -98,4 +98,4 @@ def matlab_file_labchart(testpath):
 @pytest.fixture
 def matlab_file_acq(testpath):
     return fetch_file('mc96w', testpath,
-                      'Test_belt_pulse_multifreq.acq')
+                      'Test_belt_pulse_multifreq.mat')
