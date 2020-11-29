@@ -224,6 +224,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     elif ftype == 'txt':
         from phys2bids.io import load_txt
         phys_in = load_txt(infile, chtrig)
+    elif ftype == 'mat':
+        from phys2bids.io import load_mat
+        phys_in = load_mat(infile, chtrig)
 
     LGR.info('Checking that units of measure are BIDS compatible')
     for index, unit in enumerate(phys_in.units):
