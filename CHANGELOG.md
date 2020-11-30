@@ -1,3 +1,15 @@
+# 2.3.1 (Mon Nov 30 2020)
+
+#### 🐛 Bug Fix
+
+- BlueprintInput deepcopies inputs at initialization [#358](https://github.com/physiopy/phys2bids/pull/358) ([@vinferrer](https://github.com/vinferrer))
+
+#### Authors: 1
+
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
 # 2.3.0 (Sun Nov 29 2020)
 
 :tada: This release contains work from new contributors! :tada:
