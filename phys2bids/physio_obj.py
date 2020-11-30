@@ -11,7 +11,7 @@ import re
 
 LGR = logging.getLogger(__name__)
 
-trigger_names_list = ["trig", "trigger"]
+TRIGGER_NAMES = ["trig", "trigger"]
 
 
 def is_valid(var, var_type, list_type=None):
