@@ -4,14 +4,14 @@
 """I/O objects for phys2bids."""
 
 import logging
+import re
 from itertools import groupby
 
 import numpy as np
-import re
-
-LGR = logging.getLogger(__name__)
 
 TRIGGER_NAMES = ["trig", "trigger"]
+
+LGR = logging.getLogger(__name__)
 
 
 def is_valid(var, var_type, list_type=None):
