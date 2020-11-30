@@ -268,7 +268,7 @@ def test_auto_trigger_selection(caplog):
     test_twice = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
     test_timeseries = [test_time, test_trigger, test_half, test_twice]
     test_freq = [1, 1, 0.5, 2]
-    test_chn_name = ['time', 'trigger', 'half', 'twice']
+    test_chn_name = ['time', 'trigger', 'half', 'CO2']
     test_units = ['s', 'V', 'V', 'V']
 
     # test when trigger is not the name of the channel
@@ -283,13 +283,13 @@ def test_auto_trigger_selection(caplog):
                                 test_units, test_chtrig)
     assert phys_in.trigger_idx == 1
     # test when no trigger is found
-    test_chn_name = ['time', 'dummy', 'half', 'twice']
+    test_chn_name = ['time', 'dummy', 'half', 'CO2']
     with raises(Exception) as errorinfo:
         phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
                                     test_units, test_chtrig)
         assert 'No trigger channel automatically found' in str(errorinfo.value)
     # test when no trigger is found
-    test_chn_name = ['time', 'trigger', 'TRIGGER', 'twice']
+    test_chn_name = ['time', 'trigger', 'TRIGGER', 'CO2']
     with raises(Exception) as errorinfo:
         phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
                                     test_units, test_chtrig)
