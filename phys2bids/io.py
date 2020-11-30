@@ -306,7 +306,7 @@ def load_txt_ext(filename, chtrig=0):
         path to the txt Labchart file
     chtrig : int
         index of trigger channel, starting in 1 for human readability, if chtrig is left as zero
-        the automic trigger channel search by name will be executed
+        perform an automatic trigger channel search by channel names.
 
     Returns
     -------
