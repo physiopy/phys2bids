@@ -216,18 +216,10 @@ def extract_header_items(channel_list, header=[]):
 
     Parameters
     ----------
-<<<<<<< HEAD
-    filename: str
-        path to the txt Labchart file
-    chtrig : int
-        index of trigger channel, starting in 1 for human readability. If `chtrig == 0`
-        perform an automatic trigger channel search by channel names.
-=======
     channel_list : list of strings
         The channels of the recording
     header : list
         list that contains file header
->>>>>>> 52280e01ba7d2713f29dd391e2722df3f2ff690b
 
     Returns
     -------
