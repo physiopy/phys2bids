@@ -8,7 +8,7 @@ from pathlib import Path
 
 LGR = logging.getLogger(__name__)
 
-SUPPORTED_FTYPES = ('acq', 'txt')  # 'mat', ...
+SUPPORTED_FTYPES = ('acq', 'txt', 'mat')
 
 
 def check_input_dir(indir):
