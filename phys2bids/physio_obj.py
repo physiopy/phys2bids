@@ -5,6 +5,7 @@
 
 import logging
 import re
+from copy import deepcopy
 from itertools import groupby
 
 import numpy as np
@@ -231,22 +232,16 @@ class BlueprintInput():
     def __init__(self, timeseries, freq, ch_name, units, trigger_idx,
                  num_timepoints_found=None, thr=None, time_offset=0):
         """Initialise BlueprintInput (see class docstring)."""
-        self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
-        self.freq = has_size(is_valid(freq, list,
+        self.timeseries = deepcopy(is_valid(timeseries, list, list_type=np.ndarray))
+        self.freq = deepcopy(has_size(is_valid(freq, list,
                                       list_type=(int, float)),
-                             self.ch_amount, 0.0)
-        self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
-        self.units = has_size(units, self.ch_amount, '[]')
-        self.trigger_idx = is_valid(trigger_idx, int)
-        self.num_timepoints_found = num_timepoints_found
-        self.thr = thr
-        self.time_offset = time_offset
-        if trigger_idx == 0:
-            self.auto_trigger_selection()
-        else:
-            if ch_name[trigger_idx] not in TRIGGER_NAMES:
-                LGR.warning('Trigger channel name is not in our trigger channel name alias list. '
-                            'Please make sure you choose the proper channel.')
+                             self.ch_amount, 0.0))
+        self.ch_name = deepcopy(has_size(ch_name, self.ch_amount, 'unknown'))
+        self.units = deepcopy(has_size(units, self.ch_amount, '[]'))
+        self.trigger_idx = deepcopy(is_valid(trigger_idx, int))
+        self.num_timepoints_found = deepcopy(num_timepoints_found)
+        self.thr = deepcopy(thr)
+        self.time_offset = deepcopy(time_offset)
 
     @property
     def ch_amount(self):
@@ -465,7 +460,7 @@ class BlueprintInput():
         # Use the trigger channel to find the TRs,
         # comparing it to a given threshold.
         trigger = self.timeseries[self.trigger_idx]
-        time = self.timeseries[0].copy()
+        time = self.timeseries[0]
         LGR.info(f'The trigger is in channel {self.trigger_idx}')
         # Check that trigger and time channels have the same length.
         # If not, resample time to the length of the trigger
@@ -628,12 +623,12 @@ class BlueprintOutput():
 
     def __init__(self, timeseries, freq, ch_name, units, start_time, filename=''):
         """Initialise BlueprintOutput (see class docstring)."""
-        self.timeseries = is_valid(timeseries, np.ndarray)
-        self.freq = is_valid(freq, (int, float))
-        self.ch_name = has_size(ch_name, self.ch_amount, 'unknown')
-        self.units = has_size(units, self.ch_amount, '[]')
-        self.start_time = start_time
-        self.filename = is_valid(filename, str)
+        self.timeseries = deepcopy(is_valid(timeseries, np.ndarray))
+        self.freq = deepcopy(is_valid(freq, (int, float)))
+        self.ch_name = deepcopy(has_size(ch_name, self.ch_amount, 'unknown'))
+        self.units = deepcopy(has_size(units, self.ch_amount, '[]'))
+        self.start_time = deepcopy(start_time)
+        self.filename = deepcopy(is_valid(filename, str))
 
     @property
     def ch_amount(self):
