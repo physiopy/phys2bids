@@ -571,7 +571,7 @@ class BlueprintInput():
                 Automatically retrieved trigger index
         """
         LGR.warning('Running automatic trigger detection.')
-        results = [re.search('|'.join(re.split('(\W+|\d|_)', case)),
+        results = [re.search('|'.join(re.split(r'(\W+|\d|_)', case)),
                    '§'.join(TRIGGER_NAMES), re.IGNORECASE) for case in self.ch_name]
         indexes = [i for i, v in enumerate(results) if v]
         if len(indexes) == 1:
