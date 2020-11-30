@@ -562,7 +562,8 @@ class BlueprintInput():
         ------
         Exception
         More than one possible trigger channel was automatically found.
-
+        Exception
+        No trigger channel automatically found
         Notes
         -----
         Outcome:
