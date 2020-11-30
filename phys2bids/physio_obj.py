@@ -558,6 +558,10 @@ class BlueprintInput():
         Parameters
         ----------
         self
+         Raises
+        ------
+        Exception
+        More than one possible trigger channel was automatically found.
 
         Notes
         -----
