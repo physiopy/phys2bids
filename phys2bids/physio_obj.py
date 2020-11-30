@@ -244,7 +244,7 @@ class BlueprintInput():
         if trigger_idx == 0:
             self.auto_trigger_selection()
         else:
-            if ch_name[trigger_idx] not in trigger_names_list:
+            if ch_name[trigger_idx] not in TRIGGER_NAMES:
                 LGR.warning('Trigger channel name is not in our trigger channel name alias list. '
                             'Please make sure you are choosing the proper channel')
 
