@@ -305,7 +305,7 @@ def load_txt_ext(filename, chtrig=0):
     filename: str
         path to the txt Labchart file
     chtrig : int
-        index of trigger channel, starting in 1 for human readability, if chtrig is left as zero
+        index of trigger channel, starting in 1 for human readability. If `chtrig == 0`
         perform an automatic trigger channel search by channel names.
 
     Returns
