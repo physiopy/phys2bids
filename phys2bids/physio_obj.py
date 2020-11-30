@@ -565,13 +565,13 @@ class BlueprintInput():
             trigger_idx : int
                 Automatically retrieved trigger index
         """
-        LGR.warning('Running automatic trigger detection.')
+        LGR.info('Running automatic trigger detection.')
         results = [re.search('|'.join(TRIGGER_NAMES),
                              case, re.IGNORECASE) for case in self.ch_name]
         indexes = [i for i, v in enumerate(results) if v]
         if len(indexes) == 1:
             self.trigger_idx = indexes[0]
-            LGR.warning(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
+            LGR.info(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
         if len(indexes) > 1:
             raise Exception('More than one possible trigger channel was automatically found. '
                             'Please run phys2bids specifying the -chtrig argument.')
