@@ -576,7 +576,7 @@ class BlueprintInput():
                             'Please run phys2bids'
                             'specifying the -chtrig argument.')
         if len(indexes) < 1:
-            raise Exception('No trigger channel was automatically found. Please run phys2bids'
+            raise Exception('No trigger channel automatically found. Please run phys2bids '
                             'specifying the -chtrig argument.')
 
 
