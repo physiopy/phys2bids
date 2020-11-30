@@ -562,7 +562,8 @@ class BlueprintInput():
         Notes
         -----
         Outcome:
-        trigger_idx:
+            trigger_idx : int
+                Automatically retrieved trigger index
         """
         LGR.warning('User did not input chtrig. Trying to find in auto mode by name.')
         results = [re.search('|'.join(trigger_names_list),
