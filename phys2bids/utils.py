@@ -8,7 +8,7 @@ from pathlib import Path
 
 LGR = logging.getLogger(__name__)
 
-SUPPORTED_FTYPES = ('acq', 'txt')  # 'mat', ...
+SUPPORTED_FTYPES = ('acq', 'txt', 'mat')
 
 
 def check_input_dir(indir):
@@ -110,26 +110,6 @@ def check_input_type(filename, indir):
                         f' {", ".join(SUPPORTED_FTYPES)}')
 
 
-def path_exists_or_make_it(fldr):
-    """
-    Check if folder exists, if not make it.
-
-    Parameters
-    ----------
-    fldr: str or path
-        A string representing a folder,
-        or a fullpath to such folder
-
-    Notes
-    -----
-    Outcome:
-    fldr:
-        Creates the fullpath to `fldr` if it doesn't exists.
-    """
-    if not os.path.isdir(fldr):
-        os.makedirs(fldr)
-
-
 def check_file_exists(filename):
     """
     Check if file exists.
@@ -206,7 +186,7 @@ def write_file(filename, ext, text):
         print(text, file=text_file)
 
 
-def writejson(filename, data, **kwargs):
+def write_json(filename, data, **kwargs):
     """
     Output a json file with the given data inside.
 

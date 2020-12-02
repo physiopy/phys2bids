@@ -37,18 +37,6 @@ def test_check_input_type(testpath, samefreq_full_acq_file):
     assert "wasn't found" in str(errorinfo.value)
 
 
-# Tests path_exists_or_make_it
-def test_path_exists_or_make_it(tmpdir):
-    # test_folder = '/home/travis/build/physiopy/phys2bids/tests/foo'
-    test_folder = tmpdir.mkdir('foo')
-    utils.path_exists_or_make_it(test_folder)
-    os.path.isdir(test_folder)
-
-    # Checking again with already existing folder
-    utils.path_exists_or_make_it(test_folder)
-    os.rmdir(test_folder)  # Removes the created folder
-
-
 # Tests check_file_exists
 def test_check_file_exists(samefreq_full_acq_file):
     utils.check_file_exists(samefreq_full_acq_file)
@@ -75,13 +63,13 @@ def test_write_file(tmpdir):
     utils.write_file(test_old_path, ext, test_text)
 
 
-# Tests writejson
-def test_writejson(tmpdir):
+# Tests write_json
+def test_write_json(tmpdir):
     test_json_filename = tmpdir.join('foo')
     test_json_data = dict(SamplingFrequency=42,
                           StartTime='00:00 ET',
                           Columns='Rick')
-    utils.writejson(str(test_json_filename), test_json_data, indent=4, sort_keys=False)
+    utils.write_json(str(test_json_filename), test_json_data, indent=4, sort_keys=False)
     test_json_filename += '.json'
     assert os.path.isfile(test_json_filename)
     with open(test_json_filename, 'r') as src:

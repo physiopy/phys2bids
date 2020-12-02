@@ -113,7 +113,7 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
     summary = dict(SamplingFrequency=samp_freq,
                    StartTime=round(start_time, 4),
                    Columns=ch_name)
-    utils.writejson(outfile, summary, indent=4, sort_keys=False)
+    utils.write_json(outfile, summary, indent=4, sort_keys=False)
 
 
 @due.dcite(
@@ -146,11 +146,11 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     """
     # Check options to make them internally coherent pt. I
     # #!# This can probably be done while parsing?
-    outdir = os.path.abspath(outdir)
-    utils.path_exists_or_make_it(outdir)
-    utils.path_exists_or_make_it(os.path.join(outdir, 'code'))
+    outdir = utils.check_input_dir(outdir)
+    os.makedirs(outdir, exist_ok=True)
+    os.makedirs(os.path.join(outdir, 'code'), exist_ok=True)
     conversion_path = os.path.join(outdir, 'code', 'conversion')
-    utils.path_exists_or_make_it(conversion_path)
+    os.makedirs(conversion_path, exist_ok=True)
 
     # Create logfile name
     basename = 'phys2bids_'
@@ -218,13 +218,16 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                             'the session')
 
     # Read file!
-    if ftype == 'acq':
-        from phys2bids.interfaces.acq import populate_phys_input
-    elif ftype == 'txt':
-        from phys2bids.interfaces.txt import populate_phys_input
-
     LGR.info(f'Reading the file {infile}')
-    phys_in = populate_phys_input(infile, chtrig)
+    if ftype == 'acq':
+        from phys2bids.io import load_acq
+        phys_in = load_acq(infile, chtrig)
+    elif ftype == 'txt':
+        from phys2bids.io import load_txt
+        phys_in = load_txt(infile, chtrig)
+    elif ftype == 'mat':
+        from phys2bids.io import load_mat
+        phys_in = load_mat(infile, chtrig)
 
     LGR.info('Checking that units of measure are BIDS compatible')
     for index, unit in enumerate(phys_in.units):
