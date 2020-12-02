@@ -443,9 +443,12 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                        os.path.splitext(os.path.basename(phys_out[key].filename)
                                                         )[0]))
 
+            ch_name += phys_out[key].ch_name
+            timeseries += phys_out[key].timeseries.T.tolist()
+            units += phys_out[key].units
+            freq += [phys_out[key].freq] * len(phys_out[key].ch_name)
 
-        generate_report(outdir, logname, phys_out[key])
-    return timeseries
+        generate_report(outdir, logname, ch_name, timeseries, units, freq)
 
 
 def _main(argv=None):
