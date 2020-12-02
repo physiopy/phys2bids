@@ -38,7 +38,6 @@ import numpy as np
 from phys2bids import utils, viz, _version, bids
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
-
 from phys2bids.slice4phys import slice4phys
 
 from . import __version__
