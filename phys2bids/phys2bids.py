@@ -387,12 +387,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                                              phys_in[run].timeseries[chtrig]))
             phys_out[key] = BlueprintOutput.init_from_blueprint(phys_out[key])
 
-        # Initiate lists for reports
-        ch_name = []
-        timeseries = []
-        units = []
-        freq = []
-
         # Preparing output parameters: name and folder.
         for uniq_freq in uniq_freq_list:
             key = f'{run}_{uniq_freq}'
