@@ -146,9 +146,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     """
     # Check options to make them internally coherent pt. I
     # #!# This can probably be done while parsing?
-    outdir = os.path.abspath(outdir)
-    utils.path_exists_or_make_it(outdir)
-    utils.path_exists_or_make_it(os.path.join(outdir, 'code'))
+    outdir = utils.check_input_dir(outdir)
+    os.makedirs(outdir, exist_ok=True)
+    os.makedirs(os.path.join(outdir, 'code'), exist_ok=True)
     conversion_path = os.path.join(outdir, 'code', 'conversion')
     utils.path_exists_or_make_it(conversion_path)
 
