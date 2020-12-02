@@ -438,10 +438,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                                         )[0]))
 
 
-        generate_report(outdir, logname, phys_out[key])
-    return timeseries
-
-
 def _main(argv=None):
     options = _get_parser().parse_args(argv)
     phys2bids(**vars(options))
