@@ -232,7 +232,7 @@ jobs:
       - persist_to_workspace:
           root: /tmp
           paths:
-              - src/coverage/.coverage.py37
+              - src/coverage/.coverage.bids_37
 
 workflows:
   version: 2.1
