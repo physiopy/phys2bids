@@ -22,7 +22,7 @@ jobs:
       - run:
           name: Generate environment
           command: |
-            if [[ -e /opt/conda/envs/py36_env ]]; then
+            if [[ -e /opt/conda/envs/phys2bids_py37 ]]; then
               echo "Restoring environment from cache"
                 source activate phys2bids_py37
             else
