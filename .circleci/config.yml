@@ -215,22 +215,20 @@ jobs:
           name: Generate enviroment
           command: |
             apt-get install -yqq curl
+            pip install -e ".[test,doc]"
             curl -sL https://deb.nodesource.com/setup_15.x | bash -
             apt-get install -yqq nodejs
             npm install -g bids-validator
-            source activate phys2bids_py37  # depends on makeenv37
-            
       - run:
           name: dowload data and execute pipeline
           command: |
-            source activate phys2bids_py37 # depends on makeenv37
             curl -o tutorial_file.txt https://osf.io/j842e/download
             curl -o heur_tutorial.py  https://osf.io/qnrdt/download
             phys2bids -in tutorial_file.txt -chtrig 1 -ntp 158 -tr 1.2 -outdir physio_bids -heur C:\Users\sento\phys2bids/phys2bids/heuristics/heur_tutorial.py -sub 006 -ses 01
       - run:
           name: run_validator
           command: |
-            bids_validator  physio_bids          
+            bids-validator  physio_bids          
       - persist_to_workspace:
           root: /tmp
           paths:
