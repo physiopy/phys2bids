@@ -214,7 +214,7 @@ jobs:
       - run:
           name: Generate enviroment
           command: |
-            apt-get install -yqq curl wget
+            apt-get install -yqq curl wget tree
             pip install -e ".[test,doc]"
             curl -sL https://deb.nodesource.com/setup_15.x | bash -
             apt-get install -yqq nodejs
