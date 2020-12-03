@@ -216,6 +216,7 @@ jobs:
           command: |
             apt-get install -yqq curl wget tree
             curl -sL https://deb.nodesource.com/setup_15.x | bash -
+            pip install -e ".[test]"
             apt-get install -yqq nodejs
             npm install -g bids-validator
       - run:
