@@ -205,7 +205,7 @@ jobs:
   
   bids_validate:
     docker:
-      - image: bids/validator
+      - image: continuumio/miniconda3
     working_directory: /tmp/src/phys2bids
     steps:
       - checkout
@@ -214,18 +214,15 @@ jobs:
       - run:
           name: Generate enviroment
           command: |
-            apt install python3
-            apt install python3-pip
-            python --v
-            git clone https://github.com/physiopy/phys2bids.git
-            cd phys2bids
-            pip install -e ".[test,doc]"
-            cd ..
+            curl -sL https://deb.nodesource.com/setup_15.x | sudo -E bash -
+            apt-get install -yqq nodejs
+            npm install -g bids-validator
+            source activate phys2bids_py37  # depends on makeenv37
             
       - run:
           name: dowload data and execute pipeline
           command: |
-            source activate phys2bids_py37
+            source activate phys2bids_py37 # depends on makeenv37
             curl -o tutorial_file.txt https://osf.io/j842e/download
             curl -o heur_tutorial.py  https://osf.io/qnrdt/download
             phys2bids -in tutorial_file.txt -chtrig 1 -ntp 158 -tr 1.2 -outdir physio_bids -heur C:\Users\sento\phys2bids/phys2bids/heuristics/heur_tutorial.py -sub 006 -ses 01
