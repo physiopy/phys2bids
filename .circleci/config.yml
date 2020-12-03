@@ -214,6 +214,8 @@ jobs:
       - run:
           name: Generate enviroment
           command: |
+            apt install python3
+            apt install python3-pip
             python --v
             git clone https://github.com/physiopy/phys2bids.git
             cd phys2bids
