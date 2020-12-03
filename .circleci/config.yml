@@ -214,8 +214,8 @@ jobs:
       - run:
           name: Generate enviroment
           command: |
-            source activate phys2bids_py37  # depends on makeenv_37
             apt-get install -yqq curl wget tree
+            pip install -e ".[test]"
             curl -sL https://deb.nodesource.com/setup_15.x | bash -
             apt-get install -yqq nodejs
             npm install -g bids-validator
@@ -232,8 +232,6 @@ jobs:
             bids-validator  physio_bids          
       - persist_to_workspace:
           root: /tmp
-          paths:
-              - src/coverage/.coverage.py37
 
 workflows:
   version: 2.1
@@ -242,8 +240,6 @@ workflows:
       - makeenv_37
       - unittest_36
       - bids_validate:
-          requires:
-            - makeenv_37
       - unittest_37:
           requires:
             - makeenv_37
