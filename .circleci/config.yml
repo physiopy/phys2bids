@@ -223,7 +223,7 @@ jobs:
           name: dowload data and execute pipeline
           command: |
             curl -o Test1_multifreq_onescan.txt https://osf.io/7se4t/download
-            cp phys2bids/phys2bids/heuristics/heur_test_multifreq.py .
+            cp /tmp/src/phys2bids/phys2bids/phys2bids/heuristics/heur_test_multifreq.py .
             phys2bids -in Test1_multifreq_onescan.txt -chtrig 1 -ntp 30 -tr 1.2 -outdir physio_bids -heur heur_test_multifreq.py -sub 006 -ses 01
       - run:
           name: run_validator
