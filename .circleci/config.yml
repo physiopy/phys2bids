@@ -214,14 +214,12 @@ jobs:
       - run:
           name: Generate enviroment
           command: |
-            if [[ -e /opt/conda/envs/py36_env ]]; then
-              echo "Restoring environment from cache"
-                source activate phys2bids_py37
-            else
-              conda create -yq -n phys2bids_py37 python=3.7
-              source activate phys2bids_py37
-              pip install -e ".[test,doc]"
-            fi
+            python --v
+            git clone https://github.com/physiopy/phys2bids.git
+            cd phys2bids
+            pip install -e ".[test,doc]"
+            cd ..
+            
       - run:
           name: dowload data and execute pipeline
           command: |
