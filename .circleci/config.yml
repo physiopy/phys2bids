@@ -147,19 +147,19 @@ jobs:
           at: /tmp
       - checkout
       - restore_cache:
-          key: conda-<< parameters.python-version >>-v1-{{ checksum "setup.cfg" }}
-      - run:
-          name: Install extra dependencies
-          command: |
-            apt-get install -yqq curl
+          key: conda-3.7-v1-{{ checksum "setup.cfg" }}
       - run:
           name: Merge coverage files
           command: |
-            source activate $PYVER
+            apt-get install -yqq curl
+            source activate 3.7
             cd /tmp/src/coverage/
-            bash <(curl -s https://codecov.io/bash) -f /tmp/src/coverage/.coverage.integration$PYVER
+            export CODECOV_TOKEN="eb5758aa-6d0c-4981-a22a-16c663e2aaa9"
+            bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: /tmp/src/coverage
+      - codecov/upload:
+          file: /tmp/src/coverage/coverage.xml
 
 workflows:
   version: 2.1
@@ -191,10 +191,6 @@ workflows:
           requires:
             - makeenv-3.7
       - merge_coverage:
-          name: codecov-<< matrix.python-version >>
-          matrix:
-            parameters:
-              python-version: ["3.6", "3.7", "3.8", "3.9"]
           requires:
             - unittest
             - integrationtest
