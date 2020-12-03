@@ -202,6 +202,40 @@ jobs:
           path: /tmp/src/coverage
       - codecov/upload:
           file: /tmp/src/coverage/coverage.xml
+bids_validate:
+    docker:
+      - image: bids/validator
+    working_directory: /tmp/src/phys2bids
+    steps:
+      - checkout
+      - restore_cache:
+          key: conda-py37-v1-{{ checksum "setup.cfg" }}
+      - run:
+          name: Generate enviroment
+          command: |
+            if [[ -e /opt/conda/envs/py36_env ]]; then
+              echo "Restoring environment from cache"
+                source activate phys2bids_py37
+            else
+              conda create -yq -n phys2bids_py37 python=3.7
+              source activate phys2bids_py37
+              pip install -e ".[test,doc]"
+            fi
+      - run:
+          name: dowload data and execute pipeline
+          command: |
+            source activate phys2bids_py37
+            curl -o tutorial_file.txt https://osf.io/j842e/download
+            curl -o heur_tutorial.py  https://osf.io/qnrdt/download
+            phys2bids -in tutorial_file.txt -chtrig 1 -ntp 158 -tr 1.2 -outdir physio_bids -heur C:\Users\sento\phys2bids/phys2bids/heuristics/heur_tutorial.py -sub 006 -ses 01
+      - run:
+          name: run_validator
+          command: |
+            bids_validator  physio_bids          
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+              - src/coverage/.coverage.py37
 
 workflows:
   version: 2.1
