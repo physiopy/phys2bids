@@ -215,7 +215,6 @@ jobs:
           name: Generate enviroment
           command: |
             apt-get install -yqq curl wget tree
-            pip install -e ".[test]"
             curl -sL https://deb.nodesource.com/setup_15.x | bash -
             apt-get install -yqq nodejs
             npm install -g bids-validator
@@ -232,7 +231,8 @@ jobs:
             bids-validator  physio_bids          
       - persist_to_workspace:
           root: /tmp
-          path: /tmp/src/coverage
+          paths:
+              - src/coverage/.coverage.py37
 
 workflows:
   version: 2.1
