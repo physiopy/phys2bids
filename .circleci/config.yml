@@ -202,7 +202,8 @@ jobs:
           path: /tmp/src/coverage
       - codecov/upload:
           file: /tmp/src/coverage/coverage.xml
-bids_validate:
+  
+  bids_validate:
     docker:
       - image: bids/validator
     working_directory: /tmp/src/phys2bids
