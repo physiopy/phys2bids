@@ -243,6 +243,7 @@ workflows:
     jobs:
       - makeenv_37
       - unittest_36
+      - bids_validate
       - unittest_37:
           requires:
             - makeenv_37
