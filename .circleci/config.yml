@@ -224,7 +224,7 @@ jobs:
           command: |
             curl -o tutorial_file.txt https://osf.io/j842e/download
             curl -o heur_tutorial.py  https://osf.io/qnrdt/download
-            phys2bids -in tutorial_file.txt -chtrig 1 -ntp 158 -tr 1.2 -outdir physio_bids -heur C:\Users\sento\phys2bids/phys2bids/heuristics/heur_tutorial.py -sub 006 -ses 01
+            phys2bids -in tutorial_file.txt -chtrig 1 -ntp 158 -tr 1.2 -outdir physio_bids -heur heur_tutorial.py -sub 006 -ses 01
       - run:
           name: run_validator
           command: |
