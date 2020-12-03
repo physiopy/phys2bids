@@ -155,7 +155,7 @@ jobs:
             source activate 3.7
             cd /tmp/src/coverage/
             export CODECOV_TOKEN="eb5758aa-6d0c-4981-a22a-16c663e2aaa9"
-            bash <(curl -s https://codecov.io/bash)
+            bash <(curl -s https://codecov.io/bash) -v
       - store_artifacts:
           path: /tmp/src/coverage
       - codecov/upload:
