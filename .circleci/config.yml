@@ -232,6 +232,7 @@ jobs:
             bids-validator  physio_bids          
       - persist_to_workspace:
           root: /tmp
+          path: /tmp/src/coverage
 
 workflows:
   version: 2.1
