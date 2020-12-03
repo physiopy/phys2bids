@@ -228,6 +228,7 @@ jobs:
       - run:
           name: run_validator
           command: |
+            tree physio_bids
             bids-validator  physio_bids          
       - persist_to_workspace:
           root: /tmp
