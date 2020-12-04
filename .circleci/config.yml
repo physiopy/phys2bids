@@ -290,6 +290,7 @@ workflows:
       - unittest_36
       - bids_validate
       - windows_integrationtest_37
+      - windows_unittest_37
       - unittest_37:
           requires:
             - makeenv_37
