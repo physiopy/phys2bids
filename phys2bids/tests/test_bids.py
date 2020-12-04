@@ -65,8 +65,8 @@ def test_use_heuristic(tmpdir, test_sub, test_ses):
 @pytest.mark.parametrize('outdir', '.')
 def test_README_file(outdir):
     bids.readme_file(outdir)
-    assert os.path.join(outdir, "README.md")
-    os.remove(os.path.join(outdir, "README.md"))
+    assert os.path.join(outdir, "README")
+    os.remove(os.path.join(outdir, "README"))
 
 
 @pytest.mark.parametrize('outdir', '.')
