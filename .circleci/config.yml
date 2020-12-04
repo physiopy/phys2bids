@@ -275,7 +275,7 @@ jobs:
             python -m pip install --upgrade pip setuptools>=30.3.0 wheel
             pip install -e ".[test]"
       - run:
-          name: Run unittests
+          name: Run unit tests
           no_output_timeout: 10m
           command: |
             py.test --skipintegration --cov-append --cov-report term-missing --cov=phys2bids phys2bids/
