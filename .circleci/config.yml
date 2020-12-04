@@ -262,7 +262,6 @@ jobs:
           path: /tmp/data
 
     windows_unittest_37:
-    build:
     executor:
       name: win/default
       shell: powershell.exe
