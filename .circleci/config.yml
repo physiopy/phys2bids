@@ -246,7 +246,7 @@ jobs:
       shell: powershell.exe
     steps:
       - checkout
-      - run: systeminfo
+      - run: System info
       - run:
           name: Generate enviroment
           command: |
