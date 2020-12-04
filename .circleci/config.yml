@@ -220,13 +220,13 @@ jobs:
             apt-get install -yqq nodejs
             npm install -g bids-validator
       - run:
-          name: dowload data and execute pipeline
+          name: Dowload data and execute pipeline
           command: |
             wget -O Test1_multifreq_onescan.txt https://osf.io/7se4t/download
             wget -O heur_test_multifreq.py https://osf.io/ehx6j/download
             phys2bids -in Test1_multifreq_onescan.txt -chtrig 1 -ntp 30 -tr 1.2 -outdir physio_bids -heur heur_test_multifreq.py -sub 006 -ses 01
       - run:
-          name: run_validator
+          name: Run_validator
           command: |
             wget -O sub-006_ses-01_task-test_rec-biopac_run-01_bold.json https://osf.io/6j8f7/download
             wget -O sub-006_ses-01_task-test_rec-biopac_run-01_bold.nii.gz https://osf.io/wus2p/download
