@@ -239,10 +239,19 @@ jobs:
               - src/phys2bids
 
   windows_integrationtest_37:
-    docker:
-      - image: winamd64/python
-    working_directory: /tmp/src/phys2bids
+    build:
+    executor:
+      name: win/default
+      shell: powershell.exe
     steps:
+      - checkout
+      - run: systeminfo
+      - run:
+          name: "Check docker"
+          shell: powershell.exe
+          command: |
+            docker info
+            docker run hello-world:nanoserver-1809
       - run:
           name: Generate enviroment
           command: |
