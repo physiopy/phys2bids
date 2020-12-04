@@ -228,6 +228,9 @@ jobs:
       - run:
           name: run_validator
           command: |
+            wget -O sub-006_ses-01_task-test_rec-biopac_run-01_bold.json https://osf.io/6j8f7/download
+            wget -O sub-006_ses-01_task-test_rec-biopac_run-01_bold.nii.gz https://osf.io/wus2p/download
+            mv sub-006_ses-01_task-test_rec-biopac_run-01_bold* physio_bids/sub-006/ses-01/func
             tree physio_bids
             bids-validator  physio_bids          
       - persist_to_workspace:
