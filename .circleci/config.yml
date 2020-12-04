@@ -278,7 +278,7 @@ jobs:
           name: Run unittests
           no_output_timeout: 10m
           command: |
-            pytest --log-cli-level=INFO --cov-append --cov-report term-missing --cov=phys2bids -k test_integration phys2bids/tests/test_integration.py
+            py.test --skipintegration --cov-append --cov-report term-missing --cov=phys2bids phys2bids/
       - store_artifacts:
           path: /tmp/data
 
