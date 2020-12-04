@@ -238,6 +238,24 @@ jobs:
           paths:
               - src/phys2bids
 
+  windows_integrationtest_37:
+    docker:
+      - image: winamd64/python
+    working_directory: /tmp/src/phys2bids
+    steps:
+      - run:
+          name: Generate enviroment
+          command: |
+            python -m pip install --upgrade pip setuptools>=30.3.0 wheel
+            pip install -e ".[test]"
+      - run:
+          name: Run integration tests
+          no_output_timeout: 10m
+          command: |
+            pytest --log-cli-level=INFO --cov-append --cov-report term-missing --cov=phys2bids -k test_integration phys2bids/tests/test_integration.py
+      - store_artifacts:
+          path: /tmp/data
+
 workflows:
   version: 2.1
   build_test:
