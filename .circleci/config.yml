@@ -248,14 +248,9 @@ jobs:
       - checkout
       - run: systeminfo
       - run:
-          name: "Check docker"
-          shell: powershell.exe
-          command: |
-            docker info
-            docker run hello-world:nanoserver-1809
-      - run:
           name: Generate enviroment
           command: |
+            python --version
             python -m pip install --upgrade pip setuptools>=30.3.0 wheel
             pip install -e ".[test]"
       - run:
