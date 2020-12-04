@@ -236,7 +236,7 @@ jobs:
       - persist_to_workspace:
           root: /tmp
           paths:
-              - src/coverage/.coverage.bids_37
+              - src/phys2bids
 
 workflows:
   version: 2.1
