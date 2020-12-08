@@ -22,7 +22,7 @@ jobs:
       - run:
           name: Generate environment
           command: |
-            if [[ -e /opt/conda/envs/py36_env ]]; then
+            if [[ -e /opt/conda/envs/phys2bids_py37 ]]; then
               echo "Restoring environment from cache"
                 source activate phys2bids_py37
             else
@@ -202,6 +202,41 @@ jobs:
           path: /tmp/src/coverage
       - codecov/upload:
           file: /tmp/src/coverage/coverage.xml
+  
+  bids_validate:
+    docker:
+      - image: continuumio/miniconda3
+    working_directory: /tmp/src/phys2bids
+    steps:
+      - checkout
+      - restore_cache:
+          key: conda-py37-v1-{{ checksum "setup.cfg" }}
+      - run:
+          name: Generate enviroment
+          command: |
+            apt-get install -yqq curl wget tree
+            curl -sL https://deb.nodesource.com/setup_15.x | bash -
+            pip install -e ".[test]"
+            apt-get install -yqq nodejs
+            npm install -g bids-validator
+      - run:
+          name: dowload data and execute pipeline
+          command: |
+            wget -O Test1_multifreq_onescan.txt https://osf.io/7se4t/download
+            wget -O heur_test_multifreq.py https://osf.io/ehx6j/download
+            phys2bids -in Test1_multifreq_onescan.txt -chtrig 1 -ntp 30 -tr 1.2 -outdir physio_bids -heur heur_test_multifreq.py -sub 006 -ses 01
+      - run:
+          name: run_validator
+          command: |
+            wget -O sub-006_ses-01_task-test_rec-biopac_run-01_bold.json https://osf.io/6j8f7/download
+            wget -O sub-006_ses-01_task-test_rec-biopac_run-01_bold.nii.gz https://osf.io/wus2p/download
+            mv sub-006_ses-01_task-test_rec-biopac_run-01_bold* physio_bids/sub-006/ses-01/func
+            tree physio_bids
+            bids-validator  physio_bids          
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+              - src/phys2bids
 
 workflows:
   version: 2.1
@@ -209,6 +244,7 @@ workflows:
     jobs:
       - makeenv_37
       - unittest_36
+      - bids_validate
       - unittest_37:
           requires:
             - makeenv_37
