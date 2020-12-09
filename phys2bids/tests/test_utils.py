@@ -10,13 +10,6 @@ from pytest import raises
 from phys2bids import utils
 
 
-# Tests check_input_dir
-def test_check_input_dir():
-    test_path = '/home/mrmeeseeks/blue/'
-    assert utils.check_input_dir(test_path) == test_path[:-1]
-    assert utils.check_input_dir(test_path[:-1]) == test_path[:-1]
-
-
 # Tests check_input_ext
 def test_check_input_ext():
     test_filename = 'help'
