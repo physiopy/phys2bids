@@ -226,6 +226,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     elif ftype == 'txt':
         from phys2bids.io import load_txt
         phys_in = load_txt(infile, chtrig)
+    elif ftype == 'mat':
+        from phys2bids.io import load_mat
+        phys_in = load_mat(infile, chtrig)
 
     LGR.info('Checking that units of measure are BIDS compatible')
     for index, unit in enumerate(phys_in.units):
@@ -285,7 +288,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             fileprefix = os.path.join(conversion_path,
                                       os.path.splitext(os.path.basename(filename))[0])
             for i, run in enumerate(phys_in.keys()):
-                plot_fileprefix = f'{fileprefix}_{run}'
+                plot_fileprefix = f'{fileprefix}_0{run}'
                 viz.export_trigger_plot(phys_in[run], chtrig, plot_fileprefix, tr[i],
                                         num_timepoints_expected[i], filename,
                                         sub, ses)

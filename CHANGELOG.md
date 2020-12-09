@@ -1,3 +1,93 @@
+# 2.3.2 (Wed Dec 09 2020)
+
+#### 🐛 Bug Fix
+
+- Add 0 before run number to multi-run trigger plot file name [#369](https://github.com/physiopy/phys2bids/pull/369) ([@vinferrer](https://github.com/vinferrer))
+
+#### ⚠️ Tests
+
+- Add test to check that `phys2bids` output is BIDS compatible [#362](https://github.com/physiopy/phys2bids/pull/362) ([@vinferrer](https://github.com/vinferrer))
+- Fix call to conda environment reference in the test configuration file [#363](https://github.com/physiopy/phys2bids/pull/363) ([@eurunuela](https://github.com/eurunuela))
+
+#### Authors: 2
+
+- Eneko Uruñuela ([@eurunuela](https://github.com/eurunuela))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
+# 2.3.1 (Mon Nov 30 2020)
+
+#### 🐛 Bug Fix
+
+- BlueprintInput deepcopies inputs at initialization [#358](https://github.com/physiopy/phys2bids/pull/358) ([@vinferrer](https://github.com/vinferrer))
+
+#### Authors: 1
+
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
+# 2.3.0 (Sun Nov 29 2020)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: null[@merelvdthiel](https://github.com/merelvdthiel)
+
+:heart: Inés Chavarría ([@ineschh](https://github.com/ineschh))
+
+:heart: Vittorio Iacovella ([@viacovella](https://github.com/viacovella))
+
+:heart: null[@victox5](https://github.com/victox5)
+
+#### 🚀 Enhancement
+
+- Add support for MATLAB files [#360](https://github.com/physiopy/phys2bids/pull/360) ([@vinferrer](https://github.com/vinferrer))
+
+#### 🐛 Bug Fix
+
+- Refactor `io` functions related to txt file imports. [#349](https://github.com/physiopy/phys2bids/pull/349) ([@vinferrer](https://github.com/vinferrer))
+- Refactor phys2bids interfaces into single script `io.py` [#344](https://github.com/physiopy/phys2bids/pull/344) ([@vinferrer](https://github.com/vinferrer))
+- Rename `utils.writejson()` to `utils.write_json()` to respect style conventions [#346](https://github.com/physiopy/phys2bids/pull/346) ([@merelvdthiel](https://github.com/merelvdthiel))
+- Replace custom function `utils.path_exists_or_make_it()` with core function `os.makedirs()` [#345](https://github.com/physiopy/phys2bids/pull/345) ([@merelvdthiel](https://github.com/merelvdthiel))
+- Rename function `utils.writefile` to `utils.write_file` to respect style conventions [#343](https://github.com/physiopy/phys2bids/pull/343) ([@ineschh](https://github.com/ineschh))
+- Remove `utils.move_file()` function as it is no longer used in the toolbox [#342](https://github.com/physiopy/phys2bids/pull/342) ([@viacovella](https://github.com/viacovella))
+- Updated versions required [#7](https://github.com/physiopy/phys2bids/pull/7) (vic188m@hotmail.com [@victox5](https://github.com/victox5))
+
+#### ⚠️ Pushed to `master`
+
+- Update README.md ([@smoia](https://github.com/smoia))
+
+#### 📝 Documentation
+
+- Add documentation for reviewers and a checklist for PRs [#315](https://github.com/physiopy/phys2bids/pull/315) ([@smoia](https://github.com/smoia) [@RayStick](https://github.com/RayStick))
+- Add Windows installation to the documentation [#329](https://github.com/physiopy/phys2bids/pull/329) ([@vinferrer](https://github.com/vinferrer) [@smoia](https://github.com/smoia))
+- Update tutorial with latest CLI options and new folder organisation (`output/code/conversion`) [#320](https://github.com/physiopy/phys2bids/pull/320) ([@vinferrer](https://github.com/vinferrer) [@RayStick](https://github.com/RayStick))
+
+#### ⚠️ Tests
+
+- Fix typo in artifact_path [#331](https://github.com/physiopy/phys2bids/pull/331) ([@tsalo](https://github.com/tsalo))
+
+#### 🏠 Internal
+
+- Add more "change type" options [#347](https://github.com/physiopy/phys2bids/pull/347) ([@smoia](https://github.com/smoia))
+
+#### Authors: 9
+
+- [@merelvdthiel](https://github.com/merelvdthiel)
+- [@victox5](https://github.com/victox5)
+- Inés Chavarría ([@ineschh](https://github.com/ineschh))
+- Rachael Stickland ([@RayStick](https://github.com/RayStick))
+- Stefano Moia ([@smoia](https://github.com/smoia))
+- Taylor Salo ([@tsalo](https://github.com/tsalo))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+- Victor (vic188m@hotmail.com)
+- Vittorio Iacovella ([@viacovella](https://github.com/viacovella))
+
+---
+
 # 2.2.3 (Fri Oct 23 2020)
 
 #### 🐛 Bug Fix

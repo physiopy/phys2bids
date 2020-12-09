@@ -64,7 +64,8 @@
         "bug",
         "code",
         "doc",
-        "review"
+        "review",
+        "test"
       ]
     },
     {
@@ -173,6 +174,15 @@
       "contributions": [
         "data",
         "content",
+        "doc"
+      ]
+    },
+    {
+      "login": "victox5",
+      "name": "victox5",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/56017659?v=4",
+      "profile": "https://github.com/victox5",
+      "contributions": [
         "doc"
       ]
     }

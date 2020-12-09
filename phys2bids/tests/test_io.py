@@ -126,3 +126,35 @@ def test_load_acq(samefreq_full_acq_file):
     assert phys_obj.ch_name[chtrig] == 'MR TRIGGER - Custom, HLT100C - A 5'
     assert phys_obj.freq[chtrig] == 10000.0
     assert phys_obj.units[chtrig] == 'Volts'
+
+
+def test_load_mat(matlab_file_labchart, matlab_file_acq):
+    # Read data to test labchart in mat exension
+    chtrig = 1
+    phys_obj = io.load_mat(matlab_file_labchart, chtrig)
+
+    # Check channel names are the same.
+    orig_channels = ['time', 'Trigger', 'CO2', 'O2', 'Belt', 'Pulse']
+    assert phys_obj.ch_name == orig_channels
+
+    # Check frequencies are the same.
+    orig_freq = [1000.0, 1000.0, 100.0, 40.0, 400.0, 1000.0]
+    assert phys_obj.freq == orig_freq
+
+    # Check units are the same
+    orig_units = ['s', 'V', 'mmHg', 'mmHg', 'V', 'V']
+    assert phys_obj.units == orig_units
+
+    # Read data to test acq in mat exension
+    chtrig = 3
+    phys_obj = io.load_mat(matlab_file_acq, chtrig)
+
+    # checks that the outputs make sense
+    assert phys_obj.ch_name[0] == 'time'
+    assert phys_obj.freq[0] == 10000.0
+    assert phys_obj.units[0] == 's'
+
+    # checks that the trigger is in the right channel
+    assert phys_obj.ch_name[chtrig] == 'MR TRIGGER - Custom, HLT100C - A 5'
+    assert phys_obj.freq[chtrig] == 10000.0
+    assert phys_obj.units[chtrig] == 'Volts'
