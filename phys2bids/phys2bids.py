@@ -286,7 +286,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             fileprefix = os.path.join(conversion_path,
                                       os.path.splitext(os.path.basename(filename))[0])
             for i, run in enumerate(phys_in.keys()):
-                plot_fileprefix = f'{fileprefix}_{run}'
+                plot_fileprefix = f'{fileprefix}_0{run}'
                 viz.export_trigger_plot(phys_in[run], chtrig, plot_fileprefix, tr[i],
                                         num_timepoints_expected[i], filename,
                                         sub, ses)
