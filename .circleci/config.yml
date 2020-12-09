@@ -5,6 +5,7 @@
 version: 2.1
 orbs:
   codecov: codecov/codecov@1.0.5
+  win: circleci/windows@2.2.0
 jobs:
 
   makeenv_37:
@@ -238,6 +239,49 @@ jobs:
           paths:
               - src/phys2bids
 
+  windows_integrationtest_37:
+    build:
+    executor:
+      name: win/default
+      shell: powershell.exe
+    steps:
+      - checkout
+      - run: systeminfo
+      - run:
+          name: Generate enviroment
+          command: |
+            python --version
+            python -m pip install --upgrade pip setuptools>=30.3.0 wheel
+            pip install -e ".[test]"
+      - run:
+          name: Run integration tests
+          no_output_timeout: 10m
+          command: |
+            pytest --log-cli-level=INFO --cov-append --cov-report term-missing --cov=phys2bids -k test_integration phys2bids/tests/test_integration.py
+      - store_artifacts:
+          path: /tmp/data
+
+  windows_unittest_37:
+    build:
+    executor:
+      name: win/default
+      shell: powershell.exe
+    steps:
+      - checkout
+      - run: systeminfo
+      - run:
+          name: Generate enviroment
+          command: |
+            python -m pip install --upgrade pip setuptools>=30.3.0 wheel
+            pip install -e ".[test]"
+      - run:
+          name: Run unit tests
+          no_output_timeout: 10m
+          command: |
+            py.test --skipintegration --cov-append --cov-report term-missing --cov=phys2bids phys2bids/
+      - store_artifacts:
+          path: /tmp/data
+
 workflows:
   version: 2.1
   build_test:
@@ -245,6 +289,8 @@ workflows:
       - makeenv_37
       - unittest_36
       - bids_validate
+      - windows_integrationtest_37
+      - windows_unittest_37
       - unittest_37:
           requires:
             - makeenv_37
