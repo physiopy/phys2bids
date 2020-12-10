@@ -284,7 +284,7 @@ def readme_file(outdir):
         Full path to the output directory.
 
     """
-    file_path = os.path.join(outdir, 'README.md')
+    file_path = os.path.join(outdir, 'README')
     if not os.path.exists(file_path):
         text = 'Empty README, please fill in describing the dataset in more detail.'
         LGR.warning('phys2bids could not find README,'
