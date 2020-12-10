@@ -209,6 +209,7 @@ def generate_report(out_dir, log_path, phys_in):
     # Read log
     with open(log_path, 'r+') as f:
         log_content = f.read()
+    f.close()
 
     log_content = log_content.replace('\n', '<br>')
     log_html_path = join(out_dir, 'phys2bids_report_log.html')
