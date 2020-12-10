@@ -75,11 +75,8 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
     # Remove generated files
-    for filename in glob.glob(join(conversion_path, 'phys2bids*')):
-        remove(filename)
-    for filename in glob.glob(join(test_path, 'Test_belt_pulse_samefreq*')):
-        remove(filename)
     shutil.rmtree(conversion_path)
+    shutil.rmtree(test_path)
 
 
 def test_integration_heuristic(skip_integration, multifreq_lab_file):
