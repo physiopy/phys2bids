@@ -39,8 +39,7 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
     conversion_path = join(test_path, 'code', 'conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
-              chtrig=test_chtrig, num_timepoints_expected=60, tr=1.5,
-              make_report=True)
+              chtrig=test_chtrig, num_timepoints_expected=60, tr=1.5)
 
     # Check that files are generated
     for suffix in ['.json', '.tsv.gz']:
@@ -75,11 +74,6 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
     assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'PULSE - Custom, DA100C',
                                     'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
 
-    shutil.copy(join(conversion_path, 'phys2bids_report.html'),
-                join(dirname(p2b.__file__), 'reporting', 'phys2bids_report.html'))
-    shutil.copy(join(conversion_path, 'phys2bids_report_log.html'),
-                join(dirname(p2b.__file__), 'reporting', 'phys2bids_report_log.html'))
-
     # Remove generated files
     for filename in glob.glob(join(conversion_path, 'phys2bids*')):
         remove(filename)
@@ -113,7 +107,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     command_str = (f'phys2bids -in {test_full_path} ',
                    f'-chtrig {test_chtrig} -outdir {test_outdir} ',
                    f'-tr {test_tr} -ntp {test_ntp} -thr {test_thr} ',
-                   f'-sub 006 -ses 01 -heur {test_heur}')
+                   f'-sub 006 -ses 01 -heur {test_heur} -report')
     command_str = ''.join(command_str)
     subprocess.run(command_str, shell=True, check=True)
 
@@ -203,6 +197,13 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     assert math.isclose(json_data['SamplingFrequency'], 100.0,)
     assert math.isclose(json_data['StartTime'], 3.6960,)
     assert json_data['Columns'] == ['time', 'Trigger', 'CO2']
+
+    breakpoint()
+
+    shutil.copy(join(conversion_path, 'phys2bids_report.html'),
+                join(dirname(p2b.__file__), 'reporting', 'phys2bids_report.html'))
+    shutil.copy(join(conversion_path, 'phys2bids_report_log.html'),
+                join(dirname(p2b.__file__), 'reporting', 'phys2bids_report_log.html'))
 
     # Remove generated files
     shutil.rmtree(test_path_output)
