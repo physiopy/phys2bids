@@ -76,7 +76,11 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
 
     # Remove generated files
     shutil.rmtree(conversion_path)
-    shutil.rmtree(test_path)
+    for filename in glob.glob(join(test_path, '*')):
+        try:
+            remove(filename)
+        except:
+            shutil.rmtree(filename)
 
 
 def test_integration_heuristic(skip_integration, multifreq_lab_file):
@@ -203,8 +207,11 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     # Remove generated files
     shutil.rmtree(test_path_output)
     shutil.rmtree(conversion_path)
-    for filename in glob.glob(join(test_path, 'Test1_multifreq_onescan*')):
-        remove(filename)
+    for filename in glob.glob(join(test_path, '*')):
+        try:
+            remove(filename)
+        except:
+            shutil.rmtree(filename)
 
 
 def test_integration_multirun(skip_integration, multi_run_file):
@@ -236,3 +243,10 @@ def test_integration_multirun(skip_integration, multi_run_file):
     # for run in ['1', '2']:
     #     assert isfile(join(conversion_path, f'Test2_samefreq_TWOscans_{run}_trigger_time.png'))
     assert isfile(join(conversion_path, 'Test2_samefreq_TWOscans.png'))
+
+    shutil.rmtree(conversion_path)
+    for filename in glob.glob(join(test_path, '*')):
+        try:
+            remove(filename)
+        except:
+            shutil.rmtree(filename)
