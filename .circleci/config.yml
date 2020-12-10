@@ -261,6 +261,27 @@ jobs:
       - store_artifacts:
           path: /tmp/data
 
+  windows_docker:
+    docker:
+      - image: continuumio/miniconda3
+    working_directory: /tmp/src/phys2bids
+    steps:
+      - checkout
+      - run: systeminfo
+      - run:
+          name: Generate enviroment
+          command: |
+            python --version
+            python -m pip install --upgrade pip setuptools>=30.3.0 wheel
+            pip install -e ".[test]"
+      - run:
+          name: Run integration tests
+          no_output_timeout: 10m
+          command: |
+            pytest --log-cli-level=INFO --cov-append --cov-report term-missing --cov=phys2bids -k test_integration phys2bids/tests/test_integration.py
+      - store_artifacts:
+          path: /tmp/data
+
   windows_unittest_37:
     build:
     executor:
