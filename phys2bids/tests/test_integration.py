@@ -198,8 +198,6 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     assert math.isclose(json_data['StartTime'], 3.6960,)
     assert json_data['Columns'] == ['time', 'Trigger', 'CO2']
 
-    breakpoint()
-
     shutil.copy(join(conversion_path, 'phys2bids_report.html'),
                 join(dirname(p2b.__file__), 'reporting', 'phys2bids_report.html'))
     shutil.copy(join(conversion_path, 'phys2bids_report_log.html'),
