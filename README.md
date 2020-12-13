@@ -20,7 +20,7 @@ phys2bids
 [![Requirements Status](https://requires.io/github/physiopy/phys2bids/requirements.svg?branch=master)](https://requires.io/github/physiopy/phys2bids/requirements/?branch=master)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-17-orange.svg?style=flat)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-18-orange.svg?style=flat)](#contributors)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ``phys2bids`` is a python3 library meant to format physiological files in BIDS.
@@ -95,6 +95,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/viacovella"><img src="https://avatars1.githubusercontent.com/u/1639782?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Vittorio Iacovella</b></sub></a><br /><a href="https://github.com/physiopy/phys2bids/commits?author=viacovella" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/ineschh"><img src="https://avatars0.githubusercontent.com/u/72545702?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Inés Chavarría</b></sub></a><br /><a href="https://github.com/physiopy/phys2bids/commits?author=ineschh" title="Code">💻</a></td>
   </tr>
 </table>
 
