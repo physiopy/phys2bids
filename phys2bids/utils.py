@@ -11,28 +11,6 @@ LGR = logging.getLogger(__name__)
 SUPPORTED_FTYPES = ('acq', 'txt', 'mat')
 
 
-def check_input_dir(indir):
-    """
-    Check that the given indir doesn't have a trailing `/`.
-
-    Possibly useless if better way to handle this in Python.
-
-    Parameters
-    ----------
-    indir: str or path
-        A string or path that might (or not) end with a `/`
-
-    Returns
-    -------
-    indir: str or path
-        Same as input, but surely without trailing `/`
-    """
-    if indir.endswith('/'):
-        indir = indir[:-1]
-
-    return indir
-
-
 def check_input_ext(filename, ext):
     """
     Check that the given file has the given extension.

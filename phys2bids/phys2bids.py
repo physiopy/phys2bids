@@ -146,15 +146,10 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     """
     # Check options to make them internally coherent pt. I
     # #!# This can probably be done while parsing?
-<<<<<<< HEAD
+
     outdir = os.path.abspath(outdir)
-    utils.path_exists_or_make_it(outdir)
-    utils.path_exists_or_make_it(os.path.join(outdir, 'code'))
-=======
-    outdir = utils.check_input_dir(outdir)
     os.makedirs(outdir, exist_ok=True)
     os.makedirs(os.path.join(outdir, 'code'), exist_ok=True)
->>>>>>> 2e10bf1d2597fe61229078ac9ede1c7b47273382
     conversion_path = os.path.join(outdir, 'code', 'conversion')
     os.makedirs(conversion_path, exist_ok=True)
 
@@ -197,7 +192,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
-    indir = utils.check_input_dir(indir)
+    indir = os.path.abspath(indir)
     if chtrig < 1:
         raise Exception('Wrong trigger channel. Channel indexing starts with 1!')
 
@@ -293,7 +288,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             fileprefix = os.path.join(conversion_path,
                                       os.path.splitext(os.path.basename(filename))[0])
             for i, run in enumerate(phys_in.keys()):
-                plot_fileprefix = f'{fileprefix}_{run}'
+                plot_fileprefix = f'{fileprefix}_0{run}'
                 viz.export_trigger_plot(phys_in[run], chtrig, plot_fileprefix, tr[i],
                                         num_timepoints_expected[i], filename,
                                         sub, ses)

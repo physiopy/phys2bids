@@ -1,3 +1,21 @@
+# 2.3.2 (Wed Dec 09 2020)
+
+#### 🐛 Bug Fix
+
+- Add 0 before run number to multi-run trigger plot file name [#369](https://github.com/physiopy/phys2bids/pull/369) ([@vinferrer](https://github.com/vinferrer))
+
+#### ⚠️ Tests
+
+- Add test to check that `phys2bids` output is BIDS compatible [#362](https://github.com/physiopy/phys2bids/pull/362) ([@vinferrer](https://github.com/vinferrer))
+- Fix call to conda environment reference in the test configuration file [#363](https://github.com/physiopy/phys2bids/pull/363) ([@eurunuela](https://github.com/eurunuela))
+
+#### Authors: 2
+
+- Eneko Uruñuela ([@eurunuela](https://github.com/eurunuela))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
 # 2.3.1 (Mon Nov 30 2020)
 
 #### 🐛 Bug Fix
