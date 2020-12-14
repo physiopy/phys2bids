@@ -28,11 +28,7 @@ jobs:
       - run:
           name: Generate environment
           command: |
-<<<<<<< HEAD
             if [[ -e /opt/conda/envs/${PYVER} ]]; then
-=======
-            if [[ -e /opt/conda/envs/phys2bids_py37 ]]; then
->>>>>>> f58755939b668729f122212532f1a63d453f25e3
               echo "Restoring environment from cache"
                 source activate $PYVER
             else
@@ -197,11 +193,7 @@ jobs:
             wget -O sub-006_ses-01_task-test_rec-biopac_run-01_bold.nii.gz https://osf.io/wus2p/download
             mv sub-006_ses-01_task-test_rec-biopac_run-01_bold* physio_bids/sub-006/ses-01/func
             tree physio_bids
-<<<<<<< HEAD
             bids-validator physio_bids
-=======
-            bids-validator  physio_bids          
->>>>>>> f58755939b668729f122212532f1a63d453f25e3
       - persist_to_workspace:
           root: /tmp
           paths:
@@ -254,7 +246,6 @@ workflows:
   version: 2.1
   build_test:
     jobs:
-<<<<<<< HEAD
       - makeenv:
           name: makeenv-<< matrix.python-version >>
           matrix:
@@ -265,14 +256,6 @@ workflows:
           matrix:
             parameters:
               python-version: ["3.6", "3.7", "3.8", "3.9"]
-=======
-      - makeenv_37
-      - unittest_36
-      - bids_validate
-      - windows_integrationtest_37
-      - windows_unittest_37
-      - unittest_37:
->>>>>>> f58755939b668729f122212532f1a63d453f25e3
           requires:
             - makeenv-<< matrix.python-version >>
       - integrationtest:
@@ -290,13 +273,6 @@ workflows:
             - makeenv-3.7
       - merge_coverage:
           requires:
-<<<<<<< HEAD
             - unittest
             - integrationtest
-=======
-            - unittest_36
-            - unittest_37
-            - integrationtest_36
-            - integrationtest_37
->>>>>>> f58755939b668729f122212532f1a63d453f25e3
             - style_check
