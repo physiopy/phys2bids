@@ -145,7 +145,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     """
     # Check options to make them internally coherent pt. I
     # #!# This can probably be done while parsing?
-    outdir = utils.check_input_dir(outdir)
+    outdir = os.path.abspath(outdir)
     os.makedirs(outdir, exist_ok=True)
     os.makedirs(os.path.join(outdir, 'code'), exist_ok=True)
     conversion_path = os.path.join(outdir, 'code', 'conversion')
@@ -190,7 +190,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
-    indir = utils.check_input_dir(indir)
+    indir = os.path.abspath(indir)
     if chtrig < 1:
         raise Exception('Wrong trigger channel. Channel indexing starts with 1!')
 
@@ -219,11 +219,14 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # Read file!
     LGR.info(f'Reading the file {infile}')
     if ftype == 'acq':
-        from phys2bids.io import load_acq_ext
-        phys_in = load_acq_ext(infile, chtrig)
+        from phys2bids.io import load_acq
+        phys_in = load_acq(infile, chtrig)
     elif ftype == 'txt':
-        from phys2bids.io import load_txt_ext
-        phys_in = load_txt_ext(infile, chtrig)
+        from phys2bids.io import load_txt
+        phys_in = load_txt(infile, chtrig)
+    elif ftype == 'mat':
+        from phys2bids.io import load_mat
+        phys_in = load_mat(infile, chtrig)
 
     LGR.info('Checking that units of measure are BIDS compatible')
     for index, unit in enumerate(phys_in.units):
@@ -283,7 +286,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             fileprefix = os.path.join(conversion_path,
                                       os.path.splitext(os.path.basename(filename))[0])
             for i, run in enumerate(phys_in.keys()):
-                plot_fileprefix = f'{fileprefix}_{run}'
+                plot_fileprefix = f'{fileprefix}_0{run}'
                 viz.export_trigger_plot(phys_in[run], chtrig, plot_fileprefix, tr[i],
                                         num_timepoints_expected[i], filename,
                                         sub, ses)
