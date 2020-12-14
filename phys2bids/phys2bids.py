@@ -147,7 +147,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     """
     # Check options to make them internally coherent pt. I
     # #!# This can probably be done while parsing?
-    outdir = utils.check_input_dir(outdir)
+    outdir = os.path.abspath(outdir)
     os.makedirs(outdir, exist_ok=True)
     os.makedirs(os.path.join(outdir, 'code'), exist_ok=True)
     conversion_path = os.path.join(outdir, 'code', 'conversion')
@@ -192,7 +192,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
-    indir = utils.check_input_dir(indir)
+    indir = os.path.abspath(indir)
     if chtrig < 1:
         raise Exception('Wrong trigger channel. Channel indexing starts with 1!')
 
