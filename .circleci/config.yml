@@ -284,6 +284,7 @@ jobs:
           path: /tmp/data
 
   windows_docker:
+    build:
     executor: 
       name: docker_orb/machine
     steps:
