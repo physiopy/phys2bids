@@ -286,13 +286,7 @@ jobs:
   windows_docker:
     build:
     executor: 
-      name: docker_orb/machine
-    steps:
-      - checkout
-      - docker_orb/check
-      - docker_orb/pull:
-          image: rkttu/python-nanoserver:3.7.3_1809
-    working_directory: /tmp/src/phys2bids
+      name: machine
     steps:
       - run:
           name: Generate enviroment
