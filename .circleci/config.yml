@@ -6,6 +6,7 @@ version: 2.1
 orbs:
   codecov: codecov/codecov@1.0.5
   win: circleci/windows@2.2.0
+  docker_orb: circleci/docker@1.5.0
 jobs:
 
   makeenv_37:
@@ -283,25 +284,21 @@ jobs:
           path: /tmp/data
 
   windows_docker:
-    docker:
-      - image: rkttu/python-nanoserver:3.7.3_1809
-    working_directory: /tmp/src/phys2bids
+    executor: docker/machine
     steps:
       - checkout
-      - run: systeminfo
+      - docker/check
+      - docker/pull:
+          image: rkttu/python-nanoserver:3.7.3_1809
+    working_directory: /tmp/src/phys2bids
+    steps:
       - run:
           name: Generate enviroment
           command: |
-            python --version
+            docker run -it rkttu/python-nanoserver:3.7.3_1809 python --version
             python -m pip install --upgrade pip setuptools>=30.3.0 wheel
             pip install -e ".[test]"
-      - run:
-          name: Run integration tests
-          no_output_timeout: 10m
-          command: |
-            pytest --log-cli-level=INFO --cov-append --cov-report term-missing --cov=phys2bids -k test_integration phys2bids/tests/test_integration.py
-      - store_artifacts:
-          path: /tmp/data
+
 
 workflows:
   version: 2.1
