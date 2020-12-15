@@ -285,15 +285,14 @@ jobs:
 
   windows_docker:
     build:
-    executor: 
-      name: machine
-    steps:
-      - run:
-          name: Generate enviroment
-          command: |
-            docker run -it rkttu/python-nanoserver:3.7.3_1809 python --version
-            python -m pip install --upgrade pip setuptools>=30.3.0 wheel
-            pip install -e ".[test]"
+      machine: true
+      steps:
+        - run:
+            name: Generate enviroment
+            command: |
+              docker run -it rkttu/python-nanoserver:3.7.3_1809 python --version
+              python -m pip install --upgrade pip setuptools>=30.3.0 wheel
+              pip install -e ".[test]"
 
 
 workflows:
