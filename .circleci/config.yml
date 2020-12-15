@@ -284,11 +284,10 @@ jobs:
           path: /tmp/data
 
   windows_docker:
-    build:
-      machine: true
-      steps:
-        - run: |
-              docker run -it rkttu/python-nanoserver:3.7.3_1809 python --version
+    machine: true
+    steps:
+      - run: |
+            docker run -it rkttu/python-nanoserver:3.7.3_1809 python --version
 
 
 workflows:
