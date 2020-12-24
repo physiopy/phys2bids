@@ -25,7 +25,6 @@ unittest_37_task:
     - source activate $PWD/shared/phys2bids_py37
     - sudo apt-get install -y make
     - make unittest
-    - mkdir /tmp/cirrus-ci-build/shared/coverage
     - mv /tmp/cirrus-ci-build/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.py37
 
 
@@ -41,5 +40,16 @@ integration_test_37_task:
   - source activate $PWD/shared/phys2bids_py37
   - sudo apt-get install -y make
   - make integration
-  - mkdir /tmp/cirrus-ci-build/shared/coverage
   - mv /tmp/cirrus-ci-build/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.py37
+
+
+merge_coverage_37_task:
+  depends_on:
+  - integration_test_37
+  - unittest_37
+  environment_cache:
+    folder: shared
+    fingerprint_script: echo $CIRRUS_BUILD_ID
+    populate_script:
+      - source activate $PWD/shared/phys2bids_py37
+  Running_integration_tests_script:
