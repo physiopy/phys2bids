@@ -1,10 +1,12 @@
 # global default
 container:
   image: continuumio/miniconda3
+env:
+  CIRRUS_WORKING_DIR: /usr/local/bin
 
 task:
   name: makeenv_37
-  folder: phys2bids
+  folder: /usr/local/bin/phys2bids
   env_install_script:
     - git clone --branch=$CIRRUS_BRANCH
     - pip install -e ".[test,doc]"
