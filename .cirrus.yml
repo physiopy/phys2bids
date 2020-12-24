@@ -4,9 +4,7 @@ container:
 env:
   CIRRUS_WORKING_DIR: /usr/local/bin
 
-task:
-  name: makeenv_37
-  env_install_script:
-    - echo $PWD
+makeenv_37_task:
+  Generate_environment_script:
+    - python --version
     - pip install -e ".[test,doc]"
-    - which phys2bids
