@@ -34,6 +34,17 @@
       ]
     },
     {
+      "login": "62442katieb",
+      "name": "Katie Bottenhorn",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/14095475?v=4",
+      "profile": "https://github.com/62442katieb",
+      "contributions": [
+        "code",
+        "mentoring",
+        "review"
+      ]
+    },
+    {
       "login": "BrightMG",
       "name": "Molly Bright",
       "avatar_url": "https://avatars2.githubusercontent.com/u/32640425?v=4",
@@ -53,6 +64,15 @@
         "content",
         "data",
         "ideas"
+      ]
+    },
+    {
+      "login": "ineschh",
+      "name": "Inés Chavarría",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/72545702?v=4",
+      "profile": "https://github.com/ineschh",
+      "contributions": [
+        "code"
       ]
     },
     {
@@ -78,6 +98,15 @@
       ]
     },
     {
+      "login": "viacovella",
+      "name": "Vittorio Iacovella",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1639782?v=4",
+      "profile": "https://github.com/viacovella",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
       "login": "sangfrois",
       "name": "François Lespinasse",
       "avatar_url": "https://avatars0.githubusercontent.com/u/38385719?v=4",
@@ -99,7 +128,8 @@
         "ideas",
         "infra",
         "review",
-        "test"
+        "test",
+        "mentoring"
       ]
     },
     {
@@ -115,7 +145,8 @@
         "infra",
         "projectManagement",
         "review",
-        "doc"
+        "doc",
+        "mentoring"
       ]
     },
     {
@@ -163,7 +194,17 @@
         "code",
         "infra",
         "review",
-        "test"
+        "test",
+        "mentoring"
+      ]
+    },
+    {
+      "login": "merelvdthiel",
+      "name": "merelvdthiel",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/72999546?v=4",
+      "profile": "https://github.com/merelvdthiel",
+      "contributions": [
+        "code"
       ]
     },
     {
