@@ -7,5 +7,6 @@ env:
 task:
   name: makeenv_37
   env_install_script:
+    - echo $PWD
     - pip install -e ".[test,doc]"
     - which phys2bids
