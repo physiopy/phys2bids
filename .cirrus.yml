@@ -4,12 +4,11 @@ container:
 
 makeenv_37_task:
   environment_cache:
-    folder: phys2bids_py37
-    folder: coverage
+    folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
     populate_script:
-      - conda create -yq --prefix  $PWD/phys2bids_py37 python=3.7
-      - source activate $PWD/phys2bids_py37
+      - conda create -yq --prefix  $PWD/shared/phys2bids_py37 python=3.7
+      - source activate $PWD/shared/phys2bids_py37
       - pip install -e ".[test,doc]"
       - mkdir /tmp/cirrus-ci-build/coverage
 
@@ -18,13 +17,12 @@ unittest_37_task:
   depends_on:
   - makeenv_37
   environment_cache:
-    folder: phys2bids_py37
-    folder: coverage
+    folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
     populate_script:
-      - source activate $PWD/phys2bids_py37
+      - source activate $PWD/shared/phys2bids_py37
   Running_unit_tests_script:
-    - source activate $PWD/phys2bids_py37
+    - source activate $PWD/shared/phys2bids_py37
     - sudo apt-get install -y make
     - make unittest
     - mkdir /tmp/cirrus-ci-build/coverage
@@ -35,13 +33,12 @@ integration_test_37_task:
   depends_on:
   - makeenv_37
   environment_cache:
-    folder: phys2bids_py37
-    folder: coverage
+    folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
     populate_script:
-      - source activate $PWD/phys2bids_py37
+      - source activate $PWD/shared/phys2bids_py37
   Running_integration_tests_script:
-  - source activate $PWD/phys2bids_py37
+  - source activate $PWD/shared/phys2bids_py37
   - sudo apt-get install -y make
   - make integration
   - mkdir /tmp/cirrus-ci-build/coverage
