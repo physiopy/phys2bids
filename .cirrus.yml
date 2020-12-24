@@ -10,7 +10,7 @@ unittest_37_task:
   depends_on:
     - makeenv_37
   Running_unit_tests_script:
-    - apt-get install -y make
+    - sudo apt-get install -y make
     - make unittest
     - mkdir /tmp/cirrus-ci-build/coverage
     - mv /tmp/cirrus-ci-build/.coverage /tmp/cirrus-ci-build/coverage/.coverage.py37
