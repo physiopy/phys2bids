@@ -13,3 +13,9 @@ unittest_37_task:
     - make unittest
     - mkdir /tmp/cirrus-ci-build/coverage
     - mv /tmp/cirrus-ci-build/.coverage /tmp/cirrus-ci-build/coverage/.coverage.py37
+  Coverage_script:
+    - apt-get install -yqq curl
+    - source activate phys2bids_py37  # depends on makeenv37
+    - cd /tmp/cirrus-ci-build/coverage/
+    - coverage combine
+    - coverage xml
