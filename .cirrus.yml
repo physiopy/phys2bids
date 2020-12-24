@@ -1,6 +1,6 @@
 # global default
 container:
-  image: python/3.7-slim
+  image: continuumio/conda-ci-linux-64-python3.7
 env:
   CIRRUS_WORKING_DIR: /usr/local/bin
 
