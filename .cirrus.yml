@@ -4,6 +4,13 @@ container:
 
 makeenv_37_task:
   Generate_environment_script:
-    - echo $PWD
-    - python --version
     - pip install -e ".[test,doc]"
+
+unittest_37_task:
+  depends_on:
+    - makeenv_37
+  Running_unit_tests_script:
+    - apt-get install -y make
+    - make unittest
+    - mkdir /tmp/cirrus-ci-build/coverage
+    - mv /tmp/cirrus-ci-build/.coverage /tmp/cirrus-ci-build/coverage/.coverage.py37
