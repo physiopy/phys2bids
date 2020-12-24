@@ -56,5 +56,4 @@ merge_coverage_37_task:
   - sudo apt-get install -yqq curl
   - source activate $PWD/shared/phys2bids_py37  # depends on makeenv37
   - cd $PWD/shared/coverage/
-  - coverage combine
   - coverage xml
