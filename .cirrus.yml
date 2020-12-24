@@ -38,9 +38,9 @@ integration_test_37_task:
       - source activate $PWD/shared/phys2bids_py37
   Running_integration_tests_script:
   - source activate $PWD/shared/phys2bids_py37
-  - sudo apt-get install -y make
-  - make integration
-  - mv/tmp/cirrus-ci-build/phys2bids/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.py37
+  - sudo apt-get install -y make tree
+  - py.test --log-cli-level=INFO --cov-append --cov-report=xml:/tmp/cirrus-ci-build/shared/coverage/coverage_integration_37.xml term-missing --cov=phys2bids -k test_integration phys2bids/tests/test_integration.py
+  - tree /tmp/cirrus-ci-build/shared/coverage
 
 
 merge_coverage_37_task:
