@@ -2,7 +2,7 @@
 container:
   image: continuumio/conda-ci-linux-64-python3.7
 
-makeenv_task:
+makeenv_37_task:
   environment_cache:
     folder: phys2bids_py37
     fingerprint_script: echo $CIRRUS_BUILD_ID
@@ -14,7 +14,7 @@ makeenv_task:
 
 unittest_37_task:
   depends_on:
-  - makeenv_task
+  - makeenv_37
   environment_cache:
     folder: phys2bids_py37
     fingerprint_script: echo $CIRRUS_BUILD_ID
