@@ -9,4 +9,4 @@ task:
   env_install_script:
     - git clone --branch=$CIRRUS_BRANCH
     - pip install -e ".[test,doc]"
-  folder: /usr/local/bin/phys2bids
+    folder: /usr/local/bin/phys2bids
