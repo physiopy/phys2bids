@@ -5,11 +5,13 @@ container:
 makeenv_37_task:
   environment_cache:
     folder: phys2bids_py37
+    folder: coverage
     fingerprint_script: echo $CIRRUS_BUILD_ID
     populate_script:
       - conda create -yq --prefix  $PWD/phys2bids_py37 python=3.7
       - source activate $PWD/phys2bids_py37
       - pip install -e ".[test,doc]"
+      - mkdir /tmp/cirrus-ci-build/coverage
 
 
 unittest_37_task:
@@ -17,6 +19,7 @@ unittest_37_task:
   - makeenv_37
   environment_cache:
     folder: phys2bids_py37
+    folder: coverage
     fingerprint_script: echo $CIRRUS_BUILD_ID
     populate_script:
       - source activate $PWD/phys2bids_py37
@@ -33,6 +36,7 @@ integration_test_37_task:
   - makeenv_37
   environment_cache:
     folder: phys2bids_py37
+    folder: coverage
     fingerprint_script: echo $CIRRUS_BUILD_ID
     populate_script:
       - source activate $PWD/phys2bids_py37
