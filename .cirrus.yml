@@ -5,6 +5,6 @@ container:
 task:
   name: makeenv_37
     folder: /tmp/src/phys2bids
-    env_script:
+    env_install_script:
       - git clone --branch=$CIRRUS_BRANCH
       - pip install -e ".[test,doc]"
