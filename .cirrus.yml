@@ -24,8 +24,8 @@ unittest_37_task:
   Running_unit_tests_script:
     - source activate $PWD/shared/phys2bids_py37
     - sudo apt-get install -y make tree
-    - py.test --skipintegration --cov-append --cov-report term-missing --cov=myproj /tmp/cirrus-ci-build/shared/coverage --cov=phys2bids phys2bids/
-    - mv /tmp/cirrus-ci-build/.coverage /tmp/cirrus-ci-build/shared/.coverage.py37
+    - make unittest
+    - mv /tmp/cirrus-ci-build/phys2bids/.coverage /tmp/cirrus-ci-build/shared/.coverage.py37
     - tree .coverage
 
 
