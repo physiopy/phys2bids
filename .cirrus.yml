@@ -53,3 +53,8 @@ merge_coverage_37_task:
     populate_script:
       - source activate $PWD/shared/phys2bids_py37
   Running_integration_tests_script:
+  - sudo apt-get install -yqq curl
+  - source activate $PWD/shared/phys2bids_py37  # depends on makeenv37
+  - cd /tmp/src/coverage/
+  - coverage combine
+  - coverage xml
