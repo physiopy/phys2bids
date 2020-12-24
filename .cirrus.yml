@@ -7,5 +7,4 @@ env:
 task:
   name: makeenv_37
   env_install_script:
-    - git clone --branch=$CIRRUS_BRANCH
     - pip install -e ".[test,doc]"
