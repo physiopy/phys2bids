@@ -1,10 +1,9 @@
 # global default
 container:
   image: continuumio/conda-ci-linux-64-python3.7
-env:
-  CIRRUS_WORKING_DIR: /usr/local/bin
 
 makeenv_37_task:
   Generate_environment_script:
+    - echo $PWD
     - python --version
     - pip install -e ".[test,doc]"
