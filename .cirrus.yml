@@ -10,7 +10,7 @@ makeenv_37_task:
       - conda create -yq --prefix  $PWD/shared/phys2bids_py37 python=3.7
       - source activate $PWD/shared/phys2bids_py37
       - pip install -e ".[test,doc]"
-      - mkdir /tmp/cirrus-ci-build/coverage
+      - mkdir /tmp/cirrus-ci-build/shared/coverage
 
 
 unittest_37_task:
@@ -25,8 +25,8 @@ unittest_37_task:
     - source activate $PWD/shared/phys2bids_py37
     - sudo apt-get install -y make
     - make unittest
-    - mkdir /tmp/cirrus-ci-build/coverage
-    - mv /tmp/cirrus-ci-build/.coverage /tmp/cirrus-ci-build/coverage/.coverage.py37
+    - mkdir /tmp/cirrus-ci-build/shared/coverage
+    - mv /tmp/cirrus-ci-build/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.py37
 
 
 integration_test_37_task:
@@ -41,5 +41,5 @@ integration_test_37_task:
   - source activate $PWD/shared/phys2bids_py37
   - sudo apt-get install -y make
   - make integration
-  - mkdir /tmp/cirrus-ci-build/coverage
-  - mv /tmp/cirrus-ci-build/.coverage /tmp/cirrus-ci-build/coverage/.coverage.py37
+  - mkdir /tmp/cirrus-ci-build/shared/coverage
+  - mv /tmp/cirrus-ci-build/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.py37
