@@ -1,6 +1,6 @@
 # global default
 container:
-  image: continuumio/miniconda3
+  image: python:3.7
 env:
   CIRRUS_WORKING_DIR: /usr/local/bin
 
