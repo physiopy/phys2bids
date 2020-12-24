@@ -52,7 +52,7 @@ merge_coverage_37_task:
     fingerprint_script: echo $CIRRUS_BUILD_ID
     populate_script:
       - source activate $PWD/shared/phys2bids_py37
-  Running_integration_tests_script:
+  Coverage_script:
   - sudo apt-get install -yqq curl
   - source activate $PWD/shared/phys2bids_py37  # depends on makeenv37
   - cd /tmp/src/coverage/
