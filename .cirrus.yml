@@ -4,7 +4,7 @@ container:
 
 makeenv_37_task:
   Generate_environment_script:
-    - conda create -yq -n --prefix  $PWD/phys2bids_py37 python=3.7
+    - conda create -yq --prefix  $PWD/phys2bids_py37 python=3.7
     - source activate phys2bids_py37
     - pip install -e ".[test,doc]"
 
