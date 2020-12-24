@@ -8,3 +8,4 @@ task:
   name: makeenv_37
   env_install_script:
     - pip install -e ".[test,doc]"
+    - which phys2bids
