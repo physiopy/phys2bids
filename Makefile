@@ -17,4 +17,4 @@ unittest:
 
 integration:
 	@pip install -e ".[test]"
-	@pytest --log-cli-level=INFO --cov-append --cov-report=html:/tmp/cirrus-ci-build/shared/coverage/coverage_integration_37 --cov=phys2bids -k test_integration phys2bids/tests/test_integration.py
+	@pytest --log-cli-level=INFO --cov-append --cov-report=/tmp/cirrus-ci-build/shared/coverage/coverage_integration_37 --cov=phys2bids -k test_integration phys2bids/tests/test_integration.py
