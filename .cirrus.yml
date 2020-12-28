@@ -29,7 +29,7 @@ makeenv_36_windows_task:
     image: cirrusci/windowsservercore:2019
   environment_cache:
     folder: shared36
-    fingerprint_script: set %CIRRUS_BUILD_ID%36w
+    fingerprint_script: echo %CIRRUS_BUILD_ID%36w
     reupload_on_changes: true
     populate_script:
       - conda create -yq --prefix  %HOMEPATH%/shared36/phys2bids_py36 python=3.6
