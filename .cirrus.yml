@@ -19,8 +19,8 @@ makeenv_36_task:
     fingerprint_script: echo ${CIRRUS_BUILD_ID}36
     reupload_on_changes: true
     populate_script:
-      - conda create -yq --prefix  $PWD/shared36/phys2bids_py36 python=3.6
-      - source activate $PWD/shared36/phys2bids_py36
+      - conda create -yq --prefix  %HOMEPATH%/shared36/phys2bids_py36 python=3.6
+      - source activate %HOMEPATH&/shared36/phys2bids_py36
       - pip install -e ".[test,doc]"
       - mkdir /tmp/cirrus-ci-build/shared36/coverage
 
@@ -29,7 +29,7 @@ makeenv_36_windows_task:
     image: cirrusci/windowsservercore:2019
   environment_cache:
     folder: shared36
-    fingerprint_script: echo ${CIRRUS_BUILD_ID}36w
+    fingerprint_script: set %CIRRUS_BUILD_ID%36w
     reupload_on_changes: true
     populate_script:
       - conda create -yq --prefix  $PWD/shared36/phys2bids_py36 python=3.6
