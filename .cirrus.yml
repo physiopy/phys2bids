@@ -96,7 +96,7 @@ Bids_validate_task:
       - source activate $PWD/shared/phys2bids_py37
   Generate_enviroment_script:
   - sudo apt-get install -yqq wget curl
-  - curl -sL https://deb.nodesource.com/setup_15.x | bash -
+  - sudo curl -sL https://deb.nodesource.com/setup_15.x | sudo bash -
   - sudo apt-get install -yqq nodejs
   - npm install -g bids-validator
   Dowload data and execute pipeline_script:
