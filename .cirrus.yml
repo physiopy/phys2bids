@@ -15,12 +15,12 @@ makeenv_37_task:
 
 makeenv_36_task:
   environment_cache:
-    folder: shared2
+    folder: shared36
     fingerprint_script: echo ${CIRRUS_BUILD_ID}2
     reupload_on_changes: true
     populate_script:
-      - conda create -yq --prefix  $PWD/shared/phys2bids_py36 python=3.6
-      - source activate $PWD/shared/phys2bids_py36
+      - conda create -yq --prefix  $PWD/shared36/phys2bids_py36 python=3.6
+      - source activate $PWD/shared36/phys2bids_py36
       - pip install -e ".[test,doc]"
 
 Unittest_37_task:
@@ -43,17 +43,17 @@ Unittest_36_task:
   depends_on:
   - makeenv_36
   environment_cache:
-    folder: shared2
+    folder: shared36
     fingerprint_script: echo ${CIRRUS_BUILD_ID}2
     populate_script:
-      - source activate $PWD/shared2/phys2bids_py36
+      - source activate $PWD/shared36/phys2bids_py36
     reupload_on_changes: true
   Running_unit_tests_script:
     - sudo apt-get install -y make tree
-    - source activate $PWD/shared2/phys2bids_py36
+    - source activate $PWD/shared36/phys2bids_py36
     - make unittest
-    - mv $PWD/.coverage /tmp/cirrus-ci-build/shared2/coverage/.coverage.unittest_36
-    - tree /tmp/cirrus-ci-build/shared2/coverage
+    - mv $PWD/.coverage /tmp/cirrus-ci-build/shared36/coverage/.coverage.unittest_36
+    - tree /tmp/cirrus-ci-build/shared36/coverage
 
 
 
