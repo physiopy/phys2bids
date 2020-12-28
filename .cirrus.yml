@@ -35,7 +35,7 @@ makeenv_39_windows_task:
     reupload_on_changes: true
     populate_script:
       - choco install python pip -y 
-      - env:Path += ";C:\Python39"
+      - &env:Path += ";C:\Python39"
       - refreshenv
       - python --version
       - choco install python pip -y
