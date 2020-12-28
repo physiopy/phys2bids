@@ -2,7 +2,7 @@
 container:
   image: continuumio/conda-ci-linux-64-python3.7
 
-Makeenv_37_task:
+makeenv_37_task:
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
