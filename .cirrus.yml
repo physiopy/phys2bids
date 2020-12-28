@@ -22,6 +22,7 @@ makeenv_36_task:
       - conda create -yq --prefix  $PWD/shared36/phys2bids_py36 python=3.6
       - source activate $PWD/shared36/phys2bids_py36
       - pip install -e ".[test,doc]"
+      - mkdir /tmp/cirrus-ci-build/shared/coverage
 
 Unittest_37_task:
   depends_on:
@@ -44,7 +45,7 @@ Unittest_36_task:
   - makeenv_36
   environment_cache:
     folder: shared36
-    fingerprint_script: echo ${CIRRUS_BUILD_ID}2
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}36
     populate_script:
       - source activate $PWD/shared36/phys2bids_py36
     reupload_on_changes: true
@@ -73,6 +74,22 @@ Integration_test_37_task:
   - mv $PWD/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.integration_37
   - tree /tmp/cirrus-ci-build/shared/coverage
 
+
+Integration_test_36_task:
+  depends_on:
+  - makeenv_36
+  environment_cache:
+    folder: shared
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}36
+    populate_script:
+      - source activate $PWD/shared/phys2bids_py36
+    reupload_on_changes: true
+  Running_integration_tests_script:
+  - sudo apt-get install -y make tree
+  - source activate $PWD/shared/phys2bids_py36
+  - make integration
+  - mv $PWD/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.integration_36
+  - tree /tmp/cirrus-ci-build/shared/coverage
 
 Merge_coverage_37_task:
   depends_on:
