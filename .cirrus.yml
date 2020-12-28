@@ -22,7 +22,7 @@ makeenv_36_task:
       - conda create -yq --prefix  $PWD/shared36/phys2bids_py36 python=3.6
       - source activate $PWD/shared36/phys2bids_py36
       - pip install -e ".[test,doc]"
-      - mkdir /tmp/cirrus-ci-build/shared/coverage
+      - mkdir /tmp/cirrus-ci-build/shared36/coverage
 
 Unittest_37_task:
   depends_on:
