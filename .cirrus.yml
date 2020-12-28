@@ -27,6 +27,8 @@ makeenv_36_task:
 makeenv_39_windows_task:
   windows_container:
     image: cirrusci/windowsservercore:2019
+  env:
+    CIRRUS_SHELL: powershell
   environment_cache:
     folder: shared39
     fingerprint_script: echo %CIRRUS_BUILD_ID%36w
