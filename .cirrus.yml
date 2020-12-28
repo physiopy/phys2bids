@@ -67,7 +67,6 @@ Style_check_task:
     fingerprint_script: echo $CIRRUS_BUILD_ID
     populate_script:
       - source activate $PWD/shared/phys2bids_py37
-    reupload_on_changes: true
   Lintin_script:
   - source activate $PWD/shared/phys2bids_py37  # depends on makeenv37
   - make lint
@@ -80,7 +79,6 @@ Build_docs_task:
     fingerprint_script: echo $CIRRUS_BUILD_ID
     populate_script:
       - source activate $PWD/shared/phys2bids_py37
-    reupload_on_changes: true
   Build_documentation_script:
   - source activate $PWD/shared/phys2bids_py37  # depends on makeenv37
   - make lint
