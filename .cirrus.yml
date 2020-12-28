@@ -24,14 +24,16 @@ makeenv_36_task:
       - pip install -e ".[test,doc]"
       - mkdir /tmp/cirrus-ci-build/shared36/coverage
 
-makeenv_36_windows_task:
+makeenv_39_windows_task:
   windows_container:
     image: cirrusci/windowsservercore:2019
   environment_cache:
-    folder: shared36
+    folder: shared39
     fingerprint_script: echo %CIRRUS_BUILD_ID%36w
     reupload_on_changes: true
     populate_script:
+      - wget https://www.python.org/ftp/python/3.9.1/python-3.9.1-amd64.exe -O python-3.9.0.exe
+      - python-3.9.0.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
       - python --version
       - pip install -e ".[test,doc]"
 
