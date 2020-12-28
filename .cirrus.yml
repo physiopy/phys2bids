@@ -26,7 +26,7 @@ makeenv_36_task:
 
 makeenv_39_windows_task:
   windows_container:
-    image: cirrusci/windowsservercore:2019
+    image: yorek/python-nanoserver
   env:
     CIRRUS_SHELL: powershell
   environment_cache:
