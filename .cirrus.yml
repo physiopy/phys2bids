@@ -11,7 +11,7 @@ makeenv_37_task:
       - source activate $PWD/shared/phys2bids_py37
       - pip install -e ".[test,doc]"
       - mkdir /tmp/cirrus-ci-build/shared/coverage
-
+      - sudo apt-get install -y make tree curl
 
 unittest_37_task:
   depends_on:
@@ -24,7 +24,6 @@ unittest_37_task:
     reupload_on_changes: true
   Running_unit_tests_script:
     - source activate $PWD/shared/phys2bids_py37
-    - sudo apt-get install -y make tree
     - make unittest
     - mv $PWD/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.unittest_37
     - tree /tmp/cirrus-ci-build/shared/coverage
@@ -41,7 +40,6 @@ integration_test_37_task:
     reupload_on_changes: true
   Running_integration_tests_script:
   - source activate $PWD/shared/phys2bids_py37
-  - sudo apt-get install -y make tree
   - make integration
   - mv $PWD/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.integration_37
   - tree /tmp/cirrus-ci-build/shared/coverage
@@ -57,7 +55,19 @@ merge_coverage_37_task:
     populate_script:
       - source activate $PWD/shared/phys2bids_py37
   Coverage_script:
-  - sudo apt-get install -yqq curl tree
   - source activate $PWD/shared/phys2bids_py37  # depends on makeenv37
   - tree /tmp/cirrus-ci-build/shared/coverage
   - cd /tmp/cirrus-ci-build/shared/coverage && coverage combine && coverage xml
+
+style_check_task:
+  depends_on:
+  - makeenv_37
+  environment_cache:
+    folder: shared
+    fingerprint_script: echo $CIRRUS_BUILD_ID
+    populate_script:
+      - source activate $PWD/shared/phys2bids_py37
+    reupload_on_changes: true
+  Lintin_script:
+  - source activate phys2bids_py37  # depends on makeenv37
+  - make lint
