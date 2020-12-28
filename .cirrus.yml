@@ -34,7 +34,8 @@ makeenv_39_windows_task:
     fingerprint_script: echo %CIRRUS_BUILD_ID%36w
     reupload_on_changes: true
     populate_script:
-      - choco install python -y | python -m pip install -U pip | pip3 install -e ".[test,doc]"
+      - choco install python pip -y 
+      - pip3 install -e ".[test,doc]"
 
 Unittest_37_task:
   depends_on:
