@@ -6,11 +6,21 @@ makeenv_37_task:
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
+    reupload_on_changes: true
     populate_script:
       - conda create -yq --prefix  $PWD/shared/phys2bids_py37 python=3.7
       - source activate $PWD/shared/phys2bids_py37
       - pip install -e ".[test,doc]"
       - mkdir /tmp/cirrus-ci-build/shared/coverage
+
+makeenv_36_task:
+  environment_cache:
+    folder: shared
+    fingerprint_script: echo $CIRRUS_BUILD_ID
+    populate_script:
+      - conda create -yq --prefix  $PWD/shared/phys2bids_py37 python=3.6
+      - source activate $PWD/shared/phys2bids_py36
+      - pip install -e ".[test,doc]"
 
 Unittest_37_task:
   depends_on:
@@ -27,6 +37,23 @@ Unittest_37_task:
     - make unittest
     - mv $PWD/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.unittest_37
     - tree /tmp/cirrus-ci-build/shared/coverage
+
+Unittest_36_task:
+  depends_on:
+  - makeenv_36
+  environment_cache:
+    folder: shared
+    fingerprint_script: echo $CIRRUS_BUILD_ID
+    populate_script:
+      - source activate $PWD/shared/phys2bids_py36
+    reupload_on_changes: true
+  Running_unit_tests_script:
+    - sudo apt-get install -y make tree
+    - source activate $PWD/shared/phys2bids_py36
+    - make unittest
+    - mv $PWD/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.unittest_36
+    - tree /tmp/cirrus-ci-build/shared/coverage
+
 
 
 Integration_test_37_task:
@@ -98,7 +125,7 @@ Bids_validate_task:
   - sudo apt-get install -yqq wget curl
   - sudo curl -sL https://deb.nodesource.com/setup_15.x | sudo bash -
   - sudo apt-get install -yqq nodejs
-  - npm install -g bids-validator
+  - sudo npm install -g bids-validator
   Dowload data and execute pipeline_script:
   - wget -O Test1_multifreq_onescan.txt https://osf.io/7se4t/download
   - wget -O heur_test_multifreq.py https://osf.io/ehx6j/download
