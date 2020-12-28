@@ -35,8 +35,7 @@ makeenv_39_windows_task:
     reupload_on_changes: true
     populate_script:
       - echo $PWD
-      - wget https://www.python.org/ftp/python/3.9.1/python-3.9.1-amd64.exe -O python-3.9.0.exe
-      - runas ./python-3.9.0.exe /quiet InstallAllUsers=0 PrependPath=1 Include_test=0
+      - wget https://www.python.org/ftp/python/3.9.1/python-3.9.1-amd64.exe -O python-3.9.0.exe && runas ./python-3.9.0.exe /quiet InstallAllUsers=0 PrependPath=1 Include_test=0
       - python --version
       - pip install -e ".[test,doc]"
 
