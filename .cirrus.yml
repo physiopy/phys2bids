@@ -24,8 +24,9 @@ makeenv_36_task:
       - pip install -e ".[test,doc]"
       - mkdir /tmp/cirrus-ci-build/shared36/coverage
 
-makeenv_36_task:
-  image: stefanscherer/python-windows
+makeenv_36_windows_task:
+  container:
+    image: stefanscherer/python-windows
   environment_cache:
     folder: shared36
     fingerprint_script: echo ${CIRRUS_BUILD_ID}36w
