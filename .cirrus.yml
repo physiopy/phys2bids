@@ -35,6 +35,7 @@ makeenv_39_windows_task:
     reupload_on_changes: true
     populate_script:
       - choco install python pip -y
+      - choco install pip -y
       - pip3 install -e ".[test,doc]"
 
 Unittest_37_task:
