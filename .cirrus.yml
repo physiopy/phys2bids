@@ -18,7 +18,7 @@ makeenv_36_task:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
     populate_script:
-      - conda create -yq --prefix  $PWD/shared/phys2bids_py37 python=3.6
+      - conda create -yq --prefix  $PWD/shared/phys2bids_py36 python=3.6
       - source activate $PWD/shared/phys2bids_py36
       - pip install -e ".[test,doc]"
 
