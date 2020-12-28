@@ -87,6 +87,7 @@ Integration_test_36_task:
   Running_integration_tests_script:
   - sudo apt-get install -y make tree
   - source activate $PWD/shared/phys2bids_py36
+  - PATH=/home/test_user/.local/bin:$PATH
   - make integration
   - mv $PWD/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.integration_36
   - tree /tmp/cirrus-ci-build/shared/coverage
