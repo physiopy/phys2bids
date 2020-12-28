@@ -69,5 +69,5 @@ style_check_task:
       - source activate $PWD/shared/phys2bids_py37
     reupload_on_changes: true
   Lintin_script:
-  - source activate phys2bids_py37  # depends on makeenv37
+  - source activate $PWD/shared/phys2bids_py37  # depends on makeenv37
   - make lint
