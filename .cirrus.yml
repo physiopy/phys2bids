@@ -82,7 +82,6 @@ Build_docs_task:
   Build_documentation_script:
   - source activate $PWD/shared/phys2bids_py37  # depends on makeenv37
   - make lint
-  - source activate phys2bids_py37  # depends on makeenv_37
   - make -C docs html
 
 Bids_validate_task:
@@ -94,7 +93,7 @@ Bids_validate_task:
     populate_script:
       - source activate $PWD/shared/phys2bids_py37
   Generate_enviroment_script:
-  - apt-get install -yqq wget
+  - sudo apt-get install -yqq wget
   - curl -sL https://deb.nodesource.com/setup_15.x | bash -
   - apt-get install -yqq nodejs
   - npm install -g bids-validator
