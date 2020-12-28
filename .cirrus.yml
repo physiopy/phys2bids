@@ -26,7 +26,7 @@ makeenv_36_task:
 
 makeenv_39_windows_task:
   windows_container:
-    image: yorek/python-nanoserver
+    image: cirrusci/windowsservercore:2019
   env:
     CIRRUS_SHELL: powershell
   environment_cache:
@@ -34,8 +34,8 @@ makeenv_39_windows_task:
     fingerprint_script: echo %CIRRUS_BUILD_ID%36w
     reupload_on_changes: true
     populate_script:
-      - wget https://www.python.org/ftp/python/3.9.1/python-3.9.1-amd64.exe -O python-3.9.0.exe
-      - .\python-3.9.0.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
+      - Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.7.0/python-3.7.0.exe" -OutFile "c:/temp/python-3.7.0.exe"
+      - c:/temp/python-3.7.0.exe /quiet InstallAllUsers=0 PrependPath=1 Include_test=0
       - python --version
       - pip install -e ".[test,doc]"
 
