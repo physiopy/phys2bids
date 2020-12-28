@@ -47,8 +47,8 @@ Integration_test_37_task:
 
 Merge_coverage_37_task:
   depends_on:
-  - integration_test_37
-  - unittest_37
+  - Integration_test_37
+  - Unittest_37
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
