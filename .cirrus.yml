@@ -35,8 +35,8 @@ makeenv_39_windows_task:
     reupload_on_changes: true
     populate_script:
       - echo $PWD
-      - Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.7.0/python-3.7.0.exe" -OutFile "$PWD\python-3.7.0.exe"
-      - $PWD\python-3.7.0.exe /quiet InstallAllUsers=0 PrependPath=1 Include_test=0
+      - Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.7.0/python-3.7.0.exe" -OutFile "python-3.7.0.exe"
+      - python-3.7.0.exe /quiet InstallAllUsers=0 PrependPath=1 Include_test=0
       - python --version
       - pip install -e ".[test,doc]"
 
