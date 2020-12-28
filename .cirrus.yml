@@ -16,7 +16,7 @@ makeenv_37_task:
 makeenv_36_task:
   environment_cache:
     folder: shared36
-    fingerprint_script: echo ${CIRRUS_BUILD_ID}2
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}36
     reupload_on_changes: true
     populate_script:
       - conda create -yq --prefix  $PWD/shared36/phys2bids_py36 python=3.6
