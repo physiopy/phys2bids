@@ -26,7 +26,7 @@ makeenv_36_task:
 
 makeenv_36_windows_task:
   windows_container:
-    image: stefanscherer/python-windows
+    image: cirrusci/windowsservercore:2019
   environment_cache:
     folder: shared36
     fingerprint_script: echo ${CIRRUS_BUILD_ID}36w
