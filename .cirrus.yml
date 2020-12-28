@@ -24,6 +24,18 @@ makeenv_36_task:
       - pip install -e ".[test,doc]"
       - mkdir /tmp/cirrus-ci-build/shared36/coverage
 
+makeenv_36_task:
+  image: stefanscherer/python-windows
+  environment_cache:
+    folder: shared36
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}36w
+    reupload_on_changes: true
+    populate_script:
+      - conda create -yq --prefix  $PWD/shared36/phys2bids_py36 python=3.6
+      - source activate $PWD/shared36/phys2bids_py36
+      - pip install -e ".[test,doc]"
+      - mkdir /tmp/cirrus-ci-build/shared36/coverage
+
 Unittest_37_task:
   depends_on:
   - makeenv_37
@@ -151,3 +163,4 @@ Bids_validate_task:
   - source activate $PWD/shared/phys2bids_py37
   - PATH=/home/test_user/.local/bin:$PATH
   - pip install -e ".[test,doc]" && phys2bids -in Test1_multifreq_onescan.txt -chtrig 1 -ntp 30 -tr 1.2 -outdir physio_bids -heur heur_test_multifreq.py -sub 006 -ses 01
+
