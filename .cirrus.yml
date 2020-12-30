@@ -28,16 +28,13 @@ makeenv_39_windows_task:
   windows_container:
     image: cirrusci/windowsservercore:2019
   env:
-    CIRRUS_SHELL: powershell.exe
+    CIRRUS_SHELL: powershell
   environment_cache:
     folder: shared39
     fingerprint_script: echo %CIRRUS_BUILD_ID%36w
     reupload_on_changes: true
     populate_script:
-      - choco install python pip -y & refreshenv & echo $env:path
-      - python --version
-      - choco install python pip -y
-      - pip3 install -e ".[test,doc]"
+      - make windows
 
 Unittest_37_task:
   depends_on:
