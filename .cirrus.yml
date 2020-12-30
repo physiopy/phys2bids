@@ -34,6 +34,7 @@ makeenv_39_windows_task:
     fingerprint_script: echo %CIRRUS_BUILD_ID%36w
     reupload_on_changes: true
     populate_script:
+      - choco install make -y
       - make windows
 
 Unittest_37_task:
