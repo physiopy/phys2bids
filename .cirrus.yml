@@ -34,7 +34,7 @@ makeenv_39_windows_task:
     fingerprint_script: echo $CIRRUS_BUILD_ID36w
     reupload_on_changes: true
     populate_script:
-      - choco install python -y; env:Path += ";c:\python39"; refreshenv; echo $env:path
+      - choco install python -y; $env:Path += ";c:\python39"; refreshenv; echo $env:path
       - python --version
       - choco install python pip -y
       - pip3 install -e ".[test,doc]"
