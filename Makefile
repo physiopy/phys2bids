@@ -18,10 +18,3 @@ unittest:
 integration:
 	@pip install -e ".[test]"
 	@pytest --log-cli-level=INFO --cov-append --cov-report term-missing --cov=phys2bids -k test_integration phys2bids/tests/test_integration.py
-
-windows:
-	@choco install python -y
-	@refreshenv
-	@python --version
-	@choco install pip -y
-	@pip3 install -e ".[test,doc]"
