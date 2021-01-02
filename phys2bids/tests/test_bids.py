@@ -27,6 +27,29 @@ def test_bidsify_units():
         assert bids.bidsify_units(unit_key) == bids.UNIT_ALIASES[unit_key]
 
 
+def test_update_bids_name():
+    """Unit test for update_bids_name."""
+    f = "sub-01_bold.nii.gz"
+    new_file = bids.update_bids_name(f, echo=1)
+    assert new_file == "sub-01_echo-1_bold.nii.gz"
+    new_file = bids.update_bids_name(f, echo=1, acq="lowres")
+    assert new_file == "sub-01_acq-lowres_echo-1_bold.nii.gz"
+
+    f = "sub-01_echo-1_bold.nii.gz"
+    new_file = bids.update_bids_name(f, echo=2)
+    assert new_file == "sub-01_echo-2_bold.nii.gz"
+    new_file = bids.update_bids_name(f, echo=2, acq="lowres", suffix="cbv", extension="json")
+    assert new_file == "sub-01_acq-lowres_echo-2_cbv.json"
+
+    # Documenting poor performance.
+    # Hopefully there'd be an exception here in the future.
+    f = "noncompliant_bids_file.nii.gz"
+    new_file = bids.update_bids_name(f, echo=1)
+    assert new_file == "noncompliant_bids_echo-1_file.nii.gz"
+    new_file = bids.update_bids_name(f, echo=1, acq="lowres")
+    assert new_file == "noncompliant_bids_acq-lowres_echo-1_file.nii.gz"
+
+
 @pytest.mark.parametrize('test_sub', ['SBJ01', 'sub-006', '006'])
 @pytest.mark.parametrize('test_ses', ['', 'S05', 'ses-42', '42'])
 def test_use_heuristic(tmpdir, test_sub, test_ses):
