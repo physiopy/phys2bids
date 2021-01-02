@@ -39,6 +39,7 @@ makeenv_39_windows_task:
       - pip install wheel
       - pip install -e ".[test,doc]"
   Running_integration_script:
+    - choco install make -y
     - make integration
 
 Integration_39_windows_task:
