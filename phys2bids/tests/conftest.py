@@ -37,6 +37,7 @@ def fetch_file(osf_id, path, filename):
         Full path to downloaded `filename`
     """
     # This restores the same behavior as before.
+    # this three lines make tests dowloads work in windows
     orig_sslsocket_init = ssl.SSLSocket.__init__
     ssl.SSLSocket.__init__ = lambda *args, cert_reqs=ssl.CERT_NONE, **kwargs: orig_sslsocket_init(*args, cert_reqs=ssl.CERT_NONE, **kwargs)
     ssl._create_default_https_context = ssl._create_unverified_context
