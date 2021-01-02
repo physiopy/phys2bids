@@ -41,7 +41,7 @@ makeenv_39_windows_task:
 
 Integration_39_windows_task:
   depends_on:
-  - makeenv_39_windows_task
+  - makeenv_39_windows
   windows_container:
     image: cirrusci/windowsservercore:2019
   env:
