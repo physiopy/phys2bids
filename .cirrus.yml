@@ -36,6 +36,7 @@ makeenv_39_windows_task:
     populate_script:
       - choco install make python -y; $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
       - pip install --upgrade certifi
+      - pip install wheel
       - pip install -e ".[test,doc]"
       - make integration
 

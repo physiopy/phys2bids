@@ -1,4 +1,5 @@
 import os
+import ssl
 from urllib.request import urlretrieve
 
 import pytest
@@ -35,7 +36,6 @@ def fetch_file(osf_id, path, filename):
     full_path : str
         Full path to downloaded `filename`
     """
-    import ssl
     # This restores the same behavior as before.
     context = ssl._create_unverified_context()
     url = 'https://osf.io/{}/download'.format(osf_id)
