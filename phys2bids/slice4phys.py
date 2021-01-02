@@ -115,6 +115,7 @@ def slice_phys(phys, run_timestamps, padding=9, update_trigger=False):
     Parameters
     ----------
     phys : BlueprintInput
+        Multi-run physio data in BlueprintInput object.
     run_timestamps : dict
         Each key is a run-wise filename and value is a tuple of (onset, offset),
         where onset and offset are integers corresponding to index values of

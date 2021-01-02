@@ -18,14 +18,17 @@ LGR = logging.getLogger(__name__)
 
 
 def load_scan_data(layout, sub, ses=None):
-    """
-    Extract subject- and session-specific scan onsets and durations from BIDSLayout.
+    """Extract subject- and session-specific scan onsets and durations from BIDSLayout.
 
     Parameters
     ----------
-    layout : BIDSLayout
+    layout : bids.layout.BIDSLayout
+        Dataset layout. Used to identify functional scans and load them to
+        determine scan onsets.
     sub : str
+        Subject ID.
     ses : str or None, optional
+        Session ID. If None, then no session.
 
     Returns
     -------
@@ -38,25 +41,31 @@ def load_scan_data(layout, sub, ses=None):
         'duration' is the scan duration in seconds.
         'onset' is the scan onset in seconds, starting with zero at the first scan.
     """
-    # This is the strategy we'll use in the future. Commented out for now.
-    # scans_file = layout.get(extension='.tsv', suffix='scans', subject=sub, session=ses)
-    # df = pd.read_table(scans_file)
-
-    # Collect acquisition times
-    # NOTE: Will be replaced with scans file when heudiconv makes the change
-    img_files = layout.get(
-        datatype="func",
-        suffix="bold",
-        extension=[".nii.gz", ".nii"],
-        subject=sub,
-        session=ses,
-    )
-    df = pd.DataFrame(
-        columns=["original_filename", "acq_time"],
-    )
-    for i, img_file in enumerate(img_files):
-        df.loc[i, "original_filename"] = img_file.path
-        df.loc[i, "acq_time"] = img_file.get_metadata()["AcquisitionTime"]
+    # Use the scans.tsv file directly if it is available
+    scans_file = layout.get(extension=".tsv", suffix="scans", subject=sub, session=ses)
+    if scans_file:
+        df = pd.read_table(scans_file)
+        df["original_filename"] = df["filename"]
+    else:
+        LGR.info(
+            "No scans.tsv detected. "
+            "Attempting to extract relevant metadata from sidecar jsons."
+        )
+        # Collect acquisition times
+        # TODO: Make this search more general.
+        img_files = layout.get(
+            datatype="func",
+            suffix="bold",
+            extension=[".nii.gz", ".nii"],
+            subject=sub,
+            session=ses,
+        )
+        df = pd.DataFrame(
+            columns=["original_filename", "acq_time"],
+        )
+        for i_row, img_file in enumerate(img_files):
+            df.loc[i_row, "original_filename"] = img_file.path
+            df.loc[i_row, "acq_time"] = img_file.get_metadata()["AcquisitionTime"]
 
     # Get generic filenames (without within-acquisition entities like echo)
     df["filename"] = df["original_filename"].apply(
@@ -68,7 +77,7 @@ def load_scan_data(layout, sub, ses=None):
     df = df.sort_values(by="acq_time")
     df = df.drop_duplicates(subset="filename", keep="first", ignore_index=True)
 
-    # Now back to general-purpose code
+    # Determine the duration (in seconds) of each scan.
     df = determine_scan_durations(layout, df, sub=sub, ses=ses)
     df = df.dropna(subset=["duration"])  # limit to relevant scans
 
@@ -79,8 +88,7 @@ def load_scan_data(layout, sub, ses=None):
 
 
 def determine_scan_durations(layout, scan_df, sub, ses=None):
-    """
-    Determine scan durations.
+    """Determine scan durations.
 
     Extract scan durations by loading fMRI files/metadata and
     multiplying TR by number of volumes. This can be used to determine the
@@ -101,9 +109,10 @@ def determine_scan_durations(layout, scan_df, sub, ses=None):
     Returns
     -------
     scan_df : pandas.DataFrame
-        Updated DataFrame with new "duration" column. Calculated durations are
-        in seconds.
+        Updated DataFrame with new "duration" column.
+        Calculated durations are in seconds.
     """
+    # TODO: Make this search more general.
     func_files = layout.get(
         datatype="func",
         suffix="bold",
@@ -120,13 +129,12 @@ def determine_scan_durations(layout, scan_df, sub, ses=None):
             duration = n_vols * tr
             scan_df.loc[scan_df["original_filename"] == filename, "duration"] = duration
         else:
-            LGR.info("Skipping {}".format(op.basename(filename)))
+            LGR.info(f"Skipping {op.basename(filename)}")
     return scan_df
 
 
 def extract_physio_onsets(trigger_timeseries, freq, threshold=0.5):
-    """
-    Collect onsets from physio file, both in terms of seconds and time series indices.
+    """Collect onsets from physio file in terms of seconds and time series indices.
 
     Parameters
     ----------
@@ -147,6 +155,8 @@ def extract_physio_onsets(trigger_timeseries, freq, threshold=0.5):
     samplerate = 1.0 / freq
     scan_idx = np.where(trigger_timeseries > 0)[0]
     # Get groups of consecutive numbers in index
+    # This assumes that the trigger time series is block-like
+    # (i.e., scan runs constitute consecutive periods of non-zero values).
     groups = []
     for k, g in groupby(enumerate(scan_idx), lambda x: x[0] - x[1]):
         groups.append(list(map(itemgetter(1), g)))
@@ -166,15 +176,14 @@ def extract_physio_onsets(trigger_timeseries, freq, threshold=0.5):
 
 
 def synchronize_onsets(phys_df, scan_df):
-    """
-    Find matching scans and physio trigger periods from separate DataFrames.
+    """Find matching scans and physio trigger periods from separate DataFrames.
 
     Uses time differences within each DataFrame.
     There can be fewer physios than scans (task failed to trigger physio)
     or fewer scans than physios (aborted scans are not retained in BIDS dataset).
 
     Onsets are in seconds. The baseline (i.e., absolute timing) doesn't matter.
-    Relative timing is all that matters.
+    Relative timing of the onsets is all that matters.
 
     Parameters
     ----------
@@ -205,8 +214,7 @@ def synchronize_onsets(phys_df, scan_df):
             onset_diff = j_phys["onset"] - i_scan["onset"]
             onset_diffs[i, j] = onset_diff
 
-    # Find the delay that gives the smallest difference between scan onsets
-    # and physio onsets
+    # Find the delay that gives the smallest difference between scan onsets and physio onsets
     selected = (None, None)
     thresh = 1000
     for i_scan in range(onset_diffs.shape[0]):
@@ -224,8 +232,9 @@ def synchronize_onsets(phys_df, scan_df):
 
     offset = onset_diffs[selected[0], selected[1]]
 
-    # Isolate close, but negative relative onsets, to ensure scan onsets are
-    # always before or at physio triggers.
+    # Isolate close, but negative, relative onsets, to ensure scan onsets are
+    # always before or at physio triggers (because there can be a delay between
+    # the start of the scan and when the physio is triggered).
     close_thresh = 2  # threshold for "close" onsets, in seconds
     diffs_from_phys_onset = onset_diffs - offset
     min_diff_row_idx = np.argmin(np.abs(diffs_from_phys_onset), axis=0)
@@ -236,8 +245,8 @@ def synchronize_onsets(phys_df, scan_df):
     min_diffs += min_val
     offset += min_val
     LGR.info(
-        "Scan onsets should be adjusted forward by {} seconds to best "
-        "match physio onsets.".format(offset)
+        f"Scan onsets should be adjusted forward by {offset} seconds to best "
+        "match physio onsets."
     )
 
     # Get onset of each scan in terms of the physio time series
@@ -252,15 +261,14 @@ def synchronize_onsets(phys_df, scan_df):
 
 
 def plot_sync(scan_df, physio_df):
-    """
-    Plot unsynchronized and synchonized scan and physio onsets and durations.
+    """Plot unsynchronized and synchonized scan and physio onsets and durations.
 
     Parameters
     ----------
     scan_df : pandas.DataFrame
         DataFrame with timing associated with scan files. Must have the
         following columns: onset (scan onsets in seconds), duration (scan
-        durations in seconds), and phys_onset (scan onsets after being matches
+        durations in seconds), and phys_onset (scan onsets after being matched
         with physio onsets, in seconds).
     physio_df : pandas.DataFrame
         DataFrame with timing associated with physio trigger periods. Must have
@@ -277,7 +285,7 @@ def plot_sync(scan_df, physio_df):
     """
     fig, axes = plt.subplots(nrows=2, figsize=(20, 6), sharex=True)
 
-    # get max (onset time + duration) rounded up to nearest 1000
+    # get max (onset time + duration) rounded up to nearest 1000 for limit of x-axis
     max_ = int(
         1000
         * np.ceil(
@@ -296,8 +304,7 @@ def plot_sync(scan_df, physio_df):
     scalar = 10
     x = np.linspace(0, max_, (max_ * scalar) + 1)
 
-    # first plot the onsets and durations of the raw scan and physio runs in
-    # the top axis
+    # first plot the onsets and durations of the raw scan and physio runs in the top axis
     physio_timeseries = np.zeros(x.shape)
     func_timeseries = np.zeros(x.shape)
     for i, row in scan_df.iterrows():
@@ -371,8 +378,7 @@ def plot_sync(scan_df, physio_df):
 
 
 def workflow(physio, bids_dir, sub, ses=None, padding=9, update_trigger=False):
-    """
-    Run physio/scan onset synchronization and BIDSification.
+    """Run physio/scan onset synchronization and BIDSification.
 
     This workflow writes out physio files to a BIDS dataset.
 
@@ -390,7 +396,7 @@ def workflow(physio, bids_dir, sub, ses=None, padding=9, update_trigger=False):
     padding : float or tuple, optional
         Amount of time before and after run to keep in physio time series, in seconds.
         May be a single value (in which case the time before and after is the same) or
-        a two-item tuple (which case the first item is time before and the second is
+        a two-item tuple (in which case the first item is time before and the second is
         time after).
         These values will be automatically reduced in cases where the pad would extend
         before or after the physio acquisition.
@@ -401,6 +407,7 @@ def workflow(physio, bids_dir, sub, ses=None, padding=9, update_trigger=False):
     Returns
     -------
     out : list of BlueprintOutput
+        A list of run-specific BlueprintOutput objects.
 
     Notes
     -----
@@ -436,10 +443,10 @@ def workflow(physio, bids_dir, sub, ses=None, padding=9, update_trigger=False):
 
     # we should do something better with this figure, but it's nice to have for QC
     fig, axes = plot_sync(scan_df, physio_df)
-    fig.savefig("synchronization_results.png")
+    fig.savefig("synchronization_results.svg")
 
     run_dict = {}
-    # could probably be replaced with apply() followed by to_dict()
+    # TODO: could probably be replaced with apply() followed by to_dict()
     for _, row in scan_df.iterrows():
         base_fname = update_bids_name(row["filename"], suffix="physio", extension="")
         split_times = (row["index_onset"], row["index_offset"])
