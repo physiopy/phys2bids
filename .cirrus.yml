@@ -38,10 +38,6 @@ makeenv_39_windows_task:
       - pip install --upgrade certifi
       - pip install wheel
       - pip install -e ".[test,doc]"
-  Running_integration_script:
-    - choco install make -y
-    - $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
-    - make integration
 
 Integration_39_windows_task:
   depends_on:
@@ -54,7 +50,9 @@ Integration_39_windows_task:
     folder: shared39
     fingerprint_script: echo 362
   Running_integration_script:
-      - make integration
+    - choco install make -y
+    - $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
+    - make integration
 
 Unittest_37_task:
   depends_on:
