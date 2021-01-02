@@ -310,8 +310,7 @@ def update_bids_name(basename, **kwargs):
     outname : str
         Valid BIDS filename with updated entities/suffix/extension.
     """
-    # This is hardcoded, but would be nice to use the yaml-fied BIDS entity
-    # table when that's up and running.
+    # This is hardcoded, but would be nice to use BIDS spec's YAML files.
     ENTITY_ORDER = [
         "sub",
         "ses",
@@ -359,32 +358,32 @@ def update_bids_name(basename, **kwargs):
         else:
             # entities
             if key not in ENTITY_ORDER:
-                raise ValueError("Key {} not understood.".format(key))
+                raise ValueError(f"Key {key} not understood.")
 
             if val is None:
                 # remove entity from filename if kwarg val is None
-                regex = "_{}-[0-9a-zA-Z]+".format(key)
+                regex = f"_{key}-[0-9a-zA-Z]+"
                 outname = re.sub(regex, "", outname)
-            elif "_{}-{}".format(key, val) in basename:
+            elif f"_{key}-{val}" in basename:
                 LGR.warning(
-                    "Key-value pair {}/{} already found in "
-                    "basename {}. Skipping.".format(key, val, basename)
+                    f"Key-value pair {key}/{val} already found in "
+                    f"basename {basename}. Skipping."
                 )
-            elif "_{}-".format(key) in basename:
+            elif f"_{key}-" in basename:
                 LGR.warning(
-                    "Key {} already found in basename {}. "
-                    "Overwriting.".format(key, basename)
+                    f"Key {key} already found in basename {basename}. "
+                    "Overwriting."
                 )
-                regex = "_{}-[0-9a-zA-Z]+".format(key)
-                outname = re.sub(regex, "_{}-{}".format(key, val), outname)
+                regex = f"_{key}-[0-9a-zA-Z]+"
+                outname = re.sub(regex, f"_{key}-{val}", outname)
             else:
                 loc = ENTITY_ORDER.index(key)
                 entities_to_check = ENTITY_ORDER[loc:]
-                entities_to_check = ["_{}-".format(etc) for etc in entities_to_check]
-                entities_to_check.append("_{}".format(filetype))
+                entities_to_check = [f"_{etc}-" for etc in entities_to_check]
+                entities_to_check.append(f"_{filetype}")
                 for etc in entities_to_check:
                     if etc in outname:
-                        outname = outname.replace(etc, "_{}-{}{}".format(key, val, etc))
+                        outname = outname.replace(etc, f"_{key}-{val}{etc}")
                         break
     outname = os.path.join(outdir, outname)
     return outname
