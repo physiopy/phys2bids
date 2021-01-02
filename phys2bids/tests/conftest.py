@@ -39,6 +39,7 @@ def fetch_file(osf_id, path, filename):
     # This restores the same behavior as before.
     orig_sslsocket_init = ssl.SSLSocket.__init__
     ssl.SSLSocket.__init__ = lambda *args, cert_reqs=ssl.CERT_NONE, **kwargs: orig_sslsocket_init(*args, cert_reqs=ssl.CERT_NONE, **kwargs)
+    ssl._create_default_https_context = ssl._create_unverified_context
     url = 'https://osf.io/{}/download'.format(osf_id)
     full_path = os.path.join(path, filename)
     if not os.path.isfile(full_path):
