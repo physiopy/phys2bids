@@ -35,6 +35,9 @@ def fetch_file(osf_id, path, filename):
     full_path : str
         Full path to downloaded `filename`
     """
+    import ssl
+    # This restores the same behavior as before.
+    context = ssl._create_unverified_context()
     url = 'https://osf.io/{}/download'.format(osf_id)
     full_path = os.path.join(path, filename)
     if not os.path.isfile(full_path):
