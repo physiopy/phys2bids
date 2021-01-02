@@ -24,36 +24,6 @@ makeenv_36_task:
       - pip install -e ".[test,doc]"
       - mkdir /tmp/cirrus-ci-build/shared36/coverage
 
-makeenv_39_windows_task:
-  windows_container:
-    image: cirrusci/windowsservercore:2019
-  env:
-    CIRRUS_SHELL: powershell
-  environment_cache:
-    folder: shared39
-    fingerprint_script: echo 362
-    reupload_on_changes: true
-    populate_script:
-      - choco install make python -y --no-progress; $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
-      - pip install --upgrade certifi
-      - pip install wheel
-      - pip install -e ".[test,doc]"
-
-Integration_39_windows_task:
-  depends_on:
-  - makeenv_39_windows
-  windows_container:
-    image: cirrusci/windowsservercore:2019
-  env:
-    CIRRUS_SHELL: powershell
-  environment_cache:
-    folder: shared39
-    fingerprint_script: echo 362
-  Running_integration_script:
-    - choco install make -y
-    - $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
-    - make integration
-
 Unittest_37_task:
   depends_on:
   - makeenv_37
@@ -188,4 +158,41 @@ Bids_validate_task:
     - tree physio_bids
     - bids-validator  physio_bids
 
+Integration_39_windows_task:
+  windows_container:
+    image: cirrusci/windowsservercore:2019
+  env:
+    CIRRUS_SHELL: powershell
+  environment_cache:
+    folder: shared39
+    fingerprint_script: echo 362
+    reupload_on_changes: true
+    populate_script:
+      - choco install make python -y --no-progress; $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
+      - pip install --upgrade certifi
+      - pip install wheel
+      - pip install -e ".[test,doc]"
+  Running_integration_script:
+    - choco install make -y
+    - $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
+    - make integration
+
+Unittest_39_windows_task:
+  windows_container:
+    image: cirrusci/windowsservercore:2019
+  env:
+    CIRRUS_SHELL: powershell
+  environment_cache:
+    folder: shared39
+    fingerprint_script: echo 362
+    reupload_on_changes: true
+    populate_script:
+      - choco install make python -y --no-progress; $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
+      - pip install --upgrade certifi
+      - pip install wheel
+      - pip install -e ".[test,doc]"
+  Running_integration_script:
+    - choco install make -y
+    - $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
+    - make unittest
 
