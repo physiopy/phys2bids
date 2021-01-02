@@ -173,7 +173,7 @@ Integration_39_windows_task:
       - pip install wheel
       - pip install -e ".[test,doc]"
   Running_integration_script:
-    - choco install make -y
+    - choco install make -y --no-progress
     - $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
     - make integration
 
@@ -192,7 +192,7 @@ Unittest_39_windows_task:
       - pip install wheel
       - pip install -e ".[test,doc]"
   Running_integration_script:
-    - choco install make -y
+    - choco install make -y --no-progress
     - $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
     - make unittest
 
