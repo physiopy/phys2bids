@@ -38,6 +38,8 @@ makeenv_39_windows_task:
       - pip install --upgrade certifi
       - pip install wheel
       - pip install -e ".[test,doc]"
+  Running_integration_script:
+    - make integration
 
 Integration_39_windows_task:
   depends_on:
