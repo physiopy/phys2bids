@@ -31,12 +31,12 @@ makeenv_39_windows_task:
     CIRRUS_SHELL: powershell
   environment_cache:
     folder: shared39
-    fingerprint_script: echo $CIRRUS_BUILD_ID36w
+    fingerprint_script: echo $CIRRUS_OS36
     reupload_on_changes: true
     populate_script:
-      - choco install python -y; $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
-      - python --version
+      - choco install make python -y; $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
       - pip install -e ".[test,doc]"
+      - make integration
 
 Unittest_37_task:
   depends_on:
