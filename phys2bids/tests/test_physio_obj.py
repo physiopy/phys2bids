@@ -101,11 +101,12 @@ def test_BlueprintInput():
 
     # Tests rename_channels
     new_names = ['trigger', 'time', 'lindt']
-    blueprint_in.rename_channels(new_names.copy())
+    blueprint_in.rename_channels(new_names)
     assert blueprint_in.ch_name == ['time', 'trigger', 'lindt']
 
     # Tests return_index
     test_index = blueprint_in.return_index(1)
+    assert test_index[0] is not test_trigger
     assert (test_index[0] == test_trigger).all()
     assert test_index[1] == len(test_timeseries)
     assert test_index[2] == test_freq[1]
@@ -119,6 +120,9 @@ def test_BlueprintInput():
     # Tests check_trigger_amount
     blueprint_in.check_trigger_amount(thr=0.9, num_timepoints_expected=1)
     assert blueprint_in.num_timepoints_found == 1
+    assert blueprint_in.time_offset == 1
+    test_offset_time = test_time - 1
+    assert np.array_equal(blueprint_in.timeseries[0], test_offset_time)
 
     # Tests delete_at_index with trigger channel
     blueprint_in.delete_at_index(test_chtrig)
@@ -131,6 +135,26 @@ def test_BlueprintInput():
     with raises(IndexError) as errorinfo:
         blueprint_in.__getitem__(1000)
     assert 'out of bounds' in str(errorinfo.value)
+
+
+def test_cta_time_interp():
+    """Test BlueprintInput.check_trigger_amount with time resampling."""
+    test_time = np.array([0, 7])
+    test_trigger = np.array([0, 1, 0, 0, 0, 0, 0, 0])
+    test_timeseries = [test_time, test_trigger]
+    test_freq = [42.0, 3.14]
+    test_chn_name = ['time', 'trigger']
+    test_units = ['s', 's']
+    test_chtrig = 1
+
+    blueprint_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                     test_units, test_chtrig)
+    # Test check_trigger_amount with time resampling
+    blueprint_in.check_trigger_amount(thr=0.9, num_timepoints_expected=1)
+    assert blueprint_in.num_timepoints_found == 1
+    assert blueprint_in.time_offset == 1
+    test_offset_time = test_time - 1
+    assert np.array_equal(blueprint_in.timeseries[0], test_offset_time)
 
 
 def test_BlueprintInput_slice():

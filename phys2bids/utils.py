@@ -8,29 +8,7 @@ from pathlib import Path
 
 LGR = logging.getLogger(__name__)
 
-SUPPORTED_FTYPES = ('acq', 'txt')  # 'mat', ...
-
-
-def check_input_dir(indir):
-    """
-    Check that the given indir doesn't have a trailing `/`.
-
-    Possibly useless if better way to handle this in Python.
-
-    Parameters
-    ----------
-    indir: str or path
-        A string or path that might (or not) end with a `/`
-
-    Returns
-    -------
-    indir: str or path
-        Same as input, but surely without trailing `/`
-    """
-    if indir.endswith('/'):
-        indir = indir[:-1]
-
-    return indir
+SUPPORTED_FTYPES = ('acq', 'txt', 'mat')
 
 
 def check_input_ext(filename, ext):
@@ -110,26 +88,6 @@ def check_input_type(filename, indir):
                         f' {", ".join(SUPPORTED_FTYPES)}')
 
 
-def path_exists_or_make_it(fldr):
-    """
-    Check if folder exists, if not make it.
-
-    Parameters
-    ----------
-    fldr: str or path
-        A string representing a folder,
-        or a fullpath to such folder
-
-    Notes
-    -----
-    Outcome:
-    fldr:
-        Creates the fullpath to `fldr` if it doesn't exists.
-    """
-    if not os.path.isdir(fldr):
-        os.makedirs(fldr)
-
-
 def check_file_exists(filename):
     """
     Check if file exists.
@@ -147,35 +105,6 @@ def check_file_exists(filename):
     """
     if not os.path.isfile(filename) and filename is not None:
         raise FileNotFoundError(f'The file {filename} does not exist!')
-
-
-def move_file(oldpath, newpath, ext=''):
-    """
-    Move file from oldpath to newpath.
-
-    If file already exists, removes it first.
-
-    Parameters
-    ----------
-    oldpath: str or path
-        A string or a fullpath to a file that has to be moved
-    newpath: str or path
-        A string or a fullpath to the new destination of the file
-    ext: str
-        Possible extension to add to the oldpath and newpath. Not necessary.
-
-    Notes
-    -----
-    Outcome:
-    newpath + ext:
-        Moves file to new destination
-    """
-    check_file_exists(oldpath + ext)
-
-    if os.path.isfile(newpath + ext):
-        os.remove(newpath + ext)
-
-    os.rename(oldpath + ext, newpath + ext)
 
 
 def copy_file(oldpath, newpath, ext=''):
@@ -209,7 +138,7 @@ def copy_file(oldpath, newpath, ext=''):
     cp(oldpath + ext, newpath + ext)
 
 
-def writefile(filename, ext, text):
+def write_file(filename, ext, text):
     """
     Produce a textfile of the specified extension `ext`.
 
@@ -260,10 +189,10 @@ def save_json(outfile, samp_freq, time_offset, ch_name):
     summary = dict(SamplingFrequency=samp_freq,
                    StartTime=round(start_time, 4),
                    Columns=ch_name)
-    writejson(outfile, summary, indent=4, sort_keys=False)
+    write_json(outfile, summary, indent=4, sort_keys=False)
 
 
-def writejson(filename, data, **kwargs):
+def write_json(filename, data, **kwargs):
     """
     Output a json file with the given data inside.
 

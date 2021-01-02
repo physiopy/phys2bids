@@ -328,7 +328,7 @@ def use_heuristic(heur_file, sub, ses, filename, outdir, run="", record_label=""
 
     # Finish path, create it, add filename, export
     fldr = os.path.join(fldr, "func")
-    utils.path_exists_or_make_it(fldr)
+    os.makedirs(fldr, exist_ok=True)
 
     heurpath = os.path.join(fldr, f"{name}physio")
 
@@ -433,7 +433,7 @@ def dataset_description_file(outdir):
             "phys2bids could not find dataset_description.json,"
             "generating it with provided info"
         )
-        utils.writejson(file_path, data_dict)
+        utils.write_json(file_path, data_dict)
 
 
 def readme_file(outdir):
@@ -455,4 +455,4 @@ def readme_file(outdir):
             "phys2bids could not find README,"
             "generating it EMPTY, please fill in the necessary info"
         )
-        utils.writefile(file_path, "", text)
+        utils.write_file(file_path, "", text)

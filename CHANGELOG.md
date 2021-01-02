@@ -1,3 +1,200 @@
+# 2.3.2 (Wed Dec 09 2020)
+
+#### 🐛 Bug Fix
+
+- Add 0 before run number to multi-run trigger plot file name [#369](https://github.com/physiopy/phys2bids/pull/369) ([@vinferrer](https://github.com/vinferrer))
+
+#### ⚠️ Tests
+
+- Add test to check that `phys2bids` output is BIDS compatible [#362](https://github.com/physiopy/phys2bids/pull/362) ([@vinferrer](https://github.com/vinferrer))
+- Fix call to conda environment reference in the test configuration file [#363](https://github.com/physiopy/phys2bids/pull/363) ([@eurunuela](https://github.com/eurunuela))
+
+#### Authors: 2
+
+- Eneko Uruñuela ([@eurunuela](https://github.com/eurunuela))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
+# 2.3.1 (Mon Nov 30 2020)
+
+#### 🐛 Bug Fix
+
+- BlueprintInput deepcopies inputs at initialization [#358](https://github.com/physiopy/phys2bids/pull/358) ([@vinferrer](https://github.com/vinferrer))
+
+#### Authors: 1
+
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
+# 2.3.0 (Sun Nov 29 2020)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: null[@merelvdthiel](https://github.com/merelvdthiel)
+
+:heart: Inés Chavarría ([@ineschh](https://github.com/ineschh))
+
+:heart: Vittorio Iacovella ([@viacovella](https://github.com/viacovella))
+
+:heart: null[@victox5](https://github.com/victox5)
+
+#### 🚀 Enhancement
+
+- Add support for MATLAB files [#360](https://github.com/physiopy/phys2bids/pull/360) ([@vinferrer](https://github.com/vinferrer))
+
+#### 🐛 Bug Fix
+
+- Refactor `io` functions related to txt file imports. [#349](https://github.com/physiopy/phys2bids/pull/349) ([@vinferrer](https://github.com/vinferrer))
+- Refactor phys2bids interfaces into single script `io.py` [#344](https://github.com/physiopy/phys2bids/pull/344) ([@vinferrer](https://github.com/vinferrer))
+- Rename `utils.writejson()` to `utils.write_json()` to respect style conventions [#346](https://github.com/physiopy/phys2bids/pull/346) ([@merelvdthiel](https://github.com/merelvdthiel))
+- Replace custom function `utils.path_exists_or_make_it()` with core function `os.makedirs()` [#345](https://github.com/physiopy/phys2bids/pull/345) ([@merelvdthiel](https://github.com/merelvdthiel))
+- Rename function `utils.writefile` to `utils.write_file` to respect style conventions [#343](https://github.com/physiopy/phys2bids/pull/343) ([@ineschh](https://github.com/ineschh))
+- Remove `utils.move_file()` function as it is no longer used in the toolbox [#342](https://github.com/physiopy/phys2bids/pull/342) ([@viacovella](https://github.com/viacovella))
+- Updated versions required [#7](https://github.com/physiopy/phys2bids/pull/7) (vic188m@hotmail.com [@victox5](https://github.com/victox5))
+
+#### ⚠️ Pushed to `master`
+
+- Update README.md ([@smoia](https://github.com/smoia))
+
+#### 📝 Documentation
+
+- Add documentation for reviewers and a checklist for PRs [#315](https://github.com/physiopy/phys2bids/pull/315) ([@smoia](https://github.com/smoia) [@RayStick](https://github.com/RayStick))
+- Add Windows installation to the documentation [#329](https://github.com/physiopy/phys2bids/pull/329) ([@vinferrer](https://github.com/vinferrer) [@smoia](https://github.com/smoia))
+- Update tutorial with latest CLI options and new folder organisation (`output/code/conversion`) [#320](https://github.com/physiopy/phys2bids/pull/320) ([@vinferrer](https://github.com/vinferrer) [@RayStick](https://github.com/RayStick))
+
+#### ⚠️ Tests
+
+- Fix typo in artifact_path [#331](https://github.com/physiopy/phys2bids/pull/331) ([@tsalo](https://github.com/tsalo))
+
+#### 🏠 Internal
+
+- Add more "change type" options [#347](https://github.com/physiopy/phys2bids/pull/347) ([@smoia](https://github.com/smoia))
+
+#### Authors: 9
+
+- [@merelvdthiel](https://github.com/merelvdthiel)
+- [@victox5](https://github.com/victox5)
+- Inés Chavarría ([@ineschh](https://github.com/ineschh))
+- Rachael Stickland ([@RayStick](https://github.com/RayStick))
+- Stefano Moia ([@smoia](https://github.com/smoia))
+- Taylor Salo ([@tsalo](https://github.com/tsalo))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+- Victor (vic188m@hotmail.com)
+- Vittorio Iacovella ([@viacovella](https://github.com/viacovella))
+
+---
+
+# 2.2.3 (Fri Oct 23 2020)
+
+#### 🐛 Bug Fix
+
+- Update PyYAML minimal requirements to avoid "FullLoader" attribute errors. [#330](https://github.com/physiopy/phys2bids/pull/330) ([@smoia](https://github.com/smoia))
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
+# 2.2.2 (Mon Oct 19 2020)
+
+#### 🐛 Bug Fix
+
+- Fix auto release workflow settings [#323](https://github.com/physiopy/phys2bids/pull/323) ([@smoia](https://github.com/smoia))
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
+# 2.2.1 (Mon Oct 19 2020)
+
+#### 🐛 Bug Fix
+
+- Make sure we delete testing files after finishing tests [#307](https://github.com/physiopy/phys2bids/pull/307) ([@vinferrer](https://github.com/vinferrer))
+- Add label colours to set auto labels [#318](https://github.com/physiopy/phys2bids/pull/318) ([@smoia](https://github.com/smoia))
+- Reduce `auto` verbosity [#317](https://github.com/physiopy/phys2bids/pull/317) ([@smoia](https://github.com/smoia))
+
+#### 📝 Documentation
+
+- Update badges in README and documentation [#322](https://github.com/physiopy/phys2bids/pull/322) ([@smoia](https://github.com/smoia))
+- Update zenodo info [#321](https://github.com/physiopy/phys2bids/pull/321) ([@smoia](https://github.com/smoia))
+
+#### 🏠 Internal
+
+- Setup auto release workflow [#313](https://github.com/physiopy/phys2bids/pull/313) ([@smoia](https://github.com/smoia))
+
+#### Authors: 2
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
+# v2.2.0 (Wed Oct 14 2020)
+
+#### 🚀 Enhancement
+
+- Make trigger-based time-offset correction more generalisable (resample time before comparing it to trigger) [#308](https://github.com/physiopy/phys2bids/pull/308) (s.moia@bcbl.eu)
+- Format logger to make terminal (stdout) more human readable [#312](https://github.com/physiopy/phys2bids/pull/312) ([@vinferrer](https://github.com/vinferrer))
+- Add (resampled) trigger to all output files [#288](https://github.com/physiopy/phys2bids/pull/288) ([@vinferrer](https://github.com/vinferrer))
+
+#### 🐛 Bug Fix
+
+- Skip CI on all-contributors (s.moia@bcbl.eu)
+- Explicitly ignore rc files and github folder (s.moia@bcbl.eu)
+- Add autorc (s.moia@bcbl.eu)
+- Add auto badge to documentation (s.moia@bcbl.eu)
+- Add auto badge (s.moia@bcbl.eu)
+- Add workflow for auto publishing (s.moia@bcbl.eu)
+- Change build shield from Travis to CircleCI [#297](https://github.com/physiopy/phys2bids/pull/297) ([@eurunuela](https://github.com/eurunuela))
+- Fix linting errors [#294](https://github.com/physiopy/phys2bids/pull/294) ([@eurunuela](https://github.com/eurunuela))
+- Start of sampling time is now the same for all frequencies [#283](https://github.com/physiopy/phys2bids/pull/283) ([@vinferrer](https://github.com/vinferrer))
+- Add travis wait command [#284](https://github.com/physiopy/phys2bids/pull/284) ([@eurunuela](https://github.com/eurunuela))
+- Correct trigger channel indexing while reading AcqKnowledge files. [#275](https://github.com/physiopy/phys2bids/pull/275) (s.moia@bcbl.eu)
+
+#### ⚠️ Pushed to `master`
+
+- Merge branch 'int/auto' (s.moia@bcbl.eu)
+- Update README.md (s.moia@bcbl.eu)
+- Update ISSUE_TEMPLATE_MEETING.md (s.moia@bcbl.eu)
+- Fix message shown when skipping integration test ([@eurunuela](https://github.com/eurunuela))
+- Update .travis.yml ([@eurunuela](https://github.com/eurunuela))
+- Update setup.cfg ([@eurunuela](https://github.com/eurunuela))
+
+#### 📝 Documentation
+
+- Update all-contributors [#310](https://github.com/physiopy/phys2bids/pull/310) (s.moia@bcbl.eu)
+- Update documentation to reflect change from Travis CI to CircleCI [#290](https://github.com/physiopy/phys2bids/pull/290) ([@eurunuela](https://github.com/eurunuela))
+
+#### ⚠️ Tests
+
+- Add tests for exceptions [#291](https://github.com/physiopy/phys2bids/pull/291) ([@eurunuela](https://github.com/eurunuela))
+- Add CircleCI for automatic testing and correct integration test parameters [#286](https://github.com/physiopy/phys2bids/pull/286) ([@eurunuela](https://github.com/eurunuela))
+- Switch from Travis to CircleCI for automatic testing [#285](https://github.com/physiopy/phys2bids/pull/285) ([@eurunuela](https://github.com/eurunuela))
+- Add integration test for the multi run pipeline [#266](https://github.com/physiopy/phys2bids/pull/266) ([@eurunuela](https://github.com/eurunuela))
+
+#### 🏠 Internal
+
+- Refactor txt.py chtrig parameter to improve code readability [#305](https://github.com/physiopy/phys2bids/pull/305) ([@vinferrer](https://github.com/vinferrer))
+
+#### 🖋️  Outreach
+
+- Add link to Google Calendar [#302](https://github.com/physiopy/phys2bids/pull/302) ([@eurunuela](https://github.com/eurunuela))
+
+#### Authors: 3
+
+- Eneko Uruñuela ([@eurunuela](https://github.com/eurunuela))
+- Stefano Moia ([@smoia](https://github.com/smoia))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
 # v2.1.0 (Tue Jun 23 2020)
 
 :tada: This release contains work from new contributors! :tada:

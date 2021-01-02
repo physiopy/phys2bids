@@ -4,6 +4,7 @@
 """I/O objects for phys2bids."""
 
 import logging
+from copy import deepcopy
 from itertools import groupby
 
 import numpy as np
@@ -241,16 +242,16 @@ class BlueprintInput:
         time_offset=0,
     ):
         """Initialise BlueprintInput (see class docstring)."""
-        self.timeseries = is_valid(timeseries, list, list_type=np.ndarray)
-        self.freq = has_size(
-            is_valid(freq, list, list_type=(int, float)), self.ch_amount, 0.0
-        )
-        self.ch_name = has_size(ch_name, self.ch_amount, "unknown")
-        self.units = has_size(units, self.ch_amount, "[]")
-        self.trigger_idx = is_valid(trigger_idx, int)
-        self.num_timepoints_found = num_timepoints_found
-        self.thr = thr
-        self.time_offset = time_offset
+        self.timeseries = deepcopy(is_valid(timeseries, list, list_type=np.ndarray))
+        self.freq = deepcopy(has_size(is_valid(freq, list,
+                                      list_type=(int, float)),
+                             self.ch_amount, 0.0))
+        self.ch_name = deepcopy(has_size(ch_name, self.ch_amount, "unknown"))
+        self.units = deepcopy(has_size(units, self.ch_amount, "[]"))
+        self.trigger_idx = deepcopy(is_valid(trigger_idx, int))
+        self.num_timepoints_found = deepcopy(num_timepoints_found)
+        self.thr = deepcopy(thr)
+        self.time_offset = deepcopy(time_offset)
 
     @property
     def ch_amount(self):
@@ -489,7 +490,17 @@ class BlueprintInput:
         # Use the trigger channel to find the TRs,
         # comparing it to a given threshold.
         trigger = self.timeseries[self.trigger_idx]
-        LGR.info(f"The trigger is in channel {self.trigger_idx}")
+        time = self.timeseries[0]
+        LGR.info(f'The trigger is in channel {self.trigger_idx}')
+        # Check that trigger and time channels have the same length.
+        # If not, resample time to the length of the trigger
+        if len(time) != len(trigger):
+            LGR.warning('The trigger channel has a different sampling '
+                        'from the registered time. Using a resampled version '
+                        'of time to find the starting time.')
+            time = np.linspace(time[0], time[-1], len(trigger))
+
+        # Check if thr was given, if not "guess" it.
         flag = 0
         if thr is None:
             thr = np.mean(trigger) + 2 * np.std(trigger)
@@ -504,11 +515,9 @@ class BlueprintInput:
                 f"is {num_timepoints_found}. The computed threshold is {thr:.4f}"
             )
         else:
-            LGR.info(
-                f"The number of timepoints found with the manual threshold of {thr:.4f} "
-                f"is {num_timepoints_found}"
-            )
-        time_offset = self.timeseries[0][timepoints.argmax()]
+            LGR.info(f'The number of timepoints found with the manual threshold of {thr:.4f} '
+                     f'is {num_timepoints_found}')
+        time_offset = time[timepoints.argmax()]
 
         if num_timepoints_expected:
             LGR.info("Checking number of timepoints")
@@ -548,7 +557,7 @@ class BlueprintInput:
             )
         self.thr = thr
         self.time_offset = time_offset
-        self.timeseries[0] -= time_offset
+        self.timeseries[0] = self.timeseries[0] - time_offset
         self.num_timepoints_found = num_timepoints_found
 
     def print_info(self, filename):
@@ -623,12 +632,12 @@ class BlueprintOutput:
 
     def __init__(self, timeseries, freq, ch_name, units, start_time, filename=""):
         """Initialise BlueprintOutput (see class docstring)."""
-        self.timeseries = is_valid(timeseries, np.ndarray)
-        self.freq = is_valid(freq, (int, float))
-        self.ch_name = has_size(ch_name, self.ch_amount, "unknown")
-        self.units = has_size(units, self.ch_amount, "[]")
-        self.start_time = start_time
-        self.filename = is_valid(filename, str)
+        self.timeseries = deepcopy(is_valid(timeseries, np.ndarray))
+        self.freq = deepcopy(is_valid(freq, (int, float)))
+        self.ch_name = deepcopy(has_size(ch_name, self.ch_amount, 'unknown'))
+        self.units = deepcopy(has_size(units, self.ch_amount, '[]'))
+        self.start_time = deepcopy(start_time)
+        self.filename = deepcopy(is_valid(filename, str))
 
     @property
     def ch_amount(self):

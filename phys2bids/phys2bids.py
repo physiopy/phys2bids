@@ -84,7 +84,7 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
                f'Tip: Time 0 is the time of first trigger\n'
                f'------------------------------------------------\n')
     LGR.info(summary)
-    utils.writefile(outfile, '.log', summary)
+    utils.write_file(outfile, '.log', summary)
 
 
 @due.dcite(
@@ -117,11 +117,11 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     """
     # Check options to make them internally coherent pt. I
     # #!# This can probably be done while parsing?
-    outdir = utils.check_input_dir(outdir)
-    utils.path_exists_or_make_it(outdir)
-    utils.path_exists_or_make_it(os.path.join(outdir, 'code'))
+    outdir = os.path.abspath(outdir)
+    os.makedirs(outdir, exist_ok=True)
+    os.makedirs(os.path.join(outdir, 'code'), exist_ok=True)
     conversion_path = os.path.join(outdir, 'code', 'conversion')
-    utils.path_exists_or_make_it(conversion_path)
+    os.makedirs(conversion_path, exist_ok=True)
 
     # Create logfile name
     basename = 'phys2bids_'
@@ -141,13 +141,13 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     if quiet:
         logging.basicConfig(level=logging.WARNING,
-                            handlers=[log_handler, sh])
+                            handlers=[log_handler, sh], format='%(levelname)-10s %(message)s')
     elif debug:
         logging.basicConfig(level=logging.DEBUG,
-                            handlers=[log_handler, sh])
+                            handlers=[log_handler, sh], format='%(levelname)-10s %(message)s')
     else:
         logging.basicConfig(level=logging.INFO,
-                            handlers=[log_handler, sh])
+                            handlers=[log_handler, sh], format='%(levelname)-10s %(message)s')
 
     version_number = _version.get_versions()['version']
     LGR.info(f'Currently running phys2bids version {version_number}')
@@ -162,7 +162,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
-    indir = utils.check_input_dir(indir)
+    indir = os.path.abspath(indir)
     if chtrig < 1:
         raise Exception('Wrong trigger channel. Channel indexing starts with 1!')
 
@@ -189,13 +189,16 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                             'the session')
 
     # Read file!
-    if ftype == 'acq':
-        from phys2bids.interfaces.acq import populate_phys_input
-    elif ftype == 'txt':
-        from phys2bids.interfaces.txt import populate_phys_input
-
     LGR.info(f'Reading the file {infile}')
-    phys_in = populate_phys_input(infile, chtrig)
+    if ftype == 'acq':
+        from phys2bids.io import load_acq
+        phys_in = load_acq(infile, chtrig)
+    elif ftype == 'txt':
+        from phys2bids.io import load_txt
+        phys_in = load_txt(infile, chtrig)
+    elif ftype == 'mat':
+        from phys2bids.io import load_mat
+        phys_in = load_mat(infile, chtrig)
 
     LGR.info('Checking that units of measure are BIDS compatible')
     for index, unit in enumerate(phys_in.units):
@@ -255,7 +258,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             fileprefix = os.path.join(conversion_path,
                                       os.path.splitext(os.path.basename(filename))[0])
             for i, run in enumerate(phys_in.keys()):
-                plot_fileprefix = f'{fileprefix}_{run}'
+                plot_fileprefix = f'{fileprefix}_0{run}'
                 viz.export_trigger_plot(phys_in[run], chtrig, plot_fileprefix, tr[i],
                                         num_timepoints_expected[i], filename,
                                         sub, ses)
