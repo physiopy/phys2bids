@@ -10,7 +10,7 @@ makeenv_37_task:
     populate_script:
       - conda create -yq --prefix  $PWD/shared/phys2bids_py37 python=3.7
       - source activate $PWD/shared/phys2bids_py37
-      - pip install -e ".[test,doc]"
+      - pip install -e '.[test,doc]'
       - mkdir /tmp/cirrus-ci-build/shared/coverage
 
 makeenv_36_task:
@@ -21,7 +21,7 @@ makeenv_36_task:
     populate_script:
       - conda create -yq --prefix  $PWD/shared36/phys2bids_py36 python=3.6
       - source activate $PWD/shared36/phys2bids_py36
-      - pip install -e ".[test,doc]"
+      - pip install -e '.[test,doc]'
       - mkdir /tmp/cirrus-ci-build/shared36/coverage
 
 Unittest_37_task:
@@ -150,7 +150,7 @@ Bids_validate_task:
   - wget -O heur_test_multifreq.py https://osf.io/ehx6j/download
   - source activate $PWD/shared/phys2bids_py37
   - PATH=/home/test_user/.local/bin:$PATH
-  - pip install -e ".[test,doc]" && phys2bids -in Test1_multifreq_onescan.txt -chtrig 1 -ntp 30 -tr 1.2 -outdir physio_bids -heur heur_test_multifreq.py -sub 006 -ses 01
+  - pip install -e '.[test,doc]' && phys2bids -in Test1_multifreq_onescan.txt -chtrig 1 -ntp 30 -tr 1.2 -outdir physio_bids -heur heur_test_multifreq.py -sub 006 -ses 01
   Run validator_script:
     - wget -O sub-006_ses-01_task-test_rec-biopac_run-01_bold.json https://osf.io/6j8f7/download
     - wget -O sub-006_ses-01_task-test_rec-biopac_run-01_bold.nii.gz https://osf.io/wus2p/download
@@ -168,10 +168,11 @@ Integration_39_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
-      - pip install -e ".[test,doc]"
+      - $env:Path += ';c:\python39'; $env:Path += ';c:\python39\Scripts'; refreshenv; echo $env:path
+      - pip install -e '.[test,doc]'
   Running_integration_script:
     - choco install make -y --no-progress
-    - $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
+    - $env:Path += ';c:\python39'; $env:Path += ';c:\python39\Scripts'; refreshenv; echo $env:path
     - make integration
 
 Unittest_39_windows_task:
@@ -184,12 +185,12 @@ Unittest_39_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
-      - choco install make python -y --no-progress; $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
+      - choco install make python -y --no-progress; $env:Path += ';c:\python39'; $env:Path += ';c:\python39\Scripts'; refreshenv; echo $env:path
       - pip install --upgrade certifi
       - pip install wheel
-      - pip install -e ".[test,doc]"
+      - pip install -e '.[test,doc]'
   Running_integration_script:
     - choco install make -y --no-progress
-    - $env:Path += ";c:\python39"; $env:Path += ";c:\python39\Scripts"; refreshenv; echo $env:path
+    - $env:Path += ';c:\python39'; $env:Path += ';c:\python39\Scripts'; refreshenv; echo $env:path
     - make unittest
 
