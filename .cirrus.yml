@@ -3,6 +3,17 @@ container:
   image: continuumio/conda-ci-linux-64-python3.7
   cpu: 1
 
+makeenv_39_task:
+  environment_cache:
+    folder: shared39
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}39
+    reupload_on_changes: true
+    populate_script:
+      - conda create -yq --prefix  $PWD/shared39/phys2bids_py39 python=3.9
+      - source activate $PWD/shared39/phys2bids_py39
+      - pip install -e '.[test,doc]'
+      - mkdir /tmp/cirrus-ci-build/shared39/coverage
+
 makeenv_38_task:
   environment_cache:
     folder: shared38
@@ -35,6 +46,22 @@ makeenv_36_task:
       - source activate $PWD/shared36/phys2bids_py36
       - pip install -e '.[test,doc]'
       - mkdir /tmp/cirrus-ci-build/shared36/coverage
+
+Unittest_39_task:
+  depends_on:
+  - makeenv_39
+  environment_cache:
+    folder: shared39
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}39
+    populate_script:
+      - source activate $PWD/shared39/phys2bids_py39
+    reupload_on_changes: true
+  Running_unit_tests_script:
+    - sudo apt-get install -y make tree
+    - source activate $PWD/shared39/phys2bids_py39
+    - make unittest
+    - mv $PWD/.coverage /tmp/cirrus-ci-build/shared39/coverage/.coverage.unittest_39
+    - tree /tmp/cirrus-ci-build/shared39/coverage
 
 Unittest_38_task:
   depends_on:
@@ -83,6 +110,23 @@ Unittest_36_task:
     - make unittest
     - mv $PWD/.coverage /tmp/cirrus-ci-build/shared36/coverage/.coverage.unittest_36
     - tree /tmp/cirrus-ci-build/shared36/coverage
+
+Integration_test_39_task:
+  depends_on:
+  - makeenv_39
+  environment_cache:
+    folder: shared39
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}39
+    populate_script:
+      - source activate $PWD/shared39/phys2bids_py39
+    reupload_on_changes: true
+  Running_integration_tests_script:
+  - sudo apt-get install -y make tree
+  - source activate $PWD/shared39/phys2bids_py39
+  - PATH=/home/test_user/.local/bin:$PATH
+  - make integration
+  - mv $PWD/.coverage /tmp/cirrus-ci-build/shared39/coverage/.coverage.integration_39
+  - tree /tmp/cirrus-ci-build/shared39/coverage
 
 Integration_test_38_task:
   depends_on:
