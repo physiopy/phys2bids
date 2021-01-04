@@ -158,7 +158,7 @@ Bids_validate_task:
     - tree physio_bids
     - bids-validator  physio_bids
 
-Integration_39_windows_task:
+Integration_windows_task:
   windows_container:
     matrix:
       - dockerfile: .ci/w_python_39
@@ -175,9 +175,11 @@ Integration_39_windows_task:
     - choco install make -y --no-progress
     - make integration
 
-Unittest_39_windows_task:
+Unittest_windows_task:
   windows_container:
-    dockerfile: .ci/w_python_39
+    matrix:
+      - dockerfile: .ci/w_python_39
+      - dockerfile: .ci/w_python_37
   env:
     CIRRUS_SHELL: powershell
   environment_cache:
