@@ -1,0 +1,7 @@
+FROM cirrusci/windowsservercore:2019
+
+RUN powershell -NoLogo -NoProfile -Command \
+    choco install -y --no-progress make python ; \
+    refreshenv ; \
+    pip install --upgrade certifi ; \
+    pip install wheel
