@@ -1,6 +1,7 @@
 # global default
 container:
   image: continuumio/conda-ci-linux-64-python3.7
+  cpu: 1
 
 makeenv_37_task:
   environment_cache:
