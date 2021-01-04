@@ -7,18 +7,18 @@ makeenv_37_task:
   matrix:
   - environment_cache:
       folder: shared
-      fingerprint_script: echo $CIRRUS_BUILD_ID
+      fingerprint_script: echo ${CIRRUS_BUILD_ID}37
       reupload_on_changes: true
-        populate_script:
+      populate_script:
         - conda create -yq --prefix  $PWD/shared/phys2bids_py37 python=3.7
         - source activate $PWD/shared/phys2bids_py37
         - pip install -e '.[test,doc]'
         - mkdir /tmp/cirrus-ci-build/shared/coverage
   - enviroment_cache:
       folder: shared
-      fingerprint_script: echo $CIRRUS_BUILD_ID
+      fingerprint_script: echo ${CIRRUS_BUILD_ID}362
       reupload_on_changes: true
-        populate_script:
+      populate_script:
         - conda create -yq --prefix  $PWD/shared/phys2bids_py36 python=3.6
         - source activate $PWD/shared/phys2bids_py36
         - pip install -e '.[test,doc]'
