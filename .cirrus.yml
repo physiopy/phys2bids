@@ -168,16 +168,14 @@ Integration_39_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
-      - $env:Path += ';c:\python39'; $env:Path += ';c:\python39\Scripts'; refreshenv; echo $env:path
       - pip install -e '.[test,doc]'
   Running_integration_script:
     - choco install make -y --no-progress
-    - $env:Path += ';c:\python39'; $env:Path += ';c:\python39\Scripts'; refreshenv; echo $env:path
     - make integration
 
 Unittest_39_windows_task:
   windows_container:
-    image: cirrusci/windowsservercore:2019
+    dockerfile: .ci/w_dockerfile
   env:
     CIRRUS_SHELL: powershell
   environment_cache:
@@ -185,9 +183,6 @@ Unittest_39_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
-      - choco install make python -y --no-progress; $env:Path += ';c:\python39'; $env:Path += ';c:\python39\Scripts'; refreshenv; echo $env:path
-      - pip install --upgrade certifi
-      - pip install wheel
       - pip install -e '.[test,doc]'
   Running_integration_script:
     - choco install make -y --no-progress
