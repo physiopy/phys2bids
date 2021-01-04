@@ -1,0 +1,12 @@
+FROM cirrusci/windowsservercore:2019
+
+RUN powershell -NoLogo -NoProfile -Command \
+    choco install -y --no-progress python --version=3.9.1 ; \
+    choco install -y --no-progress make ; \
+    refreshenv ; \
+    $env:Path += ';c:\python39'; \
+    $env:Path += ';c:\python39\Scripts'; \
+    refreshenv; \
+    echo $env:path; \
+    pip install --upgrade certifi ; \
+    pip install wheel
