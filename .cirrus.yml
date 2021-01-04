@@ -162,6 +162,7 @@ Integration_windows_task:
   windows_container:
     matrix:
       - dockerfile: .ci/w_python_39
+      - dockerfile: .ci/w_python_38
       - dockerfile: .ci/w_python_37
   env:
     CIRRUS_SHELL: powershell
@@ -179,6 +180,7 @@ Unittest_windows_task:
   windows_container:
     matrix:
       - dockerfile: .ci/w_python_39
+      - dockerfile: .ci/w_python_38
       - dockerfile: .ci/w_python_37
   env:
     CIRRUS_SHELL: powershell
