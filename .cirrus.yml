@@ -79,18 +79,18 @@ Integration_test_36_task:
   depends_on:
   - makeenv_36
   environment_cache:
-    folder: shared
+    folder: shared36
     fingerprint_script: echo ${CIRRUS_BUILD_ID}36
     populate_script:
-      - source activate $PWD/shared/phys2bids_py36
+      - source activate $PWD/shared36/phys2bids_py36
     reupload_on_changes: true
   Running_integration_tests_script:
   - sudo apt-get install -y make tree
-  - source activate $PWD/shared/phys2bids_py36
+  - source activate $PWD/shared36/phys2bids_py36
   - PATH=/home/test_user/.local/bin:$PATH
   - make integration
-  - mv $PWD/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.integration_36
-  - tree /tmp/cirrus-ci-build/shared/coverage
+  - mv $PWD/.coverage /tmp/cirrus-ci-build/shared36/coverage/.coverage.integration_36
+  - tree /tmp/cirrus-ci-build/shared36/coverage
 
 Merge_coverage_37_task:
   depends_on:
