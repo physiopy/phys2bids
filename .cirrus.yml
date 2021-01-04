@@ -3,30 +3,31 @@ container:
   image: continuumio/conda-ci-linux-64-python3.7
   cpu: 1
 
-makeenv_task:
-  matrix:
-  - environment_cache:
-      folder: shared
-      fingerprint_script: echo $CIRRUS_BUILD_ID
-      reupload_on_changes: true
-      populate_script:
-        - conda create -yq --prefix  $PWD/shared/phys2bids_py37 python=3.7
-        - source activate $PWD/shared/phys2bids_py37
-        - pip install -e '.[test,doc]'
-        - mkdir /tmp/cirrus-ci-build/shared/coverage
-  - enviroment_cache:
-      folder: shared
-      fingerprint_script: echo ${CIRRUS_BUILD_ID}36
-      reupload_on_changes: true
-      populate_script:
-        - conda create -yq --prefix  $PWD/shared/phys2bids_py36 python=3.6
-        - source activate $PWD/shared/phys2bids_py36
-        - pip install -e '.[test,doc]'
-        - mkdir /tmp/cirrus-ci-build/shared/coverage
+makeenv_37_task:
+  environment_cache:
+    folder: shared
+    fingerprint_script: echo $CIRRUS_BUILD_ID
+    reupload_on_changes: true
+    populate_script:
+      - conda create -yq --prefix  $PWD/shared/phys2bids_py37 python=3.7
+      - source activate $PWD/shared/phys2bids_py37
+      - pip install -e '.[test,doc]'
+      - mkdir /tmp/cirrus-ci-build/shared/coverage
+
+makeenv_36_task:
+  environment_cache:
+    folder: shared36
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}36
+    reupload_on_changes: true
+    populate_script:
+      - conda create -yq --prefix  $PWD/shared36/phys2bids_py36 python=3.6
+      - source activate $PWD/shared36/phys2bids_py36
+      - pip install -e '.[test,doc]'
+      - mkdir /tmp/cirrus-ci-build/shared36/coverage
 
 Unittest_37_task:
   depends_on:
-  - makeenv
+  - makeenv_37
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
@@ -42,25 +43,25 @@ Unittest_37_task:
 
 Unittest_36_task:
   depends_on:
-  - makeenv
+  - makeenv_36
   environment_cache:
-    folder: shared
+    folder: shared36
     fingerprint_script: echo ${CIRRUS_BUILD_ID}36
     populate_script:
-      - source activate $PWD/shared/phys2bids_py36
+      - source activate $PWD/shared36/phys2bids_py36
     reupload_on_changes: true
   Running_unit_tests_script:
     - sudo apt-get install -y make tree
-    - source activate $PWD/shared/phys2bids_py36
+    - source activate $PWD/shared36/phys2bids_py36
     - make unittest
-    - mv $PWD/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.unittest_36
-    - tree /tmp/cirrus-ci-build/shared/coverage
+    - mv $PWD/.coverage /tmp/cirrus-ci-build/shared36/coverage/.coverage.unittest_36
+    - tree /tmp/cirrus-ci-build/shared36/coverage
 
 
 
 Integration_test_37_task:
   depends_on:
-  - makeenv
+  - makeenv_37
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
@@ -77,20 +78,20 @@ Integration_test_37_task:
 
 Integration_test_36_task:
   depends_on:
-  - makeenv
+  - makeenv_36
   environment_cache:
-    folder: shared
+    folder: shared36
     fingerprint_script: echo ${CIRRUS_BUILD_ID}36
     populate_script:
-      - source activate $PWD/shared/phys2bids_py36
+      - source activate $PWD/shared36/phys2bids_py36
     reupload_on_changes: true
   Running_integration_tests_script:
   - sudo apt-get install -y make tree
-  - source activate $PWD/shared/phys2bids_py36
+  - source activate $PWD/shared36/phys2bids_py36
   - PATH=/home/test_user/.local/bin:$PATH
   - make integration
-  - mv $PWD/.coverage /tmp/cirrus-ci-build/shared/coverage/.coverage.integration_36
-  - tree /tmp/cirrus-ci-build/shared/coverage
+  - mv $PWD/.coverage /tmp/cirrus-ci-build/shared36/coverage/.coverage.integration_36
+  - tree /tmp/cirrus-ci-build/shared36/coverage
 
 Merge_coverage_37_task:
   depends_on:
@@ -109,7 +110,7 @@ Merge_coverage_37_task:
 
 Style_check_task:
   depends_on:
-  - makeenv
+  - makeenv_37
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
@@ -122,7 +123,7 @@ Style_check_task:
 
 Build_docs_task:
   depends_on:
-  - makeenv
+  - makeenv_37
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
@@ -134,7 +135,7 @@ Build_docs_task:
 
 Bids_validate_task:
   depends_on:
-  - makeenv
+  - makeenv_37
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
