@@ -3,6 +3,17 @@ container:
   image: continuumio/conda-ci-linux-64-python3.7
   cpu: 1
 
+makeenv_38_task:
+  environment_cache:
+    folder: shared38
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}38
+    reupload_on_changes: true
+    populate_script:
+      - conda create -yq --prefix  $PWD/shared38/phys2bids_py38 python=3.8
+      - source activate $PWD/shared38/phys2bids_py38
+      - pip install -e '.[test,doc]'
+      - mkdir /tmp/cirrus-ci-build/shared38/coverage
+
 makeenv_37_task:
   environment_cache:
     folder: shared
@@ -24,6 +35,22 @@ makeenv_36_task:
       - source activate $PWD/shared36/phys2bids_py36
       - pip install -e '.[test,doc]'
       - mkdir /tmp/cirrus-ci-build/shared36/coverage
+
+Unittest_38_task:
+  depends_on:
+  - makeenv_38
+  environment_cache:
+    folder: shared38
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}38
+    populate_script:
+      - source activate $PWD/shared38/phys2bids_py38
+    reupload_on_changes: true
+  Running_unit_tests_script:
+    - sudo apt-get install -y make tree
+    - source activate $PWD/shared38/phys2bids_py38
+    - make unittest
+    - mv $PWD/.coverage /tmp/cirrus-ci-build/shared38/coverage/.coverage.unittest_38
+    - tree /tmp/cirrus-ci-build/shared38/coverage
 
 Unittest_37_task:
   depends_on:
@@ -57,7 +84,22 @@ Unittest_36_task:
     - mv $PWD/.coverage /tmp/cirrus-ci-build/shared36/coverage/.coverage.unittest_36
     - tree /tmp/cirrus-ci-build/shared36/coverage
 
-
+Integration_test_38_task:
+  depends_on:
+  - makeenv_38
+  environment_cache:
+    folder: shared38
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}38
+    populate_script:
+      - source activate $PWD/shared38/phys2bids_py38
+    reupload_on_changes: true
+  Running_integration_tests_script:
+  - sudo apt-get install -y make tree
+  - source activate $PWD/shared38/phys2bids_py38
+  - PATH=/home/test_user/.local/bin:$PATH
+  - make integration
+  - mv $PWD/.coverage /tmp/cirrus-ci-build/shared38/coverage/.coverage.integration_38
+  - tree /tmp/cirrus-ci-build/shared38/coverage
 
 Integration_test_37_task:
   depends_on:
