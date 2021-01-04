@@ -165,6 +165,7 @@ Integration_windows_task:
       - dockerfile: .ci/w_python_39
       - dockerfile: .ci/w_python_38
       - dockerfile: .ci/w_python_37
+    cpu: 1
   env:
     CIRRUS_SHELL: powershell
   environment_cache:
@@ -183,6 +184,7 @@ Unittest_windows_task:
       - dockerfile: .ci/w_python_39
       - dockerfile: .ci/w_python_38
       - dockerfile: .ci/w_python_37
+    cpu: 1
   env:
     CIRRUS_SHELL: powershell
   environment_cache:
