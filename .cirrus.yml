@@ -23,7 +23,7 @@ makeenv_37_task:
 makeenv_36_task:
   environment_cache:
     folder: shared
-    fingerprint_script: echo ${CIRRUS_BUILD_ID}36
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}
     reupload_on_changes: true
     populate_script:
       - conda create -yq --prefix  $PWD/shared/phys2bids_py36 python=3.6
@@ -52,7 +52,7 @@ Unittest_36_task:
   - makeenv_36
   environment_cache:
     folder: shared
-    fingerprint_script: echo ${CIRRUS_BUILD_ID}36
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}
     populate_script:
       - source activate $PWD/shared/phys2bids_py36
     reupload_on_changes: true
@@ -87,7 +87,7 @@ Integration_test_36_task:
   - makeenv_36
   environment_cache:
     folder: shared
-    fingerprint_script: echo ${CIRRUS_BUILD_ID}36
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}
     populate_script:
       - source activate $PWD/shared/phys2bids_py36
     reupload_on_changes: true
