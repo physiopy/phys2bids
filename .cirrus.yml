@@ -160,7 +160,9 @@ Bids_validate_task:
 
 Integration_39_windows_task:
   windows_container:
-    dockerfile: .ci/w_python_39
+    matrix:
+      - dockerfile: .ci/w_python_39
+      - dockerfile: .ci/w_python_37
   env:
     CIRRUS_SHELL: powershell
   environment_cache:
@@ -175,7 +177,7 @@ Integration_39_windows_task:
 
 Unittest_39_windows_task:
   windows_container:
-    dockerfile: .ci/w_python39
+    dockerfile: .ci/w_python_39
   env:
     CIRRUS_SHELL: powershell
   environment_cache:
