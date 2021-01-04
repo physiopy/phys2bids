@@ -3,7 +3,7 @@ container:
   image: continuumio/conda-ci-linux-64-python3.7
   cpu: 1
 
-makeenv_37_task:
+makeenv_task:
   matrix:
   - environment_cache:
       folder: shared
@@ -16,7 +16,7 @@ makeenv_37_task:
         - mkdir /tmp/cirrus-ci-build/shared/coverage
   - enviroment_cache:
       folder: shared
-      fingerprint_script: echo ${CIRRUS_BUILD_ID}362
+      fingerprint_script: echo ${CIRRUS_BUILD_ID}36
       reupload_on_changes: true
       populate_script:
         - conda create -yq --prefix  $PWD/shared/phys2bids_py36 python=3.6
@@ -24,20 +24,9 @@ makeenv_37_task:
         - pip install -e '.[test,doc]'
         - mkdir /tmp/cirrus-ci-build/shared/coverage
 
-makeenv_36_task:
-  environment_cache:
-    folder: shared
-    fingerprint_script: echo ${CIRRUS_BUILD_ID}36
-    reupload_on_changes: true
-    populate_script:
-      - conda create -yq --prefix  $PWD/shared/phys2bids_py36 python=3.6
-      - source activate $PWD/shared/phys2bids_py36
-      - pip install -e '.[test,doc]'
-      - mkdir /tmp/cirrus-ci-build/shared/coverage
-
 Unittest_37_task:
   depends_on:
-  - makeenv_37
+  - makeenv
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
@@ -53,7 +42,7 @@ Unittest_37_task:
 
 Unittest_36_task:
   depends_on:
-  - makeenv_36
+  - makeenv
   environment_cache:
     folder: shared
     fingerprint_script: echo ${CIRRUS_BUILD_ID}36
@@ -71,7 +60,7 @@ Unittest_36_task:
 
 Integration_test_37_task:
   depends_on:
-  - makeenv_37
+  - makeenv
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
@@ -88,7 +77,7 @@ Integration_test_37_task:
 
 Integration_test_36_task:
   depends_on:
-  - makeenv_36
+  - makeenv
   environment_cache:
     folder: shared
     fingerprint_script: echo ${CIRRUS_BUILD_ID}36
@@ -120,7 +109,7 @@ Merge_coverage_37_task:
 
 Style_check_task:
   depends_on:
-  - makeenv_37
+  - makeenv
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
@@ -133,7 +122,7 @@ Style_check_task:
 
 Build_docs_task:
   depends_on:
-  - makeenv_37
+  - makeenv
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
@@ -145,7 +134,7 @@ Build_docs_task:
 
 Bids_validate_task:
   depends_on:
-  - makeenv_37
+  - makeenv
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
