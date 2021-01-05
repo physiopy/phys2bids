@@ -5,19 +5,17 @@ container:
 
 makeenv_task:
   environment_cache:
+    folder: shared37
+    folder: shared36
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}31
+    reupload_on_changes: true
     matrix:
       - name: makeenv_372
-        folder: shared37
-        fingerprint_script: echo ${CIRRUS_BUILD_ID}31
-        reupload_on_changes: true
         populate_script:
-          - conda create -yq --prefix  $PWD/shared37/phys2bids_py37 python=3.7
-          - source activate $PWD/shared37/phys2bids_py37
-          - pip install -e '.[test,doc]'
-    - name: makeenv_36
-        folder: shared36
-        fingerprint_script: echo ${CIRRUS_BUILD_ID}31
-        reupload_on_changes: true
+        - conda create -yq --prefix  $PWD/shared37/phys2bids_py37 python=3.7
+        - source activate $PWD/shared37/phys2bids_py37
+        - pip install -e '.[test,doc]'
+      - name: makeenv_36
         populate_script:
           - conda create -yq --prefix  $PWD/shared36/phys2bids_py36 python=3.6
           - source activate $PWD/shared36/phys2bids_py36
