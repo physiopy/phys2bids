@@ -41,9 +41,33 @@ Unittest_task:
     - sudo apt-get install -y make tree
     - source activate $PWD/conda-env
     - make unittest
-    - mv $PWD/.coverage /tmp/cirrus-ci-build/shared39/coverage/.coverage.unittest_39
-    - tree /tmp/cirrus-ci-build/shared39/coverage
-  
+    - mv $PWD/.coverage /tmp/cirrus-ci-build/coverage
+    - tree /tmp/cirrus-ci-build/coverage
+
+Unittest_task:
+  depends_on: 
+    - makeenv
+  env:
+    matrix:
+      PYTHON: 3.6
+      PYTHON: 3.7
+      PYTHON: 3.8
+      PYTHON: 3.9
+  environment_cache:
+    folder: conda-env
+    fingerprint_script: 
+      - echo $PYTHON
+      - cat setup.py
+    populate_script:
+      - source activate $PWD/conda-env
+  Running_unit_tests_script:
+    - sudo apt-get install -y make tree
+    - source activate $PWD/shared36/phys2bids_py36
+    - PATH=/home/test_user/.local/bin:$PATH
+    - make integration
+    - mv $PWD/.coverage /tmp/cirrus-ci-build/shared36/coverage
+    - tree /tmp/cirrus-ci-build/shared36/coverage
+
 # makeenv_39_task:
 #   environment_cache:
 #     folder: shared39
@@ -294,41 +318,41 @@ Unittest_task:
 #     - tree physio_bids
 #     - bids-validator  physio_bids
 
-Integration_windows_task:
-  windows_container:
-    matrix:
-      - dockerfile: .ci/w_python_39
-      - dockerfile: .ci/w_python_38
-      - dockerfile: .ci/w_python_37
-    cpu: 1
-  env:
-    CIRRUS_SHELL: powershell
-  environment_cache:
-    folder: shared39
-    fingerprint_script: echo 362
-    reupload_on_changes: true
-    populate_script:
-      - pip install -e '.[test,doc]'
-  Running_integration_script:
-    - choco install make -y --no-progress
-    - make integration
+# Integration_windows_task:
+#   windows_container:
+#     matrix:
+#       - dockerfile: .ci/w_python_39
+#       - dockerfile: .ci/w_python_38
+#       - dockerfile: .ci/w_python_37
+#     cpu: 1
+#   env:
+#     CIRRUS_SHELL: powershell
+#   environment_cache:
+#     folder: shared39
+#     fingerprint_script: echo 362
+#     reupload_on_changes: true
+#     populate_script:
+#       - pip install -e '.[test,doc]'
+#   Running_integration_script:
+#     - choco install make -y --no-progress
+#     - make integration
 
-Unittest_windows_task:
-  windows_container:
-    matrix:
-      - dockerfile: .ci/w_python_39
-      - dockerfile: .ci/w_python_38
-      - dockerfile: .ci/w_python_37
-    cpu: 1
-  env:
-    CIRRUS_SHELL: powershell
-  environment_cache:
-    folder: shared39
-    fingerprint_script: echo 362
-    reupload_on_changes: true
-    populate_script:
-      - pip install -e '.[test,doc]'
-  Running_integration_script:
-    - choco install make -y --no-progress
-    - make unittest
+# Unittest_windows_task:
+#   windows_container:
+#     matrix:
+#       - dockerfile: .ci/w_python_39
+#       - dockerfile: .ci/w_python_38
+#       - dockerfile: .ci/w_python_37
+#     cpu: 1
+#   env:
+#     CIRRUS_SHELL: powershell
+#   environment_cache:
+#     folder: shared39
+#     fingerprint_script: echo 362
+#     reupload_on_changes: true
+#     populate_script:
+#       - pip install -e '.[test,doc]'
+#   Running_integration_script:
+#     - choco install make -y --no-progress
+#     - make unittest
 
