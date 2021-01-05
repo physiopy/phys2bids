@@ -31,6 +31,8 @@ makeenv_task:
         - pip install -e '.[test,doc]'
 
 checkenv_task:
+  depends_on:
+  - makeenv_task
   environment_cache:
     folder: shared
     fingerprint_script: echo ${CIRRUS_BUILD_ID}31
