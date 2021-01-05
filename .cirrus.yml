@@ -19,7 +19,7 @@ makeenv_task:
       - conda create -yq --prefix  $PWD/conda-env python=$PYTHON
       - source activate $PWD/conda-env
       - pip install -e '.[test,doc]'
-   activate_script: source activate $PWD/conda-env
+  activate_script: source activate $PWD/conda-env
 
 Unittest_task:
   depens_on: makeenv
