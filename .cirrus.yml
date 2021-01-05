@@ -12,6 +12,8 @@ cache_setup_task:
       - mkdir /tmp/cirrus-ci-build/shared
 
 makeenv_task:
+  depends_on:
+  - cache_setup
   environment_cache:
     folder: shared
     fingerprint_script: echo ${CIRRUS_BUILD_ID}31
@@ -61,8 +63,6 @@ makeenv_38_task:
       - mkdir /tmp/cirrus-ci-build/shared38/coverage
 
 makeenv_37_task:
-  depends_on:
-  - cache_setup
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
