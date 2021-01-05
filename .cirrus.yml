@@ -10,7 +10,6 @@ cache_setup_task:
     reupload_on_changes: true
     populate_script:
       - mkdir /tmp/cirrus-ci-build/shared
-      - mkdir /tmp/cirrus-ci-build/shared/coverage
 
 makeenv_task:
   environment_cache:
@@ -34,10 +33,10 @@ checkenv_task:
     folder: shared
     fingerprint_script: echo ${CIRRUS_BUILD_ID}31
     reupload_on_changes: true
-    check_script:
-    - sudo apt-get install -y tree
-    - tree $PWD/shared/phys2bids_py36
-    - tree $PWD/shared/phys2bids_py37
+  check_script:
+  - sudo apt-get install -y tree
+  - tree $PWD/shared/phys2bids_py36
+  - tree $PWD/shared/phys2bids_py37
 
 makeenv_39_task:
   environment_cache:
