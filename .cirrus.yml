@@ -62,7 +62,7 @@ Integration_task:
       - source activate $PWD/conda-env
   Running_unit_tests_script:
     - sudo apt-get install -y make tree
-    - source activate $PWD/shared36/phys2bids_py36
+    - source activate $PWD/conda-env
     - PATH=/home/test_user/.local/bin:$PATH
     - make integration
     - mv $PWD/.coverage /tmp/cirrus-ci-build/shared36/coverage
