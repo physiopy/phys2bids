@@ -65,7 +65,7 @@ Integration_task:
     - source activate $PWD/conda-env
     - PATH=/home/test_user/.local/bin:$PATH
     - make integration
-    - mv $PWD/.coverage /tmp/cirrus-ci-build/shared36/coverage
+    - mv $PWD/.coverage /tmp/cirrus-ci-build/coverage
     - tree /tmp/cirrus-ci-build/shared36/coverage
 
 # makeenv_39_task:
