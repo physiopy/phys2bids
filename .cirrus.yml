@@ -41,8 +41,7 @@ Unittest_task:
     - sudo apt-get install -y make tree
     - source activate $PWD/conda-env
     - make unittest
-    - mv $PWD/.coverage /tmp/cirrus-ci-build/coverage
-    - tree /tmp/cirrus-ci-build/coverage
+    - mv /tmp/cirrus-ci-build/coverage_unit.xml /tmp/cirrus-ci-build/coverage_unit_$PYTHON.xml
 
 Integration_task:
   depends_on: 
@@ -61,12 +60,11 @@ Integration_task:
     populate_script:
       - source activate $PWD/conda-env
   Running_unit_tests_script:
-    - sudo apt-get install -y make tree
+    - sudo apt-get install -y make
     - source activate $PWD/conda-env
     - PATH=/home/test_user/.local/bin:$PATH
     - make integration
-    - mv $PWD/.coverage /tmp/cirrus-ci-build/coverage
-    - tree /tmp/cirrus-ci-build/coverage
+    - mv /tmp/cirrus-ci-build/coverage_integration.xml /tmp/cirrus-ci-build/coverage_integration_$PYTHON.xml
 
 # makeenv_39_task:
 #   environment_cache:
