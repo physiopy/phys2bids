@@ -32,7 +32,7 @@ makeenv_task:
 
 checkenv_task:
   depends_on:
-  - makeenv_task
+  - makeenv
   environment_cache:
     folder: shared
     fingerprint_script: echo ${CIRRUS_BUILD_ID}31
