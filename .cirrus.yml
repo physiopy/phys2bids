@@ -22,7 +22,7 @@ makeenv_task:
   activate_script: source activate $PWD/conda-env
 
 Unittest_task:
-  depens_on: 
+  depends_on: 
     - makeenv
   env:
     matrix:
