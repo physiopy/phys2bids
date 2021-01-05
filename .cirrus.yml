@@ -160,7 +160,7 @@ Integration_test_37_task:
   - make integration
   - mv /tmp/cirrus-ci-build/coverage.xml /tmp/cirrus-ci-build/coverage_integration_37.xml
   coverage_integration_37_artifacts:
-    path: "/tmp/cirrus-ci-build/coverage_integration_37.xml"
+    path: "coverage_integration_37.xml"
 
 download_artifact_task:
   depends_on:
@@ -168,8 +168,6 @@ download_artifact_task:
   download_script:
   - sudo apt-get install -y tree curl tar
   - curl https://api.cirrus-ci.com/v1/artifact/build/$CIRRUS_BUILD_ID/coverage_integration_37.xml
-  - tree .
-  - tar -zxvf coverage_integration_37.tar.gz
   - tree .
 
 Integration_test_36_task:
