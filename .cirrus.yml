@@ -158,6 +158,7 @@ Integration_test_37_task:
   - sudo apt-get install -y make tree tar
   - source activate $PWD/shared/phys2bids_py37
   - make integration
+  - mv /tmp/cirrus-ci-build/coverage.xml /tmp/cirrus-ci-build/coverage_integration_37.xml
   coverage_integration_37_artifacts:
     path: "/tmp/cirrus-ci-build/coverage_integration_37.xml"
 
