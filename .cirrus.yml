@@ -44,7 +44,7 @@ Unittest_task:
     - mv $PWD/.coverage /tmp/cirrus-ci-build/coverage
     - tree /tmp/cirrus-ci-build/coverage
 
-Unittest_task:
+Integration_task:
   depends_on: 
     - makeenv
   env:
