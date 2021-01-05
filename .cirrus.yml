@@ -4,7 +4,8 @@ container:
   cpu: 1
 
 makeenv_task:
-  cpu: 4
+  container:
+    cpu: 4
   environment_cache:
     folder: shared
     fingerprint_script: echo ${CIRRUS_BUILD_ID}31
