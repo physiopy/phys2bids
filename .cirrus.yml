@@ -30,7 +30,7 @@ Unittest_task:
       PYTHON: 3.7
       PYTHON: 3.8
       PYTHON: 3.9
-    CODECOV_TOKEN: ENCRYPTED[qwerty239abc]
+    CODECOV_TOKEN: eb5758aa-6d0c-4981-a22a-16c663e2aaa9
   environment_cache:
     folder: conda-env
     fingerprint_script: 
