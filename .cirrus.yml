@@ -25,6 +25,7 @@ Unittest_task:
   depends_on: 
     - makeenv
   env:
+  CODECOV_TOKEN: ENCRYPTED[qwerty239abc]
     matrix:
       PYTHON: 3.6
       PYTHON: 3.7
@@ -38,10 +39,11 @@ Unittest_task:
     populate_script:
       - source activate $PWD/conda-env
   Running_unit_tests_script:
-    - sudo apt-get install -y make tree
+    - sudo apt-get install -y make curl
     - source activate $PWD/conda-env
     - make unittest
     - mv /tmp/cirrus-ci-build/coverage_unit.xml /tmp/cirrus-ci-build/coverage_unit_$PYTHON.xml
+    - curl -s https://codecov.io/bash
 
 Integration_task:
   depends_on: 
