@@ -66,7 +66,7 @@ Integration_task:
     - PATH=/home/test_user/.local/bin:$PATH
     - make integration
     - mv $PWD/.coverage /tmp/cirrus-ci-build/coverage
-    - tree /tmp/cirrus-ci-build/shared36/coverage
+    - tree /tmp/cirrus-ci-build/coverage
 
 # makeenv_39_task:
 #   environment_cache:
