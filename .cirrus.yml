@@ -167,7 +167,7 @@ download_artifact_task:
   - Integration_test_37
   download_script:
   - sudo apt-get install -y tree curl tar
-  - curl https://api.cirrus-ci.com/v1/artifact/build/$CIRRUS_BUILD_ID/coverage_integration_37.tar.gz
+  - curl https://api.cirrus-ci.com/v1/artifact/build/$CIRRUS_BUILD_ID/coverage_integration_37.xml
   - tree .
   - tar -zxvf coverage_integration_37.tar.gz
   - tree .
