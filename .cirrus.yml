@@ -3,6 +3,15 @@ container:
   image: continuumio/conda-ci-linux-64-python3.7
   cpu: 1
 
+cache_setup_task:
+  environment_cache:
+    folder: shared
+    fingerprint_script: echo ${CIRRUS_BUILD_ID}
+    reupload_on_changes: true
+    populate_script:
+      - mkdir /tmp/cirrus-ci-build/shared/coverage
+
+
 makeenv_39_task:
   environment_cache:
     folder: shared39
@@ -26,6 +35,8 @@ makeenv_38_task:
       - mkdir /tmp/cirrus-ci-build/shared38/coverage
 
 makeenv_37_task:
+  depends_on:
+  - cache_setup
   environment_cache:
     folder: shared
     fingerprint_script: echo $CIRRUS_BUILD_ID
@@ -34,7 +45,6 @@ makeenv_37_task:
       - conda create -yq --prefix  $PWD/shared/phys2bids_py37 python=3.7
       - source activate $PWD/shared/phys2bids_py37
       - pip install -e '.[test,doc]'
-      - mkdir /tmp/cirrus-ci-build/shared/coverage
 
 makeenv_36_task:
   environment_cache:
