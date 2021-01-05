@@ -9,6 +9,7 @@ cache_setup_task:
     fingerprint_script: echo ${CIRRUS_BUILD_ID}
     reupload_on_changes: true
     populate_script:
+      - mkdir /tmp/cirrus-ci-build/shared
       - mkdir /tmp/cirrus-ci-build/shared/coverage
 
 
