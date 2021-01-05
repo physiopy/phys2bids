@@ -25,12 +25,12 @@ Unittest_task:
   depends_on: 
     - makeenv
   env:
-  CODECOV_TOKEN: ENCRYPTED[qwerty239abc]
     matrix:
       PYTHON: 3.6
       PYTHON: 3.7
       PYTHON: 3.8
       PYTHON: 3.9
+    CODECOV_TOKEN: ENCRYPTED[qwerty239abc]
   environment_cache:
     folder: conda-env
     fingerprint_script: 
