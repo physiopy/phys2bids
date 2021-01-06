@@ -98,6 +98,7 @@ Build_docs_task:
     populate_script:
       - source activate $PWD/conda-env
   Build_documentation_script:
+  - apt-get install -y make
   - source activate $PWD/conda-env
   - make -C docs html
 
