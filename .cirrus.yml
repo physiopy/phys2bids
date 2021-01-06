@@ -1,5 +1,6 @@
 # global default
 container:
+  image: python:latest
   cpu: 1
 
 makeenv_task:
