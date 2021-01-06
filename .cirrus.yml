@@ -62,7 +62,7 @@ Integration_task:
     populate_script:
       - source activate $PWD/conda-env
   Running_unit_tests_script:
-    - sudo apt-get install -y make
+    - sudo apt-get install -y make curl
     - source activate $PWD/conda-env
     - PATH=/home/test_user/.local/bin:$PATH
     - make integration
