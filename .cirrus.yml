@@ -43,7 +43,7 @@ Unittest_task:
     - source activate $PWD/conda-env
     - make unittest
     - mv /tmp/cirrus-ci-build/coverage_unit.xml /tmp/cirrus-ci-build/coverage_unit_$PYTHON.xml
-    - curl -s https://codecov.io/bash
+    - bash <(curl -s https://codecov.io/bash)
 
 Integration_task:
   depends_on: 
