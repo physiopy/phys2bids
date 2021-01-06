@@ -1,5 +1,6 @@
 # global default
 container:
+  image: PYTHON: 3.9
   cpu: 1
   memory: 1G
 
@@ -71,8 +72,6 @@ Integration_task:
 Style_check_task:
   depends_on:
   - makeenv
-  env:
-    PYTHON: 3.9
   environment_cache:
     folder: conda-env
     fingerprint_script:
@@ -88,8 +87,6 @@ Style_check_task:
 Build_docs_task:
   depends_on:
   - makeenv
-  env:
-    PYTHON: 3.9
   environment_cache:
     folder: conda-env
     fingerprint_script:
@@ -104,8 +101,6 @@ Build_docs_task:
 Bids_validate_task:
   depends_on:
   - makeenv
-  env:
-    PYTHON: 3.9
   environment_cache:
     folder: conda-env
     fingerprint_script:
