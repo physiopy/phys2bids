@@ -42,7 +42,6 @@ Unittest_task:
     - sudo apt-get install -y make curl
     - source activate $PWD/conda-env
     - make unittest
-    - mv /tmp/cirrus-ci-build/coverage_unit.xml /tmp/cirrus-ci-build/coverage_unit_$PYTHON.xml
     - bash <(curl -s https://codecov.io/bash)
 
 Integration_task:
@@ -54,6 +53,7 @@ Integration_task:
       PYTHON: 3.7
       PYTHON: 3.8
       PYTHON: 3.9
+    CODECOV_TOKEN: eb5758aa-6d0c-4981-a22a-16c663e2aaa9
   environment_cache:
     folder: conda-env
     fingerprint_script: 
@@ -66,7 +66,7 @@ Integration_task:
     - source activate $PWD/conda-env
     - PATH=/home/test_user/.local/bin:$PATH
     - make integration
-    - mv /tmp/cirrus-ci-build/coverage_integration.xml /tmp/cirrus-ci-build/coverage_integration_$PYTHON.xml
+    - bash <(curl -s https://codecov.io/bash)
 
 # makeenv_39_task:
 #   environment_cache:

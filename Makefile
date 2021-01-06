@@ -13,8 +13,8 @@ lint:
 	@flake8 phys2bids
 
 unittest:
-	@py.test --skipintegration --junitxml=/tmp/cirrus-ci-build/coverage_unit.xml phys2bids/
+	@py.test --skipintegration --cov-append --cov-report term-missing --cov=phys2bids phys2bids/
 
 integration:
 	@pip install -e ".[test]"
-	@pytest --log-cli-level=INFO --junitxml=/tmp/cirrus-ci-build/coverage_integration.xml -k test_integration phys2bids/tests/test_integration.py
+	@py.test --log-cli-level=INFO --cov-append --cov-report term-missing --cov=phys2bids -k test_integration phys2bids/tests/test_integration.py
