@@ -4,8 +4,8 @@ RUN powershell -NoLogo -NoProfile -Command \
     choco install -y --no-progress python --version=3.6.1 ; \
     choco install -y --no-progress make ; \
     refreshenv ; \
-    $env:Path += ';c:\python37'; \
-    $env:Path += ';c:\python37\Scripts'; \
+    $env:Path += ';c:\python36'; \
+    $env:Path += ';c:\python36\Scripts'; \
     refreshenv; \
     echo $env:path; \
     pip install --upgrade certifi ; \
