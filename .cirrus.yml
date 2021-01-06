@@ -2,6 +2,7 @@
 container:
   image: continuumio/miniconda3
   cpu: 1
+  memory: 1G
 
 makeenv_task:
   env:
