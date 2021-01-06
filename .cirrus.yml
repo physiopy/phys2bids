@@ -39,7 +39,7 @@ Unittest_task:
     populate_script:
       - source activate $PWD/conda-env
   Running_unit_tests_script:
-    - sudo apt-get install -y make curl
+    - apt-get install -y make curl
     - source activate $PWD/conda-env
     - make unittest
     - bash <(curl -s https://codecov.io/bash)
@@ -62,7 +62,7 @@ Integration_task:
     populate_script:
       - source activate $PWD/conda-env
   Running_unit_tests_script:
-    - sudo apt-get install -y make curl
+    - apt-get install -y make curl
     - source activate $PWD/conda-env
     - PATH=/home/test_user/.local/bin:$PATH
     - make integration
@@ -81,7 +81,7 @@ Style_check_task:
     populate_script:
       - source activate $PWD/conda-env
   Lintin_script:
-  - sudo apt-get install -y make
+  - apt-get install -y make
   - source activate $PWD/conda-env
   - make lint
 
@@ -114,10 +114,10 @@ Bids_validate_task:
     populate_script:
       - source activate $PWD/conda-env
   Generate_enviroment_script:
-  - sudo apt-get install -yqq wget curl tree
-  - sudo curl -sL https://deb.nodesource.com/setup_15.x | sudo bash -
-  - sudo apt-get install -yqq nodejs
-  - sudo npm install -g bids-validator
+  - apt-get install -yqq wget curl tree
+  - curl -sL https://deb.nodesource.com/setup_15.x | bash -
+  - apt-get install -yqq nodejs
+  - npm install -g bids-validator
   Dowload data and execute pipeline_script:
   - wget -O Test1_multifreq_onescan.txt https://osf.io/7se4t/download
   - wget -O heur_test_multifreq.py https://osf.io/ehx6j/download
