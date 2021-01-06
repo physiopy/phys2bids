@@ -1,6 +1,6 @@
 # global default
 container:
-  image: PYTHON: 3.9
+  PYTHON: 3.9
   cpu: 1
   memory: 1G
 
