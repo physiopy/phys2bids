@@ -1,6 +1,6 @@
 # global default
 container:
-  image: python:latest
+  image: continuumio/miniconda3
   cpu: 1
 
 makeenv_task:
