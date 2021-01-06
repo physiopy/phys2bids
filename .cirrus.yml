@@ -72,7 +72,7 @@ Style_check_task:
   depends_on:
   - makeenv
   env:
-    PYTHON: 3.7
+    PYTHON: 3.9
   environment_cache:
     folder: conda-env
     fingerprint_script:
@@ -85,43 +85,51 @@ Style_check_task:
   - source activate $PWD/conda-env
   - make lint
 
-# Build_docs_task:
-#   depends_on:
-#   - makeenv_37
-#   environment_cache:
-#     folder: shared
-#     fingerprint_script: echo $CIRRUS_BUILD_ID
-#     populate_script:
-#       - source activate $PWD/shared/phys2bids_py37
-#   Build_documentation_script:
-#   - source activate $PWD/shared/phys2bids_py37  # depends on makeenv37
-#   - make -C docs html
+Build_docs_task:
+  depends_on:
+  - makeenv
+  env:
+    PYTHON: 3.9
+  environment_cache:
+    folder: conda-env
+    fingerprint_script:
+      - echo $PYTHON
+      - cat setup.py
+    populate_script:
+      - source activate $PWD/conda-env
+  Build_documentation_script:
+  - source activate $PWD/conda-env
+  - make -C docs html
 
-# Bids_validate_task:
-#   depends_on:
-#   - makeenv_37
-#   environment_cache:
-#     folder: shared
-#     fingerprint_script: echo $CIRRUS_BUILD_ID
-#     populate_script:
-#       - source activate $PWD/shared/phys2bids_py37
-#   Generate_enviroment_script:
-#   - sudo apt-get install -yqq wget curl tree
-#   - sudo curl -sL https://deb.nodesource.com/setup_15.x | sudo bash -
-#   - sudo apt-get install -yqq nodejs
-#   - sudo npm install -g bids-validator
-#   Dowload data and execute pipeline_script:
-#   - wget -O Test1_multifreq_onescan.txt https://osf.io/7se4t/download
-#   - wget -O heur_test_multifreq.py https://osf.io/ehx6j/download
-#   - source activate $PWD/shared/phys2bids_py37
-#   - PATH=/home/test_user/.local/bin:$PATH
-#   - pip install -e '.[test,doc]' && phys2bids -in Test1_multifreq_onescan.txt -chtrig 1 -ntp 30 -tr 1.2 -outdir physio_bids -heur heur_test_multifreq.py -sub 006 -ses 01
-#   Run validator_script:
-#     - wget -O sub-006_ses-01_task-test_rec-biopac_run-01_bold.json https://osf.io/6j8f7/download
-#     - wget -O sub-006_ses-01_task-test_rec-biopac_run-01_bold.nii.gz https://osf.io/wus2p/download
-#     - mv sub-006_ses-01_task-test_rec-biopac_run-01_bold* physio_bids/sub-006/ses-01/func
-#     - tree physio_bids
-#     - bids-validator  physio_bids
+Bids_validate_task:
+  depends_on:
+  - makeenv
+  env:
+    PYTHON: 3.9
+  environment_cache:
+    folder: conda-env
+    fingerprint_script:
+      - echo $PYTHON
+      - cat setup.py
+    populate_script:
+      - source activate $PWD/conda-env
+  Generate_enviroment_script:
+  - sudo apt-get install -yqq wget curl tree
+  - sudo curl -sL https://deb.nodesource.com/setup_15.x | sudo bash -
+  - sudo apt-get install -yqq nodejs
+  - sudo npm install -g bids-validator
+  Dowload data and execute pipeline_script:
+  - wget -O Test1_multifreq_onescan.txt https://osf.io/7se4t/download
+  - wget -O heur_test_multifreq.py https://osf.io/ehx6j/download
+  - source activate $PWD/shared/phys2bids_py37
+  - PATH=/home/test_user/.local/bin:$PATH
+  - pip install -e '.[test,doc]' && phys2bids -in Test1_multifreq_onescan.txt -chtrig 1 -ntp 30 -tr 1.2 -outdir physio_bids -heur heur_test_multifreq.py -sub 006 -ses 01
+  Run validator_script:
+    - wget -O sub-006_ses-01_task-test_rec-biopac_run-01_bold.json https://osf.io/6j8f7/download
+    - wget -O sub-006_ses-01_task-test_rec-biopac_run-01_bold.nii.gz https://osf.io/wus2p/download
+    - mv sub-006_ses-01_task-test_rec-biopac_run-01_bold* physio_bids/sub-006/ses-01/func
+    - tree physio_bids
+    - bids-validator  physio_bids
 
 # Integration_windows_task:
 #   windows_container:
