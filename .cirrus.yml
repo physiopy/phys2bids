@@ -1,6 +1,7 @@
 # global default
 container:
   cpu: 1
+  memory: 1G
 
 makeenv_task:
   env:
