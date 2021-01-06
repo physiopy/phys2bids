@@ -35,3 +35,9 @@ jobs:
           key: conda-py37-v1-{{ checksum "setup.cfg" }}
           paths:
               - /opt/conda/envs/phys2bids_py37
+
+workflows:
+  version: 2.1
+  build_test:
+    jobs:
+      - makeenv_37
