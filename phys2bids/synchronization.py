@@ -1,18 +1,19 @@
 """Functions for synchronizing multi-run physio files with BIDS imaging data."""
-import os.path as op
-from operator import itemgetter
-from itertools import groupby
 import logging
+import os.path as op
+from itertools import groupby
+from operator import itemgetter
+
 import matplotlib.pyplot as plt
+import nibabel as nib
+import numpy as np
+import pandas as pd
 
 from bids import BIDSLayout
-import pandas as pd
-import numpy as np
-import nibabel as nib
 
 from .bids import update_bids_name
-from .slice4phys import slice_phys
 from .physio_obj import BlueprintOutput
+from .slice4phys import slice_phys
 
 LGR = logging.getLogger(__name__)
 
