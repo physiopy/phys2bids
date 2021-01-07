@@ -170,8 +170,12 @@ def slice_phys(phys, run_timestamps, padding=9, update_trigger=False):
 
         # Limit padding based on beginning and end of physio recording.
         # We could also limit padding to prevent overlap between scans, if desired.
-        run_time_before = np.minimum(time_before, (trigger_onset - min_onset) / trigger_freq)
-        run_time_after = np.minimum(time_after, (max_offset - trigger_offset) / trigger_freq)
+        run_time_before = np.minimum(
+            time_before, (trigger_onset - min_onset) / trigger_freq
+        )
+        run_time_after = np.minimum(
+            time_after, (max_offset - trigger_offset) / trigger_freq
+        )
 
         for freq in unique_frequencies:
             to_subtract = int(run_time_before * freq)
@@ -187,25 +191,33 @@ def slice_phys(phys, run_timestamps, padding=9, update_trigger=False):
                 example_ts = phys.timeseries[phys.freq.index(freq)]
 
                 # Determine time
-                new_time = (np.arange(example_ts.shape[0]) / temp_phys_in.timeseries[
-                    phys.freq.index(freq)].freq
+                new_time = (
+                    np.arange(example_ts.shape[0])
+                    / temp_phys_in.timeseries[phys.freq.index(freq)].freq
                 )
                 new_time += np.min(temp_phys_in.timeseries[0])
                 temp_phys_in.timeseries[0] = new_time
                 temp_phys_in.freq[0] = freq
 
                 # Resample trigger
-                new_trigger = temp_phys_in.timeseries[temp_phys_in.trigger_idx]
-                new_trigger = resample(new_trigger, example_ts.shape[0], window=10)
+                cur_xvals = np.arange(len(new_trigger))
+                new_xvals = np.linspace(0, len(new_trigger), example_ts.shape[0])
+                new_trigger = np.interp(
+                    new_xvals,
+                    cur_xvals,
+                    temp_phys_in.timeseries[temp_phys_in.trigger_idx],
+                )
                 temp_phys_in.timeseries[temp_phys_in.trigger_idx] = new_trigger
                 temp_phys_in.freq[temp_phys_in.trigger_idx] = freq
 
             if len(unique_frequencies) > 1:
-                run_fname = update_bids_name(fname, recording=str(freq) + 'Hz')
+                run_fname = update_bids_name(fname, recording=str(freq) + "Hz")
 
                 # Drop other frequency channels
                 channel_idx = np.arange(temp_phys_in.ch_amount)
-                nonfreq_channels = [i for i in channel_idx if temp_phys_in.freq[i] != freq]
+                nonfreq_channels = [
+                    i for i in channel_idx if temp_phys_in.freq[i] != freq
+                ]
                 freq_channels = [i for i in channel_idx if temp_phys_in.freq[i] == freq]
                 temp_phys_in = temp_phys_in.delete_at_index(nonfreq_channels)
 
@@ -216,8 +228,8 @@ def slice_phys(phys, run_timestamps, padding=9, update_trigger=False):
                 run_fname = fname
 
             # zero out time
-            temp_phys_in.timeseries[0] = (
-                temp_phys_in.timeseries[0] - np.min(temp_phys_in.timeseries[0])
+            temp_phys_in.timeseries[0] = temp_phys_in.timeseries[0] - np.min(
+                temp_phys_in.timeseries[0]
             )
             # Now take out the time before the scan starts
             temp_phys_in.timeseries[0] = temp_phys_in.timeseries[0] - time_before
