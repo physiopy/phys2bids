@@ -4,7 +4,6 @@ import logging
 from copy import deepcopy
 
 import numpy as np
-from scipy.signal import resample
 
 from phys2bids.bids import update_bids_name
 

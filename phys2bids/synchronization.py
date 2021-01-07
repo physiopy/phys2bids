@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 import nibabel as nib
 import numpy as np
 import pandas as pd
-
 from bids import BIDSLayout
 
 from .bids import update_bids_name
