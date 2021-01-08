@@ -7,8 +7,6 @@ from operator import itemgetter
 import matplotlib.pyplot as plt
 import nibabel as nib
 import numpy as np
-import pandas as pd
-from bids import BIDSLayout
 
 from .bids import update_bids_name
 from .physio_obj import BlueprintOutput
@@ -41,6 +39,8 @@ def load_scan_data(layout, sub, ses=None):
         'duration' is the scan duration in seconds.
         'onset' is the scan onset in seconds, starting with zero at the first scan.
     """
+    import pandas as pd
+
     # Use the scans.tsv file directly if it is available
     scans_file = layout.get(extension=".tsv", suffix="scans", subject=sub, session=ses)
     if scans_file:
@@ -152,6 +152,8 @@ def extract_physio_onsets(trigger_timeseries, freq, threshold=0.5):
         onset (in seconds), index (onsets in index of time series array),
         and duration (in seconds).
     """
+    import pandas as pd
+
     samplerate = 1.0 / freq
     scan_idx = np.where(trigger_timeseries > 0)[0]
     # Get groups of consecutive numbers in index
@@ -433,6 +435,8 @@ def workflow(physio, bids_dir, sub, ses=None, padding=9, update_trigger=False):
     8. Write out scan-associated physio files.
     9. Generate and return scan/physio onsets figure for manual QC.
     """
+    from bids import BIDSLayout
+
     layout = BIDSLayout(bids_dir)
     scan_df = load_scan_data(layout, sub=sub, ses=ses)
 
