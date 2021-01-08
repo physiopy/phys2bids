@@ -199,8 +199,9 @@ def slice_phys(phys, run_timestamps, padding=9, update_trigger=False):
                 temp_phys_in.freq[0] = freq
 
                 # Resample trigger
-                cur_xvals = np.arange(len(new_trigger))
-                new_xvals = np.linspace(0, len(new_trigger), example_ts.shape[0])
+                trigger = temp_phys_in.timeseries[temp_phys_in.trigger_idx]
+                cur_xvals = np.arange(len(trigger))
+                new_xvals = np.linspace(0, len(trigger), example_ts.shape[0])
                 new_trigger = np.interp(
                     new_xvals,
                     cur_xvals,
