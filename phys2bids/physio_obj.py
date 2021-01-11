@@ -444,7 +444,8 @@ class BlueprintInput():
         -----
         Outcome:
         self.thr: float
-            Threshold used by the function to detect trigger points.
+            Threshold used by the function to detect trigger points. 
+            If no threshold is provided, value is the mean of the trigger channel.
         self.num_timepoints_found: int
             Property of the `BlueprintInput` class.
             Contains the number of timepoints found
