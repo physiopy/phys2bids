@@ -444,7 +444,7 @@ class BlueprintInput():
         -----
         Outcome:
         self.thr: float
-            Threshold used by the function to detect trigger points. 
+            Threshold used by the function to detect trigger points.
             If no threshold is provided, value is the mean of the trigger channel.
         self.num_timepoints_found: int
             Property of the `BlueprintInput` class.
@@ -469,13 +469,14 @@ class BlueprintInput():
             time = np.linspace(time[0], time[-1], len(trigger))
 
         if thr is None:
-            thr = np.mean(trigger) + np.std(trigger)	            # If trigger channels are binary 
+            thr = np.mean(trigger) + np.std(trigger)	            
+            # If trigger channels are binary
             # (i.e., "on" is a higher value and "off" is a lower value)
             # and each "on" and "off" are each always approzimately the same value
             # then any value above the mean is "on" and every value below the mean
-            # is "off". 
+            # is "off".
             thr = np.mean(trigger)
-            flag = 1	       
+            flag = 1       
         timepoints = trigger > thr
         num_timepoints_found = len([is_true for is_true, _ in groupby(timepoints,
                                     lambda x: x != 0) if is_true])
