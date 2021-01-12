@@ -469,8 +469,7 @@ class BlueprintInput():
             time = np.linspace(time[0], time[-1], len(trigger))
 
         flag = 0
-        if thr is None:
-            thr = np.mean(trigger) + np.std(trigger)	            
+        if thr is None:	            
             # If trigger channels are binary
             # (i.e., "on" is a higher value and "off" is a lower value)
             # and each "on" and "off" are each always approzimately the same value
