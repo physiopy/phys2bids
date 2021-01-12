@@ -468,6 +468,7 @@ class BlueprintInput():
                         'of time to find the starting time.')
             time = np.linspace(time[0], time[-1], len(trigger))
 
+        flag = 0
         if thr is None:
             thr = np.mean(trigger) + np.std(trigger)	            # If trigger channels are binary 
             # (i.e., "on" is a higher value and "off" is a lower value)
