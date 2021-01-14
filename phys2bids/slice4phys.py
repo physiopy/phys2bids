@@ -143,10 +143,13 @@ def slice_phys(phys, run_timestamps, padding=9, update_trigger=False):
     """
     phys = deepcopy(phys)
     if update_trigger:
+        LGR.warning(
+            "Overwriting the trigger channel. The original signal will be retained in a 'original trigger' channel."
+        )
         phys.freq.append(phys.freq[phys.trigger_idx])
         phys.units.append(phys.units[phys.trigger_idx])
         phys.timeseries.append(phys.timeseries[phys.trigger_idx].copy())
-        phys.ch_name.append('original trigger')
+        phys.ch_name.append("original trigger")
 
         # Fix up the trigger time series
         phys.timeseries[phys.trigger_idx][:] = 0
