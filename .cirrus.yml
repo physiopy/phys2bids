@@ -147,7 +147,7 @@ Integration_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
-      - python -m pip install --upgrade pip
+      - pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org pip setuptools
       - pip install msvc-runtime
       - pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -e '.[test,doc]'
   Running_integration_script:
@@ -170,7 +170,7 @@ Unittest_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
-      - python -m pip install --upgrade pip
+      - pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org pip setuptools
       - pip install msvc-runtime
       - pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -e '.[test,doc]'
   Running_unittest_script:
