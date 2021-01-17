@@ -10,4 +10,4 @@ RUN powershell -NoLogo -NoProfile -Command \
     echo $env:path; \
     pip install --upgrade certifi ; \
     pip install wheel ; \
-    pip install --upgrade pip
+    python -m pip install --upgrade pip
