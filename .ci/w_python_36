@@ -9,4 +9,5 @@ RUN powershell -NoLogo -NoProfile -Command \
     refreshenv; \
     echo $env:path; \
     pip install --upgrade certifi ; \
-    pip install wheel
+    pip install wheel ; \
+    pip install --upgrade pip
