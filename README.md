@@ -11,6 +11,7 @@ phys2bids
 
 [![codecov](https://codecov.io/gh/physiopy/phys2bids/branch/master/graph/badge.svg)](https://codecov.io/gh/physiopy/phys2bids)
 [![CircleCI](https://circleci.com/gh/physiopy/phys2bids.svg?branch=master&style=shield)](https://circleci.com/gh/physiopy/phys2bids)
+[![Build Status. Cirrus CI](https://api.cirrus-ci.com/github/physiopy/phys2bids.svg)](https://cirrus-ci.com/github/physiopy/phys2bids)
 [![Build Status. Windows](https://dev.azure.com/physiopy/phys2bids/_apis/build/status/physiopy.phys2bids?branchName=master)](https://dev.azure.com/physiopy/phys2bids/_build/latest?definitionId=1&branchName=master)
 [![See the documentation at: https://phys2bids.readthedocs.io](https://readthedocs.org/projects/phys2bids/badge/?version=latest)](https://phys2bids.readthedocs.io/en/latest/?badge=latest)
 
