@@ -147,9 +147,8 @@ Integration_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
-      - pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org pip setuptools
       - pip install msvc-runtime
-      - pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -e '.[test,doc]'
+      - pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -e '.[test,doc]' config --global http.sslVerify false
   Running_integration_script:
     - choco install make -y --no-progress
     - pip install msvc-runtime
@@ -170,9 +169,8 @@ Unittest_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
-      - pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org pip setuptools
       - pip install msvc-runtime
-      - pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -e '.[test,doc]'
+      - pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -e '.[test,doc]' config --global http.sslVerify false
   Running_unittest_script:
     - choco install make -y --no-progress
     - pip install msvc-runtime
