@@ -10,7 +10,7 @@ phys2bids
 [![Licensed Apache 2.0](https://img.shields.io/github/license/physiopy/phys2bids)](https://github.com/physiopy/phys2bids/blob/master/LICENSE)
 
 [![codecov](https://codecov.io/gh/physiopy/phys2bids/branch/master/graph/badge.svg)](https://codecov.io/gh/physiopy/phys2bids)
-[![Build Status](https://api.cirrus-ci.com/github/physiopy/phys2bids.svg)](https://cirrus-ci.com/github/physiopy/phys2bids)
+[![Build Status](https://api.cirrus-ci.com/github/physiopy/phys2bids.svg?branch=vinferrer:master)](https://cirrus-ci.com/github/physiopy/phys2bids)
 [![See the documentation at: https://phys2bids.readthedocs.io](https://readthedocs.org/projects/phys2bids/badge/?version=latest)](https://phys2bids.readthedocs.io/en/latest/?badge=latest)
 
 [![Join the chat at Gitter: https://gitter.im/physiopy/phys2bids](https://badges.gitter.im/physiopy/phys2bids.svg)](https://gitter.im/physiopy/phys2bids?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge)
