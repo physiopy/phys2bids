@@ -1,7 +1,7 @@
 FROM cirrusci/windowsservercore:2019
 
 RUN powershell -NoLogo -NoProfile -Command \
-    choco install -y --no-progress python --version=3.7.1 ; \
+    choco install -y --no-progress python --version=3.7 ; \
     choco install -y --no-progress make ; \
     refreshenv ; \
     $env:Path += ';c:\python37'; \
@@ -9,4 +9,5 @@ RUN powershell -NoLogo -NoProfile -Command \
     refreshenv; \
     echo $env:path; \
     pip install --upgrade certifi ; \
-    pip install wheel
+    pip install wheel ; \
+    python -m pip install --upgrade pip
