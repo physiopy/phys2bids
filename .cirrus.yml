@@ -148,7 +148,7 @@ Integration_windows_task:
     reupload_on_changes: true
     populate_script:
       - pip install msvc-runtime
-      - pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -e '.[test,doc]'
+      - pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -e '.[test,doc]'
   Running_integration_script:
     - choco install make -y --no-progress
     - pip install msvc-runtime
@@ -170,7 +170,7 @@ Unittest_windows_task:
     reupload_on_changes: true
     populate_script:
       - pip install msvc-runtime
-      - pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -e '.[test,doc]'
+      - pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -e '.[test,doc]'
   Running_unittest_script:
     - choco install make -y --no-progress
     - pip install msvc-runtime
