@@ -1,6 +1,7 @@
 FROM cirrusci/windowsservercore:2019
 
 RUN powershell -NoLogo -NoProfile -Command \
+    choco install -y microsoft-visual-cpp-build-tools ; \
     choco install -y --no-progress python --version=3.7 ; \
     choco install -y --no-progress make ; \
     refreshenv ; \
