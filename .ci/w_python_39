@@ -12,4 +12,4 @@ RUN powershell -NoLogo -NoProfile -Command \
     pip install --upgrade certifi ; \
     pip install wheel ; \
     python -m pip install --upgrade pip ; \
-    pip install numpy matplotlib Cython
+    pip install numpy matplotlib Cython PyYAML
