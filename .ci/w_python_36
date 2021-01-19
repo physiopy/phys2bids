@@ -10,8 +10,6 @@ RUN powershell -NoLogo -NoProfile -Command \
     $env:Path += ';c:\Program Files\OpenSSL-Win64\bin'; \
     refreshenv; \
     echo $env:path; \
-    wget -O certs.pem https://mkcert.org/generate/ ; \
-    openssl pkcs12 -export -nokeys -out certs.pfx -in certs.pem ; \
     python -m pip install --upgrade pip ; \ 
     pip install --upgrade certifi ; \
     pip install wheel ; \
