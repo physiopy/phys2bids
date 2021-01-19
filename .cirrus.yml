@@ -147,9 +147,6 @@ Integration_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
-      - wget -O certs.pem https://mkcert.org/generate/
-      - openssl pkcs12 -export -nokeys -out certs.pfx -in certs.pem
-      - python -m pip install --upgrade pip
       - pip install --upgrade certifi
       - pip install msvc-runtime
       - pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org  --global http.sslVerify false -e '.[test,doc]'
@@ -173,7 +170,6 @@ Unittest_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
-      - python -m pip install --upgrade pip
       - pip install --upgrade certifi
       - pip install msvc-runtime
       - pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org  --global http.sslVerify false -e '.[test,doc]'
