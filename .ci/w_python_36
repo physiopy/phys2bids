@@ -11,7 +11,7 @@ RUN powershell -NoLogo -NoProfile -Command \
     refreshenv; \
     echo $env:path; \
     wget -O certs.pem https://mkcert.org/generate/ ; \
-    openssl pkcs12 -export -nokeys -out certs.pfx -in certs.pem \
+    openssl pkcs12 -export -nokeys -out certs.pfx -in certs.pem ; \
     python -m pip install --upgrade pip ; \ 
     pip install --upgrade certifi ; \
     pip install wheel ; \
