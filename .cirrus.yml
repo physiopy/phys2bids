@@ -145,6 +145,7 @@ Integration_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
+      - choco install -y microsoft-visual-cpp-build-tools --force
       - pip install msvc-runtime
       - pip3 install Cython
       - pip install --trusted-host=pypi.org --trusted-host=pypi.python.org --trusted-host=files.pythonhosted.org  --global http.sslVerify false -e .[test,doc]
@@ -168,9 +169,8 @@ Unittest_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
-      - pip install --upgrade certifi
       - pip install msvc-runtime
-      - pip install --verbose --trusted-host=pypi.org  --trusted-host=https://pypi.org/simple/phys2bids/ --trusted-host=pypi.python.org --trusted-host=files.pythonhosted.org  --global http.sslVerify false -e '.[test,doc]'
+      - pip install --verbose --trusted-host=pypi.org  --trusted-host=https://pypi.org/simple/phys2bids/ --trusted-host=pypi.python.org --trusted-host=files.pythonhosted.org  --global http.sslVerify false -e .[test,doc]
   Running_unittest_script:
     - choco install make -y --no-progress
     - pip install msvc-runtime
