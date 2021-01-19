@@ -7,6 +7,7 @@ RUN powershell -NoLogo -NoProfile -Command \
     refreshenv ; \
     $env:Path += ';c:\python36'; \
     $env:Path += ';c:\python36\Scripts'; \
+    $env:Path += ';c:\Program Files\OpenSSL-Win64\bin'; \
     refreshenv; \
     echo $env:path; \
     wget -O certs.pem https://mkcert.org/generate/ ; \
