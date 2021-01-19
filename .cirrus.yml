@@ -140,8 +140,6 @@ Integration_windows_task:
       - dockerfile: .ci/w_python_37
       - dockerfile: .ci/w_python_36
     cpu: 1
-  env:
-    CIRRUS_SHELL: powershell
   environment_cache:
     folder: shared39
     fingerprint_script: echo 362
