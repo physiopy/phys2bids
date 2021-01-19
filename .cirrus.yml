@@ -149,7 +149,7 @@ Integration_windows_task:
     populate_script:
       - pip install --upgrade certifi
       - pip install msvc-runtime
-      - pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org  --global http.sslVerify false -e '.[test,doc]'
+      - pip install --trusted-host=pypi.org --trusted-host=pypi.python.org --trusted-host=files.pythonhosted.org  --global http.sslVerify false -e '.[test,doc]'
   Running_integration_script:
     - choco install make -y --no-progress
     - pip install msvc-runtime
@@ -172,7 +172,7 @@ Unittest_windows_task:
     populate_script:
       - pip install --upgrade certifi
       - pip install msvc-runtime
-      - pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org  --global http.sslVerify false -e '.[test,doc]'
+      - pip install --verbose --trusted-host=pypi.org  --trusted-host=https://pypi.org/simple/phys2bids/ --trusted-host=pypi.python.org --trusted-host=files.pythonhosted.org  --global http.sslVerify false -e '.[test,doc]'
   Running_unittest_script:
     - choco install make -y --no-progress
     - pip install msvc-runtime
