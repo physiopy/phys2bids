@@ -4,7 +4,7 @@ import sys
 from setuptools import setup
 import versioneer
 
-SETUP_REQUIRES = ['setuptools >= 30.3.0']
+SETUP_REQUIRES = ['setuptools >= 28.8.0']
 SETUP_REQUIRES += ['wheel'] if 'bdist_wheel' in sys.argv else []
 
 if __name__ == "__main__":
