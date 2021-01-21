@@ -145,10 +145,11 @@ Integration_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
-      - choco install -y microsoft-visual-cpp-build-tools --force
+      - choco install -y --no-progress microsoft-visual-cpp-build-tools --force
+      - refreshenv
       - pip install msvc-runtime
       - pip3 install Cython
-      - pip install --trusted-host=pypi.org --trusted-host=pypi.python.org --trusted-host=files.pythonhosted.org  --global http.sslVerify false -e .[test,doc]
+      - pip install --verbose -e .[test,doc]
   Running_integration_script:
     - choco install make -y --no-progress
     - pip install msvc-runtime
