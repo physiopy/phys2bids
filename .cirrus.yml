@@ -140,16 +140,14 @@ Integration_windows_task:
       - dockerfile: .ci/w_python_37
       - dockerfile: .ci/w_python_36
     cpu: 1
-  env:
-    CIRRUS_SHELL: powershell
   environment_cache:
     folder: shared39
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
-      - pip install --upgrade certifi
       - pip install msvc-runtime
-      - pip install --trusted-host=pypi.org --trusted-host=pypi.python.org --trusted-host=files.pythonhosted.org  --global http.sslVerify false -e '.[test,doc]'
+      - pip install Cython
+      - pip install -e .[test,doc]
   Running_integration_script:
     - choco install make -y --no-progress
     - pip install msvc-runtime
@@ -163,18 +161,14 @@ Unittest_windows_task:
       - dockerfile: .ci/w_python_37
       - dockerfile: .ci/w_python_36
     cpu: 1
-  env:
-    CIRRUS_SHELL: powershell
   environment_cache:
     folder: shared39
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
-      - pip install --upgrade certifi
       - pip install msvc-runtime
-      - pip install --verbose --trusted-host=pypi.org  --trusted-host=https://pypi.org/simple/phys2bids/ --trusted-host=pypi.python.org --trusted-host=files.pythonhosted.org  --global http.sslVerify false -e '.[test,doc]'
+      - pip install -e .[test,doc]
   Running_unittest_script:
     - choco install make -y --no-progress
-    - pip install msvc-runtime
     - make unittest
 
