@@ -172,6 +172,5 @@ Unittest_windows_task:
       - pip install -e .[test,doc]
   Running_unittest_script:
     - choco install make -y --no-progress
-    - pip install msvc-runtime
     - make unittest
 
