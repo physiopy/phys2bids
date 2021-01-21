@@ -145,6 +145,8 @@ Integration_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
+      - pip install msvc-runtime
+      - pip install Cython
       - pip install -e .[test,doc]
   Running_integration_script:
     - choco install make -y --no-progress
@@ -164,6 +166,7 @@ Unittest_windows_task:
     fingerprint_script: echo 362
     reupload_on_changes: true
     populate_script:
+      - pip install msvc-runtime
       - pip install -e .[test,doc]
   Running_unittest_script:
     - choco install make -y --no-progress
