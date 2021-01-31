@@ -552,6 +552,7 @@ class BlueprintInput():
 
         LGR.info(info)
 
+
     def auto_trigger_selection(self):
         """
         Find a trigger index matching the channels with a regular expresion.
@@ -559,12 +560,15 @@ class BlueprintInput():
         Parameters
         ----------
         self
-         Raises
+
+        Raises
         ------
         Exception
         More than one possible trigger channel was automatically found.
+        
         Exception
         No trigger channel automatically found
+
         Notes
         -----
         Outcome:
