@@ -143,7 +143,7 @@ Integration_windows_task:
       PYTHON: 3.7
       PYTHON: 3.6
   environment_cache:
-    folder: shared39
+    folder: C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
     fingerprint_script:
       - echo %PYTHON%
       - cat setup.py
@@ -170,7 +170,7 @@ Unittest_windows_task:
       PYTHON: 3.7
       PYTHON: 3.6
   environment_cache:
-    folder: shared39
+    folder: C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
     fingerprint_script:
       - echo %PYTHON%
       - cat setup.py
