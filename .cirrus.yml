@@ -144,7 +144,10 @@ Integration_windows_task:
       PYTHON: 3.6
   environment_cache:
     folder: shared39
-    fingerprint_script: echo 362
+    fingerprint_script:
+      - echo $PYTHON
+      - cat setup.py
+      - echo %CIRRUS_OS
     reupload_on_changes: true
     populate_script:
       - conda create -yq --prefix  C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env python=%PYTHON%
@@ -168,7 +171,10 @@ Unittest_windows_task:
       PYTHON: 3.6
   environment_cache:
     folder: shared39
-    fingerprint_script: echo 362
+    fingerprint_script:
+      - echo $PYTHON
+      - cat setup.py
+      - echo %CIRRUS_OS
     reupload_on_changes: true
     populate_script:
       - conda create -yq --prefix  C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env python=%PYTHON%
