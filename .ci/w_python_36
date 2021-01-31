@@ -1,0 +1,17 @@
+FROM cirrusci/windowsservercore:2019
+
+RUN powershell -NoLogo -NoProfile -Command \
+    choco install -y --no-progress microsoft-visual-cpp-build-tools wget openssl ; \
+    choco install -y --no-progress python --version=3.6.8 ; \
+    choco install -y --no-progress make ; \
+    refreshenv ; \
+    $env:Path += ';c:\python36'; \
+    $env:Path += ';c:\python36\Scripts'; \
+    $env:Path += ';c:\Program Files\OpenSSL-Win64\bin'; \
+    refreshenv; \
+    echo $env:path; \
+    python -m pip install --upgrade pip ; \ 
+    pip install --upgrade certifi ; \
+    pip install wheel ; \
+    pip install setuptools==30.3.0 ; \
+    pip install numpy matplotlib Cython PyYAML h5py scipy

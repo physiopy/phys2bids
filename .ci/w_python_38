@@ -1,0 +1,15 @@
+FROM cirrusci/windowsservercore:2019
+
+RUN powershell -NoLogo -NoProfile -Command \
+    choco install -y microsoft-visual-cpp-build-tools ; \
+    choco install -y --no-progress python --version=3.8 ; \
+    choco install -y --no-progress make ; \
+    refreshenv ; \
+    $env:Path += ';c:\python38'; \
+    $env:Path += ';c:\python38\Scripts'; \
+    refreshenv; \
+    echo $env:path; \
+    python -m pip install --upgrade pip; \
+    pip install --upgrade certifi ; \
+    pip install wheel ; \
+    pip install numpy matplotlib Cython PyYAML h5py scipy
