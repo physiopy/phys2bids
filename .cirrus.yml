@@ -142,11 +142,10 @@ Integration_windows_task:
       PYTHON: 3.8
       PYTHON: 3.7
       PYTHON: 3.6
-  environment_cache:
-    populate_script:
-      - conda create -yq --prefix  C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env python=%PYTHON%
-      - activate C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
-      - pip install -e .[test,doc]
+  populate_script:
+    - conda create -yq --prefix  C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env python=%PYTHON%
+    - activate C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
+    - pip install -e .[test,doc]
   Running_integration_script:
     - choco install make -y --no-progress
     - activate C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
@@ -163,11 +162,10 @@ Unittest_windows_task:
       PYTHON: 3.8
       PYTHON: 3.7
       PYTHON: 3.6
-  environment_cache:
-    populate_script:
-      - conda create -yq --prefix  C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env python=%PYTHON%
-      - activate C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
-      - pip install -e .[test,doc]
+  populate_script:
+    - conda create -yq --prefix  C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env python=%PYTHON%
+    - activate C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
+    - pip install -e .[test,doc]
   Running_unittest_script:
     - choco install make -y --no-progress
     -  activate C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
