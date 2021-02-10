@@ -13,6 +13,7 @@ lint:
 	@flake8 phys2bids
 
 unittest:
+	@pip install -e ".[test]"
 	@py.test --skipintegration --cov-append --cov-report term-missing --cov=phys2bids phys2bids/
 
 integration:
