@@ -66,7 +66,10 @@ Integration_task:
     - source activate $PWD/conda-env
     - PATH=/home/test_user/.local/bin:$PATH
     - make integration
+    - mv .coverage .coverage_integration_${PYTHON}
     - bash <(curl -s https://codecov.io/bash)
+    binaries_artifacts:
+      path: ".coverage_integration_${PYTHON}"
 
 Style_check_task:
   depends_on:
