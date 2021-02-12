@@ -68,7 +68,7 @@ Integration_task:
     - make integration
     - mv .coverage .coverage_integration_${PYTHON}
     - bash <(curl -s https://codecov.io/bash)
-  integration_${PYTHON}_artifacts:
+  integration_artifacts:
     path: ".coverage_integration_${PYTHON}/"
 
 Style_check_task:
@@ -104,6 +104,8 @@ Build_docs_task:
   - apt-get install -y make
   - source activate $PWD/conda-env
   - make -C docs html
+  docs_artifacts:
+    path: "/tmp/cirrus-ci-build/docs/_build/html/*"
 
 Bids_validate_task:
   depends_on:
