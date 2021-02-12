@@ -105,7 +105,7 @@ Build_docs_task:
   - source activate $PWD/conda-env
   - make -C docs html
   docs_artifacts:
-    path: "docs/_build/html"
+    path: "docs/_build/html/"
 
 Bids_validate_task:
   depends_on:
