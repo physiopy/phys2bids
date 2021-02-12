@@ -62,10 +62,11 @@ Integration_task:
     populate_script:
       - source activate $PWD/conda-env
   Running_unit_tests_script:
-    - apt-get install -y make curl
+    - apt-get install -y make curl tree
     - source activate $PWD/conda-env
     - PATH=/home/test_user/.local/bin:$PATH
     - make integration
+    - tree .coverage
     - mv .coverage .coverage_integration_${PYTHON}
     - bash <(curl -s https://codecov.io/bash)
   integration_artifacts:
@@ -101,10 +102,9 @@ Build_docs_task:
     populate_script:
       - source activate $PWD/conda-env
   Build_documentation_script:
-  - apt-get install -y make tree tar
+  - apt-get install -y make tar
   - source activate $PWD/conda-env
   - make -C docs html
-  - tree /tmp/cirrus-ci-build/docs/_build/html
   - tar -zcvf html_docs.tar.gz /tmp/cirrus-ci-build/docs/_build/html
   docs_artifacts:
     path: "html_docs.tar.gz"
