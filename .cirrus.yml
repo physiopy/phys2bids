@@ -101,11 +101,12 @@ Build_docs_task:
     populate_script:
       - source activate $PWD/conda-env
   Build_documentation_script:
-  - apt-get install -y make
+  - apt-get install -y make tree
   - source activate $PWD/conda-env
   - make -C docs html
+  - tree /tmp/cirrus-ci-build/docs/_build/html
   docs_artifacts:
-    path: "docs/_build/html/"
+    path: "/tmp/cirrus-ci-build/docs/_build/html/*"
 
 Bids_validate_task:
   depends_on:
