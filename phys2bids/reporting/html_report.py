@@ -197,6 +197,7 @@ def generate_report(out_dir, log_path, phys_in):
         Path to the logged output of phys2bids
     phys_in: BlueprintInput object
         Object returned by BlueprintInput class
+
     Outcome
     -------
     Creates new plot with path specified in outfile.
