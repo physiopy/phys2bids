@@ -60,6 +60,7 @@ def _update_fpage_template(tree_string, bokeh_id, bokeh_js, log_html_path, qc_ht
         Path to the log section of the report
     qc_html_path: str
         Path to the quality check section of the report
+
     Returns
     -------
     body : Body for HTML report with embedded figures
