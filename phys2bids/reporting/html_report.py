@@ -135,6 +135,7 @@ def _generate_bokeh_plots(phys_in, figsize=(250, 500)):
     figsize: tuple
         Size of the figure expressed as (size_x, size_y),
         Default is 250x750px
+
     Outcome
     -------
     Creates new plot with path specified in outfile.
