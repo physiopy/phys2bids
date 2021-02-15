@@ -88,6 +88,7 @@ def _generate_file_tree(out_dir):
     ----------
     outdir : str
         Path to the output directory
+
     Returns
     -------
     tree_string: String with the tree of files in directory
