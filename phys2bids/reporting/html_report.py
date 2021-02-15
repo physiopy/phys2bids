@@ -56,9 +56,9 @@ def _update_fpage_template(tree_string, bokeh_id, bokeh_js, log_html_path, qc_ht
         HTML div created by bokeh.embed.components
     bokeh_js : str
         Javascript created by bokeh.embed.components
-    log_html_path: str
+    log_html_path : str
         Path to the log section of the report
-    qc_html_path: str
+    qc_html_path : str
         Path to the quality check section of the report
 
     Returns
