@@ -247,7 +247,7 @@ class BlueprintInput():
         else:
             if ch_name[trigger_idx] not in TRIGGER_NAMES:
                 LGR.info('Trigger channel name is not in our trigger channel name alias list. '
-                            'Please make sure you choose the proper channel.')
+                         'Please make sure you choose the proper channel.')
 
     @property
     def ch_amount(self):
