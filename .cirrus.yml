@@ -104,9 +104,9 @@ Build_docs_task:
   - apt-get install -y make tar
   - source activate $PWD/conda-env
   - make -C docs html
-  - tar -zcvf html_docs.tar.gz /tmp/cirrus-ci-build/docs/_build/html
   docs_artifacts:
-    path: "html_docs.tar.gz"
+    path: "/tmp/cirrus-ci-build/docs/_build/html"
+    type: text/html
 
 Bids_validate_task:
   depends_on:
