@@ -105,7 +105,7 @@ Build_docs_task:
   - source activate $PWD/conda-env
   - make -C docs html
   docs_artifacts:
-    path: "/tmp/cirrus-ci-build/docs/_build/html/**.html"
+    path: "docs/_build/html/**.html"
     type: text/html
 
 Bids_validate_task:
