@@ -592,7 +592,7 @@ class BlueprintInput():
                 raise Exception('More than one possible trigger channel was automatically found. '
                                 'Please run phys2bids specifying the -chtrig argument.')
             else:
-                self.trigger_idx = int(indexes)
+                self.trigger_idx = indexes[0]
                 LGR.info(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
         else:
             raise Exception('No trigger channel automatically found. Please run phys2bids '
