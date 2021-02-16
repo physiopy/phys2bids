@@ -134,41 +134,40 @@ Bids_validate_task:
 
 Integration_windows_task:
   windows_container:
-    matrix:
-      - dockerfile: .ci/w_python_39
-      - dockerfile: .ci/w_python_38
-      - dockerfile: .ci/w_python_37
-      - dockerfile: .ci/w_python_36
+    dockerfile: .ci/w_miniconda
     cpu: 1
-  environment_cache:
-    folder: shared39
-    fingerprint_script: echo 362
-    reupload_on_changes: true
-    populate_script:
-      - pip install msvc-runtime
-      - pip install Cython
-      - pip install -e .[test,doc]
+  env:
+    matrix:
+      PYTHON: 3.9
+      PYTHON: 3.8
+      PYTHON: 3.7
+      PYTHON: 3.6
+  populate_script:
+    - conda create -yq --prefix  C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env python=%PYTHON%
+    - activate C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
+    - pip install -e .[test,doc]
   Running_integration_script:
     - choco install make -y --no-progress
+    - activate C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
     - pip install msvc-runtime
     - make integration
 
 Unittest_windows_task:
   windows_container:
-    matrix:
-      - dockerfile: .ci/w_python_39
-      - dockerfile: .ci/w_python_38
-      - dockerfile: .ci/w_python_37
-      - dockerfile: .ci/w_python_36
+    dockerfile: .ci/w_miniconda
     cpu: 1
-  environment_cache:
-    folder: shared39
-    fingerprint_script: echo 362
-    reupload_on_changes: true
-    populate_script:
-      - pip install msvc-runtime
-      - pip install -e .[test,doc]
+  env:
+    matrix:
+      PYTHON: 3.9
+      PYTHON: 3.8
+      PYTHON: 3.7
+      PYTHON: 3.6
+  populate_script:
+    - conda create -yq --prefix  C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env python=%PYTHON%
+    - activate C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
+    - pip install -e .[test,doc]
   Running_unittest_script:
     - choco install make -y --no-progress
+    -  activate C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
     - make unittest
 
