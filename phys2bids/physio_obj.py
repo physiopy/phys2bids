@@ -15,6 +15,7 @@ TRIGGER_NAMES = ["trig", "trigger"]
 LGR = logging.getLogger(__name__)
 LGR.setLevel(logging.INFO)
 
+
 def is_valid(var, var_type, list_type=None):
     """
     Check that the var is of a certain type.

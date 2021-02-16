@@ -46,6 +46,7 @@ from .due import due, Doi
 LGR = logging.getLogger(__name__)
 LGR.setLevel(logging.INFO)
 
+
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
     """
     Print a summary onscreen and in file with informations on the files.
