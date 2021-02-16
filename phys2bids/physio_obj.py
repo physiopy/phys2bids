@@ -556,6 +556,9 @@ class BlueprintInput():
         """
         Find a trigger index matching the channels with a regular expresion.
 
+        It compares the channel name with the the regular expressions stored
+        in TRIGGER_NAMES.
+
         Parameters
         ----------
         self
@@ -575,17 +578,23 @@ class BlueprintInput():
                 Automatically retrieved trigger index
         """
         LGR.info('Running automatic trigger detection.')
-        no_numbers = [re.sub(r'\d+', '', x) for x in self.ch_name]
-        results = [re.search('|'.join(re.split(r'(\W)', case)),
-                             '§'.join(TRIGGER_NAMES), re.IGNORECASE) for case in no_numbers]
-        indexes = [i for i, v in enumerate(results) if v]
-        if len(indexes) == 1:
-            self.trigger_idx = indexes[0]
-            LGR.info(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
-        if len(indexes) > 1:
-            raise Exception('More than one possible trigger channel was automatically found. '
-                            'Please run phys2bids specifying the -chtrig argument.')
-        if len(indexes) < 1:
+        joint_match = '§'.join(TRIGGER_NAMES)
+        indexes = []
+        for n, case in enumerate(self.ch_name):
+            name = re.split('(\W+|\d|_|\s)', case)
+            name = list(filter(None, name))
+
+            if re.search('|'.join(name), joint_match, re.IGNORECASE):
+                indexes = indexes + [n]
+
+        if indexes:
+            if len(indexes) > 1:
+                raise Exception('More than one possible trigger channel was automatically found. '
+                                'Please run phys2bids specifying the -chtrig argument.')
+            else:
+                self.trigger_idx = int(indexes)
+                LGR.info(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
+        else:
             raise Exception('No trigger channel automatically found. Please run phys2bids '
                             'specifying the -chtrig argument.')
 
