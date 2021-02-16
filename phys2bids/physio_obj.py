@@ -247,7 +247,7 @@ class BlueprintInput():
         else:
             if ch_name[trigger_idx] not in TRIGGER_NAMES:
                 LGR.info('Trigger channel name is not in our trigger channel name alias list. '
-                            'Please make sure you choose the proper channel.')
+                         'Please make sure you choose the proper channel.')
 
     @property
     def ch_amount(self):
@@ -581,7 +581,7 @@ class BlueprintInput():
         joint_match = '§'.join(TRIGGER_NAMES)
         indexes = []
         for n, case in enumerate(self.ch_name):
-            name = re.split('(\W+|\d|_|\s)', case)
+            name = re.split(r'(\W+|\d|_|\s)', case)
             name = list(filter(None, name))
 
             if re.search('|'.join(name), joint_match, re.IGNORECASE):
