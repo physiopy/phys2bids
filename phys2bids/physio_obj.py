@@ -4,12 +4,16 @@
 """I/O objects for phys2bids."""
 
 import logging
+import re
 from copy import deepcopy
 from itertools import groupby
 
 import numpy as np
 
+TRIGGER_NAMES = ["trig", "trigger"]
+
 LGR = logging.getLogger(__name__)
+LGR.setLevel(logging.INFO)
 
 
 def is_valid(var, var_type, list_type=None):
@@ -239,6 +243,12 @@ class BlueprintInput():
         self.num_timepoints_found = deepcopy(num_timepoints_found)
         self.thr = deepcopy(thr)
         self.time_offset = deepcopy(time_offset)
+        if trigger_idx == 0:
+            self.auto_trigger_selection()
+        else:
+            if ch_name[trigger_idx] not in TRIGGER_NAMES:
+                LGR.info('Trigger channel name is not in our trigger channel name alias list. '
+                         'Please make sure you choose the proper channel.')
 
     @property
     def ch_amount(self):
@@ -542,6 +552,52 @@ class BlueprintInput():
         info = info + '------------------------------------------------\n'
 
         LGR.info(info)
+
+    def auto_trigger_selection(self):
+        """
+        Find a trigger index matching the channels with a regular expresion.
+
+        It compares the channel name with the the regular expressions stored
+        in TRIGGER_NAMES.
+
+        Parameters
+        ----------
+        self
+
+        Raises
+        ------
+        Exception
+        More than one possible trigger channel was automatically found.
+
+        Exception
+        No trigger channel automatically found
+
+        Notes
+        -----
+        Outcome:
+            trigger_idx : int
+                Automatically retrieved trigger index
+        """
+        LGR.info('Running automatic trigger detection.')
+        joint_match = '§'.join(TRIGGER_NAMES)
+        indexes = []
+        for n, case in enumerate(self.ch_name):
+            name = re.split(r'(\W+|\d|_|\s)', case)
+            name = list(filter(None, name))
+
+            if re.search('|'.join(name), joint_match, re.IGNORECASE):
+                indexes = indexes + [n]
+
+        if indexes:
+            if len(indexes) > 1:
+                raise Exception('More than one possible trigger channel was automatically found. '
+                                'Please run phys2bids specifying the -chtrig argument.')
+            else:
+                self.trigger_idx = indexes[0]
+                LGR.info(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
+        else:
+            raise Exception('No trigger channel automatically found. Please run phys2bids '
+                            'specifying the -chtrig argument.')
 
 
 class BlueprintOutput():
