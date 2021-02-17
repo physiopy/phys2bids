@@ -1,3 +1,20 @@
+# 2.4.0 (Wed Feb 17 2021)
+
+#### 🚀 Enhancement
+
+- Auto-detect the trigger channel based on retrieved channel names [#306](https://github.com/physiopy/phys2bids/pull/306) ([@vinferrer](https://github.com/vinferrer) [@smoia](https://github.com/smoia))
+
+#### 🏠 Internal
+
+- Testing: Use only a Windows miniconda image instead of different images for each python version [#381](https://github.com/physiopy/phys2bids/pull/381) ([@vinferrer](https://github.com/vinferrer))
+
+#### Authors: 2
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
 # 2.3.3 (Thu Jan 21 2021)
 
 :tada: This release contains work from a new contributor! :tada:
