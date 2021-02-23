@@ -61,12 +61,15 @@ Integration_task:
       - cat setup.py
     populate_script:
       - source activate $PWD/conda-env
-  Running_unit_tests_script:
-    - apt-get install -y make curl
+  Running_integration_tests_script:
+    - apt-get install -y make curl tree tar
     - source activate $PWD/conda-env
     - PATH=/home/test_user/.local/bin:$PATH
     - make integration
     - bash <(curl -s https://codecov.io/bash)
+    - tar -zcvf integration_${PYTHON}.tar.gz /tmp/pytest-of-root/pytest-0
+  integration_artifacts:
+    path: "integration_${PYTHON}.tar.gz"
 
 Style_check_task:
   depends_on:
@@ -98,9 +101,12 @@ Build_docs_task:
     populate_script:
       - source activate $PWD/conda-env
   Build_documentation_script:
-  - apt-get install -y make
+  - apt-get install -y make tar
   - source activate $PWD/conda-env
   - make -C docs html
+  docs_artifacts:
+    path: "docs/_build/html/**.html"
+    type: text/html
 
 Bids_validate_task:
   depends_on:
