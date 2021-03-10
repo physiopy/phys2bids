@@ -245,10 +245,6 @@ class BlueprintInput():
         self.time_offset = deepcopy(time_offset)
         if trigger_idx == 0:
             self.auto_trigger_selection()
-        else:
-            if ch_name[trigger_idx] not in TRIGGER_NAMES:
-                LGR.info('Trigger channel name is not in our trigger channel name alias list. '
-                         'Please make sure you choose the proper channel.')
 
     @property
     def ch_amount(self):
@@ -594,11 +590,25 @@ class BlueprintInput():
                                 'Please run phys2bids specifying the -chtrig argument.')
             else:
                 self.trigger_idx = indexes[0]
-                LGR.info(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
         else:
-            raise Exception('No trigger channel automatically found. Please run phys2bids '
-                            'specifying the -chtrig argument.')
+            # Time-domain automatic trigger detection
+            # Initialize distance array
+            mean_d = [np.nan]*(self.ch_amount-1)
+            # Loop through channels
+            for n in range(1, self.ch_amount):
+                # Get timeseries
+                s = self.timeseries[n]
+                # Normalize to [0,1]
+                s = (s-min(s))/(max(s)-min(s))
+                # Calculate distance to the closest signal limit (min or max)
+                d = np.minimum(abs(s-max(s)), abs(s-min(s)))
+                # Store the mean distance
+                mean_d[n-1] = np.mean(d)
 
+            # Set the trigger as the channel with smaller distance
+            self.trigger_idx = np.argmin(mean_d) + 1
+
+        LGR.info(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
 
 class BlueprintOutput():
     """
