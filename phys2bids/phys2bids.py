@@ -192,8 +192,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
     indir = os.path.abspath(indir)
-    if chtrig < 1:
-        raise Exception('Wrong trigger channel. Channel indexing starts with 1!')
+    if chtrig < 0:
+        raise Exception('Wrong trigger channel. Channel indexing starts with 0!')
     filename, ftype = utils.check_input_type(filename,
                                              indir)
 
