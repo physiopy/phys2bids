@@ -555,8 +555,7 @@ class BlueprintInput():
 
     def auto_trigger_selection(self):
         """
-        Find a trigger index matching the channels with a regular expresion or
-        by using a time-domain recognition of the trigger.
+        Find a trigger index automatically.
 
         It compares the channel name with the the regular expressions stored
         in TRIGGER_NAMES. If that fails a time-domain recognition of the
@@ -596,17 +595,17 @@ class BlueprintInput():
         else:
             # Time-domain automatic trigger detection
             # Initialize distance array
-            mean_d = [np.nan]*(self.ch_amount-1)
+            mean_d = [np.nan] * (self.ch_amount - 1)
             # Loop through channels
             for n in range(1, self.ch_amount):
                 # Get timeseries
                 s = self.timeseries[n]
                 # Normalize to [0,1]
-                s = (s - min(s))/(max(s) - min(s))
+                s = (s - min(s)) / (max(s) - min(s))
                 # Calculate distance to the closest signal limit (min or max)
                 d = np.minimum(abs(s - max(s)), abs(s - min(s)))
                 # Store the mean distance
-                mean_d[n-1] = np.mean(d)
+                mean_d[n - 1] = np.mean(d)
 
             # Set the trigger as the channel with smaller distance
             self.trigger_idx = np.argmin(mean_d) + 1
