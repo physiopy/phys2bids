@@ -555,7 +555,8 @@ class BlueprintInput():
 
     def auto_trigger_selection(self):
         """
-        Find a trigger index matching the channels with a regular expresion.
+        Find a trigger index matching the channels with a regular expresion or
+        by using a time-domain recognition of the trigger.
 
         It compares the channel name with the the regular expressions stored
         in TRIGGER_NAMES. If that fails a time-domain recognition of the
