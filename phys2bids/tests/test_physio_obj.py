@@ -284,12 +284,6 @@ def test_auto_trigger_selection(caplog):
                                 test_units, test_chtrig)
     assert phys_in.trigger_idx == 1
     # test when no trigger is found
-    test_chn_name = ['time', 'TRIGGAH', 'half', 'CO2', 'CO 2', 'strigose']
-    with raises(Exception) as errorinfo:
-        phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
-                                    test_units, test_chtrig)
-        assert 'No trigger channel automatically found' in str(errorinfo.value)
-    # test when no trigger is found
     test_chn_name = ['time', 'trigger', 'TRIGGER', 'CO2', 'CO 2', 'strigose']
     with raises(Exception) as errorinfo:
         phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,

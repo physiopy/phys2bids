@@ -245,6 +245,10 @@ class BlueprintInput():
         self.time_offset = deepcopy(time_offset)
         if trigger_idx == 0:
             self.auto_trigger_selection()
+        else:
+            if ch_name[trigger_idx] not in TRIGGER_NAMES:
+                LGR.info('Trigger channel name is not in our trigger channel name alias list. '
+                         'Please make sure you choose the proper channel.')
 
     @property
     def ch_amount(self):
@@ -554,7 +558,8 @@ class BlueprintInput():
         Find a trigger index matching the channels with a regular expresion.
 
         It compares the channel name with the the regular expressions stored
-        in TRIGGER_NAMES.
+        in TRIGGER_NAMES. If that fails a time-domain recognition of the
+        trigger signal is performed.
 
         Parameters
         ----------
@@ -564,9 +569,6 @@ class BlueprintInput():
         ------
         Exception
         More than one possible trigger channel was automatically found.
-
-        Exception
-        No trigger channel automatically found
 
         Notes
         -----
@@ -599,9 +601,9 @@ class BlueprintInput():
                 # Get timeseries
                 s = self.timeseries[n]
                 # Normalize to [0,1]
-                s = (s-min(s))/(max(s)-min(s))
+                s = (s - min(s))/(max(s) - min(s))
                 # Calculate distance to the closest signal limit (min or max)
-                d = np.minimum(abs(s-max(s)), abs(s-min(s)))
+                d = np.minimum(abs(s - max(s)), abs(s - min(s)))
                 # Store the mean distance
                 mean_d[n-1] = np.mean(d)
 
@@ -610,37 +612,6 @@ class BlueprintInput():
 
         LGR.info(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
 
-    def auto_rename_channels(self):
-        LGR.info('Running automatic channel detection.')
-
-        # Loop through channels excluding the trigger
-        for n in range(1,self.ch_amount):
-            # Skip trigger
-            if n == self.trigger_idx:
-                continue
-            
-            # Get timeseries and sampling frequency
-            s = self.timeseries[n]
-            T = 1/self.freq[n]
-
-            # Remove DC component
-            s = s - np.mean(s)
-
-            # Compute power spectrum
-            sf = np.power(np.abs(np.fft.fft(s)), 2)
-            f = np.array(np.fft.fftfreq(len(s), d=T))
-
-            # Get power in respiratory band
-            pow_resp = sum(sf[(f > 0) & (f < 0.5)])
-
-            # Get power in cardiac band
-            pow_cardiac = sum(sf[(f>0.5) & (f<4)])
-
-            # Classify as cardiac or respiratory    
-            if pow_resp > pow_cardiac:
-                self.ch_name[n] = 'respiratory'
-            else:
-                self.ch_name[n] = 'cardiac'
 
 class BlueprintOutput():
     """

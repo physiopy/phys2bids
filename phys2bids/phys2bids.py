@@ -252,10 +252,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     if ch_name:
         LGR.info('Renaming channels with given names')
         phys_in.rename_channels(ch_name)
-    else:
-        LGR.info('Renaming channels automatically')
-        phys_in.auto_rename_channels()
-
 
     # Checking acquisition type via user's input
     if tr is not None and num_timepoints_expected is not None:
