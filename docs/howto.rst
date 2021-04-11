@@ -4,6 +4,12 @@
 How to use ``phys2bids``
 ========================
 
+To use ``phys2bids`` you just need to run phys2bids command followed by a set of arguments. Depending on the utility you want to use these arguments will differ. A helping description of all possible arguments can be found `here <cli.html>`_ or by simply running:
+
+.. code-block:: shell
+
+    phys2bids -h
+
 This tutorial uses a text file exported from LabChart software. The principles of this tutorial apply for other inputs that ``phys2bids`` currently supports (AcqKnowledge native files and text files). However, future tutorials will go into the specifics of processing different inputs, as well as inputs which contain different sampling frequencies across data columns and inputs with multiple scans within one file.
 
 This tutorial will:
