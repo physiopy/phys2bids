@@ -291,7 +291,7 @@ def test_auto_trigger_selection_text(caplog):
         assert 'More than one possible trigger channel' in str(errorinfo.value)
 
 
-def test_auto_trigger_selection_time(caplog):
+def test_auto_trigger_selection_time():
     """Test auto_trigger_selection in time domain."""
     # Simulate 10 s of a trigger, O2 and ECG
     T = 10
