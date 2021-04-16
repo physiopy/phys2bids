@@ -594,21 +594,21 @@ class BlueprintInput():
                 self.trigger_idx = indexes[0]
         else:
             # Time-domain automatic trigger detection
-            # Initialize distance array
-            mean_d = [np.nan] * (self.ch_amount - 1)
-            # Loop through channels
-            for n in range(1, self.ch_amount):
-                # Get timeseries
-                s = self.timeseries[n]
-                # Normalize to [0,1]
-                s = (s - min(s)) / (max(s) - min(s))
-                # Calculate distance to the closest signal limit (min or max)
-                d = np.minimum(abs(s - max(s)), abs(s - min(s)))
-                # Store the mean distance
-                mean_d[n - 1] = np.mean(d)
 
-            # Set the trigger as the channel with smaller distance
-            self.trigger_idx = np.argmin(mean_d) + 1
+            # Create numpy array with all channels (excluding time)
+            channel_ts = np.array(self.timeseries[1:])
+
+            # Normalize each signal to [0,1]
+            min_ts = np.min(channel_ts, axis=1)[:, None]
+            max_ts = np.max(channel_ts, axis=1)[:, None]
+            channel_ts = (channel_ts - min_ts)/(max_ts - min_ts)
+
+            # Compute distance to the closest signal limit (0 or 1)
+            distance = np.minimum(abs(channel_ts - 0), abs(channel_ts - 1))
+            distance_mean = np.mean(distance, axis=1)
+
+            # Set the trigger as the channel with the smallest distance
+            self.trigger_idx = np.argmin(distance_mean) + 1
 
         LGR.info(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
 

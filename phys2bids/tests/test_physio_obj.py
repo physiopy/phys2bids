@@ -312,7 +312,7 @@ def test_auto_trigger_selection_time():
     test_chn_name = ['time', 'O2', 'ecg', 'tiger']
     test_units = ['s', 'V', 'V', 'V']
 
-    # test when trigger is 0 and the trigger is not recognized by text matching:
+    # test when chtrig is 0 and the trigger is not recognized by text matching:
     test_chtrig = 0
     phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
                                 test_units, test_chtrig)
