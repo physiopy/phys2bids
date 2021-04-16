@@ -76,11 +76,7 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
 
     # Remove generated files
     shutil.rmtree(conversion_path)
-    for filename in glob.glob(join(test_path, '*')):
-        try:
-            remove(filename)
-        except:
-            shutil.rmtree(filename)
+    shutil.rmtree(test_path)
 
 
 def test_integration_heuristic(skip_integration, multifreq_lab_file):
@@ -207,11 +203,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     # Remove generated files
     shutil.rmtree(test_path_output)
     shutil.rmtree(conversion_path)
-    for filename in glob.glob(join(test_path, '*')):
-        try:
-            remove(filename)
-        except:
-            shutil.rmtree(filename)
+    shutil.rmtree(test_path)
 
 
 def test_integration_multirun(skip_integration, multi_run_file):
@@ -245,8 +237,4 @@ def test_integration_multirun(skip_integration, multi_run_file):
     assert isfile(join(conversion_path, 'Test2_samefreq_TWOscans.png'))
 
     shutil.rmtree(conversion_path)
-    for filename in glob.glob(join(test_path, '*')):
-        try:
-            remove(filename)
-        except:
-            shutil.rmtree(filename)
+    shutil.rmtree(test_path)
