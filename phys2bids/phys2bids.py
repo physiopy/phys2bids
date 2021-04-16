@@ -45,6 +45,7 @@ from . import __version__
 from .due import due, Doi
 
 LGR = logging.getLogger(__name__)
+LGR.setLevel(logging.INFO)
 
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
@@ -128,7 +129,7 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
     description='The BIDS specification',
     cite_module=True)
 def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
-              sub=None, ses=None, chtrig=1, chsel=None, num_timepoints_expected=None,
+              sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=None,
               tr=None, thr=None, pad=9, ch_name=[], yml='', make_report=False,
               debug=False, quiet=False):
     """
@@ -193,9 +194,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
     indir = os.path.abspath(indir)
-    if chtrig < 1:
-        raise Exception('Wrong trigger channel. Channel indexing starts with 1!')
-
+    if chtrig < 0:
+        raise Exception('Wrong trigger channel. Channel indexing starts with 0!')
     filename, ftype = utils.check_input_type(filename,
                                              indir)
 

@@ -77,8 +77,9 @@ def _get_parser():
                           type=int,
                           help='The column number of the trigger channel. '
                                'Channel numbering starts with 1. '
-                               'Default is 1.',
-                          default=1)
+                               'Default is 0. If chtrig is left as zero phys2bids will '
+                               'perform an automatic trigger channel search by channel names.',
+                          default=0)
     optional.add_argument('-chsel', '--channel-selection',
                           dest='chsel',
                           nargs='*',

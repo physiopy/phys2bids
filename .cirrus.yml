@@ -61,12 +61,15 @@ Integration_task:
       - cat setup.py
     populate_script:
       - source activate $PWD/conda-env
-  Running_unit_tests_script:
-    - apt-get install -y make curl
+  Running_integration_tests_script:
+    - apt-get install -y make curl tree tar
     - source activate $PWD/conda-env
     - PATH=/home/test_user/.local/bin:$PATH
     - make integration
     - bash <(curl -s https://codecov.io/bash)
+    - tar -zcvf integration_${PYTHON}.tar.gz /tmp/pytest-of-root/pytest-0
+  integration_artifacts:
+    path: "integration_${PYTHON}.tar.gz"
 
 Style_check_task:
   depends_on:
@@ -98,9 +101,12 @@ Build_docs_task:
     populate_script:
       - source activate $PWD/conda-env
   Build_documentation_script:
-  - apt-get install -y make
+  - apt-get install -y make tar
   - source activate $PWD/conda-env
   - make -C docs html
+  docs_artifacts:
+    path: "docs/_build/html/**.html"
+    type: text/html
 
 Bids_validate_task:
   depends_on:
@@ -134,41 +140,40 @@ Bids_validate_task:
 
 Integration_windows_task:
   windows_container:
-    matrix:
-      - dockerfile: .ci/w_python_39
-      - dockerfile: .ci/w_python_38
-      - dockerfile: .ci/w_python_37
-      - dockerfile: .ci/w_python_36
+    dockerfile: .ci/w_miniconda
     cpu: 1
-  environment_cache:
-    folder: shared39
-    fingerprint_script: echo 362
-    reupload_on_changes: true
-    populate_script:
-      - pip install msvc-runtime
-      - pip install Cython
-      - pip install -e .[test,doc]
+  env:
+    matrix:
+      PYTHON: 3.9
+      PYTHON: 3.8
+      PYTHON: 3.7
+      PYTHON: 3.6
+  populate_script:
+    - conda create -yq --prefix  C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env python=%PYTHON%
+    - activate C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
+    - pip install -e .[test,doc]
   Running_integration_script:
     - choco install make -y --no-progress
+    - activate C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
     - pip install msvc-runtime
     - make integration
 
 Unittest_windows_task:
   windows_container:
-    matrix:
-      - dockerfile: .ci/w_python_39
-      - dockerfile: .ci/w_python_38
-      - dockerfile: .ci/w_python_37
-      - dockerfile: .ci/w_python_36
+    dockerfile: .ci/w_miniconda
     cpu: 1
-  environment_cache:
-    folder: shared39
-    fingerprint_script: echo 362
-    reupload_on_changes: true
-    populate_script:
-      - pip install msvc-runtime
-      - pip install -e .[test,doc]
+  env:
+    matrix:
+      PYTHON: 3.9
+      PYTHON: 3.8
+      PYTHON: 3.7
+      PYTHON: 3.6
+  populate_script:
+    - conda create -yq --prefix  C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env python=%PYTHON%
+    - activate C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
+    - pip install -e .[test,doc]
   Running_unittest_script:
     - choco install make -y --no-progress
+    -  activate C:\Users\ContainerAdministrator\AppData\Local\Temp\cirrus-ci-build\conda-env
     - make unittest
 
