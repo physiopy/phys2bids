@@ -601,7 +601,7 @@ class BlueprintInput():
             # Normalize each signal to [0,1]
             min_ts = np.min(channel_ts, axis=1)[:, None]
             max_ts = np.max(channel_ts, axis=1)[:, None]
-            channel_ts = (channel_ts - min_ts)/(max_ts - min_ts)
+            channel_ts = (channel_ts - min_ts) / (max_ts - min_ts)
 
             # Compute distance to the closest signal limit (0 or 1)
             distance = np.minimum(abs(channel_ts - 0), abs(channel_ts - 1))
