@@ -238,15 +238,6 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     )
     assert json_data["Columns"] == ["time", "Trigger", "CO2"]
 
-    shutil.copy(
-        join(conversion_path, "phys2bids_report.html"),
-        join(dirname(p2b.__file__), "reporting", "phys2bids_report.html"),
-    )
-    shutil.copy(
-        join(conversion_path, "phys2bids_report_log.html"),
-        join(dirname(p2b.__file__), "reporting", "phys2bids_report_log.html"),
-    )
-
     # Remove generated files
     shutil.rmtree(test_path_output)
     shutil.rmtree(conversion_path)
