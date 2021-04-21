@@ -203,7 +203,6 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     # Remove generated files
     shutil.rmtree(test_path_output)
     shutil.rmtree(conversion_path)
-    shutil.rmtree(test_path)
 
 
 def test_integration_multirun(skip_integration, multi_run_file):
