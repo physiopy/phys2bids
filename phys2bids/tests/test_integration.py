@@ -131,7 +131,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
 
     # Get version info
     current_version = get_versions()
-    assert current_version["version"] in logger_info[0]
+    assert current_version["version"] in "\t".join(logger_info)
 
     assert check_string(logger_info, "01. Trigger; sampled at", "1000.0")
     assert check_string(logger_info, "04. Belt; sampled at", "500.0")
