@@ -109,6 +109,8 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     heur_path = resource_filename("phys2bids", "heuristics")
     test_heur = join(heur_path, "heur_test_multifreq.py")
 
+    shutil.rmtree(conversion_path)
+
     # Move into folder
     subprocess.run(f"cd {test_path}", shell=True, check=True)
     # Phys2bids call through terminal
