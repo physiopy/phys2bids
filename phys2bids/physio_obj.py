@@ -608,7 +608,7 @@ class BlueprintInput():
             distance_mean = np.mean(distance, axis=1)
 
             # Set the trigger as the channel with the smallest distance
-            self.trigger_idx = np.argmin(distance_mean) + 1
+            self.trigger_idx = np.nanargmin(distance_mean) + 1
 
         LGR.info(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
 
