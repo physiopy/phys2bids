@@ -1,3 +1,20 @@
+# 2.5.0 (Wed May 12 2021)
+
+#### 🚀 Enhancement
+
+- Add additional automatic detection of the trigger based on time-domain analysis [#391](https://github.com/physiopy/phys2bids/pull/391) ([@drombas](https://github.com/drombas))
+
+#### 🏠 Internal
+
+- Upgrade to GitHub-native Dependabot [#395](https://github.com/physiopy/phys2bids/pull/395) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- David Romero-Bascones ([@drombas](https://github.com/drombas))
+
+---
+
 # 2.4.1 (Sun Apr 11 2021)
 
 :tada: This release contains work from a new contributor! :tada:
