@@ -1,3 +1,132 @@
+# 2.5.0 (Wed May 12 2021)
+
+#### 🚀 Enhancement
+
+- Add additional automatic detection of the trigger based on time-domain analysis [#391](https://github.com/physiopy/phys2bids/pull/391) ([@drombas](https://github.com/drombas))
+
+#### 🏠 Internal
+
+- Upgrade to GitHub-native Dependabot [#395](https://github.com/physiopy/phys2bids/pull/395) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- David Romero-Bascones ([@drombas](https://github.com/drombas))
+
+---
+
+# 2.4.1 (Sun Apr 11 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, David Romero-Bascones ([@drombas](https://github.com/drombas)), for all your work!
+
+#### 🐛 Bug Fix
+
+- correct chtrig check in phys2bids main workflow [#390](https://github.com/physiopy/phys2bids/pull/390) ([@drombas](https://github.com/drombas))
+
+#### 📝 Documentation
+
+- Clarify installation instructions and tutorial [#382](https://github.com/physiopy/phys2bids/pull/382) ([@drombas](https://github.com/drombas))
+
+#### 🏠 Internal
+
+- Provide the outcome of integration and documentation tests as downloadable artifacts from each Cirrus CI test page [#384](https://github.com/physiopy/phys2bids/pull/384) ([@vinferrer](https://github.com/vinferrer))
+
+#### Authors: 2
+
+- David Romero-Bascones ([@drombas](https://github.com/drombas))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
+# 2.4.0 (Wed Feb 17 2021)
+
+#### 🚀 Enhancement
+
+- Auto-detect the trigger channel based on retrieved channel names [#306](https://github.com/physiopy/phys2bids/pull/306) ([@vinferrer](https://github.com/vinferrer) [@smoia](https://github.com/smoia))
+
+#### 🏠 Internal
+
+- Testing: Use only a Windows miniconda image instead of different images for each python version [#381](https://github.com/physiopy/phys2bids/pull/381) ([@vinferrer](https://github.com/vinferrer))
+
+#### Authors: 2
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
+# 2.3.3 (Thu Jan 21 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Yaroslav Halchenko ([@yarikoptic](https://github.com/yarikoptic)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Stop using powershell as windows interpreter [#379](https://github.com/physiopy/phys2bids/pull/379) ([@vinferrer](https://github.com/vinferrer))
+- Update contributions and remove auto all-contribution plugin [#372](https://github.com/physiopy/phys2bids/pull/372) ([@smoia](https://github.com/smoia))
+- Replace utils.check_input_dir() with os.path.abspath() [#368](https://github.com/physiopy/phys2bids/pull/368) ([@vinferrer](https://github.com/vinferrer))
+
+#### ⚠️ Tests
+
+- Add windows CI testing [#366](https://github.com/physiopy/phys2bids/pull/366) ([@vinferrer](https://github.com/vinferrer))
+- Correct BIDS validation test names [#365](https://github.com/physiopy/phys2bids/pull/365) ([@vinferrer](https://github.com/vinferrer))
+
+#### 🏠 Internal
+
+- Add .mailmap to improve `git shortlog -sn` output [#378](https://github.com/physiopy/phys2bids/pull/378) ([@yarikoptic](https://github.com/yarikoptic))
+- Migrate testing to Cirrus CI [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- create coverage folder only in the makeenv [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- add the coverage folder to the shared folder [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- have a common folder with subfolders [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- add the coverage folder [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- add integration tests [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- do not pip in unittest_37 [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- name task properly [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- use as fingerprint_script [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- add coverage [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- don't use makeenv [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- cache name [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- cache enviroment folder [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- use full path in source [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- remove name option [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- save enviroment in working dir [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- add source command [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- create conda enviroment [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- add sudo comand [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- add python 3.7 tests [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- use default WD [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- use 3.7 from miniconda [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- use slim version [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- retry python version [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- change to python 3.7 container [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- change task name and checkout python version [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- check working dir [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- get default phys2bids install path [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- clone done automatically [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- try witout folder command [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- add ident [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- put folder in the end so it's created [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- set up working dir and save phys2bids folder for cache [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- delete some identation [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- rename /tmp/src/phys2bids folder to phys2bids [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- eliminate env_script line [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- use name field [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- adding cirrus CI with basic enviroment [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- Merge branch 'master' of https://github.com/physiopy/phys2bids [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- delete test [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- add windows docker trial tests [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+
+#### Authors: 3
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+- Yaroslav Halchenko ([@yarikoptic](https://github.com/yarikoptic))
+
+---
+
 # 2.3.2 (Wed Dec 09 2020)
 
 #### 🐛 Bug Fix

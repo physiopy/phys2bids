@@ -47,12 +47,12 @@ def test_print_json(tmpdir):
 def test_raise_exception(samefreq_full_acq_file):
     test_path, test_filename = os.path.split(samefreq_full_acq_file)
     with raises(Exception) as errorinfo:
-        phys2bids.phys2bids(filename=test_filename, indir=test_path, outdir=test_path, chtrig=0)
+        phys2bids.phys2bids(filename=test_filename, indir=test_path, outdir=test_path, chtrig=-1)
     assert 'Wrong trigger' in str(errorinfo.value)
 
     with raises(Exception) as errorinfo:
         phys2bids.phys2bids(filename=test_filename, num_timepoints_expected=[70], tr=[1.3, 2],
-                            indir=test_path, outdir=test_path)
+                            indir=test_path, outdir=test_path, chtrig=3)
     assert "doesn't match" in str(errorinfo.value)
 
     with raises(Exception) as errorinfo:

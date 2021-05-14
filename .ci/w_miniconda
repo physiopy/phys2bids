@@ -1,0 +1,35 @@
+FROM cirrusci/windowsservercore:2019
+WORKDIR C:/Users/Administrator
+# Specifying the user like this could, theoretically,
+# fix some of the installation/menu problems 
+# USER Administrator
+
+# Some installers return an exit code after launching sucessfully,
+# not after completing sucessfully.
+# The `| more` idiom makes cmd wait for the command to finish.
+# The `| Write-Output` idiom in powershell does the same thing in powershell.
+
+# This shows how miniconda can be downloaded and installed
+# once the normal installer works properly in a container.
+# Get and install the latest miniconda3 installer.
+# Run clean after install to eliminate unneeded tarballs.
+RUN powershell -NoLogo -NoProfile -Command \
+    choco install -y microsoft-visual-cpp-build-tools ; \
+    choco install -y --no-progress python --version=3.9 ; \
+    choco install -y --no-progress make ; \
+    refreshenv ; \
+    $env:Path += ';c:\python39'; \
+    $env:Path += ';c:\python39\Scripts'; \
+    $env:Path += ';c:\python39\lib\site-packages'; \
+    refreshenv; \
+    echo $env:path; \
+    python -m pip install --upgrade pip ; \
+    pip install --upgrade certifi ; \
+    choco install -y miniconda3 --params="'/AddToPath:1'"; \
+    $env:Path += ';C:\tools\miniconda3'; \
+    $env:Path += ';C:\tools\miniconda3\Scripts'; \
+    $env:Path += ';C:\tools\miniconda3\lib\site-packages'; \
+    refreshenv; \
+    conda install conda-build git svn anaconda-client anaconda-build; \
+    conda clean --all; \
+    "

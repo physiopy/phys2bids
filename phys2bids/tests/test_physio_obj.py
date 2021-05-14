@@ -2,7 +2,6 @@
 
 import numpy as np
 from pytest import raises
-
 from phys2bids import physio_obj as po
 
 
@@ -260,3 +259,61 @@ def test_BlueprintOutput():
 
     # Test __eq__
     assert blueprint_out == blueprint_out
+
+
+def test_auto_trigger_selection_text(caplog):
+    """Test auto_trigger_selection."""
+    test_time = np.array([0, 1, 2, 3, 4])
+    test_trigger = np.array([0, 1, 2, 3, 4])
+    test_half = np.array([0, 1, 2])
+    test_twice = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    test_timeseries = [test_time, test_trigger, test_half, test_twice, test_twice, test_twice]
+    test_freq = [1, 1, 0.5, 2, 2, 2]
+    test_chn_name = ['time', 'trigger', 'half', 'CO2', 'CO 2', 'strigose']
+    test_units = ['s', 'V', 'V', 'V', 'V', 'V']
+
+    # test when trigger is not the name of the channel
+    test_chtrig = 2
+    phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                test_units, test_chtrig)
+    assert 'Trigger channel name is not' in caplog.text
+
+    # test when trigger is 0 and that the trigger channel is recognized by name:
+    test_chtrig = 0
+    phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                test_units, test_chtrig)
+    assert phys_in.trigger_idx == 1
+    # test when no trigger is found
+    test_chn_name = ['time', 'trigger', 'TRIGGER', 'CO2', 'CO 2', 'strigose']
+    with raises(Exception) as errorinfo:
+        phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                    test_units, test_chtrig)
+        assert 'More than one possible trigger channel' in str(errorinfo.value)
+
+
+def test_auto_trigger_selection_time():
+    """Test auto_trigger_selection in time domain."""
+    # Simulate 10 s of a trigger, O2 and ECG
+    T = 10
+    nSamp = 100
+    fs = nSamp/T
+    test_time = np.linspace(0, T, nSamp)
+    test_freq = [fs, fs, fs, fs]
+
+    # O2 as a sinusoidal of 0.5 Hz
+    test_O2 = np.sin(2*np.pi*0.5*test_time)
+    # ECG as a sinusoidal with 1.5 Hz
+    test_ecg = np.sin(2*np.pi*1.5*test_time)
+    # Trigger as a binary signal
+    test_trigger = np.zeros(nSamp)
+    test_trigger[1:nSamp:4] = 1
+
+    test_timeseries = [test_time, test_O2, test_ecg, test_trigger]
+    test_chn_name = ['time', 'O2', 'ecg', 'tiger']
+    test_units = ['s', 'V', 'V', 'V']
+
+    # test when chtrig is 0 and the trigger is not recognized by text matching:
+    test_chtrig = 0
+    phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
+                                test_units, test_chtrig)
+    assert phys_in.trigger_idx == 3
