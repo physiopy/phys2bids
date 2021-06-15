@@ -1,3 +1,45 @@
+# 2.5.0 (Wed May 12 2021)
+
+#### 🚀 Enhancement
+
+- Add additional automatic detection of the trigger based on time-domain analysis [#391](https://github.com/physiopy/phys2bids/pull/391) ([@drombas](https://github.com/drombas))
+
+#### 🏠 Internal
+
+- Upgrade to GitHub-native Dependabot [#395](https://github.com/physiopy/phys2bids/pull/395) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- David Romero-Bascones ([@drombas](https://github.com/drombas))
+
+---
+
+# 2.4.1 (Sun Apr 11 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, David Romero-Bascones ([@drombas](https://github.com/drombas)), for all your work!
+
+#### 🐛 Bug Fix
+
+- correct chtrig check in phys2bids main workflow [#390](https://github.com/physiopy/phys2bids/pull/390) ([@drombas](https://github.com/drombas))
+
+#### 📝 Documentation
+
+- Clarify installation instructions and tutorial [#382](https://github.com/physiopy/phys2bids/pull/382) ([@drombas](https://github.com/drombas))
+
+#### 🏠 Internal
+
+- Provide the outcome of integration and documentation tests as downloadable artifacts from each Cirrus CI test page [#384](https://github.com/physiopy/phys2bids/pull/384) ([@vinferrer](https://github.com/vinferrer))
+
+#### Authors: 2
+
+- David Romero-Bascones ([@drombas](https://github.com/drombas))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
 # 2.4.0 (Wed Feb 17 2021)
 
 #### 🚀 Enhancement

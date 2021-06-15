@@ -555,10 +555,11 @@ class BlueprintInput():
 
     def auto_trigger_selection(self):
         """
-        Find a trigger index matching the channels with a regular expresion.
+        Find a trigger index automatically.
 
         It compares the channel name with the the regular expressions stored
-        in TRIGGER_NAMES.
+        in TRIGGER_NAMES. If that fails a time-domain recognition of the
+        trigger signal is performed.
 
         Parameters
         ----------
@@ -568,9 +569,6 @@ class BlueprintInput():
         ------
         Exception
         More than one possible trigger channel was automatically found.
-
-        Exception
-        No trigger channel automatically found
 
         Notes
         -----
@@ -594,10 +592,25 @@ class BlueprintInput():
                                 'Please run phys2bids specifying the -chtrig argument.')
             else:
                 self.trigger_idx = indexes[0]
-                LGR.info(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
         else:
-            raise Exception('No trigger channel automatically found. Please run phys2bids '
-                            'specifying the -chtrig argument.')
+            # Time-domain automatic trigger detection
+
+            # Create numpy array with all channels (excluding time)
+            channel_ts = np.array(self.timeseries[1:])
+
+            # Normalize each signal to [0,1]
+            min_ts = np.min(channel_ts, axis=1)[:, None]
+            max_ts = np.max(channel_ts, axis=1)[:, None]
+            channel_ts = (channel_ts - min_ts) / (max_ts - min_ts)
+
+            # Compute distance to the closest signal limit (0 or 1)
+            distance = np.minimum(abs(channel_ts - 0), abs(channel_ts - 1))
+            distance_mean = np.mean(distance, axis=1)
+
+            # Set the trigger as the channel with the smallest distance
+            self.trigger_idx = np.nanargmin(distance_mean) + 1
+
+        LGR.info(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
 
 
 class BlueprintOutput():

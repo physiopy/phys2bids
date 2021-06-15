@@ -13,7 +13,7 @@ Requirements
    :lines: 25-27
    :dedent: 4
 
-Depending on the processed files, it might require the **manual installation** of extra modules.
+If you are planning to use file formats other than plain ``txt``, you will need to install additional **extra modules** to have the right interface.
 At the moment, those modules are:
 
 - |bioread|_, for AcqKnowledge (``.acq``) files.
@@ -24,6 +24,9 @@ At the moment, those modules are:
 
 Linux and mac installation
 --------------------------
+The most convenient option is to use ``pip``, as it allows you to automatically download and install the package from PyPI repository and facilitates upgrading or uninstalling it. Since we use ``auto`` to publish the latest features as soon as they are ready, PyPI will always have the latest stable release of ``phys2bids`` as a package.
+
+Alternatively, you can get the package directly from GitHub but all download, installation and package handling steps will need to be done manually.
 
 Install with ``pip``
 ^^^^^^^^^^^^^^^^^^^^
@@ -33,18 +36,21 @@ Install with ``pip``
     If it is, you might need to use ``pip`` instead of ``pip3``, although some OSs do adopt ``pip3`` anyway.
     If you want to check, type ``python --version`` in a terminal.
 
+If you don't need any of the extra modules listed at the beginning of this page go to **Install phys2bids alone**. Otherwise, follow the instructions under **Install phys2bids with extra modules**.
+
 Install ``phys2bids`` alone
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Pypi has the latest stable release of ``phys2bids`` as a package. Since we use ``auto`` to publish the latest features as soon as they are ready, it will *really* be the latest release. Just run::
+To install ``phys2bids`` along with the basic required modules just run::
 
     pip3 install phys2bids
+    
+You can now proceed to check your installation and start using ``phys2bids``!
 
-Install extra modules
-~~~~~~~~~~~~~~~~~~~~~
+Install ``phys2bids`` with extra modules
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you are planning to use file formats other than plain ``txt``, you need to install extra modules to have the right interface.
-Extra modules installation can be done with the syntax::
+The installation of ``phys2bids`` along with extra modules can be done with the syntax::
 
     pip3 install phys2bids[<extra>]
 
@@ -56,6 +62,8 @@ Where ``<extra>`` is one of the following:
 For instance, if you plan to install ``phys2bids`` and use all of the interfaces, run::
 
     pip3 install phys2bids[interfaces]
+
+You can now proceed to check your installation and start using ``phys2bids``!
 
 .. note::
     If you "missed" or skipped this trick when you installed ``phys2bids`` the first time, don't worry!
@@ -72,9 +80,9 @@ Alternatively, if you have ``git`` installed, use the command::
 
 Open a terminal in the ``phys2bids`` folder and execute the command::
 
-    python3 setup.py
+    python3 setup.py install
 
-You might still need to install extra dependencies listed at the beginning of the page.
+This should have installed ``phys2bids`` along with the basic required modules. If you need any of the extra modules listed at the beginning of the page you might need to install them manually. Otherwise, you can proceed to check your installation and start using ``phys2bids``. 
 
 .. note::
     If python 3 is already your default, you might use ``python`` rather than ``python3``
