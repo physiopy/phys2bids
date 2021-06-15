@@ -68,7 +68,10 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
         # define index of the run's last trigger + padding (HAS TO BE INT type)
         # pick first value of time array that is over specified run length
         # where returns list of values over end_sec and its dtype, choose [list][first value]
-        run_end = int(np.where(phys_in.timeseries[0] > end_sec)[0][0] + padding)
+        try:
+            run_end = int(np.where(phys_in.timeseries[0] > end_sec)[0][0] + padding)
+        except IndexError:
+            run_end = phys_in.timeseries[0].shape[0]
         update = int(run_end - padding + 1)
 
         # if the padding is too much for the remaining timeseries length
