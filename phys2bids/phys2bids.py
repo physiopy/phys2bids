@@ -141,8 +141,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     Raises
     ------
-    NotImplementedError
-        If the file extension is not supported yet.
+    RuntimeError[NotImplementedError]
+        If invalid input data is provided or if the file extension is not supported yet.
     """
     # Check options to make them internally coherent pt. I
     # #!# This can probably be done while parsing?
@@ -193,7 +193,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # #!# This can probably be done while parsing?
     indir = os.path.abspath(indir)
     if chtrig < 0:
-        raise Exception('Wrong trigger channel. Channel indexing starts with 0!')
+        raise RuntimeError('Wrong trigger channel. Channel indexing starts with 0!')
     filename, ftype = utils.check_input_type(filename,
                                              indir)
 
@@ -212,9 +212,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     if tr is not None and num_timepoints_expected is not None:
         # If tr and ntp were specified, check that tr is either length one or ntp.
         if len(num_timepoints_expected) != len(tr) and len(tr) != 1:
-            raise Exception('Number of sequence types listed with TR '
-                            'doesn\'t match expected number of runs in '
-                            'the session')
+            raise RuntimeError('Number of sequence types listed with TR '
+                               'doesn\'t match expected number of runs in '
+                               'the session')
 
     # Read file!
     LGR.info(f'Reading the file {infile}')
@@ -272,7 +272,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # Check that sum of tp expected is equivalent to num_timepoints_found,
             # if it passes call slice4phys
             if phys_in.num_timepoints_found != sum(num_timepoints_expected):
-                raise Exception('The number of triggers found is different '
+                raise NotImplementedError('The number of triggers found is different '
                                 'than expected. Better stop now than break '
                                 'something.')
 
