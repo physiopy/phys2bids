@@ -272,9 +272,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # Check that sum of tp expected is equivalent to num_timepoints_found,
             # if it passes call slice4phys
             if phys_in.num_timepoints_found != sum(num_timepoints_expected):
-                raise NotImplementedError('The number of triggers found is different '
-                                'than expected. Better stop now than break '
-                                'something.')
+                raise RuntimeError('The number of triggers found is different '
+                                   'than expected. Better stop now than break '
+                                   'something.')
 
             # slice the recording based on user's entries
             # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY
