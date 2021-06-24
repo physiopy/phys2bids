@@ -5,18 +5,23 @@ import re
 import shutil
 import subprocess
 from os import remove
-from os.path import isfile, join, split
-from pkg_resources import resource_filename
+from os.path import dirname, isfile, join, split
+
+import phys2bids as p2b
 
 import pytest
 
 from phys2bids._version import get_versions
 from phys2bids.phys2bids import phys2bids
+from pkg_resources import resource_filename
 
 
 def check_string(str_container, str_to_find, str_expected, is_num=True):
-    idx = [log_idx for log_idx, log_str in enumerate(
-                      str_container) if str_to_find in log_str]
+    idx = [
+        log_idx
+        for log_idx, log_str in enumerate(str_container)
+        if str_to_find in log_str
+    ]
     str_found = str_container[idx[0]]
     if is_num:
         num_found = re.findall(r"[-+]?\d*\.\d+|\d+", str_found)
@@ -31,14 +36,20 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
     """
 
     if skip_integration:
-        pytest.skip('Skipping integration test')
+        pytest.skip("Skipping integration test")
 
     test_path, test_filename = split(samefreq_full_acq_file)
     test_chtrig = 3
-    conversion_path = join(test_path, 'code', 'conversion')
+    conversion_path = join(test_path, "code", "conversion")
 
-    phys2bids(filename=test_filename, indir=test_path, outdir=test_path,
-              chtrig=test_chtrig, num_timepoints_expected=60, tr=1.5)
+    phys2bids(
+        filename=test_filename,
+        indir=test_path,
+        outdir=test_path,
+        chtrig=test_chtrig,
+        num_timepoints_expected=60,
+        tr=1.5,
+    )
 
     # Check that files are generated
     for suffix in ['.json', '.tsv.gz']:
@@ -68,17 +79,17 @@ def test_integration_acq(skip_integration, samefreq_full_acq_file):
         json_data = json.load(json_file)
 
     # Compares values in json file with ground truth
-    assert math.isclose(json_data['SamplingFrequency'], 10000.0)
-    assert math.isclose(json_data['StartTime'], 10.4251)
-    assert json_data['Columns'] == ['time', 'RESP - RSP100C', 'PULSE - Custom, DA100C',
-                                    'MR TRIGGER - Custom, HLT100C - A 5', 'PPG100C', 'CO2', 'O2']
-
-    # Remove generated files
-    for filename in glob.glob(join(conversion_path, 'phys2bids*')):
-        remove(filename)
-    for filename in glob.glob(join(test_path, 'Test_belt_pulse_samefreq*')):
-        remove(filename)
-    shutil.rmtree(conversion_path)
+    assert math.isclose(json_data["SamplingFrequency"], 10000.0)
+    assert math.isclose(json_data["StartTime"], 10.4251)
+    assert json_data["Columns"] == [
+        "time",
+        "RESP - RSP100C",
+        "PULSE - Custom, DA100C",
+        "MR TRIGGER - Custom, HLT100C - A 5",
+        "PPG100C",
+        "CO2",
+        "O2",
+    ]
 
 
 def test_integration_heuristic(skip_integration, multifreq_lab_file):
@@ -100,21 +111,25 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     heur_path = resource_filename('phys2bids', 'heuristics')
     test_heur = join(heur_path, 'heur_test_multifreq.py')
 
+    shutil.rmtree(conversion_path)
+
     # Move into folder
     subprocess.run(f'cd {test_path}', shell=True, check=True)
     # Phys2bids call through terminal
-    command_str = (f'phys2bids -in {test_full_path} ',
-                   f'-chtrig {test_chtrig} -outdir {test_outdir} ',
-                   f'-tr {test_tr} -ntp {test_ntp} -thr {test_thr} ',
-                   f'-sub 006 -ses 01 -heur {test_heur}')
-    command_str = ''.join(command_str)
+    command_str = (
+        f"phys2bids -in {test_full_path} ",
+        f"-chtrig {test_chtrig} -outdir {test_outdir} ",
+        f"-tr {test_tr} -ntp {test_ntp} -thr {test_thr} ",
+        f"-sub 006 -ses 01 -heur {test_heur} -report",
+    )
+    command_str = "".join(command_str)
     subprocess.run(command_str, shell=True, check=True)
 
     # Check that call.sh is generated
     assert isfile(join(conversion_path, 'call.sh'))
 
     # Read logger file
-    logger_file = glob.glob(join(conversion_path, '*phys2bids*'))[0]
+    logger_file = glob.glob(join(conversion_path, "*phys2bids*.tsv"))[0]
     with open(logger_file) as logger_info:
         logger_info = logger_info.readlines()
 
@@ -197,11 +212,14 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     assert math.isclose(json_data['StartTime'], 3.6960,)
     assert json_data['Columns'] == ['time', 'Trigger', 'CO2']
 
-    # Remove generated files
-    shutil.rmtree(test_path_output)
-    shutil.rmtree(conversion_path)
-    for filename in glob.glob(join(test_path, 'Test1_multifreq_onescan*')):
-        remove(filename)
+    # shutil.copy(
+    #     join(conversion_path, "phys2bids_report.html"),
+    #     join(dirname(p2b.__file__), "reporting", "phys2bids_report.html"),
+    # )
+    # shutil.copy(
+    #     join(conversion_path, "phys2bids_report_log.html"),
+    #     join(dirname(p2b.__file__), "reporting", "phys2bids_report_log.html"),
+    # )
 
 
 def test_integration_multirun(skip_integration, multi_run_file):
