@@ -134,6 +134,12 @@ def _get_parser():
                           help='full path to file with info needed to generate '
                                'participant.tsv file ',
                           default='')
+    optional.add_argument('-report', '--report',
+                           dest='make_report',
+                           action='store_true',
+                           help='Generate a report with the data and generated folder structure. '
+                                'Default is False.',
+                           default=False)
     optional.add_argument('-debug', '--debug',
                           dest='debug',
                           action='store_true',
