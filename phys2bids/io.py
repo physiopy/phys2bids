@@ -567,15 +567,15 @@ def load_smr(filename, chtrig=0):
 
     # taken from sonpy demo
     read_data = {
-        sonpy.lib.DataType.Adc:        sonpy.lib.SonFile.ReadInts,
-        sonpy.lib.DataType.EventFall:  sonpy.lib.SonFile.ReadEvents,
-        sonpy.lib.DataType.EventRise:  sonpy.lib.SonFile.ReadEvents,
-        sonpy.lib.DataType.EventBoth:  sonpy.lib.SonFile.ReadEvents,
-        sonpy.lib.DataType.Marker:     sonpy.lib.SonFile.ReadMarkers,
-        sonpy.lib.DataType.AdcMark:    sonpy.lib.SonFile.ReadWaveMarks,
-        sonpy.lib.DataType.RealMark:   sonpy.lib.SonFile.ReadRealMarks,
-        sonpy.lib.DataType.TextMark:   sonpy.lib.SonFile.ReadTextMarks,
-        sonpy.lib.DataType.RealWave:   sonpy.lib.SonFile.ReadFloats
+        sonpy.lib.DataType.Adc: sonpy.lib.SonFile.ReadInts,
+        sonpy.lib.DataType.EventFall: sonpy.lib.SonFile.ReadEvents,
+        sonpy.lib.DataType.EventRise: sonpy.lib.SonFile.ReadEvents,
+        sonpy.lib.DataType.EventBoth: sonpy.lib.SonFile.ReadEvents,
+        sonpy.lib.DataType.Marker: sonpy.lib.SonFile.ReadMarkers,
+        sonpy.lib.DataType.AdcMark: sonpy.lib.SonFile.ReadWaveMarks,
+        sonpy.lib.DataType.RealMark: sonpy.lib.SonFile.ReadRealMarks,
+        sonpy.lib.DataType.TextMark: sonpy.lib.SonFile.ReadTextMarks,
+        sonpy.lib.DataType.RealWave: sonpy.lib.SonFile.ReadFloats
     }
 
     smrfile = sonpy.lib.SonFile(filename, True)
