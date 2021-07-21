@@ -214,3 +214,34 @@ def test_load_gep_two_files_resp(ge_two_gep_files_resp, testpath):
     gep_data2 = np.loadtxt(os.path.join(testpath, "PPGData_epiRT_0000000000_00_00_000.gep"))
     assert np.array_equal(gep_data1, phys_obj.timeseries[2])
     assert np.array_equal(gep_data2, phys_obj.timeseries[3])
+
+
+def test_load_smr(spike2_smr_file, spike2_smrx_file):
+    chtrig = 5
+
+    # 32-bit file
+    phys_obj = io.load_smr(spike2_smr_file, chtrig)
+    assert phys_obj.ch_name[0] == 'time'
+    assert phys_obj.freq[0] == 1000.0
+    assert phys_obj.units[0] == 's'
+    for n, ts in zip(phys_obj.ch_name, phys_obj.timeseries):
+        print(n, len(ts))
+
+    # checks that the scanner strigger is in the right channel
+    # the marker channels are stored as binary
+    assert phys_obj.ch_name[chtrig] == 'Scan Vol'
+    assert phys_obj.freq[chtrig] == 200.0
+    assert phys_obj.units[chtrig] == ''
+    assert len(phys_obj.timeseries[chtrig]) == 60
+
+    # 64-bit file should have the same
+    phys_obj = io.load_smr(spike2_smrx_file, chtrig)
+    assert phys_obj.ch_name[0] == 'time'
+    assert phys_obj.freq[0] == 1000.0
+    assert phys_obj.units[0] == 's'
+    # checks that the scanner trigger is in the right channel
+    # the marker channels are stored as binary
+    assert phys_obj.ch_name[chtrig] == 'Scan Vol'
+    assert phys_obj.freq[chtrig] == 200.0
+    assert phys_obj.units[chtrig] == ''
+    assert len(phys_obj.timeseries[chtrig]) == 60

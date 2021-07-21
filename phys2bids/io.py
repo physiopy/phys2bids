@@ -538,3 +538,88 @@ def load_gep(filename):
     timeseries = [t_ch, trigger]
     timeseries.extend(data)
     return BlueprintInput(timeseries, freq, names, units, 1)
+
+
+def load_smr(filename, chtrig=0):
+    """Load Spike2 smr file and populate object phys_input.
+
+    Parameters
+    ----------
+    filename: str
+        Path to the spike smr or smrx file.
+
+    chtrig : int
+        Index of trigger channel.
+
+    Returns
+    -------
+    BlueprintInput
+
+    Note
+    ----
+    Index of chtrig is 1-index (i.e. spike2 channel number).
+
+    See Also
+    --------
+    physio_obj.BlueprintInput
+    """
+    import sonpy
+
+    # taken from sonpy demo
+    read_data = {
+        sonpy.lib.DataType.Adc:        sonpy.lib.SonFile.ReadInts,
+        sonpy.lib.DataType.EventFall:  sonpy.lib.SonFile.ReadEvents,
+        sonpy.lib.DataType.EventRise:  sonpy.lib.SonFile.ReadEvents,
+        sonpy.lib.DataType.EventBoth:  sonpy.lib.SonFile.ReadEvents,
+        sonpy.lib.DataType.Marker:     sonpy.lib.SonFile.ReadMarkers,
+        sonpy.lib.DataType.AdcMark:    sonpy.lib.SonFile.ReadWaveMarks,
+        sonpy.lib.DataType.RealMark:   sonpy.lib.SonFile.ReadRealMarks,
+        sonpy.lib.DataType.TextMark:   sonpy.lib.SonFile.ReadTextMarks,
+        sonpy.lib.DataType.RealWave:   sonpy.lib.SonFile.ReadFloats
+    }
+
+    smrfile = sonpy.lib.SonFile(filename, True)
+    time_base = smrfile.GetTimeBase()
+    n_channels = smrfile.MaxChannels()
+    freq, names, units, timeseries = [], [], [], []
+    for i in range(n_channels):
+        current_channel = smrfile.ChannelType(i)
+        max_n_tick = smrfile.ChannelMaxTime(i)
+        if current_channel != sonpy.lib.DataType.Off and max_n_tick > 0:
+            max_n_tick = smrfile.ChannelMaxTime(i)
+            sample_rate = smrfile.GetIdealRate(i)
+            if current_channel == sonpy.lib.DataType.Adc:
+                divide = smrfile.ChannelDivide(i)
+            else:  # marker channels
+                divide = 1 / (time_base * sample_rate)
+            # conversion factor from CED spike2 doc
+            # http://ced.co.uk/img/Spike9.pdf
+            gain = smrfile.GetChannelScale(i) / 6553.6
+            offset = smrfile.GetChannelOffset(i)
+            name = smrfile.GetChannelTitle(chan=i)
+            unit = smrfile.GetChannelUnits(chan=i)
+
+            n_samples = int(np.floor((max_n_tick) / divide))
+            raw_signal = read_data[current_channel](
+                smrfile, chan=i, nMax=n_samples,
+                tFrom=0, tUpto=max_n_tick)
+
+            signal = np.array(raw_signal) * gain + offset
+
+            # save the data
+            freq.append(sample_rate)
+            names.append(name)
+            units.append(unit)
+            timeseries.append(signal)
+
+    # use the channel with highest sample rate to create time stamps
+    idx_max = np.argmax(freq)
+    n_timepoints = len(timeseries[idx_max])  # end point included
+    time = np.arange(n_timepoints) * freq[idx_max]
+
+    # prepend to the existing list
+    freq = [freq[idx_max], ] + freq
+    timeseries = [time, ] + timeseries
+    units = ['s', ] + units
+    names = ['time', ] + names
+    return BlueprintInput(timeseries, freq, names, units, chtrig)
