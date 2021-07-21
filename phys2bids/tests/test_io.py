@@ -224,8 +224,6 @@ def test_load_smr(spike2_smr_file, spike2_smrx_file):
     assert phys_obj.ch_name[0] == 'time'
     assert phys_obj.freq[0] == 1000.0
     assert phys_obj.units[0] == 's'
-    for n, ts in zip(phys_obj.ch_name, phys_obj.timeseries):
-        print(n, len(ts))
 
     # checks that the scanner strigger is in the right channel
     # the marker channels are stored as binary
