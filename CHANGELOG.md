@@ -1,3 +1,24 @@
+# 2.6.0 (Fri Jun 18 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Marcel Zwiers ([@marcelzwiers](https://github.com/marcelzwiers)), for all your work!
+
+#### 🚀 Enhancement
+
+- Define previously unspecified Exceptions in the main workflow [#406](https://github.com/physiopy/phys2bids/pull/406) ([@marcelzwiers](https://github.com/marcelzwiers))
+
+#### 📝 Documentation
+
+- Fix bug that would impede building the docs [#399](https://github.com/physiopy/phys2bids/pull/399) ([@eurunuela](https://github.com/eurunuela))
+
+#### Authors: 2
+
+- Eneko Uruñuela ([@eurunuela](https://github.com/eurunuela))
+- Marcel Zwiers ([@marcelzwiers](https://github.com/marcelzwiers))
+
+---
+
 # 2.5.0 (Wed May 12 2021)
 
 #### 🚀 Enhancement
