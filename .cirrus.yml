@@ -63,6 +63,7 @@ Integration_task:
     populate_script:
       - source activate $PWD/conda-env
   Running_integration_tests_script:
+    - apt-get update
     - apt-get install -y build-essential curl tree tar
     - source activate $PWD/conda-env
     - PATH=/home/test_user/.local/bin:$PATH
