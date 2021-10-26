@@ -10,7 +10,6 @@ makeenv_task:
       PYTHON: 3.7
       PYTHON: 3.8
       PYTHON: 3.9
-      PYTHON: 3.10
   environment_cache:
     folder: conda-env
     fingerprint_script: 
@@ -31,7 +30,6 @@ Unittest_task:
       PYTHON: 3.7
       PYTHON: 3.8
       PYTHON: 3.9
-      PYTHON: 3.10
     CODECOV_TOKEN: eb5758aa-6d0c-4981-a22a-16c663e2aaa9
   environment_cache:
     folder: conda-env
@@ -55,7 +53,6 @@ Integration_task:
       PYTHON: 3.7
       PYTHON: 3.8
       PYTHON: 3.9
-      PYTHON: 3.10
     CODECOV_TOKEN: eb5758aa-6d0c-4981-a22a-16c663e2aaa9
   environment_cache:
     folder: conda-env
@@ -78,8 +75,7 @@ Style_check_task:
   depends_on:
   - makeenv
   env:
-    PYTHON: 3.9
-    PYTHON: 3.10
+    PYTHON: 3.
   environment_cache:
     folder: conda-env
     fingerprint_script:
@@ -96,8 +92,7 @@ Build_docs_task:
   depends_on:
   - makeenv
   env:
-    PYTHON: 3.9
-    PYTHON: 3.10
+    PYTHON: 3.
   environment_cache:
     folder: conda-env
     fingerprint_script:
@@ -117,8 +112,7 @@ Bids_validate_task:
   depends_on:
   - makeenv
   env:
-    PYTHON: 3.9
-    PYTHON: 3.10
+    PYTHON: 3.
   environment_cache:
     folder: conda-env
     fingerprint_script:
@@ -151,7 +145,6 @@ Integration_windows_task:
   env:
     matrix:
       PYTHON: 3.9
-      PYTHON: 3.10
       PYTHON: 3.8
       PYTHON: 3.7
       PYTHON: 3.6
@@ -172,7 +165,6 @@ Unittest_windows_task:
   env:
     matrix:
       PYTHON: 3.9
-      PYTHON: 3.10
       PYTHON: 3.8
       PYTHON: 3.7
       PYTHON: 3.6
