@@ -208,7 +208,7 @@ Now the output says:
     Tip: Time 0 is the time of first trigger
     ------------------------------------------------
 
-``phys2bids`` has an automatic way of finding the right threshold, in order to find the correct number of timepoints, by using the mean and standard deviation of the trigger channel. If "Found just the right amount of timepoints!" appears everything should be working properly!
+``phys2bids`` has an automatic way of finding the right threshold, in order to find the correct number of timepoints, by using the mean of the trigger channel. If "Found just the right amount of timepoints!" appears everything should be working properly!
 
 Alright, so now we have some outputs that make sense! We have 158 timepoints expected (as inputted with ``-ntp``) and found. The output also tells us that the fMRI sampling started around 0.25 seconds later than the start of this physiological sampling.
 
@@ -231,7 +231,7 @@ If for some reason ``-ntp`` and the number of timepoints found by ``phys2bids`` 
 3. The file doesn't have all the trigger pulses you expect because the recording started later than the MRI recording (e.g. by mistake).
 
 .. note::
-    ``phys2bids`` was created to deal with little sampling errors - such as distracted researchers that started sampling a bit too late than expected. For this reason, if it finds less trigger pulses than the amount specified, it will assume that the missing ones are at the beginning and anticipate the starting time consequently.
+    ``phys2bids`` was created to deal with little sampling errors - such as distracted researchers that started sampling a bit too late than expected. For this reason, if it finds fewer trigger pulses than the amount specified, it will assume that the missing ones are at the beginning and anticipate the starting time consequently.
 
 
 Let's go through an example where the number of timepoints automatically found is not correct. For that, will we use tutorial_file_v2.txt (in the same location as tutorial_file.txt):
