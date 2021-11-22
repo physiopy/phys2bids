@@ -39,7 +39,8 @@ Unittest_task:
     populate_script:
       - source activate $PWD/conda-env
   Running_unit_tests_script:
-    - apt-get install -y make curl
+    - apt-get update
+    - apt-get install -y build-essential curl
     - source activate $PWD/conda-env
     - make unittest
     - bash <(curl -s https://codecov.io/bash)
@@ -62,7 +63,8 @@ Integration_task:
     populate_script:
       - source activate $PWD/conda-env
   Running_integration_tests_script:
-    - apt-get install -y make curl tree tar
+    - apt-get update
+    - apt-get install -y build-essential curl tree tar
     - source activate $PWD/conda-env
     - PATH=/home/test_user/.local/bin:$PATH
     - make integration
@@ -84,7 +86,8 @@ Style_check_task:
     populate_script:
       - source activate $PWD/conda-env
   Lintin_script:
-  - apt-get install -y make
+  - apt-get update
+  - apt-get install -y build-essential
   - source activate $PWD/conda-env
   - make lint
 
@@ -101,7 +104,8 @@ Build_docs_task:
     populate_script:
       - source activate $PWD/conda-env
   Build_documentation_script:
-  - apt-get install -y make tar
+  - apt-get update
+  - apt-get install -y build-essential tar
   - source activate $PWD/conda-env
   - make -C docs html
   docs_artifacts:
@@ -121,6 +125,7 @@ Bids_validate_task:
     populate_script:
       - source activate $PWD/conda-env
   Generate_enviroment_script:
+  - apt-get update
   - apt-get install -yqq wget curl tree
   - curl -sL https://deb.nodesource.com/setup_15.x | bash -
   - apt-get install -yqq nodejs
