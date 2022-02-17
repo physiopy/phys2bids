@@ -72,6 +72,10 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
             run_end = int(np.where(phys_in.timeseries[0] > end_sec)[0][0] + padding)
         except IndexError:
             run_end = phys_in.timeseries[0].shape[0]
+            LGR.info('\n------------------------------------------------------\n'
+                     f'Not enough timepoints at the end of the file to add padding.'
+                     f' Using original shape of the file.\n'
+                     '----------------------------------------------------------')
         update = int(run_end - padding + 1)
 
         # if the padding is too much for the remaining timeseries length
