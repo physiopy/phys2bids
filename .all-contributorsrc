@@ -89,6 +89,15 @@
       ]
     },
     {
+      "login": "yarikoptic",
+      "name": "Yaroslav Halchenko",
+      "avatar_url": "https://avatars.githubusercontent.com/u/39889?v=4",
+      "profile": "https://github.com/yarikoptic",
+      "contributions": [
+        "infra"
+      ]
+    },
+    {
       "login": "soichih",
       "name": "Soichi Hayashi",
       "avatar_url": "https://avatars3.githubusercontent.com/u/923896?v=4",
@@ -230,15 +239,6 @@
       ]
     },
     {
-      "login": "victox5",
-      "name": "victox5",
-      "avatar_url": "https://avatars1.githubusercontent.com/u/56017659?v=4",
-      "profile": "https://github.com/victox5",
-      "contributions": [
-        "doc"
-      ]
-    },
-    {
       "login": "marcelzwiers",
       "name": "Marcel Zwiers",
       "avatar_url": "https://avatars.githubusercontent.com/u/15156015?v=4",
@@ -248,12 +248,12 @@
       ]
     },
     {
-      "login": "yarikoptic",
-      "name": "Yaroslav Halchenko",
-      "avatar_url": "https://avatars.githubusercontent.com/u/39889?v=4",
-      "profile": "https://github.com/yarikoptic",
+      "login": "victox5",
+      "name": "victox5",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/56017659?v=4",
+      "profile": "https://github.com/victox5",
       "contributions": [
-        "infra"
+        "doc"
       ]
     }
   ]
