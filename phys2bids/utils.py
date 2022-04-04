@@ -111,7 +111,7 @@ def check_ge(filename, indir):
     """
     Check if the input file is from a GE scanner.
 
-    If so, add a ".gep" filename extension.
+    If so, copy the file while adding a ".gep" filename extension.
 
     Parameters
     ----------
@@ -127,10 +127,13 @@ def check_ge(filename, indir):
     ge_types = ['PPGData', 'RESPData', 'ECGData']
 
     if any(ge_type in filename for ge_type in ge_types):
-        new_filename = filename + '.gep'
-        copy_file(os.path.join(indir, filename),
-                  os.path.join(indir, new_filename))
-        LGR.info('GE physiological data detected. Appending .gep to filename.')
+        if 'gep' not in filename[:-3]:
+            new_filename = filename + '.gep'
+            copy_file(os.path.join(indir, filename),
+                      os.path.join(indir, new_filename))
+            LGR.info('GE physiological data detected. Appending ".gep" to filename.')
+        else:
+            LGR.info('GE physiological data detected. ".gep" extension present. ')
 
 
 def copy_file(oldpath, newpath, ext=''):
