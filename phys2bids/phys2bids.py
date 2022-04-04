@@ -194,6 +194,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     indir = os.path.abspath(indir)
     if chtrig < 0:
         raise RuntimeError('Wrong trigger channel. Channel indexing starts with 0!')
+
+    check_ge(filename, indir)
     filename, ftype = utils.check_input_type(filename,
                                              indir)
 
