@@ -107,6 +107,32 @@ def check_file_exists(filename):
         raise FileNotFoundError(f'The file {filename} does not exist!')
 
 
+def check_ge(filename, indir):
+    """
+    Check if the input file is from a GE scanner.
+
+    If so, add a ".gep" filename extension.
+
+    Parameters
+    ----------
+    filename: str or path
+        A string representing a file name or a fullpath
+        to a file
+    indir: str or path
+        A string representing a folder in which the file is,
+        or a fullpath to such folder
+
+    """
+
+    ge_types = ['PPGData', 'RESPData', 'ECGData']
+
+    if any(ge_type in filename for ge_type in ge_types):
+        new_filename = filename + '.gep'
+        copy_file(os.path.join(indir, filename),
+                  os.path.join(indir, new_filename))
+        LGR.info('GE physiological data detected. Appending .gep to filename.')
+
+
 def copy_file(oldpath, newpath, ext=''):
     """
     Copy file from oldpath to newpath.
