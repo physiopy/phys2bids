@@ -230,7 +230,7 @@ class BlueprintInput():
     - Actual number of channels +1 <= ch_amount
     """
 
-    def __init__(self, timeseries, freq, ch_name, units, trigger_idx=0,
+    def __init__(self, timeseries, freq, ch_name, units, trigger_idx,
                  num_timepoints_found=None, thr=None, time_offset=0):
         """Initialise BlueprintInput (see class docstring)."""
         self.timeseries = deepcopy(is_valid(timeseries, list, list_type=np.ndarray))
