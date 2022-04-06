@@ -8,7 +8,7 @@ from pathlib import Path
 
 LGR = logging.getLogger(__name__)
 
-SUPPORTED_FTYPES = ('acq', 'txt', 'mat', '.gep')
+SUPPORTED_FTYPES = ('acq', 'txt', 'mat', 'gep')
 
 
 def check_input_ext(filename, ext):
