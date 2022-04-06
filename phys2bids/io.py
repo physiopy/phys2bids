@@ -431,13 +431,13 @@ def load_gep(filename):
     names = ['time', 'trigger']
     units = ['s', 'mV', 'mV']  # Assuming recording units are mV...
     if 'PPGData' in filename:
-        freq = [100, 100]
+        freq = [100, 100, 100]
         names.append('cardiac')
     elif 'RESPData' in filename:
-        freq = [25, 25]
+        freq = [25, 25, 25]
         names.append('respiratory')
     elif 'ECGData' in filename:
-        freq = [1000, 1000]
+        freq = [1000, 1000, 1000]
         names.append('cardiac')
 
     # Load in data and remove first 30s
