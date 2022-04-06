@@ -401,3 +401,27 @@ def load_mat(filename, chtrig=0):
         t_ch = np.ogrid[0:duration:interval][:-1]
         timeseries = [t_ch, ] + timeseries
         return BlueprintInput(timeseries, freq, names, units, chtrig)
+
+def load_gep(filename):
+    """
+    Populate object phys_input from GE physiological files.
+
+    Parameters
+    ----------
+    filename: str
+        path to the txt labchart file
+
+    Returns
+    -------
+    BlueprintInput
+
+    Note
+    ----
+    chtrig is not a 0-based Python index - instead, it's human readable (i.e., 1-based).
+    This is handy because, when initialising the class, a new channel corresponding
+    to time is added at the beginning - that is already taken into account!
+
+    See Also
+    --------
+    physio_obj.BlueprintInput
+    """

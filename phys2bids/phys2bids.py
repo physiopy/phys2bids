@@ -229,6 +229,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     elif ftype == 'mat':
         from phys2bids.io import load_mat
         phys_in = load_mat(infile, chtrig)
+    elif ftype == 'gep':
+        from phys2bids.io import load_gep
+        phys_in = load_gep(infile)
 
     LGR.info('Checking that units of measure are BIDS compatible')
     for index, unit in enumerate(phys_in.units):
