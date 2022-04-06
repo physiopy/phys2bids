@@ -410,7 +410,7 @@ def load_gep(filename):
     Parameters
     ----------
     filename: str
-        path to the GE scanner file
+        path to the GE scanner physiological file
 
     Returns
     -------
@@ -429,7 +429,7 @@ def load_gep(filename):
 
     # Set acquisition frequency and column names based on the filename.
     names = ['time']
-    units = ['s', 'Hz']
+    units = ['s', 'mV']  # Assuming recording units are mV...
     if 'PPGData' in filename:
         freq = [100, 100]
         names.append('cardiac')
@@ -440,13 +440,13 @@ def load_gep(filename):
         freq = [1000, 1000]
         names.append('cardiac')
 
-    # Load in data
+    # Load in data and remove first 30s
     timeseries = np.loadtxt(filename)
 
     # Calculate time in seconds (starts from -30ms)
-    interval = 1/freq
-    duration = timeseries[0].shape[0] * interval
-    t_ch = np.ogrid[-0.03:duration-0.03:interval]
+    interval = 1/freq[0]
+    duration = timeseries.shape[0] * interval
+    t_ch = np.ogrid[-30:duration-30:interval]
     timeseries = list(np.vstack((t_ch, timeseries)))
 
     return BlueprintInput(timeseries, freq, names, units, None)
