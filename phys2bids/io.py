@@ -336,7 +336,7 @@ def load_acq(filename, chtrig=0):
         units.append(ch.units)
         names.append(ch.name)
 
-    return BlueprintInput(timeseries, freq, names, units, trigger_idx=chtrig)
+    return BlueprintInput(timeseries, freq, names, units, chtrig)
 
 
 def load_mat(filename, chtrig=0):
@@ -400,7 +400,7 @@ def load_mat(filename, chtrig=0):
         duration = (timeseries[0].shape[0] + 1) * interval
         t_ch = np.ogrid[0:duration:interval][:-1]
         timeseries = [t_ch, ] + timeseries
-        return BlueprintInput(timeseries, freq, names, units, trigger_idx=chtrig)
+        return BlueprintInput(timeseries, freq, names, units, chtrig)
 
 
 def load_gep(filename):
@@ -419,8 +419,8 @@ def load_gep(filename):
     Note
     ----
 
-    GE physiological files do not record a trigger so trigger channel is
-    returned as None.
+    GE physiological files do not record a trigger so a column of zeros is
+    added in its place at position 1.
 
     See Also
     --------
@@ -428,8 +428,8 @@ def load_gep(filename):
     """
 
     # Set acquisition frequency and column names based on the filename.
-    names = ['time']
-    units = ['s', 'mV']  # Assuming recording units are mV...
+    names = ['time', 'trigger']
+    units = ['s', 'mV', 'mV']  # Assuming recording units are mV...
     if 'PPGData' in filename:
         freq = [100, 100]
         names.append('cardiac')
@@ -447,6 +447,6 @@ def load_gep(filename):
     interval = 1/freq[0]
     duration = timeseries.shape[0] * interval
     t_ch = np.ogrid[-30:duration-30:interval]
-    timeseries = list(np.vstack((t_ch, timeseries)))
+    timeseries = list(np.vstack((t_ch, np.zeros(timeseries.shape[0]), timeseries)))
 
-    return BlueprintInput(timeseries, freq, names, units, None)
+    return BlueprintInput(timeseries, freq, names, units, 1)
