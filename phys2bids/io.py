@@ -165,7 +165,7 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
         timeseries = [t_ch, ] + timeseries
         freq = [max(freq)] + freq
     freq = check_multifreq(timeseries, freq)
-    return BlueprintInput(timeseries, freq, names, units, chtrig)
+    return BlueprintInput(timeseries, freq, names, units, trigger_idx=chtrig)
 
 
 def read_header_and_channels(filename):
@@ -336,7 +336,7 @@ def load_acq(filename, chtrig=0):
         units.append(ch.units)
         names.append(ch.name)
 
-    return BlueprintInput(timeseries, freq, names, units, chtrig)
+    return BlueprintInput(timeseries, freq, names, units, trigger_idx=chtrig)
 
 
 def load_mat(filename, chtrig=0):
@@ -400,7 +400,7 @@ def load_mat(filename, chtrig=0):
         duration = (timeseries[0].shape[0] + 1) * interval
         t_ch = np.ogrid[0:duration:interval][:-1]
         timeseries = [t_ch, ] + timeseries
-        return BlueprintInput(timeseries, freq, names, units, chtrig)
+        return BlueprintInput(timeseries, freq, names, units, trigger_idx=chtrig)
 
 
 def load_gep(filename):
