@@ -402,6 +402,7 @@ def load_mat(filename, chtrig=0):
         timeseries = [t_ch, ] + timeseries
         return BlueprintInput(timeseries, freq, names, units, chtrig)
 
+
 def load_gep(filename):
     """
     Populate object phys_input from GE physiological files.
@@ -409,7 +410,7 @@ def load_gep(filename):
     Parameters
     ----------
     filename: str
-        path to the txt labchart file
+        path to the GE scanner file
 
     Returns
     -------
@@ -417,11 +418,35 @@ def load_gep(filename):
 
     Note
     ----
-    chtrig is not a 0-based Python index - instead, it's human readable (i.e., 1-based).
-    This is handy because, when initialising the class, a new channel corresponding
-    to time is added at the beginning - that is already taken into account!
+
+    GE physiological files do not record a trigger so trigger channel is
+    returned as None.
 
     See Also
     --------
     physio_obj.BlueprintInput
     """
+
+    # Set acquisition frequency and column names based on the filename.
+    names = ['time']
+    units = ['s', 'Hz']
+    if 'PPGData' in filename:
+        freq = [100, 100]
+        names.append('cardiac')
+    elif 'RESPData' in filename:
+        freq = [25, 25]
+        names.append('respiratory')
+    elif 'ECGData' in filename:
+        freq = [1000, 1000]
+        names.append('cardiac')
+
+    # Load in data
+    timeseries = np.loadtxt(filename)
+
+    # Calculate time in seconds (starts from -30ms)
+    interval = 1/freq
+    duration = timeseries[0].shape[0] * interval
+    t_ch = np.ogrid[-0.03:duration-0.03:interval]
+    timeseries = list(np.vstack((t_ch, timeseries)))
+
+    return BlueprintInput(timeseries, freq, names, units, None)
