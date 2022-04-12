@@ -56,7 +56,7 @@ def has_size(var, data_size, token):
     """
     Check that the var has the same dimension of the data.
 
-    If it's not the case, fill in the var or removes exceding var entry.
+    If it's not the case, fill in the var or removes exceeding var entry.
 
     Parameters
     ----------

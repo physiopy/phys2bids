@@ -407,6 +407,14 @@ def load_gep(filename):
     """
     Populate object phys_input from GE physiological files.
 
+    Uses the filename that the user provides to find any matching inputs
+    from other recording types (PPG, RESP, or ECG).
+
+    Populates physio_obj with all identified recording types (note that one
+    or more of these may not be true recordings as the scanner outputs all
+    possible types in all cases). The modality corresponding to the filename
+    entered by the user is put first (after time and trigger).
+
     Parameters
     ----------
     filename: str
@@ -426,10 +434,16 @@ def load_gep(filename):
     --------
     physio_obj.BlueprintInput
     """
+    import os
+    from glob import glob
 
-    # Set acquisition frequency and column names based on the filename.
+    filename = Path(filename)
+
+    # Inititate lists of column names and units with time and trigger
     names = ['time', 'trigger']
-    units = ['s', 'mV', 'mV']  # Assuming recording units are mV...
+    units = ['s', 'mV']  # Assuming recording units are mV...
+
+    # Add column for file given by user
     if 'PPGData' in filename:
         freq = [100, 100, 100]
         names.append('cardiac')
@@ -440,13 +454,20 @@ def load_gep(filename):
         freq = [1000, 1000, 1000]
         names.append('cardiac')
 
-    # Load in data and remove first 30s
-    timeseries = np.loadtxt(filename)
+    # Load in user file data
+    data_user = np.loadtxt(filename)
 
-    # Calculate time in seconds (starts from -30ms)
+    # Calculate time in seconds for first input (starts from -30ms)
     interval = 1/freq[0]
-    duration = timeseries.shape[0] * interval
+    duration = data_user.shape[0] * interval
     t_ch = np.ogrid[-30:duration-30:interval]
-    timeseries = list(np.vstack((t_ch, np.zeros(timeseries.shape[0]), timeseries)))
+
+    # Find and add additional data files
+    fnames = glob(os.path.join(filename.parent, f'*{filename.name[-20:]}'))
+    for in_file in fnames:
+        if infile not in filename:
+
+    # Create final list of timeseries
+    timeseries = list(t_ch, np.zeros(data_user.shape[0]), data_user)
 
     return BlueprintInput(timeseries, freq, names, units, 1)
