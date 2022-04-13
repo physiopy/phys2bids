@@ -436,8 +436,7 @@ def load_gep(filename):
     """
     import os
     from glob import glob
-
-    filename = Path(filename)
+    from pathlib import Path
 
     # Inititate lists of column names and units with time and trigger
     names = ['time', 'trigger']
@@ -455,19 +454,33 @@ def load_gep(filename):
         names.append('cardiac')
 
     # Load in user file data
-    data_user = np.loadtxt(filename)
+    data = [np.loadtxt(filename)]
 
     # Calculate time in seconds for first input (starts from -30ms)
     interval = 1/freq[0]
-    duration = data_user.shape[0] * interval
+    duration = data[0].shape[0] * interval
     t_ch = np.ogrid[-30:duration-30:interval]
 
     # Find and add additional data files
-    fnames = glob(os.path.join(filename.parent, f'*{filename.name[-20:]}'))
-    for in_file in fnames:
-        if infile not in filename:
+    filename = Path(filename)
+    fnames = glob(os.path.join(filename.parent, f'*{filename.name[-24:-4]}.gep'))
+    fnames.remove(str(filename))  # Drop the original file
+    if not len(fnames) == 0:
+        for fname in fnames:
+            if 'PPGData' in fname:
+                freq.append(100)
+                names.append('cardiac')
+                data.append(np.loadtxt(fname))
+            elif 'RESPData' in fname:
+                freq.append(25)
+                names.append('respiratory')
+                data.append(np.loadtxt(fname))
+            elif 'ECGData' in fname:
+                freq.append(1000)
+                names.append('cardiac')
+                data.append(np.loadtxt(fname))
 
     # Create final list of timeseries
-    timeseries = list(t_ch, np.zeros(data_user.shape[0]), data_user)
-
+    timeseries = [t_ch, np.zeros(data[0].shape[0])]
+    timeseries.extend(data)
     return BlueprintInput(timeseries, freq, names, units, 1)
