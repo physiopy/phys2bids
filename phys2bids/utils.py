@@ -137,12 +137,18 @@ def check_ge(filename, indir):
         LGR.info('GE physiological data detected.')
         # Look for related GE files based on timestamp in name
         fnames = glob(os.path.join(indir, f'*{filename[-20:]}*'))
+        # Catch any tsv or json files
+        for fname in fnames[:]:
+            if '.tsv.gz' in fname:
+                fnames.remove(fname)
+            if '.json' in fname:
+                fnames.remove(fname)
         # Add extension to original so it's logged appropriately
         if 'gep' not in filename[:-3]:
             new_filename = filename + '.gep'
             copy_file(os.path.join(indir, filename),
                       os.path.join(indir, new_filename))
-            LGR.info(f'Appending ".gep" extension to {filename}.')
+            LGR.info(f'Appending ".gep" extension to {filename}')
         else:
             LGR.info(f'".gep" extension already present in {filename}.')
         # Add extension to additional files and log these
@@ -157,15 +163,14 @@ def check_ge(filename, indir):
             LGR.info('No additional GE physiological files found')
         else:
             LGR.info('Additional GE physiological file(s) found')
-            for fname in fnames:
-                print(f'GE physiological file {fname.split("/")[-1]} also found.')
-                if 'gep' not in fname[:-3]:
+            for fname in fnames[:]:
+                if 'gep' in fname[-3:]:
+                    LGR.info(f'".gep" extension already present in {fname.split("/")[-1]}.')
+                else:
                     new_fname = fname + '.gep'
                     copy_file(os.path.join(indir, fname),
                               os.path.join(indir, new_fname))
                     LGR.info(f'Appending ".gep" extension to {fname.split("/")[-1]}.')
-                else:
-                    LGR.info(f'".gep" extension already present in {fname.split("/")[-1]}.')
 
 
 def copy_file(oldpath, newpath, ext=''):
