@@ -168,8 +168,6 @@ def check_ge(filename, indir):
                     LGR.info(f'".gep" extension already present in {fname.split("/")[-1]}.')
 
 
-
-
 def copy_file(oldpath, newpath, ext=''):
     """
     Copy file from oldpath to newpath.
