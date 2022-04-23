@@ -427,8 +427,9 @@ def load_gep(filename):
     Note
     ----
 
-    GE physiological files do not record a trigger so a column of zeros is
-    added in its place at position 1.
+    GE physiological files do not record a trigger so a column is added at
+    position 1. This has a value of zero up to the scan start time and then
+    a value of one for the duration of the scan.
 
     See Also
     --------
@@ -456,7 +457,7 @@ def load_gep(filename):
     # Load in user file data
     data = [np.loadtxt(filename)]
 
-    # Calculate time in seconds for first input (starts from -30ms)
+    # Calculate time in seconds for first input (starts from -30s)
     interval = 1/freq[0]
     duration = data[0].shape[0] * interval
     t_ch = np.ogrid[-30:duration-30:interval]
@@ -480,7 +481,11 @@ def load_gep(filename):
                 names.append('cardiac')
                 data.append(np.loadtxt(fname))
 
+    # Create trigger channel
+    trigger = np.hstack((np.zeros(int(30/interval)),
+                         np.ones(int((duration-30)/interval))))
+
     # Create final list of timeseries
-    timeseries = [t_ch, np.zeros(data[0].shape[0])]
+    timeseries = [t_ch, trigger]
     timeseries.extend(data)
     return BlueprintInput(timeseries, freq, names, units, 1)
