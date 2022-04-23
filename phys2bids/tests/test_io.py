@@ -1,7 +1,7 @@
 from phys2bids import io
 
 import math
-
+import numpy as np
 import pytest
 from pytest import raises
 
@@ -158,3 +158,25 @@ def test_load_mat(matlab_file_labchart, matlab_file_acq):
     assert phys_obj.ch_name[chtrig] == 'MR TRIGGER - Custom, HLT100C - A 5'
     assert phys_obj.freq[chtrig] == 10000.0
     assert phys_obj.units[chtrig] == 'Volts'
+
+
+# Check single GE file is loaded correctly
+def test_load_gep_one_file(gep_file):
+    # Load data
+    phys_obj = io.load_gep(gep_file)
+
+    # Check the channel data is as expected
+    gep_data = np.loadtxt(gep_file)
+    assert np.array_equal(gep_data, phys_obj.timeseries[2])
+
+
+# Check two GE files are loaded correctly
+def test_load_gep_two_files(gep_file, gep_file2):
+    # Load data
+    phys_obj = io.load_gep(gep_file)
+
+    # Check the channel data is as expected
+    gep_data1 = np.loadtxt(gep_file)
+    gep_data2 = np.loadtxt(gep_file2)
+    assert np.array_equal(gep_data1, phys_obj.timeseries[2])
+    assert np.array_equal(gep_data2, phys_obj.timeseries[3])
