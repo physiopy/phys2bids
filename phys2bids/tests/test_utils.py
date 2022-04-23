@@ -90,3 +90,21 @@ def test_append_list_as_row(tmpdir):
         tsv_read = reader(tsv, delimiter="\t")
         for row in tsv_read:
             assert row == list_of_elem
+
+
+# Test check_ge's ability to catch improperly formatted GE files
+def test_check_ge_bad_files(tmpdir):
+    # Catch string
+    with raises(Exception) as errorinfo:
+        utils.check_ge('PPGData_epiRT_string0000_00_00_000', tmpdir)
+    assert 'not numerical' in str(errorinfo.value)
+
+    # Catch multiple columns in csv file
+    with raises(Exception) as errorinfo:
+        utils.check_ge('PPGData_epiRT_columnscsv_00_00_000', tmpdir)
+    assert 'not numerical' in str(errorinfo.value)
+
+    # Catch multiple columns in tsv file
+    with raises(Exception) as errorinfo:
+        utils.check_ge('PPGData_epiRT_columnstsv_00_00_000', tmpdir)
+    assert 'multiple columns' in str(errorinfo.value)
