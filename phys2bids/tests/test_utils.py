@@ -108,3 +108,17 @@ def test_check_ge_bad_files(tmpdir):
     with raises(Exception) as errorinfo:
         utils.check_ge('PPGData_epiRT_columnstsv_00_00_000', tmpdir)
     assert 'multiple columns' in str(errorinfo.value)
+
+
+# Test that check_ge adds suffix to files appropriately
+def test_check_ge_add_suffix(tmpdir):
+    # Single file
+    indir = os.path.join(tmpdir, 'one_file')
+    utils.check_ge('PPGData_epiRT_0000000000_00_00_000', indir)
+    assert os.path.isfile(os.path.join(indir, 'PPGData_epiRT_0000000000_00_00_000.gep'))
+
+    # Multiple files
+    indir = os.path.join(tmpdir, 'two_files')
+    utils.check_ge('PPGData_epiRT_0000000000_00_00_000', indir)
+    assert os.path.isfile(os.path.join(indir, 'RESPData_epiRT_0000000000_00_00_000.gep'))
+
