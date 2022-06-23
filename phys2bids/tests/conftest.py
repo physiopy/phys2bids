@@ -106,3 +106,23 @@ def matlab_file_labchart(testpath):
 def matlab_file_acq(testpath):
     return fetch_file('mc96w', testpath,
                       'Test_belt_pulse_multifreq.mat')
+
+@pytest.fixture
+def ge_file_ppg(testpath):
+#    return fetch_file('u9wsr', testpath,
+#                      'PPGData_epiRT_0000000000_00_00_000')
+# Instead of returning you fetch and copy
+#    fetch_file('u9wsr', testpath,
+#                      'PPGData_epiRT_0000000000_00_00_000')
+# os.path.mkdirs to create the two folders for the two files and the one file case
+# os.path copy (something similar) to copy ppg in onefile folder
+# os.path.move (smthg like that) to move the ppg in twofile folder
+return 0
+
+@pytest.fixture
+def ge_file_resp(testpath):
+# os mkdirs to create folders (check they exists or mkdirs exists=ok or something like that)
+# os chdir to move to twofile folder
+    return fetch_file('49xpw', testpath,
+                      'RESPData_epiRT_0000000000_00_00_000')
+

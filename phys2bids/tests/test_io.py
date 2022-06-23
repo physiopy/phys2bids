@@ -161,12 +161,13 @@ def test_load_mat(matlab_file_labchart, matlab_file_acq):
 
 
 # Check single GE file is loaded correctly
-def test_load_gep_one_file(gep_file):
+# To read downloaded files in conftest, use the same name of the fixture function
+def test_load_gep_one_file(ge_file_ppg):
     # Load data
-    phys_obj = io.load_gep(gep_file)
+    phys_obj = io.load_gep(ge_file_ppg)
 
     # Check the channel data is as expected
-    gep_data = np.loadtxt(gep_file)
+    gep_data = np.loadtxt(ge_file_ppg)
     assert np.array_equal(gep_data, phys_obj.timeseries[2])
 
 
