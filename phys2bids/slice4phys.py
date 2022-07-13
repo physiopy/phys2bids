@@ -46,7 +46,7 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
     run_timestamps = {}
 
     # Express the padding in samples equivalent
-    padding = padding * phys_in.freq[0]
+    padding_fr = padding * phys_in.freq[0]
 
     # enumerate user input  num_timepoints_expected
     for run_idx, run_tps in enumerate(ntp_list):
@@ -68,8 +68,17 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
         # define index of the run's last trigger + padding (HAS TO BE INT type)
         # pick first value of time array that is over specified run length
         # where returns list of values over end_sec and its dtype, choose [list][first value]
-        run_end = int(np.where(phys_in.timeseries[0] > end_sec)[0][0] + padding)
-        update = int(run_end - padding + 1)
+
+        # Check if end_sec is above the end of the timeseries (it happens for noisy cases)
+        if phys_in.timeseries[0][-1] > end_sec:
+            run_end = int(np.where(phys_in.timeseries[0] > end_sec)[0][0] + padding_fr)
+        else:
+            run_end = int(phys_in.timeseries[0].shape[0]-1)
+            LGR.warning(f'The computed end point in second was {end_sec}, '
+                        'but current timeseries only lasts up to '
+                        f'{phys_in.timeseries[0][-1]}')
+
+        update = int(run_end - padding_fr + 1)
 
         # if the padding is too much for the remaining timeseries length
         # then the padding stops at the end of recording
@@ -83,9 +92,9 @@ def find_runs(phys_in, ntp_list, tr_list, thr=None, padding=9):
             # adjust time_offset to keep original timing information
             phys_in.time_offset = phys_in.time_offset + run_timestamps[run_idx][2]
             # update run_start, removing 2 paddings (one for this run, one for the previous)
-            run_start = int(run_start + previous_end_index - 2 * padding)
+            run_start = int(run_start + previous_end_index - 2 * padding_fr)
             # update run_end, removing the padding of the previous end
-            run_end = int(run_end + previous_end_index - padding)
+            run_end = int(run_end + previous_end_index - padding_fr)
 
         # Save *start* and *end_index* in dictionary along with *time_offset* and *ntp found*
         # dict key must be readable by human
