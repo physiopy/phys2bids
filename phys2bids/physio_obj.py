@@ -243,6 +243,7 @@ class BlueprintInput():
         self.num_timepoints_found = deepcopy(num_timepoints_found)
         self.thr = deepcopy(thr)
         self.time_offset = deepcopy(time_offset)
+        self._time_resampled_to_trigger = None 
         if trigger_idx == 0:
             self.auto_trigger_selection()
         else:
@@ -340,10 +341,13 @@ class BlueprintInput():
             new_idx = slice(idx_dict['start'], idx_dict['stop'], idx_dict['step'])
             sliced_timeseries[n] = channel[new_idx]
 
-        return BlueprintInput(sliced_timeseries, self.freq, self.ch_name,
-                              self.units, self.trigger_idx,
-                              self.num_timepoints_found, self.thr,
-                              self.time_offset)
+        sliced_bp = BlueprintInput(sliced_timeseries, self.freq, self.ch_name,
+                                   self.units, self.trigger_idx,
+                                   self.num_timepoints_found, self.thr,
+                                   self.time_offset)
+
+        sliced_bp._time_resampled_to_trigger = self._time_resampled_to_trigger
+        return sliced_bp
 
     def __eq__(self, other):
         """
@@ -477,6 +481,8 @@ class BlueprintInput():
                         'from the registered time. Using a resampled version '
                         'of time to find the starting time.')
             time = np.linspace(time[0], time[-1], len(trigger))
+
+            self._time_resampled_to_trigger = time
 
         flag = 0
         if thr is None:
