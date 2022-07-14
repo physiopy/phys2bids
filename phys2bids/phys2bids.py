@@ -333,7 +333,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         LGR.info(f'Preparing BIDS output using {heur_file}')
         # If heuristics are used, init a dict of arguments to pass to use_heuristic
         heur_args = {'heur_file': heur_file, 'sub': sub, 'ses': ses,
-                     'filename': filename, 'outdir': outdir, 'run': '',
+                     'filename': filename, 'outdir': outdir, 'take': '',
                      'record_label': ''}
         # Generate participants.tsv file if it doesn't exist already.
         # Update the file if the subject is not in the file.
