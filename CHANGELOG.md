@@ -1,3 +1,37 @@
+# 2.6.1 (Thu Jul 14 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Stefano Moia ([@smoia](https://github.com/smoia)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Rename "run" into "take" for clearer purposes and fix naming convention in multi-take overlapping [#427](https://github.com/physiopy/phys2bids/pull/427) ([@smoia](https://github.com/smoia))
+- Fix trigger plots when trigger has different sampling than time [#426](https://github.com/physiopy/phys2bids/pull/426) ([@smoia](https://github.com/smoia))
+- Prevent slicing from terminating program if end of last slice is above maximum timepoints. [#425](https://github.com/physiopy/phys2bids/pull/425) ([@smoia](https://github.com/smoia))
+- Update trigger threshold guess estimation to mean of trigger channel [#377](https://github.com/physiopy/phys2bids/pull/377) ([@62442katieb](https://github.com/62442katieb))
+
+#### 📝 Documentation
+
+- Update contributors list [#423](https://github.com/physiopy/phys2bids/pull/423) (s.moia@bcbl.eu [@smoia](https://github.com/smoia))
+
+#### ⚠️ Tests
+
+- Fix testing enviroment by using `apt-get install build-essential` rather than `apt-get install make` [#413](https://github.com/physiopy/phys2bids/pull/413) ([@vinferrer](https://github.com/vinferrer))
+
+#### 🏠 Internal
+
+- Add @drombas as contributor [#416](https://github.com/physiopy/phys2bids/pull/416) ([@smoia](https://github.com/smoia))
+
+#### Authors: 4
+
+- Katie Bottenhorn ([@62442katieb](https://github.com/62442katieb))
+- smoia (s.moia@bcbl.eu)
+- Stefano Moia ([@smoia](https://github.com/smoia))
+- Vicente Ferrer ([@vinferrer](https://github.com/vinferrer))
+
+---
+
 # 2.6.0 (Fri Jun 18 2021)
 
 :tada: This release contains work from a new contributor! :tada:
