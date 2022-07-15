@@ -1,3 +1,15 @@
+# 2.6.2 (Fri Jul 15 2022)
+
+#### 🐛 Bug Fix
+
+- fix: Remove breakpoint from workflow ([@smoia](https://github.com/smoia))
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
 # 2.6.1 (Thu Jul 14 2022)
 
 :tada: This release contains work from a new contributor! :tada:
