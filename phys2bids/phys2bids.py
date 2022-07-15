@@ -407,7 +407,6 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                 # If any filename exists already because of multi-take, append labels
                 # But warn about the non-validity of this BIDS-like name.
                 if take_amount > 1:
-                    breakpoint()
                     for n, k in enumerate(phys_out.keys()):
                         if k != key and phys_out[key].filename == phys_out[k].filename:
                             phys_out[key].filename = (f'{phys_out[key].filename}'
