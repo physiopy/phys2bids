@@ -51,10 +51,10 @@ API
    :template: function.rst
    :toctree: generated/
 
-   io.check_multifreq
-   io.generate_blueprint
-   io.read_header_and_channels
-   io.extract_header_items
+   check_multifreq
+   generate_blueprint
+   read_header_and_channels
+   extract_header_items
 
 :mod:`phys2bids.io` - Loading functions
 --------------------------------------------------
@@ -69,6 +69,6 @@ API
    :template: function.rst
    :toctree: generated/
 
-   io.load_txt
-   io.load_acq
-   io.load_mat
+   load_txt
+   load_acq
+   load_mat
