@@ -38,18 +38,37 @@ API
    BlueprintInput
    BlueprintOutput
 
-:mod:`phys2bids.interfaces` - Data I/O interfaces
+:mod:`phys2bids.io` - Data I/O interfaces
 --------------------------------------------------
 
-.. automodule:: phys2bids.interfaces
+.. automodule:: phys2bids.io
    :no-members:
    :no-inherited-members:
 
-.. currentmodule:: phys2bids.interfaces
+.. currentmodule:: phys2bids.io
 
 .. autosummary::
    :template: function.rst
    :toctree: generated/
 
-   acq.populate_phys_input
-   txt.populate_phys_input
+   io.check_multifreq
+   io.generate_blueprint
+   io.read_header_and_channels
+   io.extract_header_items
+
+:mod:`phys2bids.io` - Loading functions
+--------------------------------------------------
+
+.. automodule:: phys2bids.io
+   :no-members:
+   :no-inherited-members:
+
+.. currentmodule:: phys2bids.io
+
+.. autosummary::
+   :template: function.rst
+   :toctree: generated/
+
+   io.load_txt
+   io.load_acq
+   io.load_mat
