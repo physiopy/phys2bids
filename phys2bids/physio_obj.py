@@ -243,7 +243,7 @@ class BlueprintInput():
         self.num_timepoints_found = deepcopy(num_timepoints_found)
         self.thr = deepcopy(thr)
         self.time_offset = deepcopy(time_offset)
-        self._time_resampled_to_trigger = None 
+        self._time_resampled_to_trigger = None
         if trigger_idx == 0:
             self.auto_trigger_selection()
         else:

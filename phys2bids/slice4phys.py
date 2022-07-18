@@ -73,7 +73,7 @@ def find_takes(phys_in, ntp_list, tr_list, thr=None, padding=9):
         if phys_in.timeseries[0][-1] > end_sec:
             take_end = int(np.where(phys_in.timeseries[0] > end_sec)[0][0] + padding_fr)
         else:
-            take_end = int(phys_in.timeseries[0].shape[0]-1)
+            take_end = int(phys_in.timeseries[0].shape[0] - 1)
             LGR.warning(f'The computed end point in second was {end_sec}, '
                         'but current timeseries only lasts up to '
                         f'{phys_in.timeseries[0][-1]}')
