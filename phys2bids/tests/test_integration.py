@@ -234,6 +234,59 @@ def test_integration_multirun(skip_integration, multi_run_file):
     #     assert isfile(join(conversion_path, f'Test2_samefreq_TWOscans_{run}_trigger_time.png'))
     assert isfile(join(conversion_path, 'Test2_samefreq_TWOscans.png'))
 
+def test_integration_gep_onefile(skip_integration, ge_one_gep_file):
+    """
+    Does the integration test for a single GE file
+    Input file is PPG
+    """
+
+    if skip_integration:
+        pytest.skip('Skipping integration test')
+
+    test_path, test_filename = split(ge_one_gep_file)
+    conversion_path = join(test_path, 'code', 'conversion')
+
+    phys2bids(filename=test_filename, indir=test_path, outdir=test_path)
+
+    # Check that files are generated
+    for suffix in ['.json', '.tsv.gz']:
+        assert isfile(join(test_path, test_filename + suffix))
+
+    # Check files in extra are generated
+    for suffix in ['.log']:
+        assert isfile(join(conversion_path, test_filename + suffix))
+
+    # Read log file (note that this file is not the logger file)
+    with open(join(conversion_path, test_filename + '.log')) as log_info:
+        log_info = log_info.readlines()
+
+    # Check timepoints expected
+    assert check_string(log_info, 'Timepoints expected', 'None', is_num=False)
+    # Check timepoints found
+    assert check_string(log_info, 'Timepoints found', 'None', is_num=False)
+    # Check sampling frequency
+    assert check_string(log_info, 'Sampling Frequency', '100')
+    # Check sampling started
+    assert check_string(log_info, 'Sampling started', '30.0000')
+    # Check start time
+    assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
+
+    # Checks json file
+    with open(join(test_path, test_filename + '.json')) as json_file:
+        json_data = json.load(json_file)
+
+    # Compares values in json file with ground truth
+    assert math.isclose(json_data['SamplingFrequency'], 100)
+    assert math.isclose(json_data['StartTime'], 30.0)
+    assert json_data['Columns'] == ['time', 'trigger', 'cardiac']
+
+    # Remove generated files
+    for filename in glob.glob(join(conversion_path, 'phys2bids*')):
+        remove(filename)
+    for filename in glob.glob(join(test_path, test_filename+'*')):
+        remove(filename)
+    shutil.rmtree(conversion_path)
+
 
 def test_integration_gep_multifile(skip_integration, ge_two_gep_files):
     """
@@ -276,60 +329,6 @@ def test_integration_gep_multifile(skip_integration, ge_two_gep_files):
 
     # Checks json file
     with open(join(test_path, test_filename + '_100Hz.json')) as json_file:
-        json_data = json.load(json_file)
-
-    # Compares values in json file with ground truth
-    assert math.isclose(json_data['SamplingFrequency'], 100)
-    assert math.isclose(json_data['StartTime'], 30.0)
-    assert json_data['Columns'] == ['time', 'trigger', 'cardiac']
-
-    # Remove generated files
-    for filename in glob.glob(join(conversion_path, 'phys2bids*')):
-        remove(filename)
-    for filename in glob.glob(join(test_path, test_filename+'*')):
-        remove(filename)
-    shutil.rmtree(conversion_path)
-
-
-def test_integration_gep_onefile(skip_integration, ge_one_gep_file):
-    """
-    Does the integration test for a single GE file
-    Input file is PPG
-    """
-
-    if skip_integration:
-        pytest.skip('Skipping integration test')
-
-    test_path, test_filename = split(ge_one_gep_file)
-    conversion_path = join(test_path, 'code', 'conversion')
-
-    phys2bids(filename=test_filename, indir=test_path, outdir=test_path)
-
-    # Check that files are generated
-    for suffix in ['.json', '.tsv.gz']:
-        assert isfile(join(test_path, test_filename + suffix))
-
-    # Check files in extra are generated
-    for suffix in ['.log']:
-        assert isfile(join(conversion_path, test_filename + suffix))
-
-    # Read log file (note that this file is not the logger file)
-    with open(join(conversion_path, test_filename + '.log')) as log_info:
-        log_info = log_info.readlines()
-
-    # Check timepoints expected
-    assert check_string(log_info, 'Timepoints expected', 'None', is_num=False)
-    # Check timepoints found
-    assert check_string(log_info, 'Timepoints found', 'None', is_num=False)
-    # Check sampling frequency
-    assert check_string(log_info, 'Sampling Frequency', '100')
-    # Check sampling started
-    assert check_string(log_info, 'Sampling started', '30.0000')
-    # Check start time
-    assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
-
-    # Checks json file
-    with open(join(test_path, test_filename + '.json')) as json_file:
         json_data = json.load(json_file)
 
     # Compares values in json file with ground truth
