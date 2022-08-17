@@ -1,5 +1,6 @@
 from phys2bids import io
 
+import os
 import math
 import numpy as np
 import pytest
@@ -162,22 +163,23 @@ def test_load_mat(matlab_file_labchart, matlab_file_acq):
 
 # Check single GE file is loaded correctly
 # To read downloaded files in conftest, use the same name of the fixture function
-def test_load_gep_one_file(ge_file_ppg):
+def test_load_gep_one_file(ge_one_gep_file):
     # Load data
-    phys_obj = io.load_gep(ge_file_ppg)
+    phys_obj = io.load_gep(ge_one_gep_file)
 
     # Check the channel data is as expected
-    gep_data = np.loadtxt(ge_file_ppg)
+    gep_data = np.loadtxt(ge_one_gep_file)
     assert np.array_equal(gep_data, phys_obj.timeseries[2])
 
 
 # Check two GE files are loaded correctly
-def test_load_gep_two_files(gep_file, gep_file2):
+def test_load_gep_two_files(ge_two_gep_files, testpath):
     # Load data
-    phys_obj = io.load_gep(gep_file)
+    phys_obj = io.load_gep(ge_two_gep_files)
 
     # Check the channel data is as expected
-    gep_data1 = np.loadtxt(gep_file)
-    gep_data2 = np.loadtxt(gep_file2)
+    gep_data1 = np.loadtxt(ge_two_gep_files)
+    gep_data2 = np.loadtxt(os.path.join(testpath,
+                                        'RESPData_epiRT_0000000000_00_00_000.gep'))
     assert np.array_equal(gep_data1, phys_obj.timeseries[2])
     assert np.array_equal(gep_data2, phys_obj.timeseries[3])
