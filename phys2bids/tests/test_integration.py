@@ -235,7 +235,7 @@ def test_integration_multirun(skip_integration, multi_run_file):
     assert isfile(join(conversion_path, 'Test2_samefreq_TWOscans.png'))
 
 
-def test_integration_gep_multifile(skip_integration, test_gep_file):
+def test_integration_gep_multifile(skip_integration, ge_two_gep_files):
     """
     Does the integration test for a set of two GE files
     Input file is PPG with RESP file also in folder
@@ -244,7 +244,7 @@ def test_integration_gep_multifile(skip_integration, test_gep_file):
     if skip_integration:
         pytest.skip('Skipping integration test')
 
-    test_path, test_filename = split(test_gep_file)
+    test_path, test_filename = split(ge_two_gep_files)
     conversion_path = join(test_path, 'code', 'conversion')
 
     phys2bids.phys2bids(filename=test_filename, indir=test_path, outdir=test_path)
@@ -291,16 +291,16 @@ def test_integration_gep_multifile(skip_integration, test_gep_file):
     shutil.rmtree(conversion_path)
 
 
-def test_integration_gep_onefile(skip_integration, test_gep_file):
+def test_integration_gep_onefile(skip_integration, ge_one_gep_file):
     """
-    Does the integration test for a singel GE file
+    Does the integration test for a single GE file
     Input file is PPG
     """
 
     if skip_integration:
         pytest.skip('Skipping integration test')
 
-    test_path, test_filename = split(test_gep_file)
+    test_path, test_filename = split(ge_one_gep_file)
     conversion_path = join(test_path, 'code', 'conversion')
 
     phys2bids.phys2bids(filename=test_filename, indir=test_path, outdir=test_path)
