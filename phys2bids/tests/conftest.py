@@ -110,7 +110,7 @@ def matlab_file_acq(testpath):
 @pytest.fixture
 def ge_one_gep_file(testpath):
     return fetch_file('wb84d', testpath,
-                      'PPGData_epiRT_columnscsv_00_00_000.gep')
+                      'PPGData_epiRT_0000000000_00_00_000.gep')
 
 @pytest.fixture
 def ge_two_gep_files(testpath):
@@ -137,10 +137,10 @@ def ge_one_raw_file(testpath):
 
 @pytest.fixture
 def ge_two_raw_files(testpath):
-    tmp = fetch_file('u9wsr', testpath,
-                     'PPGData_epiRT_0000000000_00_00_000')
     tmp = fetch_file('49xpw', testpath,
                      'RESPData_epiRT_0000000000_00_00_000')
+    return fetch_file('u9wsr', testpath,
+                      'PPGData_epiRT_0000000000_00_00_000')
 
 
 @pytest.fixture
