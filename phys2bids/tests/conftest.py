@@ -117,7 +117,7 @@ def ge_two_gep_files(testpath):
     tmp = fetch_file('qawjv', testpath,
                      'RESPData_epiRT_0000000000_00_00_000.gep')
     return fetch_file('wb84d', testpath,
-                      'PPGData_epiRT_columnscsv_00_00_000.gep')
+                      'PPGData_epiRT_0000000000_00_00_000.gep')
 
 #    return fetch_file('u9wsr', testpath,
 #                      'PPGData_epiRT_0000000000_00_00_000')
