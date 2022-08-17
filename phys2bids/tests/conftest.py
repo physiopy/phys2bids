@@ -146,8 +146,8 @@ def ge_two_raw_files(testpath):
 @pytest.fixture
 def ge_badfiles(testpath):
     tmp = fetch_file('tdmyn', testpath,
-                           'PPGData_epiRT_columnscsv_00_00_000')
+                     'PPGData_epiRT_columnscsv_00_00_000')
     tmp = fetch_file('b6skq', testpath,
-                           'PPGData_epiRT_columnstsv_00_00_000')
-    tmp = fetch_file('8235b', testpath,
-                           'PPGData_epiRT_string0000_00_00_000')
+                     'PPGData_epiRT_columnstsv_00_00_000')
+    return fetch_file('8235b', testpath,
+                      'PPGData_epiRT_string0000_00_00_000')
