@@ -250,14 +250,14 @@ def test_integration_gep_onefile(skip_integration, ge_one_gep_file):
 
     # Check that files are generated
     for suffix in ['.json', '.tsv.gz']:
-        assert isfile(join(test_path, test_filename + suffix))
+        assert isfile(join(test_path, test_filename[:-4] + suffix))
 
     # Check files in extra are generated
     for suffix in ['.log']:
-        assert isfile(join(conversion_path, test_filename + suffix))
+        assert isfile(join(conversion_path, test_filename[:-4] + suffix))
 
     # Read log file (note that this file is not the logger file)
-    with open(join(conversion_path, test_filename + '.log')) as log_info:
+    with open(join(conversion_path, test_filename[:-4] + '.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -272,7 +272,7 @@ def test_integration_gep_onefile(skip_integration, ge_one_gep_file):
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
     # Checks json file
-    with open(join(test_path, test_filename + '.json')) as json_file:
+    with open(join(test_path, test_filename[:-4] + '.json')) as json_file:
         json_data = json.load(json_file)
 
     # Compares values in json file with ground truth
@@ -304,16 +304,16 @@ def test_integration_gep_multifile(skip_integration, ge_two_gep_files):
 
     # Check that files are generated
     for suffix in ['.json', '.tsv.gz']:
-        assert isfile(join(test_path, test_filename + '_100Hz' + suffix))
-        assert isfile(join(test_path, test_filename + '_25Hz' + suffix))
+        assert isfile(join(test_path, test_filename[:-4] + '_100Hz' + suffix))
+        assert isfile(join(test_path, test_filename[:-4] + '_25Hz' + suffix))
 
     # Check files in extra are generated
     for suffix in ['.log']:
-        assert isfile(join(conversion_path, test_filename + '_100Hz' + suffix))
-        assert isfile(join(conversion_path, test_filename + '_25Hz' + suffix))
+        assert isfile(join(conversion_path, test_filename[:-4] + '_100Hz' + suffix))
+        assert isfile(join(conversion_path, test_filename[:-4] + '_25Hz' + suffix))
 
     # Read log file (note that this file is not the logger file)
-    with open(join(conversion_path, test_filename + '_100Hz.log')) as log_info:
+    with open(join(conversion_path, test_filename[:-4] + '_100Hz.log')) as log_info:
         log_info = log_info.readlines()
 
     # Check timepoints expected
@@ -328,7 +328,7 @@ def test_integration_gep_multifile(skip_integration, ge_two_gep_files):
     assert check_string(log_info, 'first trigger', 'Time 0', is_num=False)
 
     # Checks json file
-    with open(join(test_path, test_filename + '_100Hz.json')) as json_file:
+    with open(join(test_path, test_filename[:-4] + '_100Hz.json')) as json_file:
         json_data = json.load(json_file)
 
     # Compares values in json file with ground truth
