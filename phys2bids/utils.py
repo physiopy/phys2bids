@@ -165,7 +165,7 @@ def check_ge(filename, indir):
         # Remove the original filename from the list
         fnames.remove(os.path.join(indir, filename))
         try:
-            fnames.remove(os.path.join(indir, filename+'.gep'))
+            fnames.remove(os.path.join(indir, filename + '.gep'))
         except ValueError:
             pass
         # Log if there are no additional files

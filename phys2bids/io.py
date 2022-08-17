@@ -165,7 +165,7 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
         timeseries = [t_ch, ] + timeseries
         freq = [max(freq)] + freq
     freq = check_multifreq(timeseries, freq)
-    return BlueprintInput(timeseries, freq, names, units, trigger_idx=chtrig)
+    return BlueprintInput(timeseries, freq, names, units, chtrig)
 
 
 def read_header_and_channels(filename):
@@ -483,7 +483,7 @@ def load_gep(filename):
 
     # Create trigger channel
     trigger = np.hstack((np.zeros(int(30 / interval)),
-                         np.ones(int((duration-30) / interval))))
+                         np.ones(int((duration - 30) / interval))))
 
     # Create final list of timeseries
     timeseries = [t_ch, trigger]

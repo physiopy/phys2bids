@@ -239,16 +239,15 @@ class BlueprintInput():
                              self.ch_amount, 0.0))
         self.ch_name = deepcopy(has_size(ch_name, self.ch_amount, 'unknown'))
         self.units = deepcopy(has_size(units, self.ch_amount, '[]'))
-        if trigger_idx:
-            self.trigger_idx = deepcopy(is_valid(trigger_idx, int))
-            if trigger_idx == 0:
-                self.auto_trigger_selection()
-            else:
-                if ch_name[trigger_idx] not in TRIGGER_NAMES:
-                    LGR.info('Trigger channel name is not in our trigger channel name alias list. '
-                         'Please make sure you choose the proper channel.')
+
+        self.trigger_idx = deepcopy(is_valid(trigger_idx, int))
+        if trigger_idx == 0:
+            self.auto_trigger_selection()
         else:
-            LGR.info('No trigger channel provided.')
+            if ch_name[trigger_idx] not in TRIGGER_NAMES:
+                LGR.info('Trigger channel name is not in our trigger channel name alias list. '
+                         'Please make sure you choose the proper channel.')
+
         self.num_timepoints_found = deepcopy(num_timepoints_found)
         self.thr = deepcopy(thr)
         self.time_offset = deepcopy(time_offset)
