@@ -458,9 +458,9 @@ def load_gep(filename):
     data = [np.loadtxt(filename)]
 
     # Calculate time in seconds for first input (starts from -30s)
-    interval = 1/freq[0]
+    interval = 1 / freq[0]
     duration = data[0].shape[0] * interval
-    t_ch = np.ogrid[-30:duration-30:interval]
+    t_ch = np.ogrid[-30:duration - 30:interval]
 
     # Find and add additional data files
     filename = Path(filename)
@@ -482,8 +482,8 @@ def load_gep(filename):
                 data.append(np.loadtxt(fname))
 
     # Create trigger channel
-    trigger = np.hstack((np.zeros(int(30/interval)),
-                         np.ones(int((duration-30)/interval))))
+    trigger = np.hstack((np.zeros(int(30 / interval)),
+                         np.ones(int((duration-30) / interval))))
 
     # Create final list of timeseries
     timeseries = [t_ch, trigger]
