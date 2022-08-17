@@ -247,7 +247,7 @@ def test_integration_gep_multifile(skip_integration, ge_two_gep_files):
     test_path, test_filename = split(ge_two_gep_files)
     conversion_path = join(test_path, 'code', 'conversion')
 
-    phys2bids.phys2bids(filename=test_filename, indir=test_path, outdir=test_path)
+    phys2bids(filename=test_filename, indir=test_path, outdir=test_path)
 
     # Check that files are generated
     for suffix in ['.json', '.tsv.gz']:
@@ -303,7 +303,7 @@ def test_integration_gep_onefile(skip_integration, ge_one_gep_file):
     test_path, test_filename = split(ge_one_gep_file)
     conversion_path = join(test_path, 'code', 'conversion')
 
-    phys2bids.phys2bids(filename=test_filename, indir=test_path, outdir=test_path)
+    phys2bids(filename=test_filename, indir=test_path, outdir=test_path)
 
     # Check that files are generated
     for suffix in ['.json', '.tsv.gz']:
