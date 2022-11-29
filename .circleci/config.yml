@@ -24,7 +24,7 @@ jobs:
     docker:
       - image: cimg/python:3.7
     working_directory: /tmp/src/phys2bids
-    resource_class: medium
+    resource_class: small
     # Checkout the code as the first step. This is a dedicated CircleCI step.
     # The python orb's install-packages step will install the dependencies from a Pipfile via Pipenv by default.
     # Here we're making sure we use just use the system-wide pip. By default it uses the project root's requirements.txt.
@@ -62,7 +62,7 @@ jobs:
     docker:
       - image: cimg/python:3.10
     working_directory: /tmp/src/phys2bids
-    resource_class: medium
+    resource_class: small
     steps:
       - checkout
       - python/install-packages:
