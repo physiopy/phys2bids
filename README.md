@@ -5,19 +5,26 @@
 phys2bids
 =========
 
-[![Latest version](https://img.shields.io/pypi/v/phys2bids)](https://pypi.org/project/phys2bids/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3470091.svg)](https://doi.org/10.5281/zenodo.3470091)
-[![Licensed Apache 2.0](https://img.shields.io/github/license/physiopy/phys2bids)](https://github.com/physiopy/phys2bids/blob/master/LICENSE)
+[![Latest version](https://img.shields.io/github/v/release/physiopy/phys2bids?style=flat&logo=github&sort=semver)](https://github.com/physiopy/phys2bids/releases)
+[![Release date](https://img.shields.io/github/release-date/physiopy/phys2bids?style=flat&logo=github)](https://github.com/physiopy/phys2bids/releases)
+[![Auto Release](https://img.shields.io/badge/release-auto.svg?style=flat&colorA=888888&colorB=9B065A&label=auto&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAACzElEQVR4AYXBW2iVBQAA4O+/nLlLO9NM7JSXasko2ASZMaKyhRKEDH2ohxHVWy6EiIiiLOgiZG9CtdgG0VNQoJEXRogVgZYylI1skiKVITPTTtnv3M7+v8UvnG3M+r7APLIRxStn69qzqeBBrMYyBDiL4SD0VeFmRwtrkrI5IjP0F7rjzrSjvbTqwubiLZffySrhRrSghBJa8EBYY0NyLJt8bDBOtzbEY72TldQ1kRm6otana8JK3/kzN/3V/NBPU6HsNnNlZAz/ukOalb0RBJKeQnykd7LiX5Fp/YXuQlfUuhXbg8Di5GL9jbXFq/tLa86PpxPhAPrwCYaiorS8L/uuPJh1hZFbcR8mewrx0d7JShr3F7pNW4vX0GRakKWVk7taDq7uPvFWw8YkMcPVb+vfvfRZ1i7zqFwjtmFouL72y6C/0L0Ie3GvaQXRyYVB3YZNE32/+A/D9bVLcRB3yw3hkRCdaDUtFl6Ykr20aaLvKoqIXUdbMj6GFzAmdxfWx9iIRrkDr1f27cFONGMUo/gRI/jNbIMYxJOoR1cY0OGaVPb5z9mlKbyJP/EsdmIXvsFmM7Ql42nEblX3xI1BbYbTkXCqRnxUbgzPo4T7sQBNeBG7zbAiDI8nWfZDhQWYCG4PFr+HMBQ6l5VPJybeRyJXwsdYJ/cRnlJV0yB4ZlUYtFQIkMZnst8fRrPcKezHCblz2IInMIkPzbbyb9mW42nWInc2xmE0y61AJ06oGsXL5rcOK1UdCbEXiVwNXsEy/6+EbaiVG8eeEAfxvaoSBnCH61uOD7BS1Ul8ESHBKWxCrdyd6EYNKihgEVrwOAbQruoytuBYIFfAc3gVN6iawhjKyNCEpYhVJXgbOzARyaU4hCtYizq5EI1YgiUoIlT1B7ZjByqmRWYbwtdYjoWoN7+LOIQefIqKawLzK6ID69GGpQgwhhEcwGGUzfEPAiPqsCXadFsAAAAASUVORK5CYII=)](https://github.com/intuit/auto)
 
-[![codecov](https://codecov.io/gh/physiopy/phys2bids/branch/master/graph/badge.svg)](https://codecov.io/gh/physiopy/phys2bids)
-[![Build Status](https://api.cirrus-ci.com/github/physiopy/phys2bids.svg)](https://cirrus-ci.com/github/physiopy/phys2bids)
-[![See the documentation at: https://phys2bids.readthedocs.io](https://readthedocs.org/projects/phys2bids/badge/?version=latest)](https://phys2bids.readthedocs.io/en/latest/?badge=latest)
+[![See the documentation at: https://phys2bids.readthedocs.io](https://img.shields.io/badge/docs-read%20latest-informational?style=flat&logo=readthedocs)](https://phys2bids.readthedocs.io/en/latest/?badge=latest)
+[![Latest DOI](https://zenodo.org/badge/208861898.svg)](https://zenodo.org/badge/latestdoi/208861898)
+[![Licensed Apache 2.0](https://img.shields.io/github/license/physiopy/phys2bids?style=flat&logo=apache)](https://github.com/physiopy/phys2bids/blob/master/LICENSE)
 
-[![Join the chat at Gitter: https://gitter.im/physiopy/phys2bids](https://badges.gitter.im/physiopy/phys2bids.svg)](https://gitter.im/physiopy/phys2bids?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge)
+[![Codecov](https://img.shields.io/codecov/c/gh/physiopy/phys2bids?style=flat&label=codecov&logo=codecov)](https://codecov.io/gh/physiopy/phys2bids)
+[![Build Status](https://img.shields.io/circleci/build/github/physiopy/phys2bids?style=flat&label=circleci&logo=circleci)](https://circleci.com/gh/physiopy/phys2bids)
+[![Documentation Status](https://img.shields.io/readthedocs/phys2bids?style=flat&label=readthedocs&logo=readthedocs)](https://phys2bids.readthedocs.io/en/latest/?badge=latest)
+
+[![Latest version](https://img.shields.io/pypi/v/phys2bids?style=flat&logo=pypi&logoColor=white)](https://pypi.org/project/phys2bids/)
+[![Supports python version](https://img.shields.io/pypi/pyversions/phys2bids?style=flat&logo=python&logoColor=white)](https://pypi.org/project/phys2bids/)
+
 [![Auto Release](https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto)](https://github.com/intuit/auto)
 [![Supports python version](https://img.shields.io/pypi/pyversions/phys2bids)](https://pypi.org/project/phys2bids/)
 [![Requirements Status](https://requires.io/github/physiopy/phys2bids/requirements.svg?branch=master)](https://requires.io/github/physiopy/phys2bids/requirements/?branch=master)
 
+[![Join the chat on Gitter: https://gitter.im/physiopy/phys2bids](https://badges.gitter.im/physiopy/phys2bids.svg)](https://gitter.im/physiopy/phys2bids?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge) -->
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat)](#contributors)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
@@ -28,7 +35,7 @@ It was born for AcqKnowledge files (BIOPAC), and at the moment it supports
 (ADInstruments).
 It doesn't support physiological files recorded with the MRI, as you can find a software for it [here](https://github.com/tarrlab/physio2bids).
 
-> If you use ``phys2bids`` in your work, please cite it with the zenodo DOI of the version you used. You can find the latest version [here](https://doi.org/10.5281/zenodo.3470091)
+> If you use ``phys2bids`` in your work, please support it by citing the zenodo DOI of the version you used. You can find the latest version [here](https://doi.org/10.5281/zenodo.3470091)
 
 > We also support gathering all relevant citations via [DueCredit](http://duecredit.org).
 
@@ -45,17 +52,26 @@ Shortcuts:
 - [**Code of Conduct**](https://phys2bids.readthedocs.io/en/latest/conduct.html)
 - [Developer calls calendar](https://calendar.google.com/calendar/u/0?cid=amoycDQ1MTdhMWdpaHNuNzlnOW1ucHJkMjRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 
+## Tested OSs
+While all version until `2.6.2` were tested on Linux and Windows, starting from version `2.7` onward we had to **drop Windows testing**. The reason is related to the cost of running such tests: for each Windows test, we can run up to 8 tests on Linux instead. Partial Windows testing might be reintroduced in future releases.
+
+Hence, while **we cannot ensure that phys2bids will run on Windows**, however we don't see any reason it shouldn't. Besides, it will run on Linux Subsistems.
+
+We apologise for the discomfort. 
+
+
 <!-- ## Hacktoberfest
 Hacktoberfest participants, welcome!
 We have some issues for you [here](https://github.com/physiopy/phys2bids/issues?q=is%3Aissue+is%3Aopen+label%3Ahacktoberfest)!
 However, feel free to tackle any issue you'd like. Depending on the issue and extent of contribution, Hacktoberfest related PRs might not count toward being listed as contributors and authors (unless there is the specific interest). You can ask about it in the issue itself!
 Feel free to ask help to the contributors over gitter, happy coding and (hopefully) enjoy hour tee (or tree)!
--->
+
 ## The BrainWeb
 BrainWeb participants, welcome!
 We have a milestone [here](https://github.com/physiopy/phys2bids/milestone/5) as a collection of issues you could work on with our help. 
 Check the issues with a `BrainWeb` label. Of course, they are only suggestions, so feel free to tackle any issue you want, even open new ones!
 You can also contact us on Gitter, in the BrainHack Mattermost (<a href="https://mattermost.brainhack.org/brainhack/channels/physiopy">#physiopy</a>), and don't hesitate to contact [Stefano](https://github.com/smoia) in other ways to jump in the development!
+-->
 
 **We're looking for code contributors,** but any suggestion/bug report is welcome! Feel free to open issues!
 
