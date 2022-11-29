@@ -113,7 +113,7 @@ jobs:
       - checkout
       - python/install-packages:
           args: coverage
-          pkg-manager: pip
+          pkg-manager: pip-dist
       - run:
           name: Merge coverage files
           command: |
