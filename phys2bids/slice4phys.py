@@ -68,7 +68,6 @@ def find_takes(phys_in, ntp_list, tr_list, thr=None, padding=9):
         # define index of the take's last trigger + padding (HAS TO BE INT type)
         # pick first value of time array that is over specified take length
         # where returns list of values over end_sec and its dtype, choose [list][first value]
-
         # Check if end_sec is above the end of the timeseries (it happens for noisy cases)
         if phys_in.timeseries[0][-1] > end_sec:
             take_end = int(np.where(phys_in.timeseries[0] > end_sec)[0][0] + padding_fr)
