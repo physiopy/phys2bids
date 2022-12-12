@@ -174,8 +174,13 @@ def export_trigger_plot(phys_in, chtrig, fileprefix, tr, num_timepoints_expected
     if ses is not None:
         fileprefix += f'_ses-{ses}'
 
+    if phys_in._time_resampled_to_trigger is None:
+        timeseries_plot = phys_in.timeseries[0]
+    else:
+        timeseries_plot = phys_in._time_resampled_to_trigger
+
     # adjust for multi run arguments, iterate through acquisition attributes
-    plot_trigger(phys_in.timeseries[0], phys_in.timeseries[chtrig],
+    plot_trigger(timeseries_plot, phys_in.timeseries[chtrig],
                  fileprefix, tr, phys_in.thr, num_timepoints_expected,
                  filename, figsize, dpi)
 

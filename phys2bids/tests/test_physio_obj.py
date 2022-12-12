@@ -171,44 +171,46 @@ def test_BlueprintInput_slice():
     phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name,
                                 test_units, test_chtrig)
 
-    phys_dict = {'timeseries': test_timeseries,
-                 'freq': test_freq,
-                 'ch_name': ['time', 'trigger', 'half', 'twice'],
-                 'units': ['s', 'V', 'V', 'V'],
-                 'trigger_idx': 1,
-                 'num_timepoints_found': None,
-                 'thr': None,
-                 'time_offset': 0}
+    phys_d = po.BlueprintInput(test_timeseries,
+                               test_freq,
+                               ['time', 'trigger', 'half', 'twice'],
+                               ['s', 'V', 'V', 'V'],
+                               1)
+
+    phys_d.num_timepoints_found = None
+    phys_d.thr = None
+    phys_d.time_offset = 0
+    phys_d._time_resampled_to_trigger = None
 
     # Test all-comprehensive slice
-    assert phys_in[0:len(test_trigger)] == phys_dict
+    assert phys_in[0:len(test_trigger)] == phys_d
 
     # Test instantaneous slice first and last
-    phys_dict['timeseries'] = [np.array([test_time[0]]),
-                               np.array([test_trigger[0]]),
-                               np.array([test_half[0]]),
-                               np.array([test_twice[0]])]
-    assert phys_in[0] == phys_dict
+    phys_d.timeseries = [np.array([test_time[0]]),
+                         np.array([test_trigger[0]]),
+                         np.array([test_half[0]]),
+                         np.array([test_twice[0]])]
+    assert phys_in[0] == phys_d
 
-    phys_dict['timeseries'] = [np.array([test_time[-1]]),
-                               np.array([test_trigger[-1]]),
-                               np.array([test_half[-1]]),
-                               np.array([test_twice[-2]])]
-    assert phys_in[-1] == phys_dict
+    phys_d.timeseries = [np.array([test_time[-1]]),
+                         np.array([test_trigger[-1]]),
+                         np.array([test_half[-1]]),
+                         np.array([test_twice[-2]])]
+    assert phys_in[-1] == phys_d
 
     # Test slice in the middle
-    phys_dict['timeseries'] = [np.array(test_time[2:4]),
-                               np.array(test_trigger[2:4]),
-                               np.array(test_half[1:2]),
-                               np.array(test_twice[4:8])]
-    assert phys_in[2:4] == phys_dict
+    phys_d.timeseries = [np.array(test_time[2:4]),
+                         np.array(test_trigger[2:4]),
+                         np.array(test_half[1:2]),
+                         np.array(test_twice[4:8])]
+    assert phys_in[2:4] == phys_d
 
     # Test slice in the middle with steps
-    phys_dict['timeseries'] = [np.array(test_time[1:4:2]),
-                               np.array(test_trigger[1:4:2]),
-                               np.array(test_half[0:2:1]),
-                               np.array(test_twice[4:8:4])]
-    assert phys_in[1:4:2] == phys_dict
+    phys_d.timeseries = [np.array(test_time[1:4:2]),
+                         np.array(test_trigger[1:4:2]),
+                         np.array(test_half[0:2:1]),
+                         np.array(test_twice[4:8:4])]
+    assert phys_in[1:4:2] == phys_d
 
 
 def test_BlueprintOutput():

@@ -1,7 +1,7 @@
 import fnmatch
 
 
-def heur(physinfo, run=''):
+def heur(physinfo, take=''):
     """
     Set of if .. elif statements to fill BIDS names.
 

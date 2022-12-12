@@ -1,0 +1,145 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
+# See: https://circleci.com/docs/2.0/orb-intro/
+orbs:
+  # The python orb contains a set of prepackaged CircleCI configuration you can use repeatedly in your configuration files
+  # Orb commands and jobs help you with common scripting around a language/tool
+  # so you dont have to copy and paste it everywhere.
+  # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/python
+  python: circleci/python@2.0.3
+  codecov: codecov/codecov@3.2.2
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+  test37: # This is the name of the job, feel free to change it to better match what you're trying to do!
+    # These next lines defines a Docker executors: https://circleci.com/docs/2.0/executor-types/
+    # You can specify an image from Dockerhub or use one of the convenience images from CircleCI's Developer Hub
+    # A list of available CircleCI Docker convenience images are available here: https://circleci.com/developer/images/image/cimg/python
+    # The executor is the environment in which the steps below will be executed - below will use a python 3.6.14 container
+    # Change the version below to your required version of python
+    docker:
+      - image: cimg/python:3.7
+    working_directory: /tmp/src/phys2bids
+    resource_class: medium
+    # Checkout the code as the first step. This is a dedicated CircleCI step.
+    # The python orb's install-packages step will install the dependencies from a Pipfile via Pipenv by default.
+    # Here we're making sure we use just use the system-wide pip. By default it uses the project root's requirements.txt.
+    # Then run your tests!
+    # CircleCI will report the results back to your VCS provider.
+    steps:
+      - checkout
+      # Install Pillow first to avoid jpsg and zlib issues
+      - python/install-packages:
+          path-args: .[test]
+          pypi-cache: false
+          venv-cache: false
+          pkg-manager: pip-dist
+          # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
+          # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
+      - run:
+          name: Run tests
+          # This assumes pytest is installed via the install-package step above
+          command: |
+            pytest --cov=./phys2bids
+            mkdir /tmp/src/coverage
+            mv ./.coverage /tmp/src/coverage/.coverage.py37
+      - store_artifacts:
+          path: /tmp/src/coverage
+      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
+          # taken to be the root directory of the workspace.
+          root: /tmp
+          # Must be relative path from root
+          paths:
+            - src/coverage/.coverage.py37
+
+  test310:
+    docker:
+      - image: cimg/python:3.10
+    working_directory: /tmp/src/phys2bids
+    resource_class: medium
+    steps:
+      - checkout
+      - python/install-packages:
+          path-args: .[test]
+          pypi-cache: false
+          venv-cache: false
+          pkg-manager: pip-dist
+      - run:
+          name: Run tests
+          command: |
+            pytest --cov=./phys2bids
+            mkdir /tmp/src/coverage
+            mv ./.coverage /tmp/src/coverage/.coverage.py310
+      - store_artifacts:
+          path: /tmp/src/coverage
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - src/coverage/.coverage.py310
+
+  style_check:
+    docker:
+      - image: cimg/python:3.7
+    working_directory: /tmp/src/phys2bids
+    resource_class: small
+    steps:
+      - checkout
+      - python/install-packages:
+          path-args: .[style]
+          pypi-cache: false
+          venv-cache: false
+          pkg-manager: pip-dist
+      - run:
+          name: Check style
+          command: echo "Skipping for now"  # |
+            # isort --check .
+            # black --check phys2bids
+            # flake8 ./phys2bids
+
+  merge_coverage:
+    working_directory: /tmp/src/phys2bids
+    docker:
+      - image: cimg/python:3.10
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - checkout
+      - python/install-packages:
+          args: coverage
+          pkg-manager: pip-dist
+      - run:
+          name: Merge coverage files
+          command: |
+            sudo apt update && sudo apt install curl
+            cd /tmp/src/coverage/
+            coverage combine
+            coverage xml
+      - store_artifacts:
+          path: /tmp/src/coverage
+      - codecov/upload:
+          file: /tmp/src/coverage/coverage.xml
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  build_test: # This is the name of the workflow, feel free to change it to better match your workflow.
+    # Inside the workflow, you define the jobs you want to run.
+    jobs:
+      - style_check
+      - test37:
+          requires:
+            - style_check
+      - test310:
+          requires:
+            - style_check
+      - merge_coverage:
+          requires:
+            - test37
+            - test310

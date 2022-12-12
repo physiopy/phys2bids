@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""phys2bids interfaces for txt  and acq extension files."""
+"""phys2bids interfaces for loading extension files."""
 
 import logging
 from collections import Counter

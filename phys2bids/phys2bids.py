@@ -280,18 +280,18 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY
             phys_in = slice4phys(phys_in, num_timepoints_expected, tr,
                                  phys_in.thr, pad)
-            # returns a dictionary in the form {run_idx: phys_in[startpoint, endpoint]}
+            # returns a dictionary in the form {take_idx: phys_in[startpoint, endpoint]}
 
-            # save a figure for each run | give the right acquisition parameters for runs
+            # save a figure for each take | give the right acquisition parameters for takes
             fileprefix = os.path.join(conversion_path,
                                       os.path.splitext(os.path.basename(filename))[0])
-            for i, run in enumerate(phys_in.keys()):
-                plot_fileprefix = f'{fileprefix}_0{run}'
-                viz.export_trigger_plot(phys_in[run], chtrig, plot_fileprefix, tr[i],
+            for i, take in enumerate(phys_in.keys()):
+                plot_fileprefix = f'{fileprefix}_{take:02d}'
+                viz.export_trigger_plot(phys_in[take], chtrig, plot_fileprefix, tr[i],
                                         num_timepoints_expected[i], filename,
                                         sub, ses)
 
-        # Single run acquisition type, or : nothing to split workflow
+        # Single take acquisition type, or : nothing to split workflow
         else:
             # Run analysis on trigger channel to get first timepoint
             # and the time offset.
@@ -314,18 +314,18 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         phys_in = {1: phys_in}
 
     # The next few lines create a dictionary of different BlueprintInput
-    # objects, one for each unique frequency for each run in phys_in
+    # objects, one for each unique frequency for each take in phys_in
     # they also save the amount of runs and unique frequencies
-    run_amount = len(phys_in)
+    take_amount = len(phys_in)
     uniq_freq_list = set(phys_in[1].freq)
     freq_amount = len(uniq_freq_list)
     if freq_amount > 1:
         LGR.info(f'Found {freq_amount} different frequencies in input!')
 
-    if run_amount > 1:
-        LGR.info(f'Found {run_amount} different scans in input!')
+    if take_amount > 1:
+        LGR.info(f'Found {take_amount} different takes in input!')
 
-    LGR.info(f'Preparing {freq_amount*run_amount} output files.')
+    LGR.info(f'Preparing {freq_amount*take_amount} output files.')
     # Create phys_out dict that will have a blueprint object for each different frequency
     phys_out = {}
 
@@ -333,7 +333,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         LGR.info(f'Preparing BIDS output using {heur_file}')
         # If heuristics are used, init a dict of arguments to pass to use_heuristic
         heur_args = {'heur_file': heur_file, 'sub': sub, 'ses': ses,
-                     'filename': filename, 'outdir': outdir, 'run': '',
+                     'filename': filename, 'outdir': outdir, 'take': '',
                      'record_label': ''}
         # Generate participants.tsv file if it doesn't exist already.
         # Update the file if the subject is not in the file.
@@ -351,17 +351,17 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
     # Export a (set of) phys_out for each element in phys_in
     # run keys start from 1 (human friendly)
-    for run in phys_in.keys():
+    for take in phys_in.keys():
         for uniq_freq in uniq_freq_list:
             # Initialise the key for the (possibly huge amount of) dictionary entries
-            key = f'{run}_{uniq_freq}'
+            key = f'{take}_{uniq_freq}'
             # copy the phys_in object to the new dict entry
-            phys_out[key] = deepcopy(phys_in[run])
+            phys_out[key] = deepcopy(phys_in[take])
             # this counter will take into account how many channels are eliminated
             count = 0
             # for each channel in the original phys_in object
             # take the frequency
-            for idx, i in enumerate(phys_in[run].freq):
+            for idx, i in enumerate(phys_in[take].freq):
                 # if that frequency is different than the frequency of the phys_obj entry
                 if i != uniq_freq:
                     # eliminate that channel from the dict since we only want channels
@@ -374,29 +374,29 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # Populate it with the corresponding blueprint input and replace it
             # in the dictionary.
             # Add time channel in the proper frequency.
-            if uniq_freq != phys_in[run].freq[0]:
-                phys_out[key].ch_name.insert(0, phys_in[run].ch_name[0])
-                phys_out[key].units.insert(0, phys_in[run].units[0])
-                phys_out[key].timeseries.insert(0, np.linspace(phys_in[run].timeseries[0][0],
-                                                phys_in[run].timeseries[0][-1],
+            if uniq_freq != phys_in[take].freq[0]:
+                phys_out[key].ch_name.insert(0, phys_in[take].ch_name[0])
+                phys_out[key].units.insert(0, phys_in[take].units[0])
+                phys_out[key].timeseries.insert(0, np.linspace(phys_in[take].timeseries[0][0],
+                                                phys_in[take].timeseries[0][-1],
                                                 num=phys_out[key].timeseries[0].shape[0]))
             # Add trigger channel in the proper frequency.
-            if uniq_freq != phys_in[run].freq[chtrig]:
-                phys_out[key].ch_name.insert(1, phys_in[run].ch_name[chtrig])
-                phys_out[key].units.insert(1, phys_in[run].units[chtrig])
+            if uniq_freq != phys_in[take].freq[chtrig]:
+                phys_out[key].ch_name.insert(1, phys_in[take].ch_name[chtrig])
+                phys_out[key].units.insert(1, phys_in[take].units[chtrig])
                 phys_out[key].timeseries.insert(1, np.interp(phys_out[key].timeseries[0],
-                                                             phys_in[run].timeseries[0],
-                                                             phys_in[run].timeseries[chtrig]))
+                                                             phys_in[take].timeseries[0],
+                                                             phys_in[take].timeseries[chtrig]))
             phys_out[key] = BlueprintOutput.init_from_blueprint(phys_out[key])
 
         # Preparing output parameters: name and folder.
         for uniq_freq in uniq_freq_list:
-            key = f'{run}_{uniq_freq}'
+            key = f'{take}_{uniq_freq}'
             # If possible, prepare bids renaming.
             if heur_file is not None and sub is not None:
-                # Add run info to heur_args if more than one run is present
-                if run_amount > 1:
-                    heur_args['run'] = f'{run:02d}'
+                # Add take info to heur_args if more than one take is present
+                if take_amount > 1:
+                    heur_args['take'] = f'{take:02d}'
 
                 # Append "recording-freq" to filename if more than one freq
                 if freq_amount > 1:
@@ -404,36 +404,36 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
 
                 phys_out[key].filename = bids.use_heuristic(**heur_args)
 
-                # If any filename exists already because of multirun, append labels
+                # If any filename exists already because of multi-take, append labels
                 # But warn about the non-validity of this BIDS-like name.
-                if run_amount > 1:
-                    if any([phys.filename == phys_out[key].filename
-                           for phys in phys_out.values()]):
-                        phys_out[key].filename = (f'{phys_out[key].filename}'
-                                                  f'_take-{run}')
-                        LGR.warning('Identified multiple outputs with the same name.\n'
-                                    'Appending fake label to avoid overwriting.\n'
-                                    '!!! ATTENTION !!! the output is not BIDS compliant.\n'
-                                    'Please check heuristics to solve the problem.')
+                if take_amount > 1:
+                    for n, k in enumerate(phys_out.keys()):
+                        if k != key and phys_out[key].filename == phys_out[k].filename:
+                            phys_out[key].filename = (f'{phys_out[key].filename}'
+                                                      f'_take-{take:02d}')
+                            LGR.warning('Identified multiple outputs with the same name.\n'
+                                        'Appending fake label to avoid overwriting.\n'
+                                        '!!! ATTENTION !!! the output is not BIDS compliant.\n'
+                                        'Please check heuristics to solve the problem.')
 
             else:
                 phys_out[key].filename = os.path.join(outdir,
                                                       os.path.splitext(os.path.basename(filename)
                                                                        )[0])
-                # Append "run" to filename if more than one run
-                if run_amount > 1:
-                    phys_out[key].filename = f'{phys_out[key].filename}_{run:02d}'
+                # Append "take" to filename if more than one take
+                if take_amount > 1:
+                    phys_out[key].filename = f'{phys_out[key].filename}_{take:02d}'
                 # Append "freq" to filename if more than one freq
                 if freq_amount > 1:
                     phys_out[key].filename = f'{phys_out[key].filename}_{uniq_freq:.0f}Hz'
 
-            LGR.info(f'Exporting files for run {run} freq {uniq_freq}')
+            LGR.info(f'Exporting files for take {take} freq {uniq_freq}')
             np.savetxt(phys_out[key].filename + '.tsv.gz',
                        phys_out[key].timeseries, fmt='%.8e', delimiter='\t')
             print_json(phys_out[key].filename, phys_out[key].freq,
                        phys_out[key].start_time, phys_out[key].ch_name)
             print_summary(filename, num_timepoints_expected,
-                          phys_in[run].num_timepoints_found, uniq_freq,
+                          phys_in[take].num_timepoints_found, uniq_freq,
                           phys_out[key].start_time,
                           os.path.join(conversion_path,
                                        os.path.splitext(os.path.basename(phys_out[key].filename)
