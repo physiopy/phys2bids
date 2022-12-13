@@ -12,8 +12,8 @@ def loaded_acq_file(samefreq_short_txt_file):
     header_acq, channels_acq = io.read_header_and_channels(samefreq_short_txt_file)
 
     # just a few quick checks to make sure the data loaded correctly
-    assert len(header_acq) == 8  # check proper header lenght
-    assert len(channels_acq) == 1048560  # check proper number of timepoints
+    assert len(header_acq) == 9  # check proper header lenght
+    assert len(channels_acq) == 1048559  # check proper number of timepoints
     assert len(header_acq[-1]) == 2  # check extra line is deleted
     assert 'acq' in header_acq[0][0]
 
@@ -53,7 +53,7 @@ def test_generate_blueprint_for_acq(loaded_acq_file, units, expected):
 
     # set units to test that expected frequency is generated correctly
     header[1][0] = units
-    interval, orig_units, orig_names = io.extract_header_items(channels, header)
+    interval, orig_units, orig_names = io.extract_header_items(header)
     phys_obj = io.generate_blueprint(channels, chtrig, interval, orig_units, orig_names)
     assert math.isclose(phys_obj.freq[0], expected)
 
@@ -68,7 +68,7 @@ def test_generate_blueprint_for_acq(loaded_acq_file, units, expected):
 def test_generate_blueprint_for_labchart(loaded_lab_file, units, expected):
     header, channels, chtrig = loaded_lab_file
     header[0][1] = units
-    interval, orig_units, orig_names = io.extract_header_items(channels, header)
+    interval, orig_units, orig_names = io.extract_header_items(header)
     phys_obj = io.generate_blueprint(channels, chtrig, interval, orig_units, orig_names)
     assert math.isclose(phys_obj.freq[0], expected)
 
@@ -76,7 +76,7 @@ def test_generate_blueprint_for_labchart(loaded_lab_file, units, expected):
 def test_generate_blueprint_notime(notime_lab_file):
     chtrig = 0
     header, channels = io.read_header_and_channels(notime_lab_file)
-    interval, orig_units, orig_names = io.extract_header_items(channels, header)
+    interval, orig_units, orig_names = io.extract_header_items(header)
     phys_obj = io.generate_blueprint(channels, chtrig, interval, orig_units, orig_names)
     assert len(phys_obj.timeseries) == len(channels[0]) + 1
 
@@ -86,7 +86,7 @@ def test_generate_blueprint_items_errors(loaded_lab_file):
     # test file without header
     # test when units are not valid
     header[0][1] = ' 1 gHz'
-    interval, orig_units, orig_names = io.extract_header_items(channels, header)
+    interval, orig_units, orig_names = io.extract_header_items(header)
     with raises(AttributeError) as errorinfo:
         io.generate_blueprint(channels, chtrig, interval, orig_units, orig_names)
     assert 'Interval unit "gHz" is not in a valid frequency' in str(errorinfo.value)
@@ -95,18 +95,26 @@ def test_generate_blueprint_items_errors(loaded_lab_file):
 def test_extract_header_items_errors(loaded_lab_file):
     header, channels, chtrig = loaded_lab_file
     # test file without header
-    with raises(AttributeError) as errorinfo:
-        io.extract_header_items(channels, header=[])
+    with raises(NotImplementedError) as errorinfo:
+        io.extract_header_items(header=[])
     assert 'without header' in str(errorinfo.value)
+
+    # test Labchart header missing entries
+    header = [['Interval=', '0.001 s'],
+              ['Range=', '2.000 V', '50.0 mmHg', '180.0 mmHg', '10.000 V', '10.000 V']]
+    with raises(NotImplementedError) as errorinfo:
+        io.extract_header_items(header)
+    assert 'supported by phys2bids yet' in str(errorinfo.value)
+
     # test when header is not valid
-    with raises(AttributeError) as errorinfo:
-        io.extract_header_items(channels, header=['hello', 'bye'])
-    assert 'supported yet for txt files' in str(errorinfo.value)
+    with raises(NotImplementedError) as errorinfo:
+        io.extract_header_items(header=['hello', 'bye'])
+    assert 'supported by phys2bids yet' in str(errorinfo.value)
 
 
 def test_multifreq(loaded_lab_file):
     header, channels, chtrig = loaded_lab_file
-    interval, orig_units, orig_names = io.extract_header_items(channels, header)
+    interval, orig_units, orig_names = io.extract_header_items(header)
     phys_obj = io.generate_blueprint(channels, chtrig, interval, orig_units, orig_names)
     new_freq = io.check_multifreq(phys_obj.timeseries, [phys_obj.freq[0]] * len(phys_obj.freq))
     assert new_freq[-3:] == [100, 40, 500]

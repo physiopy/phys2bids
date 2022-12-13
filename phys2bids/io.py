@@ -242,25 +242,37 @@ def extract_header_items(header):
 
     Raises
     ------
-    AttributeError
+    NotImplementedError
         If len(header) == 0 and therefore there is no header
+        If Labchart headers cannot be processed
         If files are not in acq or txt format
     """
     # check header is not empty and detect if it is in labchart or Acqknoledge format
     if len(header) == 0:
-        raise AttributeError('Files without header are not supported yet')
+        raise NotImplementedError('Files without header are not supported yet')
     elif 'Interval=' in header[0]:
         LGR.info('phys2bids detected that your file is in Labchart format')
-        interval = header[0][1].split(" ")
-        range_list = header[5][1:]
+
+        interval = None
+        orig_names = None
+        range_list = None
+        for line in header:
+            if 'Interval=' in line:
+                interval = line[1].split(" ")
+            if 'ChannelTitle=' in line:
+                orig_names = line[1:]
+            if 'Range=' in line:
+                range_list = line[1:]
+
+        if None in [interval, orig_names, range_list]:
+            raise NotImplementedError(OPEN_ISSUE)
+
         orig_units = []
         for item in range_list:
             orig_units.append(item.split(' ')[1])
-        orig_names = header[4][1:]
+
     elif 'acq' in header[0][0]:
         LGR.info('phys2bids detected that your file is in AcqKnowledge format')
-        header.append(channel_list[0])
-        del channel_list[0]  # delete sample size from channel list
         interval = header[1][0].split()
         interval[-1] = interval[-1].split('/')[0]
         # get units and names
@@ -274,7 +286,7 @@ def extract_header_items(header):
             # since units are in the line imediately after we get the units at the same time
             orig_units.append(header[index1 + 1][0])
     else:
-        raise AttributeError('This file format is not supported yet for txt files')
+        raise NotImplementedError(OPEN_ISSUE)
     return interval, orig_units, orig_names
 
 
@@ -299,7 +311,7 @@ def load_txt(filename, chtrig=0):
     physio_obj.BlueprintInput
     """
     header, channel_list = read_header_and_channels(filename)
-    interval, orig_units, orig_names = extract_header_items(channel_list, header)
+    interval, orig_units, orig_names = extract_header_items(header)
     phys_in = generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names)
     return phys_in
 
