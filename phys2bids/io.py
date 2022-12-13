@@ -8,9 +8,15 @@ import numpy as np
 from operator import itemgetter
 import warnings
 
-
 from phys2bids.physio_obj import BlueprintInput
+
 LGR = logging.getLogger(__name__)
+OPEN_ISSUE = (
+    'The file you are trying to convert might not be supported by phys2bids yet. '
+    'Please open an issue on GitHub '
+    '(https://github.com/physiopy/phys2bids/issues/new/choose) '
+    'so that we can improve file support!'
+)
 
 
 def check_multifreq(timeseries, freq, start=0, leftout=0):
