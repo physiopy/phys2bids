@@ -3,10 +3,11 @@
 """phys2bids interfaces for loading extension files."""
 
 import logging
-from collections import Counter
-import numpy as np
-from operator import itemgetter
 import warnings
+from copy import deepcopy
+from itertools import groupby
+
+import numpy as np
 
 from phys2bids.physio_obj import BlueprintInput
 
