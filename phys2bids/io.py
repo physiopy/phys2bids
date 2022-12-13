@@ -192,38 +192,46 @@ def read_header_and_channels(filename):
 
     """
     header = []
-    channel_list = []
+    # Read in the header until it's numbers
     with open(filename, 'r') as f:
-        for line in f:
+        for n, line in enumerate(f):
             line = line.rstrip('\n').split('\t')
-            while line[-1] == '':
-                line.remove('')  # sometimes there is an extra space
-            for item in line:
-                if '#' == item[0]:  # detecting comments
-                    line.remove(item)
             if line[-1] == '':
                 line.remove('')
             try:
                 float(line[0])
+                break
             except ValueError:
                 header.append(line)
                 continue
-            line = [float(i) for i in line]
-            channel_list.append(line)
+    # Read in the rest paying attention to possible differences
+    if 'Interval=' in header[0]:
+        # Not specifying delimiters will ignore comments
+        channel_list = np.genfromtxt(filename, skip_header=n)
+    elif 'acq' in header[0][0]:
+        # Specifying delimiters will avoid missing values in the files
+        channel_list = np.genfromtxt(filename, skip_header=n, delimiter='\t')
+        # Remove extra (empty?) columns, if present
+        ch_number = int(header[2][0].split(' ')[0])
+        channel_list = channel_list[:, :ch_number]
+        # Set all remaining NaNs to 0
+        channel_list = np.nan_to_num(channel_list)
+        # Take first row and assign it back to header.
+        header.append(list(channel_list[0, :]))
+        channel_list = channel_list[1:, :]
+
     return header, channel_list
 
 
-def extract_header_items(channel_list, header=[]):
+def extract_header_items(header):
     """
-    Extract interval, orig_units and orig_names from header and channel_list.
+    Extract interval, orig_units and orig_names from header.
 
-    Extract interval, orig_units and orig_names from header and channel_list
+    Extract interval, orig_units and orig_names from header
     depending on the format (AcqKnowledge and labchart)
 
     Parameters
     ----------
-    channel_list : list of strings
-        The channels of the recording
     header : list
         list that contains file header
 
