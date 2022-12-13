@@ -214,7 +214,7 @@ def read_header_and_channels(filename):
         # Set all remaining NaNs to 0
         channel_list = np.nan_to_num(channel_list)
         # Take first row and assign it back to header.
-        header.append(list(channel_list[0, :]))
+        header.append(list(channel_list[0, :].astype(int)))
         channel_list = channel_list[1:, :]
 
     return header, channel_list
