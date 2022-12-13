@@ -40,6 +40,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
     mfreq : list
         new list with the actual frequency of the channels
     """
+    LGR.info('Checking if frequencies are different across channels')
     mfreq = []
     # for each channel check frequency
     max_equal = 1
