@@ -148,6 +148,7 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
                 interval[0] = float(interval[0]) / 1000
             elif interval[-1] == 'µs':
                 interval[0] = float(interval[0]) / 1000000
+            interval[-1] = 's'
         else:
             interval[0] = float(interval[0])
         # get frequency
