@@ -111,8 +111,6 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     --------
     physio_obj.BlueprintInput
     """
-    # Make channel_list a list of singular arrays (one per channel)
-    timeseries = [ch for ch in channel_list.T]
     if interval[-1] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz', 'hr', 'min', 's',
                             'ms', 'µs']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a '
@@ -218,6 +216,9 @@ def read_header_and_channels(filename):
         # Take first row and assign it back to header.
         header.append(list(channel_list[0, :].astype(int)))
         channel_list = channel_list[1:, :]
+
+    # Make channel_list a list of singular arrays (one per channel)
+    channel_list = [ch for ch in channel_list.T]
 
     return header, channel_list
 
