@@ -109,9 +109,8 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     --------
     physio_obj.BlueprintInput
     """
-    # this transposes the channel_list from a list of samples x channels to
-    # a list of channels x samples
-    timeseries = list(map(list, zip(*channel_list)))
+    # Make channel_list a list of singular arrays (one per channel)
+    timeseries = [ch for ch in channel_list.T]
     if interval[-1] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz', 'hr', 'min', 's',
                             'ms', 'µs']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a '
@@ -158,9 +157,6 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     # reoder channels units
     units = ['s', ]
     units = units + orig_units
-    timeseries = list(map(list, zip(*channel_list)))
-    freq = [1 / interval[0]] * len(timeseries)
-    timeseries = [np.array(darray) for darray in timeseries]
     # Check if the file has a time channel, otherwise create it.
     # As the "time" doesn't have a column header, if the number of header names
     # is less than the number of timeseries, then "time" is column 0...
