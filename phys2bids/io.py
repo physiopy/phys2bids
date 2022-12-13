@@ -19,7 +19,7 @@ OPEN_ISSUE = (
 )
 
 
-def check_multifreq(timeseries, freq, start=0, leftout=0):
+def check_multifreq(timeseries, freq, start=0, endat=-1):
     """
     Check if there are channels with different frequency than the maximum one.
 
@@ -31,7 +31,7 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
         list with the maximun frequency
     start : integer
         first sample of the channel to be considered
-    leftout : integer
+    endat : integer
         number of samples at the end of the channel that are not considered
         This is done  so this process doesn't take forever
 
@@ -46,8 +46,8 @@ def check_multifreq(timeseries, freq, start=0, leftout=0):
     max_equal = 1
     for idx, chann in enumerate(timeseries):
         eq_list = []
-        # cut the beggining of the channel
-        chann = chann[start:]
+        # cut the beggining and end of the channel
+        chann = chann[start:endat]
         while len(chann) > max_equal:
             eq_samples = 1  # start counter
             for idx2, value in enumerate(chann[1:]):
