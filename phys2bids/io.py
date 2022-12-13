@@ -20,73 +20,64 @@ OPEN_ISSUE = (
 )
 
 
-def check_multifreq(timeseries, freq, start=0, endat=-1):
+def check_multifreq(timeseries, freq, start=0, endat=None):
     """
     Check if there are channels with different frequency than the maximum one.
 
     Parameters
     ----------
-    timeseries : list of arrays
-        list with channels only in np array format
-    freq : list
+    timeseries : list of numpy.ndarrays
+        list of numpy.ndarrays representing channels.
+    freq : list of floats
         list with the maximun frequency
-    start : integer
+    start : int, optional
         first sample of the channel to be considered
-    endat : integer
-        number of samples at the end of the channel that are not considered
-        This is done  so this process doesn't take forever
+    endat : int or None, optional
+        last sasmple to consider (None for last)
+        Just in case the process takes too long
 
     Returns
     -------
-    mfreq : list
-        new list with the actual frequency of the channels
+    multifreq_timeseries : list of numpy.ndarrays
+        new list with the channels in their own frequency
+    multifreq_freq : list of floats
+        new list with the real frequency of the channels
     """
     LGR.info('Checking if frequencies are different across channels')
-    mfreq = []
-    # for each channel check frequency
-    max_equal = 1
-    for idx, chann in enumerate(timeseries):
-        eq_list = []
-        # cut the beggining and end of the channel
-        chann = chann[start:endat]
-        while len(chann) > max_equal:
-            eq_samples = 1  # start counter
-            for idx2, value in enumerate(chann[1:]):
-                # if value equal to previous value
-                if value == chann[idx2]:
-                    # count number of identic samples
-                    eq_samples += 1
-                else:
-                    # save this number when the next sample is not equal
-                    eq_list.append(eq_samples)
-                    # remove the samples that where equal
-                    chann = chann[idx2 + 1:]
-                    if max_equal < eq_samples:
-                        max_equal = eq_samples
-                    break
-        # count the number of ocurrences in eq_list
-        dict_fr = Counter(eq_list)
-        # get maximum
-        n_inter_samples = max(dict_fr.items(), key=itemgetter(1))[0]
-        # if there are interpolated samples, it means the frequency is lower
-        # decrease frequency by dividing for the number of interpolated samples
-        mfreq.append(freq[idx] / n_inter_samples)
-    return mfreq
+    multifreq_freq = deepcopy(freq)
+    multifreq_timeseries = deepcopy(timeseries)
+
+    # Skip time
+    for n, ch in enumerate(timeseries[1:]):
+        n = n + 1
+        # Find lengths of repetitions
+        groups = [list(g) for k, g in groupby(ch[start:endat])]
+        count = [len(g) for g in groups]
+        # If the file is multifrequency, the greatest common divisor is
+        # higher than one and equal to the mode (cause repetitions are possible)
+        gcd = np.gcd.reduce(count)
+        if gcd > 1 and gcd == max(set(count), key=count.count):
+            multifreq_freq[n] = freq[n] / gcd
+            multifreq_timeseries[n] = ch[::gcd]
+
+    return multifreq_timeseries, multifreq_freq
 
 
-def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
+def generate_blueprint(timeseries, chtrig, interval, orig_units, orig_names):
     """
-    Standarize channel_list, chtrig interval orig_units and orig_names.
+    Generate blueprint object from various information.
 
-    Standarize channel_list, chtrig interval orig_units and orig_names in the correct units and
+    Standarize timeseries, chtrig interval orig_units and orig_names in the correct units and
     format and generate a physio_obj.BlueprintInput object.
+    This function is mainly thought to adapt txt files.
 
     Parameters
     ----------
-    channel_list : list of strings
-        list with channels only
+    timeseries : list of numpy.ndarrays
+        a list of numpy.ndarrays representing the channels
     chtrig : int
-        index of trigger channel, starting in 1 for human readability
+        index of trigger channel, count starts at 1 for human readability
+        (and because index 0 is dedicated to time)
     interval : list of strings
         maximum sampling frequency or interval value and unit for the recording.
         Example: ["400", "Hz"]
@@ -167,7 +158,7 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
         t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
         timeseries = [t_ch, ] + timeseries
         freq = [max(freq)] + freq
-    freq = check_multifreq(timeseries, freq)
+    timeseries, freq = check_multifreq(timeseries, freq)
     return BlueprintInput(timeseries, freq, names, units, chtrig)
 
 

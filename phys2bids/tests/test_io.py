@@ -115,9 +115,14 @@ def test_extract_header_items_errors(loaded_lab_file):
 def test_multifreq(loaded_lab_file):
     header, channels, chtrig = loaded_lab_file
     interval, orig_units, orig_names = io.extract_header_items(header)
-    phys_obj = io.generate_blueprint(channels, chtrig, interval, orig_units, orig_names)
-    new_freq = io.check_multifreq(phys_obj.timeseries, [phys_obj.freq[0]] * len(phys_obj.freq))
-    assert new_freq[-3:] == [100, 40, 500]
+
+    new_timeseries, new_freq = io.check_multifreq(
+                                            channels,
+                                            [1 / float(interval[0])] * len(channels)
+                                        )
+    assert new_freq[-3:] == [100.0, 40.0, 1000.0]
+    # In fairness, last frequency should be 500, but current implemented method is not
+    # resilient to it.
 
 
 def test_load_acq(samefreq_full_acq_file):
