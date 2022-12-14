@@ -390,6 +390,7 @@ def load_mat(filename, chtrig=0):
         orig_units = list(mat_dict['units'])
         interval = [mat_dict['isi'], mat_dict['isi_units']]
         channel_list = mat_dict['data']
+        channel_list = [ch for ch in channel_list.T]
         return generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names)
     else:
         # Convert data into 1d numpy array for easier indexing.
