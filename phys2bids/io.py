@@ -3,82 +3,81 @@
 """phys2bids interfaces for loading extension files."""
 
 import logging
-from collections import Counter
-import numpy as np
-from operator import itemgetter
 import warnings
+from copy import deepcopy
+from itertools import groupby
 
+import numpy as np
 
 from phys2bids.physio_obj import BlueprintInput
+
 LGR = logging.getLogger(__name__)
+OPEN_ISSUE = (
+    'The file you are trying to convert might not be supported by phys2bids yet. '
+    'Please open an issue on GitHub '
+    '(https://github.com/physiopy/phys2bids/issues/new/choose) '
+    'so that we can improve file support!'
+)
 
 
-def check_multifreq(timeseries, freq, start=0, leftout=0):
+def check_multifreq(timeseries, freq, start=0, endat=None):
     """
     Check if there are channels with different frequency than the maximum one.
 
     Parameters
     ----------
-    timeseries : list of arrays
-        list with channels only in np array format
-    freq : list
+    timeseries : list of numpy.ndarrays
+        list of numpy.ndarrays representing channels.
+    freq : list of floats
         list with the maximun frequency
-    start : integer
+    start : int, optional
         first sample of the channel to be considered
-    leftout : integer
-        number of samples at the end of the channel that are not considered
-        This is done  so this process doesn't take forever
+    endat : int or None, optional
+        last sasmple to consider (None for last)
+        Just in case the process takes too long
 
     Returns
     -------
-    mfreq : list
-        new list with the actual frequency of the channels
+    multifreq_timeseries : list of numpy.ndarrays
+        new list with the channels in their own frequency
+    multifreq_freq : list of floats
+        new list with the real frequency of the channels
     """
-    mfreq = []
-    # for each channel check frequency
-    max_equal = 1
-    for idx, chann in enumerate(timeseries):
-        eq_list = []
-        # cut the beggining of the channel
-        chann = chann[start:]
-        while len(chann) > max_equal:
-            eq_samples = 1  # start counter
-            for idx2, value in enumerate(chann[1:]):
-                # if value equal to previous value
-                if value == chann[idx2]:
-                    # count number of identic samples
-                    eq_samples += 1
-                else:
-                    # save this number when the next sample is not equal
-                    eq_list.append(eq_samples)
-                    # remove the samples that where equal
-                    chann = chann[idx2 + 1:]
-                    if max_equal < eq_samples:
-                        max_equal = eq_samples
-                    break
-        # count the number of ocurrences in eq_list
-        dict_fr = Counter(eq_list)
-        # get maximum
-        n_inter_samples = max(dict_fr.items(), key=itemgetter(1))[0]
-        # if there are interpolated samples, it means the frequency is lower
-        # decrease frequency by dividing for the number of interpolated samples
-        mfreq.append(freq[idx] / n_inter_samples)
-    return mfreq
+    LGR.info('Checking if frequencies are different across channels')
+    multifreq_freq = deepcopy(freq)
+    multifreq_timeseries = deepcopy(timeseries)
+
+    # Skip time
+    for n, ch in enumerate(timeseries[1:]):
+        n = n + 1
+        # Find lengths of repetitions
+        groups = [list(g) for k, g in groupby(ch[start:endat])]
+        count = [len(g) for g in groups]
+        # If the file is multifrequency, the greatest common divisor is
+        # higher than one and equal to the mode (cause repetitions are possible)
+        gcd = np.gcd.reduce(count)
+        if gcd > 1 and gcd == max(set(count), key=count.count):
+            multifreq_freq[n] = freq[n] / gcd
+            multifreq_timeseries[n] = ch[::gcd]
+
+    return multifreq_timeseries, multifreq_freq
 
 
-def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
+def generate_blueprint(timeseries, chtrig, interval, orig_units, orig_names):
     """
-    Standarize channel_list, chtrig interval orig_units and orig_names.
+    Generate blueprint object from various information.
 
-    Standarize channel_list, chtrig interval orig_units and orig_names in the correct units and
+    Standarize timeseries, chtrig interval orig_units and orig_names in the correct units and
     format and generate a physio_obj.BlueprintInput object.
+    This function is mainly thought to adapt txt files.
 
     Parameters
     ----------
-    channel_list : list of strings
-        list with channels only
+    timeseries : list of numpy.ndarrays
+        a list of numpy.ndarrays representing the channels
     chtrig : int
-        index of trigger channel, starting in 1 for human readability
+        index of trigger channel, count starts at 1 for human readability
+        (and because index 0 is dedicated to time)
     interval : list of strings
         maximum sampling frequency or interval value and unit for the recording.
         Example: ["400", "Hz"]
@@ -103,9 +102,6 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     --------
     physio_obj.BlueprintInput
     """
-    # this transposes the channel_list from a list of samples x channels to
-    # a list of channels x samples
-    timeseries = list(map(list, zip(*channel_list)))
     if interval[-1] not in ['min', 'sec', 'µsec', 'msec', 'MHz', 'kHz', 'Hz', 'hr', 'min', 's',
                             'ms', 'µs']:
         raise AttributeError(f'Interval unit "{interval[-1]}" is not in a '
@@ -142,6 +138,7 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
                 interval[0] = float(interval[0]) / 1000
             elif interval[-1] == 'µs':
                 interval[0] = float(interval[0]) / 1000000
+            interval[-1] = 's'
         else:
             interval[0] = float(interval[0])
         # get frequency
@@ -152,9 +149,6 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
     # reoder channels units
     units = ['s', ]
     units = units + orig_units
-    timeseries = list(map(list, zip(*channel_list)))
-    freq = [1 / interval[0]] * len(timeseries)
-    timeseries = [np.array(darray) for darray in timeseries]
     # Check if the file has a time channel, otherwise create it.
     # As the "time" doesn't have a column header, if the number of header names
     # is less than the number of timeseries, then "time" is column 0...
@@ -164,7 +158,7 @@ def generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names):
         t_ch = np.ogrid[0:duration:interval[0]][:-1]  # create time channel
         timeseries = [t_ch, ] + timeseries
         freq = [max(freq)] + freq
-    freq = check_multifreq(timeseries, freq)
+    timeseries, freq = check_multifreq(timeseries, freq)
     return BlueprintInput(timeseries, freq, names, units, chtrig)
 
 
@@ -186,38 +180,49 @@ def read_header_and_channels(filename):
 
     """
     header = []
-    channel_list = []
+    # Read in the header until it's numbers
     with open(filename, 'r') as f:
-        for line in f:
+        for n, line in enumerate(f):
             line = line.rstrip('\n').split('\t')
-            while line[-1] == '':
-                line.remove('')  # sometimes there is an extra space
-            for item in line:
-                if '#' == item[0]:  # detecting comments
-                    line.remove(item)
             if line[-1] == '':
                 line.remove('')
             try:
                 float(line[0])
+                break
             except ValueError:
                 header.append(line)
                 continue
-            line = [float(i) for i in line]
-            channel_list.append(line)
+    # Read in the rest paying attention to possible differences
+    if 'Interval=' in header[0]:
+        # Not specifying delimiters will ignore comments
+        channel_list = np.genfromtxt(filename, skip_header=n)
+    elif 'acq' in header[0][0]:
+        # Specifying delimiters will avoid missing values in the files
+        channel_list = np.genfromtxt(filename, skip_header=n, delimiter='\t')
+        # Remove extra (empty?) columns, if present
+        ch_number = int(header[2][0].split(' ')[0])
+        channel_list = channel_list[:, :ch_number]
+        # Set all remaining NaNs to 0
+        channel_list = np.nan_to_num(channel_list)
+        # Take first row and assign it back to header.
+        header.append(list(channel_list[0, :].astype(int)))
+        channel_list = channel_list[1:, :]
+
+    # Make channel_list a list of singular arrays (one per channel)
+    channel_list = [ch for ch in channel_list.T]
+
     return header, channel_list
 
 
-def extract_header_items(channel_list, header=[]):
+def extract_header_items(header):
     """
-    Extract interval, orig_units and orig_names from header and channel_list.
+    Extract interval, orig_units and orig_names from header.
 
-    Extract interval, orig_units and orig_names from header and channel_list
+    Extract interval, orig_units and orig_names from header
     depending on the format (AcqKnowledge and labchart)
 
     Parameters
     ----------
-    channel_list : list of strings
-        The channels of the recording
     header : list
         list that contains file header
 
@@ -232,25 +237,37 @@ def extract_header_items(channel_list, header=[]):
 
     Raises
     ------
-    AttributeError
+    NotImplementedError
         If len(header) == 0 and therefore there is no header
+        If Labchart headers cannot be processed
         If files are not in acq or txt format
     """
     # check header is not empty and detect if it is in labchart or Acqknoledge format
     if len(header) == 0:
-        raise AttributeError('Files without header are not supported yet')
+        raise NotImplementedError('Files without header are not supported yet')
     elif 'Interval=' in header[0]:
         LGR.info('phys2bids detected that your file is in Labchart format')
-        interval = header[0][1].split(" ")
-        range_list = header[5][1:]
+
+        interval = None
+        orig_names = None
+        range_list = None
+        for line in header:
+            if 'Interval=' in line:
+                interval = line[1].split(" ")
+            if 'ChannelTitle=' in line:
+                orig_names = line[1:]
+            if 'Range=' in line:
+                range_list = line[1:]
+
+        if None in [interval, orig_names, range_list]:
+            raise NotImplementedError(OPEN_ISSUE)
+
         orig_units = []
         for item in range_list:
             orig_units.append(item.split(' ')[1])
-        orig_names = header[4][1:]
+
     elif 'acq' in header[0][0]:
         LGR.info('phys2bids detected that your file is in AcqKnowledge format')
-        header.append(channel_list[0])
-        del channel_list[0]  # delete sample size from channel list
         interval = header[1][0].split()
         interval[-1] = interval[-1].split('/')[0]
         # get units and names
@@ -264,7 +281,7 @@ def extract_header_items(channel_list, header=[]):
             # since units are in the line imediately after we get the units at the same time
             orig_units.append(header[index1 + 1][0])
     else:
-        raise AttributeError('This file format is not supported yet for txt files')
+        raise NotImplementedError(OPEN_ISSUE)
     return interval, orig_units, orig_names
 
 
@@ -289,7 +306,7 @@ def load_txt(filename, chtrig=0):
     physio_obj.BlueprintInput
     """
     header, channel_list = read_header_and_channels(filename)
-    interval, orig_units, orig_names = extract_header_items(channel_list, header)
+    interval, orig_units, orig_names = extract_header_items(header)
     phys_in = generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names)
     return phys_in
 
@@ -373,6 +390,7 @@ def load_mat(filename, chtrig=0):
         orig_units = list(mat_dict['units'])
         interval = [mat_dict['isi'], mat_dict['isi_units']]
         channel_list = mat_dict['data']
+        channel_list = [ch for ch in channel_list.T]
         return generate_blueprint(channel_list, chtrig, interval, orig_units, orig_names)
     else:
         # Convert data into 1d numpy array for easier indexing.
