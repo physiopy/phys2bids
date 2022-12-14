@@ -249,9 +249,18 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # The next few lines remove the undesired channels from phys_in.
     if chsel:
         LGR.info('Dropping unselected channels')
-        for i in range(phys_in.ch_amount - 1, 0, -1):
+        chsel.insert(0, 0)
+        if phys_in.trigger_idx not in chsel:
+            LGR.warning(f'The selected channels {tuple(chsel)} do not '
+                        f'contain the trigger channel ({phys_in.trigger_idx}). '
+                        f'Adding channel {phys_in.trigger_idx} to the selection.')
+            chsel.extend(phys_in.trigger_idx)
+        chsel.sort()
+        for i in range(phys_in.ch_amount-1, 0, -1):
             if i not in chsel:
                 phys_in.delete_at_index(i)
+        # Update trigger index
+        phys_in.trigger_idx = chsel.index(phys_in.trigger_idx)
 
     # If requested, change channel names.
     if ch_name:
@@ -292,7 +301,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                       os.path.splitext(os.path.basename(filename))[0])
             for i, take in enumerate(phys_in.keys()):
                 plot_fileprefix = f'{fileprefix}_{take:02d}'
-                viz.export_trigger_plot(phys_in[take], chtrig, plot_fileprefix, tr[i],
+                viz.export_trigger_plot(phys_in[take], phys_in.trigger_idx, plot_fileprefix, tr[i],
                                         num_timepoints_expected[i], filename,
                                         sub, ses)
 
@@ -304,7 +313,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # save a figure of the trigger
             fileprefix = os.path.join(conversion_path,
                                       os.path.splitext(os.path.basename(filename))[0])
-            viz.export_trigger_plot(phys_in, chtrig, fileprefix, tr[0],
+            viz.export_trigger_plot(phys_in, phys_in.trigger_idx, fileprefix, tr[0],
                                     num_timepoints_expected[0], filename,
                                     sub, ses)
 
@@ -386,12 +395,12 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                                 phys_in[take].timeseries[0][-1],
                                                 num=phys_out[key].timeseries[0].shape[0]))
             # Add trigger channel in the proper frequency.
-            if uniq_freq != phys_in[take].freq[chtrig]:
-                phys_out[key].ch_name.insert(1, phys_in[take].ch_name[chtrig])
-                phys_out[key].units.insert(1, phys_in[take].units[chtrig])
+            if uniq_freq != phys_in[take].freq[phys_in.trigger_idx]:
+                phys_out[key].ch_name.insert(1, phys_in[take].ch_name[phys_in.trigger_idx])
+                phys_out[key].units.insert(1, phys_in[take].units[phys_in.trigger_idx])
                 phys_out[key].timeseries.insert(1, np.interp(phys_out[key].timeseries[0],
                                                              phys_in[take].timeseries[0],
-                                                             phys_in[take].timeseries[chtrig]))
+                                                             phys_in[take].timeseries[phys_in.trigger_idx]))
             phys_out[key] = BlueprintOutput.init_from_blueprint(phys_out[key])
 
         # Preparing output parameters: name and folder.
