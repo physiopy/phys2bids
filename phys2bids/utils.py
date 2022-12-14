@@ -31,11 +31,11 @@ def check_input_ext(filename, ext):
     Path(filename).with_suffix(ext): path
         Path representing the input filename, but with corrected extension.
     """
-    if filename.endswith('.gz'):
+    if filename.endswith(".gz"):
         filename = filename[:-3]
 
-    if not ext.startswith('.'):
-        ext = '.' + ext
+    if not ext.startswith("."):
+        ext = "." + ext
 
     return Path(filename).with_suffix(ext)
 
@@ -78,8 +78,8 @@ def check_input_type(filename, indir):
             break
 
     if fftype_found:
-        LGR.info(f'File extension is .{ftype}')
-        LGR.warning('If both acq and txt files exist in the path, acq will be selected.')
+        LGR.info(f"File extension is .{ftype}")
+        LGR.warning("If both acq and txt files exist in the path, acq will be selected.")
         return fname, ftype
     else:
         raise Exception(f'The file {filename} was not found in {indir}'
@@ -104,7 +104,7 @@ def check_file_exists(filename):
         If the file doesn't exists.
     """
     if not os.path.isfile(filename) and filename is not None:
-        raise FileNotFoundError(f'The file {filename} does not exist!')
+        raise FileNotFoundError(f"The file {filename} does not exist!")
 
 
 def check_ge(filename, indir):
@@ -236,7 +236,7 @@ def write_file(filename, ext, text):
     filename + ext:
         Creates new file `filename.ext`.
     """
-    with open(filename + ext, 'w') as text_file:
+    with open(filename + ext, "w") as text_file:
         print(text, file=text_file)
 
 
@@ -258,9 +258,9 @@ def write_json(filename, data, **kwargs):
     filename:
         Creates new file `filename.json`.
     """
-    if not filename.endswith('.json'):
-        filename += '.json'
-    with open(filename, 'w') as out:
+    if not filename.endswith(".json"):
+        filename += ".json"
+    with open(filename, "w") as out:
         json.dump(data, out, **kwargs)
 
 
@@ -279,18 +279,19 @@ def load_heuristic(heuristic):
         try:
             old_syspath = sys.path[:]
             sys.path.append(path)
-            mod = __import__(fname.split('.')[0])
+            mod = __import__(fname.split(".")[0])
             mod.filename = heuristic_file
         finally:
             sys.path = old_syspath
     else:
         from importlib import import_module
+
         try:
-            mod = import_module(f'phys2bids.heuristics.{heuristic}')
+            mod = import_module(f"phys2bids.heuristics.{heuristic}")
             # remove c or o from pyc/pyo
-            mod.filename = mod.__file__.rstrip('co')
+            mod.filename = mod.__file__.rstrip("co")
         except Exception as exc:
-            raise ImportError(f'Failed to import heuristic {heuristic}: {exc}')
+            raise ImportError(f"Failed to import heuristic {heuristic}: {exc}")
     return mod
 
 
@@ -307,8 +308,8 @@ def append_list_as_row(file_name, list_of_elem):
         The list to be appended to the file.
     """
     # Open file in append mode
-    with open(file_name, 'a+', newline='') as write_obj:
+    with open(file_name, "a+", newline="") as write_obj:
         # Create a writer object from csv module
-        csv_writer = writer(write_obj, delimiter='\t')
+        csv_writer = writer(write_obj, delimiter="\t")
         # Add contents of list as last row in the csv file
         csv_writer.writerow(list_of_elem)

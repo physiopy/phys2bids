@@ -152,7 +152,9 @@ def _get_parser():
     return parser
 
 
-if __name__ == '__main__':
-    raise RuntimeError('phys2bids/cli/run.py should not be run directly;\n'
-                       'Please `pip install` phys2bids and use the '
-                       '`phys2bids` command')
+if __name__ == "__main__":
+    raise RuntimeError(
+        "phys2bids/cli/run.py should not be run directly;\n"
+        "Please `pip install` phys2bids and use the "
+        "`phys2bids` command"
+    )

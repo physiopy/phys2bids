@@ -52,8 +52,9 @@ def find_takes(phys_in, ntp_list, tr_list, thr=None, padding=9):
     for take_idx, take_tps in enumerate(ntp_list):
 
         # correct time offset for this iteration's object
-        phys_in.check_trigger_amount(thr=thr, num_timepoints_expected=take_tps,
-                                     tr=tr_list[take_idx])
+        phys_in.check_trigger_amount(
+            thr=thr, num_timepoints_expected=take_tps, tr=tr_list[take_idx]
+        )
         # If it's the very first take, start the take at sample 0,
         # otherwise start is first trigger (adjust with padding later)
         if take_idx == 0:
@@ -73,9 +74,11 @@ def find_takes(phys_in, ntp_list, tr_list, thr=None, padding=9):
             take_end = int(np.where(phys_in.timeseries[0] > end_sec)[0][0] + padding_fr)
         else:
             take_end = int(phys_in.timeseries[0].shape[0] - 1)
-            LGR.warning(f'The computed end point in second was {end_sec}, '
-                        'but current timeseries only lasts up to '
-                        f'{phys_in.timeseries[0][-1]}')
+            LGR.warning(
+                f"The computed end point in second was {end_sec}, "
+                "but current timeseries only lasts up to "
+                f"{phys_in.timeseries[0][-1]}"
+            )
 
         update = int(take_end - padding_fr + 1)
 
@@ -98,14 +101,19 @@ def find_takes(phys_in, ntp_list, tr_list, thr=None, padding=9):
         # Save *start* and *end_index* in dictionary along with *time_offset* and *ntp found*
         # dict key must be readable by human
         # LGRinfo
-        LGR.info('\n--------------------------------------------------------------\n'
-                 f'Slicing between {(take_start/phys_in.freq[phys_in.trigger_idx])} seconds and '
-                 f'{take_end/phys_in.freq[phys_in.trigger_idx]} seconds\n'
-                 '--------------------------------------------------------------')
+        LGR.info(
+            "\n--------------------------------------------------------------\n"
+            f"Slicing between {(take_start/phys_in.freq[phys_in.trigger_idx])} seconds and "
+            f"{take_end/phys_in.freq[phys_in.trigger_idx]} seconds\n"
+            "--------------------------------------------------------------"
+        )
 
-        take_timestamps[take_idx + 1] = (take_start, take_end,
-                                         phys_in.time_offset,
-                                         phys_in.num_timepoints_found)
+        take_timestamps[take_idx + 1] = (
+            take_start,
+            take_end,
+            phys_in.time_offset,
+            phys_in.num_timepoints_found,
+        )
 
         # update the object so that next iteration will look for the first trigger
         # after previous take's last trigger. maybe padding extends to next take
@@ -141,10 +149,12 @@ def slice4phys(phys_in, ntp_list, tr_list, thr, padding=9):
     """
     phys_in_slices = {}
     # inform the user
-    LGR.warning('\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-                '\nphys2bids will split the input file according to the given -tr and -ntp'
-                ' arguments'
-                '\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    LGR.warning(
+        "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        "\nphys2bids will split the input file according to the given -tr and -ntp"
+        " arguments"
+        "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    )
     # Find the timestamps
     take_timestamps = find_takes(phys_in, ntp_list, tr_list, thr, padding)
     for n, take in enumerate(take_timestamps.keys()):
@@ -152,11 +162,11 @@ def slice4phys(phys_in, ntp_list, tr_list, thr, padding=9):
         # tmp variable to collect take's info
         take_attributes = take_timestamps[take]
 
-        phys_in_slices[take] = deepcopy(phys_in[take_attributes[0]:take_attributes[1]])
+        phys_in_slices[take] = deepcopy(phys_in[take_attributes[0] : take_attributes[1]])
 
         # take check_trigger amount
-        phys_in_slices[take].check_trigger_amount(thr=thr,
-                                                  num_timepoints_expected=ntp_list[n],
-                                                  tr=tr_list[n])
+        phys_in_slices[take].check_trigger_amount(
+            thr=thr, num_timepoints_expected=ntp_list[n], tr=tr_list[n]
+        )
 
     return phys_in_slices
