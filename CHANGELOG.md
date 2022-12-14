@@ -1,3 +1,15 @@
+# 2.7.1 (Wed Dec 14 2022)
+
+#### ⚠️ Pushed to `master`
+
+- Update README.md ([@smoia](https://github.com/smoia))
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
 # 2.7.0 (Wed Dec 14 2022)
 
 :tada: This release contains work from a new contributor! :tada:
