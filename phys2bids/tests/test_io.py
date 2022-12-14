@@ -13,7 +13,7 @@ def loaded_acq_file(samefreq_short_txt_file):
 
     # just a few quick checks to make sure the data loaded correctly
     assert len(header_acq) == 9  # check proper header lenght
-    assert len(channels_acq) == 1048559  # check proper number of timepoints
+    assert len(channels_acq[0]) == 1048559  # check proper number of timepoints
     assert len(header_acq[-1]) == 2  # check extra line is deleted
     assert 'acq' in header_acq[0][0]
 
@@ -78,7 +78,7 @@ def test_generate_blueprint_notime(notime_lab_file):
     header, channels = io.read_header_and_channels(notime_lab_file)
     interval, orig_units, orig_names = io.extract_header_items(header)
     phys_obj = io.generate_blueprint(channels, chtrig, interval, orig_units, orig_names)
-    assert len(phys_obj.timeseries) == len(channels[0]) + 1
+    assert len(phys_obj.timeseries) == len(channels) + 1
 
 
 def test_generate_blueprint_items_errors(loaded_lab_file):
@@ -121,8 +121,7 @@ def test_multifreq(loaded_lab_file):
                                             [1 / float(interval[0])] * len(channels)
                                         )
     assert new_freq[-3:] == [100.0, 40.0, 1000.0]
-    # In fairness, last frequency should be 500, but current implemented method is not
-    # resilient to it.
+    # In fairness, last frequency should be 500, but labchart export does not work well.
 
 
 def test_load_acq(samefreq_full_acq_file):
