@@ -1,3 +1,15 @@
+# 2.7.2 (Thu Dec 15 2022)
+
+#### 🐛 Bug Fix
+
+- fix: Update python support ([@smoia](https://github.com/smoia))
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
 # 2.7.1 (Wed Dec 14 2022)
 
 #### ⚠️ Pushed to `master`
