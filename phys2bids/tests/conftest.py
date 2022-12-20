@@ -113,46 +113,30 @@ def ge_one_gep_file(testpath):
                       'PPGData_epiRT_0000000000_00_00_000.gep')
 
 @pytest.fixture
-def ge_two_gep_files(testpath):
+def ge_two_gep_files_ppg(testpath):
     tmp = fetch_file('qawjv', testpath,
                      'RESPData_epiRT_0000000000_00_00_000.gep')
     return fetch_file('wb84d', testpath,
                       'PPGData_epiRT_0000000000_00_00_000.gep')
 
-#    return fetch_file('u9wsr', testpath,
-#                      'PPGData_epiRT_0000000000_00_00_000')
-# Instead of returning you fetch and copy
-#    fetch_file('u9wsr', testpath,
-#                      'PPGData_epiRT_0000000000_00_00_000')
-# os.path.mkdirs to create the two folders for the two files and the one file case
-# os.path copy (something similar) to copy ppg in onefile folder
-# os.path.move (smthg like that) to move the ppg in twofile folder
-
+@pytest.fixture
+def ge_two_gep_files_resp(testpath):
+    tmp = fetch_file('wb84d', testpath,
+                      'PPGData_epiRT_0000000000_00_00_000.gep')
+    return fetch_file('qawjv', testpath,
+                     'RESPData_epiRT_0000000000_00_00_000.gep')
 
 @pytest.fixture
-def ge_one_raw_file_ppg(testpath):
+def ge_one_raw_file(testpath):
     return fetch_file('u9wsr', testpath,
                       'PPGData_epiRT_0000000000_00_00_000')
 
 @pytest.fixture
-def ge_one_raw_file_resp(testpath):
-    return fetch_file('49xpw', testpath,
-                      'RESPData_epiRT_0000000000_00_00_000')
-
-@pytest.fixture
-def ge_two_raw_files_ppg(testpath):
+def ge_two_raw_files(testpath):
     tmp = fetch_file('49xpw', testpath,
                      'RESPData_epiRT_0000000000_00_00_000')
     return fetch_file('u9wsr', testpath,
                       'PPGData_epiRT_0000000000_00_00_000')
-
-@pytest.fixture
-def ge_two_raw_files_resp(testpath):
-    tmp = fetch_file('u9wsr', testpath,
-                     'PPGData_epiRT_0000000000_00_00_000')
-    return fetch_file('49xpw', testpath,
-                      'RESPData_epiRT_0000000000_00_00_000')
-
 
 @pytest.fixture
 def ge_badfiles(testpath):
