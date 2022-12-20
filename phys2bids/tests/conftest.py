@@ -130,17 +130,28 @@ def ge_two_gep_files(testpath):
 
 
 @pytest.fixture
-def ge_one_raw_file(testpath):
+def ge_one_raw_file_ppg(testpath):
     return fetch_file('u9wsr', testpath,
                       'PPGData_epiRT_0000000000_00_00_000')
 
+@pytest.fixture
+def ge_one_raw_file_resp(testpath):
+    return fetch_file('49xpw', testpath,
+                      'RESPData_epiRT_0000000000_00_00_000')
 
 @pytest.fixture
-def ge_two_raw_files(testpath):
+def ge_two_raw_files_ppg(testpath):
     tmp = fetch_file('49xpw', testpath,
                      'RESPData_epiRT_0000000000_00_00_000')
     return fetch_file('u9wsr', testpath,
                       'PPGData_epiRT_0000000000_00_00_000')
+
+@pytest.fixture
+def ge_two_raw_files_resp(testpath):
+    tmp = fetch_file('u9wsr', testpath,
+                     'PPGData_epiRT_0000000000_00_00_000')
+    return fetch_file('49xpw', testpath,
+                      'RESPData_epiRT_0000000000_00_00_000')
 
 
 @pytest.fixture
