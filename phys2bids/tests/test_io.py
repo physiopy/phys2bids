@@ -198,7 +198,7 @@ def test_load_gep_two_files_ppg(ge_two_gep_files_ppg, testpath):
 
 
 # Check two GE files are loaded correctly, RESP user defined
-def test_load_gep_two_files_ppg(ge_two_gep_files_resp, testpath):
+def test_load_gep_two_files_resp(ge_two_gep_files_resp, testpath):
     # Load data
     phys_obj = io.load_gep(ge_two_gep_files_resp)
 

@@ -291,7 +291,7 @@ def test_integration_gep_onefile(skip_integration, ge_one_gep_file):
     shutil.rmtree(conversion_path)
 
 
-def test_integration_gep_multifile(skip_integration, ge_two_gep_files):
+def test_integration_gep_multifile(skip_integration, ge_two_gep_files_ppg):
     """
     Does the integration test for a set of two GE files
     Input file is PPG with RESP file also in folder
@@ -300,7 +300,7 @@ def test_integration_gep_multifile(skip_integration, ge_two_gep_files):
     if skip_integration:
         pytest.skip('Skipping integration test')
 
-    test_path, test_filename = split(ge_two_gep_files)
+    test_path, test_filename = split(ge_two_gep_files_ppg)
     conversion_path = join(test_path, 'code', 'conversion')
 
     phys2bids(filename=test_filename, indir=test_path, outdir=test_path)
