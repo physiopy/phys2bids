@@ -1,3 +1,62 @@
+# 2.7.2 (Thu Dec 15 2022)
+
+#### 🐛 Bug Fix
+
+- fix: Update python support ([@smoia](https://github.com/smoia))
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
+# 2.7.1 (Wed Dec 14 2022)
+
+#### ⚠️ Pushed to `master`
+
+- Update README.md ([@smoia](https://github.com/smoia))
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
+# 2.7.0 (Wed Dec 14 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Stefano Moia ([@smoia](https://github.com/smoia)), for all your work!
+
+#### 🚀 Enhancement
+
+- Fix txt reading and improve performance [#432](https://github.com/physiopy/phys2bids/pull/432) ([@smoia](https://github.com/smoia))
+
+#### 🐛 Bug Fix
+
+- IndexError when slicing last run [#415](https://github.com/physiopy/phys2bids/pull/415) ([@sangfrois](https://github.com/sangfrois) [@smoia](https://github.com/smoia))
+
+#### ⚠️ Pushed to `master`
+
+- Physiopylogo ([@smoia](https://github.com/smoia))
+
+#### 📝 Documentation
+
+- Fix documentation indexing [#429](https://github.com/physiopy/phys2bids/pull/429) ([@smoia](https://github.com/smoia))
+- Fix API documentation removing deprecated `interfaces` and adding `io`. [#428](https://github.com/physiopy/phys2bids/pull/428) ([@smoia](https://github.com/smoia))
+
+#### ⚠️ Tests
+
+- Switch CI to CircleCI, drop Windows testing [#430](https://github.com/physiopy/phys2bids/pull/430) ([@smoia](https://github.com/smoia))
+- int: Quick linting fix [skip release] [#430](https://github.com/physiopy/phys2bids/pull/430) ([@smoia](https://github.com/smoia))
+
+#### Authors: 2
+
+- François Lespinasse ([@sangfrois](https://github.com/sangfrois))
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
 # 2.6.2 (Fri Jul 15 2022)
 
 #### 🐛 Bug Fix
