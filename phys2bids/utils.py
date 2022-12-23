@@ -8,7 +8,7 @@ from pathlib import Path
 
 LGR = logging.getLogger(__name__)
 
-SUPPORTED_FTYPES = ('acq', 'txt', 'mat')
+SUPPORTED_FTYPES = ('acq', 'txt', 'mat', 'gep')
 
 
 def check_input_ext(filename, ext):
@@ -105,6 +105,82 @@ def check_file_exists(filename):
     """
     if not os.path.isfile(filename) and filename is not None:
         raise FileNotFoundError(f'The file {filename} does not exist!')
+
+
+def check_ge(filename, indir):
+    """
+    Check if the input file is from a GE scanner.
+
+    If so, copy the file while adding a ".gep" filename extension.
+
+    Parameters
+    ----------
+    filename: str or path
+        A string representing a file name or a fullpath
+        to a file
+    indir: str or path
+        A string representing a folder in which the file is,
+        or a fullpath to such folder
+
+    """
+    from numpy import loadtxt
+    from glob import glob
+
+    ge_types = ['ECGData', 'PPGData', 'RESPData']
+
+    # Ensure the file exists
+    if not os.path.isfile(os.path.join(indir, filename)) and filename is not None:
+        raise FileNotFoundError(f'The file {filename} does not exist!')
+
+    # Check if it's a GE file and add file extension
+    # Do the same for other linked files
+    if any(ge_type in filename for ge_type in ge_types):
+        LGR.info('Filename with the form of GE physiological data entered')
+        #  Check that the file contents correspond to the format of GE files
+        try:
+            test_data = loadtxt(os.path.join(indir, filename))
+            if len(test_data.shape) > 1:
+                LGR.info('File contents do not match GE format: multiple columns')
+                raise TypeError('File contents do not match GE format: multiple columns')
+        except ValueError:
+            LGR.info('File contents do not match GE format: not numerical')
+            raise TypeError('File contents do not match GE format: not numerical') from None
+        # Look for related GE files based on timestamp in name
+        fnames = glob(os.path.join(indir, f'*{filename[-20:]}*'))
+        # Catch any tsv or json files
+        for fname in fnames[:]:
+            if '.tsv.gz' in fname:
+                fnames.remove(fname)
+            if '.json' in fname:
+                fnames.remove(fname)
+        # Add extension to original so it's logged appropriately
+        if 'gep' not in filename[:-3]:
+            new_filename = filename + '.gep'
+            copy_file(os.path.join(indir, filename),
+                      os.path.join(indir, new_filename))
+            LGR.info(f'Appending ".gep" extension to {filename}')
+        else:
+            LGR.info(f'".gep" extension already present in {filename}.')
+        # Add extension to additional files and log these
+        # Remove the original filename from the list
+        fnames.remove(os.path.join(indir, filename))
+        try:
+            fnames.remove(os.path.join(indir, filename + '.gep'))
+        except ValueError:
+            pass
+        # Log if there are no additional files
+        if len(fnames) == 0:
+            LGR.info('No additional GE physiological files found')
+        else:
+            LGR.info('Additional GE physiological file(s) found')
+            for fname in fnames[:]:
+                if 'gep' in fname[-3:]:
+                    LGR.info(f'".gep" extension already present in {fname.split("/")[-1]}.')
+                else:
+                    new_fname = fname + '.gep'
+                    copy_file(os.path.join(indir, fname),
+                              os.path.join(indir, new_fname))
+                    LGR.info(f'Appending ".gep" extension to {fname.split("/")[-1]}.')
 
 
 def copy_file(oldpath, newpath, ext=''):

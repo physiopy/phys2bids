@@ -419,3 +419,91 @@ def load_mat(filename, chtrig=0):
         t_ch = np.ogrid[0:duration:interval][:-1]
         timeseries = [t_ch, ] + timeseries
         return BlueprintInput(timeseries, freq, names, units, chtrig)
+
+
+def load_gep(filename):
+    """
+    Populate object phys_input from GE physiological files.
+
+    Uses the filename that the user provides to find any matching inputs
+    from other recording types (PPG, RESP, or ECG).
+
+    Populates physio_obj with all identified recording types (note that one
+    or more of these may not be true recordings as the scanner outputs all
+    possible types in all cases). The modality corresponding to the filename
+    entered by the user is put first (after time and trigger).
+
+    Parameters
+    ----------
+    filename: str
+        path to the GE scanner physiological file
+
+    Returns
+    -------
+    BlueprintInput
+
+    Note
+    ----
+
+    GE physiological files do not record a trigger so a column is added at
+    position 1. This has a value of zero up to the scan start time and then
+    a value of one for the duration of the scan.
+
+    See Also
+    --------
+    physio_obj.BlueprintInput
+    """
+    import os
+    from glob import glob
+    from pathlib import Path
+
+    # Inititate lists of column names and units with time and trigger
+    names = ['time', 'trigger']
+    units = ['s', 'mV']  # Assuming recording units are mV...
+
+    # Add column for file given by user
+    if 'PPGData' in filename:
+        freq = [100, 100, 100]
+        names.append('cardiac')
+    elif 'RESPData' in filename:
+        freq = [25, 25, 25]
+        names.append('respiratory')
+    elif 'ECGData' in filename:
+        freq = [1000, 1000, 1000]
+        names.append('cardiac')
+
+    # Load in user file data
+    data = [np.loadtxt(filename)]
+
+    # Calculate time in seconds for first input (starts from -30s)
+    interval = 1 / freq[0]
+    duration = data[0].shape[0] * interval
+    t_ch = np.ogrid[-30:duration - 30:interval]
+
+    # Find and add additional data files
+    filename = Path(filename)
+    fnames = glob(os.path.join(filename.parent, f'*{filename.name[-24:-4]}.gep'))
+    fnames.remove(str(filename))  # Drop the original file
+    if not len(fnames) == 0:
+        for fname in fnames:
+            if 'PPGData' in fname:
+                freq.append(100)
+                names.append('cardiac')
+                data.append(np.loadtxt(fname))
+            elif 'RESPData' in fname:
+                freq.append(25)
+                names.append('respiratory')
+                data.append(np.loadtxt(fname))
+            elif 'ECGData' in fname:
+                freq.append(1000)
+                names.append('cardiac')
+                data.append(np.loadtxt(fname))
+
+    # Create trigger channel
+    trigger = np.hstack((np.zeros(int(30 / interval)),
+                         np.ones(int((duration - 30) / interval))))
+
+    # Create final list of timeseries
+    timeseries = [t_ch, trigger]
+    timeseries.extend(data)
+    return BlueprintInput(timeseries, freq, names, units, 1)

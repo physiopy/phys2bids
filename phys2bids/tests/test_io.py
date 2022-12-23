@@ -1,7 +1,8 @@
 from phys2bids import io
 
+import os
 import math
-
+import numpy as np
 import pytest
 from pytest import raises
 
@@ -170,3 +171,40 @@ def test_load_mat(matlab_file_labchart, matlab_file_acq):
     assert phys_obj.ch_name[chtrig] == 'MR TRIGGER - Custom, HLT100C - A 5'
     assert phys_obj.freq[chtrig] == 10000.0
     assert phys_obj.units[chtrig] == 'Volts'
+
+
+# Check single GE file is loaded correctly
+# To read downloaded files in conftest, use the same name of the fixture function
+def test_load_gep_one_file(ge_one_gep_file):
+    # Load data
+    phys_obj = io.load_gep(ge_one_gep_file)
+
+    # Check the channel data is as expected
+    gep_data = np.loadtxt(ge_one_gep_file)
+    assert np.array_equal(gep_data, phys_obj.timeseries[2])
+
+
+# Check two GE files are loaded correctly, PPG user defined
+def test_load_gep_two_files_ppg(ge_two_gep_files_ppg, testpath):
+    # Load data
+    phys_obj = io.load_gep(ge_two_gep_files_ppg)
+
+    # Check the channel data is as expected
+    gep_data1 = np.loadtxt(ge_two_gep_files_ppg)
+    gep_data2 = np.loadtxt(os.path.join(testpath,
+                                        'RESPData_epiRT_0000000000_00_00_000.gep'))
+    assert np.array_equal(gep_data1, phys_obj.timeseries[2])
+    assert np.array_equal(gep_data2, phys_obj.timeseries[3])
+
+
+# Check two GE files are loaded correctly, RESP user defined
+def test_load_gep_two_files_resp(ge_two_gep_files_resp, testpath):
+    # Load data
+    phys_obj = io.load_gep(ge_two_gep_files_resp)
+
+    # Check the channel data is as expected
+    gep_data1 = np.loadtxt(ge_two_gep_files_resp)
+    gep_data2 = np.loadtxt(os.path.join(testpath,
+                                        'PPGData_epiRT_0000000000_00_00_000.gep'))
+    assert np.array_equal(gep_data1, phys_obj.timeseries[2])
+    assert np.array_equal(gep_data2, phys_obj.timeseries[3])

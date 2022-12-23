@@ -192,8 +192,10 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
     indir = os.path.abspath(indir)
-    if chtrig < 0:
+    if chtrig and chtrig < 0:
         raise RuntimeError('Wrong trigger channel. Channel indexing starts with 0!')
+
+    utils.check_ge(filename, indir)
     filename, ftype = utils.check_input_type(filename,
                                              indir)
 
@@ -227,6 +229,9 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     elif ftype == 'mat':
         from phys2bids.io import load_mat
         phys_in = load_mat(infile, chtrig)
+    elif ftype == 'gep':
+        from phys2bids.io import load_gep
+        phys_in = load_gep(infile)
 
     LGR.info('Checking that units of measure are BIDS compatible')
     for index, unit in enumerate(phys_in.units):

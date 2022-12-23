@@ -90,3 +90,39 @@ def test_append_list_as_row(tmpdir):
         tsv_read = reader(tsv, delimiter="\t")
         for row in tsv_read:
             assert row == list_of_elem
+
+
+# Test check_ge's ability to catch improperly formatted GE files
+def test_check_ge_bad_files(ge_badfiles):
+    str_fname = os.path.split(ge_badfiles)
+
+    # Catch string
+    with raises(Exception) as errorinfo:
+        utils.check_ge(str_fname[1], str_fname[0])
+    assert 'not numerical' in str(errorinfo.value)
+
+    # Catch multiple columns in csv file
+    with raises(Exception) as errorinfo:
+        utils.check_ge('PPGData_epiRT_columnscsv_00_00_000',
+                       str_fname[0])
+    assert 'not numerical' in str(errorinfo.value)
+
+    # Catch multiple columns in tsv file
+    with raises(Exception) as errorinfo:
+        utils.check_ge('PPGData_epiRT_columnstsv_00_00_000',
+                       str_fname[0])
+    assert 'multiple columns' in str(errorinfo.value)
+
+
+# Test that check_ge adds suffix to files appropriately
+def test_check_ge_add_suffix(ge_one_raw_file, ge_two_raw_files):
+    # Single file
+    in_fname = os.path.split(ge_one_raw_file)
+    utils.check_ge('PPGData_epiRT_0000000000_00_00_000', in_fname[0])
+    assert os.path.isfile(os.path.join(in_fname[0], in_fname[1]+'.gep'))
+
+    # Multiple files
+    in_fname = os.path.split(ge_two_raw_files)
+    utils.check_ge('PPGData_epiRT_0000000000_00_00_000', in_fname[0])
+    assert os.path.isfile(os.path.join(in_fname[0],
+                                       'RESPData_epiRT_0000000000_00_00_000.gep'))
