@@ -1,3 +1,16 @@
+# 2.8.0 (Fri Dec 23 2022)
+
+#### 🚀 Enhancement
+
+- Add GE scanner physiological file functionality [#424](https://github.com/physiopy/phys2bids/pull/424) ([@nw-duncan](https://github.com/nw-duncan) [@smoia](https://github.com/smoia))
+
+#### Authors: 2
+
+- Niall Duncan ([@nw-duncan](https://github.com/nw-duncan))
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
 # 2.7.2 (Thu Dec 15 2022)
 
 #### 🐛 Bug Fix
