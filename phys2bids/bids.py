@@ -25,10 +25,10 @@ UNIT_ALIASES = {
                 '°c': '°C', '°celsius': '°C', 'celsius': '°C',
                 # ampere: electric current
                 'ampere': 'A', 'amp': 'A', 'amps': 'A',
-                # second: time and hertzs: frequency
+                # second: time and hertz: frequency
                 # siemens: electric conductance (e.g. EDA)
                 'siemens': 'S',
-                # second: time and hertzs
+                # second: time and hertz
                 '1/hz': 's', '1/hertz': 's', 'hz': 'Hz',
                 '1/s': 'Hz', '1/second': 'Hz', '1/seconds': 'Hz',
                 '1/sec': 'Hz', '1/secs': 'Hz', 'hertz': 'Hz',
@@ -243,7 +243,7 @@ def participants_file(outdir, yml, sub):
                     break
         # Only append to file if subject is not in the file
         if not sub_exists:
-            LGR.info(f'Appending subjet sub-{sub} to participants.tsv ...')
+            LGR.info(f'Appending subject sub-{sub} to participants.tsv ...')
             participants_data = ['n/a'] * header_length
             participants_data[p_id_idx] = f'sub-{sub}'
             utils.append_list_as_row(file_path, participants_data)

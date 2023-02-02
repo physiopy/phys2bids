@@ -2,7 +2,7 @@
 name: Feature request
 about: Use this template to request new features.
 title: ''
-labels: Enhacement
+labels: Enhancement
 assignees: ''
 ---
 

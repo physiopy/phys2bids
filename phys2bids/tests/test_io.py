@@ -13,7 +13,7 @@ def loaded_acq_file(samefreq_short_txt_file):
     header_acq, channels_acq = io.read_header_and_channels(samefreq_short_txt_file)
 
     # just a few quick checks to make sure the data loaded correctly
-    assert len(header_acq) == 9  # check proper header lenght
+    assert len(header_acq) == 9  # check proper header length
     assert len(channels_acq[0]) == 1048559  # check proper number of timepoints
     assert len(header_acq[-1]) == 2  # check extra line is deleted
     assert 'acq' in header_acq[0][0]
@@ -142,7 +142,7 @@ def test_load_acq(samefreq_full_acq_file):
 
 
 def test_load_mat(matlab_file_labchart, matlab_file_acq):
-    # Read data to test labchart in mat exension
+    # Read data to test labchart in mat extension
     chtrig = 1
     phys_obj = io.load_mat(matlab_file_labchart, chtrig)
 
@@ -158,7 +158,7 @@ def test_load_mat(matlab_file_labchart, matlab_file_acq):
     orig_units = ['s', 'V', 'mmHg', 'mmHg', 'V', 'V']
     assert phys_obj.units == orig_units
 
-    # Read data to test acq in mat exension
+    # Read data to test acq in mat extension
     chtrig = 3
     phys_obj = io.load_mat(matlab_file_acq, chtrig)
 

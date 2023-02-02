@@ -38,7 +38,7 @@ def find_takes(phys_in, ntp_list, tr_list, thr=None, padding=9):
     take_timestamps: dictionary
         Containing tuples of take start and end indexes for each take, based on
         trigger channels. It also contains take attributes: time offset from
-        session beggining, and nb of triggers in the form of
+        session beginning, and nb of triggers in the form of
         take_timestamps{1:(start, end, time offset, nb of triggers),
                        2:(...), ... }
     """

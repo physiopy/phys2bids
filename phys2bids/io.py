@@ -29,7 +29,7 @@ def check_multifreq(timeseries, freq, start=0, endat=None):
     timeseries : list of numpy.ndarrays
         list of numpy.ndarrays representing channels.
     freq : list of floats
-        list with the maximun frequency
+        list with the maximum frequency
     start : int, optional
         first sample of the channel to be considered
     endat : int or None, optional
@@ -67,7 +67,7 @@ def generate_blueprint(timeseries, chtrig, interval, orig_units, orig_names):
     """
     Generate blueprint object from various information.
 
-    Standarize timeseries, chtrig interval orig_units and orig_names in the correct units and
+    Standardize timeseries, chtrig interval orig_units and orig_names in the correct units and
     format and generate a physio_obj.BlueprintInput object.
     This function is mainly thought to adapt txt files.
 
@@ -111,7 +111,7 @@ def generate_blueprint(timeseries, chtrig, interval, orig_units, orig_names):
     # Check if the header is in frequency or sampling interval
     if 'Hz' in interval[-1]:
         LGR.info('Retrieving frequency from file header, calculating sample interval, '
-                 'and standarizing to Hz if needed')
+                 'and standardizing to Hz if needed')
         freq = float(interval[0])
         freq_unit = interval[-1]
         if freq_unit == 'MHz':
@@ -146,7 +146,7 @@ def generate_blueprint(timeseries, chtrig, interval, orig_units, orig_names):
     # reorder channels names
     names = ['time', ]
     names = names + orig_names
-    # reoder channels units
+    # reorder channels units
     units = ['s', ]
     units = units + orig_units
     # Check if the file has a time channel, otherwise create it.
@@ -229,7 +229,7 @@ def extract_header_items(header):
     Returns
     -------
     interval : list of strings
-        maximun sampling frequency or interval value and unit for the recording
+        maximum sampling frequency or interval value and unit for the recording
     orig_units : list of strings
         contains original channels units
     orig_names : list of strings
@@ -278,7 +278,7 @@ def extract_header_items(header):
         # that should be the last channel name
         for index1 in range(3, 3 + len(header[-1]) * 2, 2):
             orig_names.append(header[index1][0])
-            # since units are in the line imediately after we get the units at the same time
+            # since units are in the line immediately after we get the units at the same time
             orig_units.append(header[index1 + 1][0])
     else:
         raise NotImplementedError(OPEN_ISSUE)
@@ -457,7 +457,7 @@ def load_gep(filename):
     from glob import glob
     from pathlib import Path
 
-    # Inititate lists of column names and units with time and trigger
+    # Initiate lists of column names and units with time and trigger
     names = ['time', 'trigger']
     units = ['s', 'mV']  # Assuming recording units are mV...
 

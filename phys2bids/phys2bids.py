@@ -49,7 +49,7 @@ LGR.setLevel(logging.INFO)
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
     """
-    Print a summary onscreen and in file with informations on the files.
+    Print a summary onscreen and in file with information on the files.
 
     Parameters
     ----------
@@ -372,7 +372,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                     # eliminate that channel from the dict since we only want channels
                     # with the same frequency
                     phys_out[key].delete_at_index(idx - count)
-                    # take into acount the elimination so in the next eliminated channel we
+                    # take into account the elimination so in the next eliminated channel we
                     # eliminate correctly
                     count += 1
             # Also create a BlueprintOutput object for each unique frequency found.
