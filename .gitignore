@@ -132,3 +132,10 @@ docs/generated/
 .vscode/
 phys2bids/tests/data/*
 /phys2bids/tests/data/
+.idea/workspace.xml
+.idea/vcs.xml
+.idea/phys2bids.iml
+.idea/modules.xml
+.idea/misc.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/inspectionProfiles/profiles_settings.xml
