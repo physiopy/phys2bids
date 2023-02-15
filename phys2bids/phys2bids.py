@@ -249,7 +249,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # The next few lines remove the undesired channels from phys_in.
     if chsel:
         LGR.info('Dropping unselected channels')
-        for i in reversed(range(0, phys_in.ch_amount)):
+        for i in range(phys_in.ch_amount - 1, 0, -1):
             if i not in chsel:
                 phys_in.delete_at_index(i)
 
