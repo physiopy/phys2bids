@@ -1,3 +1,15 @@
+# 2.8.1 (Wed Feb 15 2023)
+
+#### 🐛 Bug Fix
+
+- Fix channel selection to not remove "time channel" [#439](https://github.com/physiopy/phys2bids/pull/439) ([@smoia](https://github.com/smoia))
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
 # 2.8.0 (Fri Dec 23 2022)
 
 #### 🚀 Enhancement
