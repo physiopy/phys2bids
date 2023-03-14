@@ -1,3 +1,15 @@
+# 2.8.3 (Tue Mar 14 2023)
+
+#### 🐛 Bug Fix
+
+- Fix trigger index update on channel subset selection (`-chsel`) [#433](https://github.com/physiopy/phys2bids/pull/433) (s.moia@bcbl.eu)
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
 # 2.8.2 (Tue Mar 14 2023)
 
 #### 🐛 Bug Fix
