@@ -590,6 +590,7 @@ class BlueprintInput():
                 Automatically retrieved trigger index
         """
         LGR.info('Running automatic trigger detection.')
+        LGR.info('Matching channel names with known trigger names first.')
         joint_match = '§'.join(TRIGGER_NAMES)
         indexes = []
         for n, case in enumerate(self.ch_name):
@@ -607,7 +608,7 @@ class BlueprintInput():
                 self.trigger_idx = indexes[0]
         else:
             # Time-domain automatic trigger detection
-
+            LGR.info('Find the trigger channel by measuring data distance from its value limits.')
             # Create numpy array with all channels (excluding time)
             channel_ts = np.array(self.timeseries[1:])
 
@@ -621,7 +622,7 @@ class BlueprintInput():
             distance_mean = np.mean(distance, axis=1)
 
             # Set the trigger as the channel with the smallest distance
-            self.trigger_idx = np.nanargmin(distance_mean) + 1
+            self.trigger_idx = int(np.nanargmin(distance_mean) + 1)
 
         LGR.info(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
 
