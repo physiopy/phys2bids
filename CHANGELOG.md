@@ -1,3 +1,15 @@
+# 2.8.2 (Tue Mar 14 2023)
+
+#### 🐛 Bug Fix
+
+- Fix channel trigger variable type when the trigger is automatically detected [#440](https://github.com/physiopy/phys2bids/pull/440) ([@smoia](https://github.com/smoia))
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
 # 2.8.1 (Wed Feb 15 2023)
 
 #### 🐛 Bug Fix
