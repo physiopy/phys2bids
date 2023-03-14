@@ -605,7 +605,7 @@ class BlueprintInput():
                 raise Exception('More than one possible trigger channel was automatically found. '
                                 'Please run phys2bids specifying the -chtrig argument.')
             else:
-                self.trigger_idx = indexes[0]
+                self.trigger_idx = int(indexes[0])
         else:
             # Time-domain automatic trigger detection
             LGR.info('Find the trigger channel by measuring data distance from its value limits.')
