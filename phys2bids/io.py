@@ -428,6 +428,9 @@ def load_gep(filename):
     Uses the filename that the user provides to find any matching inputs
     from other recording types (PPG, RESP, or ECG).
 
+    **Note that the filename must not be altered from how it is output from
+    the scanner.**
+
     Populates physio_obj with all identified recording types (note that one
     or more of these may not be true recordings as the scanner outputs all
     possible types in all cases). The modality corresponding to the filename
