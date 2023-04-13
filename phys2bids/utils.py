@@ -82,7 +82,7 @@ def check_input_type(filename, indir):
         LGR.warning('If both acq and txt files exist in the path, acq will be selected.')
         return fname, ftype
     else:
-        raise Exception(f'The file {filename} wasn\'t found in {indir}'
+        raise Exception(f'The file {filename} was not found in {indir}'
                         f' or {ftype} is not supported yet.\n'
                         f'phys2bids currently supports:'
                         f' {", ".join(SUPPORTED_FTYPES)}')

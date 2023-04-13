@@ -27,7 +27,7 @@ def test_check_input_type(testpath, samefreq_full_acq_file):
 
     with raises(Exception) as errorinfo:
         utils.check_input_type('nobel_prize.win', testpath)
-    assert "wasn't found" in str(errorinfo.value)
+    assert "was not found" in str(errorinfo.value)
 
 
 # Tests check_file_exists

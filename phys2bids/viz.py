@@ -19,8 +19,8 @@ def plot_trigger(time, trigger, fileprefix, tr, thr, num_timepoints_expected,
     1. Plots the triggers in blue, a block in orange that indicates
     the time from the first trigger to the last, and a red line showing
     the threshold used for trigger detection
-    2. Same plot but showing only the intial trigger
-    3. Same plot but showing only the intial trigger
+    2. Same plot but showing only the initial trigger
+    3. Same plot but showing only the initial trigger
 
     Parameters
     ----------

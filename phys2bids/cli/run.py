@@ -92,7 +92,7 @@ def _get_parser():
                           nargs='*',
                           type=int,
                           help='Number of expected trigger timepoints (TRs). '
-                               'Default is None. Note: the estimation of beggining of '
+                               'Default is None. Note: the estimation of beginning of '
                                'neuroimaging acquisition cannot take place with this default. '
                                'If you\'re running phys2bids on a multi-run recording, '
                                'give a list of each expected ntp for each run.',

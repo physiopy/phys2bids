@@ -1,0 +1,3 @@
+[codespell]
+skip = .git,venvs,.venv,versioneer.py
+# ignore-words-list = 

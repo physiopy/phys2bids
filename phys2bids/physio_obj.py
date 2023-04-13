@@ -327,7 +327,7 @@ class BlueprintInput():
         # Operate on each channel on its own
         for n, channel in enumerate(self.timeseries):
             idx_dict = {'start': idx.start, 'stop': idx.stop, 'step': idx.step}
-            # Adapt the slicing indexes to the right requency
+            # Adapt the slicing indexes to the right frequency
             for i in ['start', 'stop', 'step']:
                 if idx_dict[i]:
                     idx_dict[i] = int(np.floor(self.freq[n]
