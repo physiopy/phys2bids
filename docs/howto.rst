@@ -172,10 +172,20 @@ Six files have been generated in the output directory:
 
 Unless specified with ``-chsel``, ``phys2bids`` will process and output all channels. Unless specified with ``-chnames``, ``phys2bids`` will read the channel names from the header information in the file. In this tutorial, we are processing all channels and reading the names from the header information.
 
+.. note::
+    **GE scanner physiological files**
+
+    GE scanner physiological file filenames should not be altered from how they are output from the scanner.
+
+    If you have more than one type of physiological recording from the scanner for a particular fMRI run (e.g., RESP + PPG) then only one file should be entered as an input. ``phys2bids`` will automatically detect the other files and process them together.
+
+    When GE scanner physiological files are used, versions of the input files will be created with a ".gep" filename extension.
+
+
 Finding the "start time"
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-If you're just transforming files into ``tsv.gz``, **you can ignore this**. If you recorded the trigger of your (f)MRI, ``phys2bids`` can use it to detect the moment in your input file in which you started sampling your (f)MRI data, and set the "0" time to be that point.
+If you're just transforming files into ``tsv.gz``, **you can ignore this**. If you recorded the trigger of your (f)MRI, ``phys2bids`` can use it to detect the moment in your input file in which you started sampling your (f)MRI data, and set the "0" time to be that point. If you are processing GE scanner physiological files then the start time is synchronised with the start of the fMRI run. With this datatype, the start is automatically set by ``phys2bids`` and no user input is required.
 
 First, we need to ensure ``phys2bids`` knows where our trigger channel is, and for this we can use the argument ``-chtrig``. ``-chtrig`` has a default of 1.
 For the text file used in this example, the trigger information is the second column of the raw file; the first recorded channel. Remember, ``phys2bids`` treats time as a hidden channel, always in position 0.
@@ -220,6 +230,8 @@ Notice that an extra file has been generated, called "tutorial_file_trigger_time
 
 In the first row of this plot, the whole trigger channel is plotted in blue. The orange block shows where the time starts and ends (i.e. the start and end of your fMRI recording).
 In the second row, we see the first and last trigger (or expected first and last). The red dotted line represents the trigger detection threshold.
+
+If you are analysing GE scanner files, the trigger channel will show a constant value of "1" from the beginning of the fMRI run to the end. Note that the physiological recording starts 20 seconds before the start of the fMRI run and so a value of "0" will be shown for that period.
 
 .. warning::
     If you have another file that was collected in an identical way, the threshold is likely to be same. However, it is *very* important to calibrate the threshold in a couple of files before assuming this. This still *won't* necessarily mean that it's the right threshold for all the files, but there's a chance that it's ok(ish) for most of them.
