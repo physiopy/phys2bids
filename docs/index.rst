@@ -50,7 +50,7 @@ It was born for AcqKnowledge files (BIOPAC), and at the moment it supports
 (ADInstruments).
 
 
-At the moment, it only supports physiological files from GE MRI scanners. You can find software that will work with files from other MRI scanner types `here <https://github.com/tarrlab/physio2bids>`_.
+While we aim at supporting all MRI proprietary physiological file formats, at the moment it only supports GE MRI scanners. You can find software that will work with files from other MRI scanner types `here <https://github.com/tarrlab/physio2bids>`_.
 
 **We're looking for code contributors,** and any suggestion/bug report is welcome! Feel free to open issues!
 
