@@ -10,7 +10,7 @@ Requirements
 ``phys2bids`` requires python 3.6 or above, as well as the modules:
 
 .. literalinclude:: ../setup.cfg
-   :lines: 25-27
+   :lines: 28-30
    :dedent: 4
 
 If you are planning to use file formats other than plain ``txt``, you will need to install additional **extra modules** to have the right interface.
