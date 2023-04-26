@@ -1,82 +1,82 @@
 {
-    "license": "Apache-2.0", 
+    "license": "Apache-2.0",
     "title": "physiopy/phys2bids: BIDS formatting of physiological recordings",
     "upload_type": "software",
     "creators": [
         {
-            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language",
             "name": "Daniel Alcal\u00e1"
-        }, 
+        },
         {
-            "affiliation": "Northwestern University", 
+            "affiliation": "Northwestern University",
             "name": "Apoorva Ayyagari"
-        }, 
+        },
         {
             "orcid": "0000-0002-7796-8795",
-            "affiliation": "Florida International University", 
+            "affiliation": "Florida International University",
             "name": "Katie Bottenhorn"
-        }, 
+        },
         {
-            "affiliation": "Northwestern University", 
+            "affiliation": "Northwestern University",
             "name": "Molly Bright"
-        }, 
+        },
         {
             "orcid": "0000-0002-9068-5810",
-            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language",
             "name": "C\u00e9sar Caballero-Gaudes"
-        }, 
+        },
         {
-            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language",
             "name": "In\u00e9s Chavarr\u00eda"
-        }, 
+        },
         {
-            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language",
             "name": "Vicente Ferrer"
-        }, 
+        },
         {
             "name": "Soichi Hayashi"
-        }, 
+        },
         {
             "name": "Vittorio Iacovella"
-        }, 
+        },
         {
             "name": "Fran\u00e7ois Lespinasse"
-        }, 
+        },
         {
             "orcid": "0000-0003-1057-1336",
-            "affiliation": "McGill University", 
+            "affiliation": "McGill University",
             "name": "Ross Markello"
-        }, 
+        },
         {
-            "orcid": "0000-0002-2553-3327", 
-            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+            "orcid": "0000-0002-2553-3327",
+            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language",
             "name": "Stefano Moia"
-        }, 
+        },
         {
             "name": "Robert Oostenveld"
-        }, 
+        },
         {
             "orcid": "0000-0001-9813-3167",
-            "affiliation": "Florida International University", 
+            "affiliation": "Florida International University",
             "name": "Taylor Salo"
-        }, 
+        },
         {
-            "affiliation": "Northwestern University", 
+            "affiliation": "Northwestern University",
             "name": "Rachael Stickland"
-        }, 
+        },
         {
             "orcid": "0000-0001-6849-9088",
-            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language", 
+            "affiliation": "BCBL - Basque Center on Cognition, Brain and Language",
             "name": "Eneko Uru\u00f1uela"
-        },  
+        },
         {
-            "affiliation": "Maastricht University", 
+            "affiliation": "Maastricht University",
             "name": "Merel van der Thiel"
-        }, 
+        },
         {
-            "affiliation": "Northwestern University", 
+            "affiliation": "Northwestern University",
             "name": "Kristina Zvolanek"
         }
-    ], 
+    ],
     "access_right": "open"
 }

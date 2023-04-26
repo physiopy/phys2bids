@@ -18,6 +18,6 @@ assignees: ''
 ## Next Steps
 <!--- Provide possible steps to take in order to address the issue -->
 
-    * 
-    * 
-    * 
+    *
+    *
+    *

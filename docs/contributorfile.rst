@@ -245,7 +245,7 @@ There are many best practices to review code online, for instance `this one <htt
 - If the PR graduated from Draft to full PR, check that it follows the sections `Pull requests <#pr>`_ and `Style Guide <#styling>`_ of these guidelines. If not, invite the author to do so before starting a review.
 - **Don't limit your review to the parts that are changed**. Look at the entire file, see if the changes fit well in it, and see if the changes are properly addressed everywhere in the code - in the documentation, in the tests, and in other functions. Sometimes the differences reported don't show the full impact of the PR in the repository!
 - If your want to make Pull Requests an educational process, invite the author of the PR to make changes before actually doing them yourself. Request changes via comments or in the message board or by checking out the PR locally, making changes and then submitting a PR to the author's branch.
-- If you decide to use the suggestion tool in reviews, or to start a PR to the branch under review, please alert the Project Manager. Bots might automatically assign you contribution types that will have to be removed (remember, your contribution in this case is "Reviewer"). Instead of starting a PR to the branch under review, think about opening a new PR with those modifications (unless they are needed to pass tests), and alert the Main Reviewer. In any case **don't commit directly to the branch under review**! 
+- If you decide to use the suggestion tool in reviews, or to start a PR to the branch under review, please alert the Project Manager. Bots might automatically assign you contribution types that will have to be removed (remember, your contribution in this case is "Reviewer"). Instead of starting a PR to the branch under review, think about opening a new PR with those modifications (unless they are needed to pass tests), and alert the Main Reviewer. In any case **don't commit directly to the branch under review**!
 - If you're reviewing documentation, build it locally with ``sphinx``.
 - If you're asking for changes, **don't approve the PR**. Approve it only after everything was sufficiently addressed. Someone else might merge the PR in taking your word for granted.
 - If you are the main reviewer, and the last reviewer required to approve the PR, merge the PR!
@@ -261,7 +261,7 @@ Before approving and/or merging PRs, be sure that:
 
 Main reviewer
 ~~~~~~~~~~~~~
-At ``physiopy`` we use the "Assignees" section of a PR to mark the **main reviewer** for that PR. The main reviewer is the primary person responsible **for the quality of the repository and its next version release**, as well as **for the behaviour of the other reviewers**. 
+At ``physiopy`` we use the "Assignees" section of a PR to mark the **main reviewer** for that PR. The main reviewer is the primary person responsible **for the quality of the repository and its next version release**, as well as **for the behaviour of the other reviewers**.
 The main reviewer:
 
 - Takes care of the reviewing process of the PR, in particular:

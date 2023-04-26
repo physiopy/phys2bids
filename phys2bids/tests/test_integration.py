@@ -123,7 +123,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     assert check_string(logger_info, 'phys2bids version', current_version['version'], is_num=False)
 
     assert check_string(logger_info, '01. Trigger; sampled at', '1000.0')
-    # Should be 500.0 for sampling, but new faster multifreq version does not detect it. 
+    # Should be 500.0 for sampling, but new faster multifreq version does not detect it.
     assert check_string(logger_info, '04. Belt; sampled at', '1000.0')
 
     # Check that files are generated in conversion path
