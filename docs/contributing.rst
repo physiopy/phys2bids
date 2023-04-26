@@ -26,18 +26,18 @@ Follow these steps to get started:
 Linux, Mac, and Windows developer installation
 ----------------------------------------------
 
-Be sure to have ``git`` and ``pip`` installed. Fork the phys2bids repository in GitHub, then open a terminal and run the following code to clone the forked repository and set it as your `origin`::
+Be sure to have ``git`` and ``pip`` installed. Fork the phys2bids repository in GitHub, then open a terminal and run the following code to clone the forked repository and set it as your ``origin``::
 
     git clone https://github.com/{username}/phys2bids.git
     # or in case you prefer to use ssh:
     git clone git@github.com:{username}/phys2bids.git
 
-We also recommend to set up the physiopy/phys2bids repository as `upstream`.
-In this way you can always keep your main branch up to date with the command `git pull upstream master`::
+We also recommend to set up the physiopy/phys2bids repository as ``upstream``.
+In this way you can always keep your main branch up to date with the command ``git pull upstream master``::
 
     cd phys2bids
     git remote add upstream https://github.com/physiopy/phys2bids.git
-    git pull upstream master 
+    git pull upstream master
 
 
 Basic installation

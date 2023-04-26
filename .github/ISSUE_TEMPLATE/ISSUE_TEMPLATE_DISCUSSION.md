@@ -1,6 +1,6 @@
 ---
 name: Discussion
-about: Use this template to start a discussion issue, i.e. an issue that 
+about: Use this template to start a discussion issue, i.e. an issue that
 title: ''
 labels: Discussion
 assignees: ''
@@ -22,6 +22,6 @@ I'm opening this discussion because/I think that/I noticed that...
 <!--- Repeat the concept in a very few, short (max 3) questions -->
 <!--- Remember that the aim is not to give a "tldr", but to help address salient points. -->
 
-    - 
-    - 
-    - 
+    -
+    -
+    -
