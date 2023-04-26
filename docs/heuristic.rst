@@ -31,7 +31,7 @@ It's important **not to modify this part of the file**. Instead, you can copy an
 This file looks like a python function, initialised by a mandatory parameter, ``physinfo``.
 | ``physinfo`` is the information used to label your file. **At the moment, it corresponds to the name of the input file itself**. This is what you need to build your heuristic.
 
-The function initialises ``info``, a `python dictionary <https://www.w3schools.com/python/python_dictionaries.asp>`_ that contains the BIDS keys, such as `sub` and `ses`, as well as all the possible keys you can add to your heuristics. This is what you will work with in creating your heuristic.
+The function initialises ``info``, a ``python dictionary <https://www.w3schools.com/python/python_dictionaries.asp>``_ that contains the BIDS keys, such as ``sub`` and ``ses``, as well as all the possible keys you can add to your heuristics. This is what you will work with in creating your heuristic.
 
 The scripts also imports ``fnmatch``, a nice python module that lets you use bash-like wildcards.
 
