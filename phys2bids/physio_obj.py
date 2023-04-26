@@ -340,7 +340,7 @@ class BlueprintInput:
         # Operate on each channel on its own
         for n, channel in enumerate(self.timeseries):
             idx_dict = {"start": idx.start, "stop": idx.stop, "step": idx.step}
-            # Adapt the slicing indexes to the right requency
+            # Adapt the slicing indexes to the right frequency
             for i in ["start", "stop", "step"]:
                 if idx_dict[i]:
                     idx_dict[i] = int(
@@ -623,9 +623,9 @@ class BlueprintInput:
             trigger_idx : int
                 Automatically retrieved trigger index
         """
-        LGR.info('Running automatic trigger detection.')
-        LGR.info('Matching channel names with known trigger names first.')
-        joint_match = '§'.join(TRIGGER_NAMES)
+        LGR.info("Running automatic trigger detection.")
+        LGR.info("Matching channel names with known trigger names first.")
+        joint_match = "§".join(TRIGGER_NAMES)
         indexes = []
         for n, case in enumerate(self.ch_name):
             name = re.split(r"(\W+|\d|_|\s)", case)
@@ -644,7 +644,7 @@ class BlueprintInput:
                 self.trigger_idx = int(indexes[0])
         else:
             # Time-domain automatic trigger detection
-            LGR.info('Find the trigger channel by measuring data distance from its value limits.')
+            LGR.info("Find the trigger channel by measuring data distance from its value limits.")
             # Create numpy array with all channels (excluding time)
             channel_ts = np.array(self.timeseries[1:])
 

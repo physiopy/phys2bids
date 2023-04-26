@@ -216,11 +216,10 @@ def phys2bids(
     # #!# This can probably be done while parsing?
     indir = os.path.abspath(indir)
     if chtrig and chtrig < 0:
-        raise RuntimeError('Wrong trigger channel. Channel indexing starts with 0!')
+        raise RuntimeError("Wrong trigger channel. Channel indexing starts with 0!")
 
     utils.check_ge(filename, indir)
-    filename, ftype = utils.check_input_type(filename,
-                                             indir)
+    filename, ftype = utils.check_input_type(filename, indir)
 
     if heur_file:
         heur_file = utils.check_input_ext(heur_file, ".py")
@@ -257,8 +256,9 @@ def phys2bids(
         from phys2bids.io import load_mat
 
         phys_in = load_mat(infile, chtrig)
-    elif ftype == 'gep':
+    elif ftype == "gep":
         from phys2bids.io import load_gep
+
         phys_in = load_gep(infile)
 
     LGR.info("Checking that units of measure are BIDS compatible")
@@ -277,15 +277,17 @@ def phys2bids(
 
     # The next few lines remove the undesired channels from phys_in.
     if chsel:
-        LGR.info('Dropping unselected channels')
+        LGR.info("Dropping unselected channels")
         chsel.insert(0, 0)
         if phys_in.trigger_idx not in chsel:
-            LGR.warning(f'The selected channels {tuple(chsel)} do not '
-                        f'contain the trigger channel ({phys_in.trigger_idx}). '
-                        f'Adding channel {phys_in.trigger_idx} to the selection.')
+            LGR.warning(
+                f"The selected channels {tuple(chsel)} do not "
+                f"contain the trigger channel ({phys_in.trigger_idx}). "
+                f"Adding channel {phys_in.trigger_idx} to the selection."
+            )
             chsel.extend(phys_in.trigger_idx)
         chsel.sort()
-        for i in range(phys_in.ch_amount-1, 0, -1):
+        for i in range(phys_in.ch_amount - 1, 0, -1):
             if i not in chsel:
                 phys_in.delete_at_index(i)
         # Update trigger index
@@ -331,11 +333,17 @@ def phys2bids(
                 conversion_path, os.path.splitext(os.path.basename(filename))[0]
             )
             for i, take in enumerate(phys_in.keys()):
-                plot_fileprefix = f'{fileprefix}_{take:02d}'
-                viz.export_trigger_plot(phys_in[take], phys_in[take].trigger_idx,
-                                        plot_fileprefix, tr[i],
-                                        num_timepoints_expected[i], filename,
-                                        sub, ses)
+                plot_fileprefix = f"{fileprefix}_{take:02d}"
+                viz.export_trigger_plot(
+                    phys_in[take],
+                    phys_in[take].trigger_idx,
+                    plot_fileprefix,
+                    tr[i],
+                    num_timepoints_expected[i],
+                    filename,
+                    sub,
+                    ses,
+                )
 
         # Single take acquisition type, or : nothing to split workflow
         else:
@@ -343,11 +351,19 @@ def phys2bids(
             # and the time offset.
             phys_in.check_trigger_amount(thr, num_timepoints_expected[0], tr[0])
             # save a figure of the trigger
-            fileprefix = os.path.join(conversion_path,
-                                      os.path.splitext(os.path.basename(filename))[0])
-            viz.export_trigger_plot(phys_in, phys_in.trigger_idx, fileprefix, tr[0],
-                                    num_timepoints_expected[0], filename,
-                                    sub, ses)
+            fileprefix = os.path.join(
+                conversion_path, os.path.splitext(os.path.basename(filename))[0]
+            )
+            viz.export_trigger_plot(
+                phys_in,
+                phys_in.trigger_idx,
+                fileprefix,
+                tr[0],
+                num_timepoints_expected[0],
+                filename,
+                sub,
+                ses,
+            )
 
             # Reassign phys_in as dictionary
             # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY
@@ -453,8 +469,8 @@ def phys2bids(
                     np.interp(
                         phys_out[key].timeseries[0],
                         phys_in[take].timeseries[0],
-                        phys_in[take].timeseries[phys_in[take].trigger_idx]
-                    )
+                        phys_in[take].timeseries[phys_in[take].trigger_idx],
+                    ),
                 )
             phys_out[key] = BlueprintOutput.init_from_blueprint(phys_out[key])
 

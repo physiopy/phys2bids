@@ -123,9 +123,11 @@ def generate_blueprint(timeseries, chtrig, interval, orig_units, orig_names):
             "Mhz, KHz or Hz"
         )
     # Check if the header is in frequency or sampling interval
-    if 'Hz' in interval[-1]:
-        LGR.info('Retrieving frequency from file header, calculating sample interval, '
-                 'and standardizing to Hz if needed')
+    if "Hz" in interval[-1]:
+        LGR.info(
+            "Retrieving frequency from file header, calculating sample interval, "
+            "and standardizing to Hz if needed"
+        )
         freq = float(interval[0])
         freq_unit = interval[-1]
         if freq_unit == "MHz":
@@ -159,10 +161,10 @@ def generate_blueprint(timeseries, chtrig, interval, orig_units, orig_names):
         # get frequency
         freq = [1 / interval[0]] * len(timeseries)
     # reorder channels names
-    names = ['time']
+    names = ["time"]
     names = names + orig_names
     # reorder channels units
-    units = ['s']
+    units = ["s"]
     units = units + orig_units
     # Check if the file has a time channel, otherwise create it.
     # As the "time" doesn't have a column header, if the number of header names
@@ -361,8 +363,8 @@ def load_acq(filename, chtrig=0):
 
     freq = [data[0].samples_per_second]
     timeseries = [data[0].time_index]
-    units = ['s']
-    names = ['time']
+    units = ["s"]
+    names = ["time"]
 
     for k, ch in enumerate(data):
         LGR.info(f"{k:02d}. {ch}")
@@ -488,19 +490,19 @@ def load_gep(filename):
     from pathlib import Path
 
     # Initiate lists of column names and units with time and trigger
-    names = ['time', 'trigger']
-    units = ['s', 'mV']  # Assuming recording units are mV...
+    names = ["time", "trigger"]
+    units = ["s", "mV"]  # Assuming recording units are mV...
 
     # Add column for file given by user
-    if 'PPGData' in filename:
+    if "PPGData" in filename:
         freq = [100, 100, 100]
-        names.append('cardiac')
-    elif 'RESPData' in filename:
+        names.append("cardiac")
+    elif "RESPData" in filename:
         freq = [25, 25, 25]
-        names.append('respiratory')
-    elif 'ECGData' in filename:
+        names.append("respiratory")
+    elif "ECGData" in filename:
         freq = [1000, 1000, 1000]
-        names.append('cardiac')
+        names.append("cardiac")
 
     # Load in user file data
     data = [np.loadtxt(filename)]
@@ -508,30 +510,29 @@ def load_gep(filename):
     # Calculate time in seconds for first input (starts from -30s)
     interval = 1 / freq[0]
     duration = data[0].shape[0] * interval
-    t_ch = np.ogrid[-30:duration - 30:interval]
+    t_ch = np.ogrid[-30 : duration - 30 : interval]
 
     # Find and add additional data files
     filename = Path(filename)
-    fnames = glob(os.path.join(filename.parent, f'*{filename.name[-24:-4]}.gep'))
+    fnames = glob(os.path.join(filename.parent, f"*{filename.name[-24:-4]}.gep"))
     fnames.remove(str(filename))  # Drop the original file
     if not len(fnames) == 0:
         for fname in fnames:
-            if 'PPGData' in fname:
+            if "PPGData" in fname:
                 freq.append(100)
-                names.append('cardiac')
+                names.append("cardiac")
                 data.append(np.loadtxt(fname))
-            elif 'RESPData' in fname:
+            elif "RESPData" in fname:
                 freq.append(25)
-                names.append('respiratory')
+                names.append("respiratory")
                 data.append(np.loadtxt(fname))
-            elif 'ECGData' in fname:
+            elif "ECGData" in fname:
                 freq.append(1000)
-                names.append('cardiac')
+                names.append("cardiac")
                 data.append(np.loadtxt(fname))
 
     # Create trigger channel
-    trigger = np.hstack((np.zeros(int(30 / interval)),
-                         np.ones(int((duration - 30) / interval))))
+    trigger = np.hstack((np.zeros(int(30 / interval)), np.ones(int((duration - 30) / interval))))
 
     # Create final list of timeseries
     timeseries = [t_ch, trigger]
