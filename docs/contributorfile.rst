@@ -253,7 +253,7 @@ There are many best practices to review code online, for instance `this one <htt
 Before approving and/or merging PRs, be sure that:
 
 - All the tests in CircleCI/Azure pass without errors.
-- Prefereably, codecov checks pass as well. If they don't, discuss what to do.
+- Preferably, codecov checks pass as well. If they don't, discuss what to do.
 - The title describes the content of the PR clearly enough to be meaningful on its own - remember that it will appear in the version changelog!
 - The PR has the appropriate labels to trigger the appropriate version release and update the contributors table.
 
