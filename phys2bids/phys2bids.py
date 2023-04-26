@@ -301,7 +301,8 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                                       os.path.splitext(os.path.basename(filename))[0])
             for i, take in enumerate(phys_in.keys()):
                 plot_fileprefix = f'{fileprefix}_{take:02d}'
-                viz.export_trigger_plot(phys_in[take], phys_in[take].trigger_idx, plot_fileprefix, tr[i],
+                viz.export_trigger_plot(phys_in[take], phys_in[take].trigger_idx,
+                                        plot_fileprefix, tr[i],
                                         num_timepoints_expected[i], filename,
                                         sub, ses)
 
@@ -398,9 +399,14 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             if uniq_freq != phys_in[take].freq[phys_in[take].trigger_idx]:
                 phys_out[key].ch_name.insert(1, phys_in[take].ch_name[phys_in[take].trigger_idx])
                 phys_out[key].units.insert(1, phys_in[take].units[phys_in[take].trigger_idx])
-                phys_out[key].timeseries.insert(1, np.interp(phys_out[key].timeseries[0],
-                                                             phys_in[take].timeseries[0],
-                                                             phys_in[take].timeseries[phys_in[take].trigger_idx]))
+                phys_out[key].timeseries.insert(
+                    1,
+                    np.interp(
+                        phys_out[key].timeseries[0],
+                        phys_in[take].timeseries[0],
+                        phys_in[take].timeseries[phys_in[take].trigger_idx]
+                    )
+                )
             phys_out[key] = BlueprintOutput.init_from_blueprint(phys_out[key])
 
         # Preparing output parameters: name and folder.
