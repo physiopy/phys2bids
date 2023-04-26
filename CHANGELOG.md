@@ -1,3 +1,38 @@
+# 2.8.4 (Wed Apr 26 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Yaroslav Halchenko ([@yarikoptic](https://github.com/yarikoptic)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Remove wrong version of exclusion strings [#444](https://github.com/physiopy/phys2bids/pull/444) ([@smoia](https://github.com/smoia))
+
+#### ⚠️ Pushed to `master`
+
+- int: Add pre-commit configuration ([@smoia](https://github.com/smoia))
+- int: Fix codespell use and transfer its functionalities in `setup.cfg` ([@smoia](https://github.com/smoia))
+- int: Update CI environment ([@smoia](https://github.com/smoia))
+- docs: Update install requirement lines in documentation ([@smoia](https://github.com/smoia))
+
+#### 📝 Documentation
+
+- Update documentation to include GE file functionality [#443](https://github.com/physiopy/phys2bids/pull/443) ([@nw-duncan](https://github.com/nw-duncan) [@smoia](https://github.com/smoia))
+
+#### 🏠 Internal
+
+- Fix pre-commit configuration [#445](https://github.com/physiopy/phys2bids/pull/445) ([@smoia](https://github.com/smoia) [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]))
+- Codespell the code, add configuration and workflow for it so no typo sneaks in [#436](https://github.com/physiopy/phys2bids/pull/436) ([@yarikoptic](https://github.com/yarikoptic))
+
+#### Authors: 4
+
+- [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot])
+- Niall Duncan ([@nw-duncan](https://github.com/nw-duncan))
+- Stefano Moia ([@smoia](https://github.com/smoia))
+- Yaroslav Halchenko ([@yarikoptic](https://github.com/yarikoptic))
+
+---
+
 # 2.8.3 (Tue Mar 14 2023)
 
 #### 🐛 Bug Fix
