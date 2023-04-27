@@ -1,7 +1,7 @@
 import fnmatch
 
 
-def heur(physinfo, take=''):
+def heur(physinfo, take=""):
     """
     Set of if .. elif statements to fill BIDS names.
 
@@ -56,14 +56,14 @@ def heur(physinfo, take=''):
     # ##  See example below          ## #
     # ################################# #
 
-    if fnmatch.fnmatchcase(physinfo, '*samefreq*'):
-        info['task'] = 'test'
-        info['run'] = '01'
-        info['rec'] = 'biopac'
-    elif physinfo == 'Example':
-        info['task'] = 'rest'
-        info['run'] = '01'
-        info['acq'] = 'resp'
+    if fnmatch.fnmatchcase(physinfo, "*samefreq*"):
+        info["task"] = "test"
+        info["run"] = "01"
+        info["rec"] = "biopac"
+    elif physinfo == "Example":
+        info["task"] = "rest"
+        info["run"] = "01"
+        info["acq"] = "resp"
 
     # ############################## #
     # ## Don't modify below this! ## #

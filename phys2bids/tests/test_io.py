@@ -1,13 +1,14 @@
-from phys2bids import io
-
-import os
 import math
+import os
+
 import numpy as np
 import pytest
 from pytest import raises
 
+from phys2bids import io
 
-@pytest.fixture(scope='function')
+
+@pytest.fixture(scope="function")
 def loaded_acq_file(samefreq_short_txt_file):
     chtrig = 2
     header_acq, channels_acq = io.read_header_and_channels(samefreq_short_txt_file)
@@ -16,19 +17,19 @@ def loaded_acq_file(samefreq_short_txt_file):
     assert len(header_acq) == 9  # check proper header length
     assert len(channels_acq[0]) == 1048559  # check proper number of timepoints
     assert len(header_acq[-1]) == 2  # check extra line is deleted
-    assert 'acq' in header_acq[0][0]
+    assert "acq" in header_acq[0][0]
 
     return header_acq, channels_acq, chtrig
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def loaded_lab_file(multifreq_lab_file):
     chtrig = 1
     header_lab, channels_lab = io.read_header_and_channels(multifreq_lab_file)
 
     # just a few quick checks to make sure the data loaded correctly
     assert len(channels_lab) == 5
-    assert 'Interval=' in header_lab[0]
+    assert "Interval=" in header_lab[0]
 
     return header_lab, channels_lab, chtrig
 
@@ -40,15 +41,18 @@ def test_load_txt(samefreq_short_txt_file, multifreq_lab_file):
     io.load_txt(multifreq_lab_file, chtrig=1)
 
 
-@pytest.mark.parametrize('units, expected', [
-    ('1 µsec/sample', 1000000),
-    ('1 msec/sample', 1000),
-    ('0.01 sec/sample', 100),
-    ('0.001 min/sample', 100 / 6),
-    ('100 Hz', 100),
-    ('1 kHz', 1000),
-    ('1 MHz', 1000000)
-])
+@pytest.mark.parametrize(
+    "units, expected",
+    [
+        ("1 µsec/sample", 1000000),
+        ("1 msec/sample", 1000),
+        ("0.01 sec/sample", 100),
+        ("0.001 min/sample", 100 / 6),
+        ("100 Hz", 100),
+        ("1 kHz", 1000),
+        ("1 MHz", 1000000),
+    ],
+)
 def test_generate_blueprint_for_acq(loaded_acq_file, units, expected):
     header, channels, chtrig = loaded_acq_file
 
@@ -59,13 +63,16 @@ def test_generate_blueprint_for_acq(loaded_acq_file, units, expected):
     assert math.isclose(phys_obj.freq[0], expected)
 
 
-@pytest.mark.parametrize('units, expected', [
-    ('0.001 s', 1000),
-    ('0.001 min', 16.666666666666668),
-    ('0.001 hr', 0.2777777777777778),
-    ('1 ms', 1000),
-    ('1000 µs', 1000)
-])
+@pytest.mark.parametrize(
+    "units, expected",
+    [
+        ("0.001 s", 1000),
+        ("0.001 min", 16.666666666666668),
+        ("0.001 hr", 0.2777777777777778),
+        ("1 ms", 1000),
+        ("1000 µs", 1000),
+    ],
+)
 def test_generate_blueprint_for_labchart(loaded_lab_file, units, expected):
     header, channels, chtrig = loaded_lab_file
     header[0][1] = units
@@ -86,7 +93,7 @@ def test_generate_blueprint_items_errors(loaded_lab_file):
     header, channels, chtrig = loaded_lab_file
     # test file without header
     # test when units are not valid
-    header[0][1] = ' 1 gHz'
+    header[0][1] = " 1 gHz"
     interval, orig_units, orig_names = io.extract_header_items(header)
     with raises(AttributeError) as errorinfo:
         io.generate_blueprint(channels, chtrig, interval, orig_units, orig_names)
@@ -98,19 +105,21 @@ def test_extract_header_items_errors(loaded_lab_file):
     # test file without header
     with raises(NotImplementedError) as errorinfo:
         io.extract_header_items(header=[])
-    assert 'without header' in str(errorinfo.value)
+    assert "without header" in str(errorinfo.value)
 
     # test Labchart header missing entries
-    header = [['Interval=', '0.001 s'],
-              ['Range=', '2.000 V', '50.0 mmHg', '180.0 mmHg', '10.000 V', '10.000 V']]
+    header = [
+        ["Interval=", "0.001 s"],
+        ["Range=", "2.000 V", "50.0 mmHg", "180.0 mmHg", "10.000 V", "10.000 V"],
+    ]
     with raises(NotImplementedError) as errorinfo:
         io.extract_header_items(header)
-    assert 'supported by phys2bids yet' in str(errorinfo.value)
+    assert "supported by phys2bids yet" in str(errorinfo.value)
 
     # test when header is not valid
     with raises(NotImplementedError) as errorinfo:
-        io.extract_header_items(header=['hello', 'bye'])
-    assert 'supported by phys2bids yet' in str(errorinfo.value)
+        io.extract_header_items(header=["hello", "bye"])
+    assert "supported by phys2bids yet" in str(errorinfo.value)
 
 
 def test_multifreq(loaded_lab_file):
@@ -118,9 +127,8 @@ def test_multifreq(loaded_lab_file):
     interval, orig_units, orig_names = io.extract_header_items(header)
 
     new_timeseries, new_freq = io.check_multifreq(
-                                            channels,
-                                            [1 / float(interval[0])] * len(channels)
-                                        )
+        channels, [1 / float(interval[0])] * len(channels)
+    )
     assert new_freq[-3:] == [100.0, 40.0, 1000.0]
     # In fairness, last frequency should be 500, but labchart export does not work well.
 
@@ -131,14 +139,14 @@ def test_load_acq(samefreq_full_acq_file):
     phys_obj = io.load_acq(samefreq_full_acq_file, chtrig)
 
     # checks that the outputs make sense
-    assert phys_obj.ch_name[0] == 'time'
+    assert phys_obj.ch_name[0] == "time"
     assert phys_obj.freq[0] == 10000.0
-    assert phys_obj.units[0] == 's'
+    assert phys_obj.units[0] == "s"
 
     # checks that the trigger is in the right channel
-    assert phys_obj.ch_name[chtrig] == 'MR TRIGGER - Custom, HLT100C - A 5'
+    assert phys_obj.ch_name[chtrig] == "MR TRIGGER - Custom, HLT100C - A 5"
     assert phys_obj.freq[chtrig] == 10000.0
-    assert phys_obj.units[chtrig] == 'Volts'
+    assert phys_obj.units[chtrig] == "Volts"
 
 
 def test_load_mat(matlab_file_labchart, matlab_file_acq):
@@ -147,7 +155,7 @@ def test_load_mat(matlab_file_labchart, matlab_file_acq):
     phys_obj = io.load_mat(matlab_file_labchart, chtrig)
 
     # Check channel names are the same.
-    orig_channels = ['time', 'Trigger', 'CO2', 'O2', 'Belt', 'Pulse']
+    orig_channels = ["time", "Trigger", "CO2", "O2", "Belt", "Pulse"]
     assert phys_obj.ch_name == orig_channels
 
     # Check frequencies are the same.
@@ -155,7 +163,7 @@ def test_load_mat(matlab_file_labchart, matlab_file_acq):
     assert phys_obj.freq == orig_freq
 
     # Check units are the same
-    orig_units = ['s', 'V', 'mmHg', 'mmHg', 'V', 'V']
+    orig_units = ["s", "V", "mmHg", "mmHg", "V", "V"]
     assert phys_obj.units == orig_units
 
     # Read data to test acq in mat extension
@@ -163,14 +171,14 @@ def test_load_mat(matlab_file_labchart, matlab_file_acq):
     phys_obj = io.load_mat(matlab_file_acq, chtrig)
 
     # checks that the outputs make sense
-    assert phys_obj.ch_name[0] == 'time'
+    assert phys_obj.ch_name[0] == "time"
     assert phys_obj.freq[0] == 10000.0
-    assert phys_obj.units[0] == 's'
+    assert phys_obj.units[0] == "s"
 
     # checks that the trigger is in the right channel
-    assert phys_obj.ch_name[chtrig] == 'MR TRIGGER - Custom, HLT100C - A 5'
+    assert phys_obj.ch_name[chtrig] == "MR TRIGGER - Custom, HLT100C - A 5"
     assert phys_obj.freq[chtrig] == 10000.0
-    assert phys_obj.units[chtrig] == 'Volts'
+    assert phys_obj.units[chtrig] == "Volts"
 
 
 # Check single GE file is loaded correctly
@@ -191,8 +199,7 @@ def test_load_gep_two_files_ppg(ge_two_gep_files_ppg, testpath):
 
     # Check the channel data is as expected
     gep_data1 = np.loadtxt(ge_two_gep_files_ppg)
-    gep_data2 = np.loadtxt(os.path.join(testpath,
-                                        'RESPData_epiRT_0000000000_00_00_000.gep'))
+    gep_data2 = np.loadtxt(os.path.join(testpath, "RESPData_epiRT_0000000000_00_00_000.gep"))
     assert np.array_equal(gep_data1, phys_obj.timeseries[2])
     assert np.array_equal(gep_data2, phys_obj.timeseries[3])
 
@@ -204,7 +211,6 @@ def test_load_gep_two_files_resp(ge_two_gep_files_resp, testpath):
 
     # Check the channel data is as expected
     gep_data1 = np.loadtxt(ge_two_gep_files_resp)
-    gep_data2 = np.loadtxt(os.path.join(testpath,
-                                        'PPGData_epiRT_0000000000_00_00_000.gep'))
+    gep_data2 = np.loadtxt(os.path.join(testpath, "PPGData_epiRT_0000000000_00_00_000.gep"))
     assert np.array_equal(gep_data1, phys_obj.timeseries[2])
     assert np.array_equal(gep_data2, phys_obj.timeseries[3])
