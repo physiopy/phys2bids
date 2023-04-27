@@ -575,7 +575,7 @@ def load_smr(filename, chtrig=0):
         sonpy.lib.DataType.AdcMark: sonpy.lib.SonFile.ReadWaveMarks,
         sonpy.lib.DataType.RealMark: sonpy.lib.SonFile.ReadRealMarks,
         sonpy.lib.DataType.TextMark: sonpy.lib.SonFile.ReadTextMarks,
-        sonpy.lib.DataType.RealWave: sonpy.lib.SonFile.ReadFloats
+        sonpy.lib.DataType.RealWave: sonpy.lib.SonFile.ReadFloats,
     }
 
     smrfile = sonpy.lib.SonFile(filename, True)
@@ -601,8 +601,8 @@ def load_smr(filename, chtrig=0):
 
             n_samples = int(np.floor((max_n_tick) / divide))
             raw_signal = read_data[current_channel](
-                smrfile, chan=i, nMax=n_samples,
-                tFrom=0, tUpto=max_n_tick)
+                smrfile, chan=i, nMax=n_samples, tFrom=0, tUpto=max_n_tick
+            )
 
             signal = np.array(raw_signal) * gain + offset
 
@@ -618,8 +618,8 @@ def load_smr(filename, chtrig=0):
     time = np.arange(n_timepoints) * freq[idx_max]
 
     # prepend to the existing list
-    freq = [freq[idx_max], ] + freq
-    timeseries = [time, ] + timeseries
-    units = ['s', ] + units
-    names = ['time', ] + names
+    freq = [freq[idx_max]] + freq
+    timeseries = [time] + timeseries
+    units = ["s"] + units
+    names = ["time"] + names
     return BlueprintInput(timeseries, freq, names, units, chtrig)

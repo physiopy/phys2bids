@@ -219,7 +219,7 @@ def test_load_gep_two_files_resp(ge_two_gep_files_resp, testpath):
 
 @pytest.mark.skipif(
     sys.version_info < (3, 7) or sys.version_info > (3, 9),
-    reason="Requires python between 3.7 and 3.9"
+    reason="Requires python between 3.7 and 3.9",
 )
 @pytest.mark.xfail(reason="We need to fix sonpy install")
 def test_load_smr(spike2_smr_file, spike2_smrx_file):
@@ -227,25 +227,25 @@ def test_load_smr(spike2_smr_file, spike2_smrx_file):
 
     # 32-bit file
     phys_obj = io.load_smr(spike2_smr_file, chtrig)
-    assert phys_obj.ch_name[0] == 'time'
+    assert phys_obj.ch_name[0] == "time"
     assert phys_obj.freq[0] == 1000.0
-    assert phys_obj.units[0] == 's'
+    assert phys_obj.units[0] == "s"
 
     # checks that the scanner strigger is in the right channel
     # the marker channels are stored as binary
-    assert phys_obj.ch_name[chtrig] == 'Scan Vol'
+    assert phys_obj.ch_name[chtrig] == "Scan Vol"
     assert phys_obj.freq[chtrig] == 200.0
-    assert phys_obj.units[chtrig] == ''
+    assert phys_obj.units[chtrig] == ""
     assert len(phys_obj.timeseries[chtrig]) == 60
 
     # 64-bit file should have the same
     phys_obj = io.load_smr(spike2_smrx_file, chtrig)
-    assert phys_obj.ch_name[0] == 'time'
+    assert phys_obj.ch_name[0] == "time"
     assert phys_obj.freq[0] == 1000.0
-    assert phys_obj.units[0] == 's'
+    assert phys_obj.units[0] == "s"
     # checks that the scanner trigger is in the right channel
     # the marker channels are stored as binary
-    assert phys_obj.ch_name[chtrig] == 'Scan Vol'
+    assert phys_obj.ch_name[chtrig] == "Scan Vol"
     assert phys_obj.freq[chtrig] == 200.0
-    assert phys_obj.units[chtrig] == ''
+    assert phys_obj.units[chtrig] == ""
     assert len(phys_obj.timeseries[chtrig]) == 60
