@@ -50,7 +50,6 @@ def find_takes(phys_in, ntp_list, tr_list, thr=None, padding=9):
 
     # enumerate user input  num_timepoints_expected
     for take_idx, take_tps in enumerate(ntp_list):
-
         # correct time offset for this iteration's object
         phys_in.check_trigger_amount(
             thr=thr, num_timepoints_expected=take_tps, tr=tr_list[take_idx]
@@ -158,7 +157,6 @@ def slice4phys(phys_in, ntp_list, tr_list, thr, padding=9):
     # Find the timestamps
     take_timestamps = find_takes(phys_in, ntp_list, tr_list, thr, padding)
     for n, take in enumerate(take_timestamps.keys()):
-
         # tmp variable to collect take's info
         take_attributes = take_timestamps[take]
 

@@ -236,7 +236,6 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
 
 
 def test_integration_multirun(skip_integration, multi_run_file):
-
     if skip_integration:
         pytest.skip("Skipping integration test")
 

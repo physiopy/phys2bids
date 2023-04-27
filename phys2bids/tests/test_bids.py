@@ -89,7 +89,6 @@ def test_dataset_description_file(outdir):
 
 @pytest.mark.parametrize("outdir", ".")
 def test_participants_file(outdir):
-
     # Checks first condition in line 198
     test_sub = "001"
     test_sub_no_yml = "002"

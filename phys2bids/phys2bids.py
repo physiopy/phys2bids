@@ -300,7 +300,6 @@ def phys2bids(
 
     # Checking acquisition type via user's input
     if tr is not None and num_timepoints_expected is not None:
-
         #  Multi-run acquisition type section
         #  Check list length, more than 1 means multi-run
         if len(num_timepoints_expected) > 1:
