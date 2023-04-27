@@ -99,8 +99,8 @@ jobs:
           name: Check style
           command: |
             isort --check .
-            black --check nigsp
-            flake8 ./nigsp
+            black --check phys2bids
+            flake8 ./phys2bids
 
   merge_coverage:
     working_directory: /tmp/src/phys2bids
