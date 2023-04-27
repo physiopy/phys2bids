@@ -1,3 +1,26 @@
+# 2.9.0 (Thu Apr 27 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Hao-Ting Wang ([@htwangtw](https://github.com/htwangtw)), for all your work!
+
+#### 🚀 Enhancement
+
+- Add support for Spike2 files [#410](https://github.com/physiopy/phys2bids/pull/410) ([@htwangtw](https://github.com/htwangtw) [@smoia](https://github.com/smoia))
+
+#### 🏠 Internal
+
+- Adopt Black and isort [#327](https://github.com/physiopy/phys2bids/pull/327) ([@tsalo](https://github.com/tsalo) [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]) [@smoia](https://github.com/smoia))
+
+#### Authors: 4
+
+- [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot])
+- Hao-Ting Wang ([@htwangtw](https://github.com/htwangtw))
+- Stefano Moia ([@smoia](https://github.com/smoia))
+- Taylor Salo ([@tsalo](https://github.com/tsalo))
+
+---
+
 # 2.8.4 (Wed Apr 26 2023)
 
 :tada: This release contains work from a new contributor! :tada:
