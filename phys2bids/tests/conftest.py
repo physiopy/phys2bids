@@ -138,3 +138,13 @@ def ge_badfiles(testpath):
     tmp = fetch_file("tdmyn", testpath, "PPGData_epiRT_columnscsv_00_00_000")
     tmp = fetch_file("b6skq", testpath, "PPGData_epiRT_columnstsv_00_00_000")
     return fetch_file("8235b", testpath, "PPGData_epiRT_string0000_00_00_000")
+
+
+@pytest.fixture
+def spike2_smrx_file(testpath):
+    return fetch_file("7x5qw", testpath, "Test_ppg_pulse_spike2.smrx")
+
+
+@pytest.fixture
+def spike2_smr_file(testpath):
+    return fetch_file("zdpfr", testpath, "Test_ppg_pulse_spike2.smr")
