@@ -221,6 +221,7 @@ def test_load_gep_two_files_resp(ge_two_gep_files_resp, testpath):
     sys.version_info < (3, 7) or sys.version_info > (3, 9),
     reason="Requires python between 3.7 and 3.9"
 )
+@pytest.mark.xfail(reason="We need to fix sonpy install")
 def test_load_smr(spike2_smr_file, spike2_smrx_file):
     chtrig = 5
 
