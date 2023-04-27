@@ -1,5 +1,6 @@
 import math
 import os
+import sys
 
 import numpy as np
 import pytest
@@ -216,6 +217,10 @@ def test_load_gep_two_files_resp(ge_two_gep_files_resp, testpath):
     assert np.array_equal(gep_data2, phys_obj.timeseries[3])
 
 
+@pytest.mark.skipif(
+    sys.version_info < (3, 7) or sys.version_info > (3, 9),
+    reason="Requires python between 3.7 and 3.9"
+)
 def test_load_smr(spike2_smr_file, spike2_smrx_file):
     chtrig = 5
 
