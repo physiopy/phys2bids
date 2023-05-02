@@ -106,6 +106,7 @@ html_show_sourcelink = False
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
+
 # https://github.com/rtfd/sphinx_rtd_theme/issues/117
 def setup(app):  # noqa
     app.add_css_file("theme_overrides.css")
