@@ -268,4 +268,4 @@ def plot_all(ch_name, timeseries, units, freq, infile, outfile, dpi=SET_DPI, siz
     LGR.info(f"saving channel plot to {outfile}")
     fig.savefig(outfile, dpi=dpi, bbox_inches="tight")
     fig.clf()
-    plt.close('all')
+    plt.close("all")
