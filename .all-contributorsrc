@@ -154,7 +154,11 @@
         "projectManagement",
         "review",
         "doc",
-        "mentoring"
+        "mentoring",
+        "talk",
+        "promotion",
+        "maintenance",
+        "tutorial"
       ]
     },
     {
