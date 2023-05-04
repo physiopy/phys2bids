@@ -24,7 +24,7 @@ phys2bids
 [![Supports python version](https://img.shields.io/pypi/pyversions/phys2bids)](https://pypi.org/project/phys2bids/)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-25-orange.svg?style=flat)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-26-orange.svg?style=flat)](#contributors)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ``phys2bids`` is a python3 library meant to format physiological files in BIDS.
@@ -120,6 +120,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="25%"><a href="https://wanghaoting.com/"><img src="https://avatars.githubusercontent.com/u/13743617?v=4?s=100" width="100px;" alt="Hao-Ting Wang"/><br /><sub><b>Hao-Ting Wang</b></sub></a><br /><a href="https://github.com/physiopy/phys2bids/commits?author=htwangtw" title="Code">💻</a> <a href="https://github.com/physiopy/phys2bids/commits?author=htwangtw" title="Documentation">📖</a> <a href="#data-htwangtw" title="Data">🔣</a> <a href="https://github.com/physiopy/phys2bids/commits?author=htwangtw" title="Tests">⚠️</a> <a href="#ideas-htwangtw" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="25%"><a href="https://github.com/m-miedema"><img src="https://avatars.githubusercontent.com/u/39968233?v=4?s=100" width="100px;" alt="m-miedema"/><br /><sub><b>m-miedema</b></sub></a><br /><a href="#tutorial-m-miedema" title="Tutorials">✅</a></td>
     </tr>
   </tbody>
 </table>
