@@ -524,7 +524,6 @@ class BlueprintInput:
             thr = np.mean(trigger)
             flag = 1
         timepoints = trigger > thr
-        # way more efficient alternative
         num_timepoints_found = np.count_nonzero(np.ediff1d(timepoints.astype(np.int8)) > 0)
         if flag == 1:
             LGR.info(
