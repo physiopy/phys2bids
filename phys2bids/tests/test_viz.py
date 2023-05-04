@@ -20,6 +20,7 @@ def test_plot_all(samefreq_full_acq_file):
     assert os.path.isfile(
         os.path.join(test_path, os.path.splitext(os.path.basename(test_filename))[0] + ".png")
     )
+    assert len(viz.plt.get_fignums()) == 0, "plots are not closed, this can cause memory leaks"
 
 
 # Expected to fail due to trigger plot issue
@@ -33,3 +34,4 @@ def test_plot_trigger(samefreq_full_acq_file):
         phys_obj.timeseries[0], phys_obj.timeseries[chtrig], out, 1.5, 1.6, 60, test_filename
     )
     assert os.path.isfile(out + "_trigger_time.png")
+    assert len(viz.plt.get_fignums()) == 0, "plots are not closed, this can cause memory leaks"
