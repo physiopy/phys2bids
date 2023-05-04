@@ -1,3 +1,24 @@
+# 2.10.0 (Thu May 04 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Basile ([@bpinsard](https://github.com/bpinsard)), for all your work!
+
+#### 🚀 Enhancement
+
+- Improve performance by using numpy for trigger detection and closing matplotlib figures to avoid memleaks. [#448](https://github.com/physiopy/phys2bids/pull/448) ([@bpinsard](https://github.com/bpinsard))
+
+#### 🏠 Internal
+
+- [pre-commit.ci] pre-commit autoupdate [#446](https://github.com/physiopy/phys2bids/pull/446) ([@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]))
+
+#### Authors: 2
+
+- [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot])
+- Basile ([@bpinsard](https://github.com/bpinsard))
+
+---
+
 # 2.9.0 (Thu Apr 27 2023)
 
 :tada: This release contains work from a new contributor! :tada:
