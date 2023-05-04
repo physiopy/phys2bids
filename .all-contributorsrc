@@ -279,6 +279,19 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "htwangtw",
+      "name": "Hao-Ting Wang",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13743617?v=4",
+      "profile": "https://wanghaoting.com/",
+      "contributions": [
+        "code",
+        "doc",
+        "data",
+        "test",
+        "ideas"
+      ]
     }
   ]
 }
