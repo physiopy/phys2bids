@@ -256,6 +256,19 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "nw-duncan",
+      "name": "Niall Duncan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/23524584?v=4",
+      "profile": "https://github.com/nw-duncan",
+      "contributions": [
+        "code",
+        "doc",
+        "data",
+        "test",
+        "ideas"
+      ]
     }
   ]
 }
