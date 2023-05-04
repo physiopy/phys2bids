@@ -524,9 +524,7 @@ class BlueprintInput:
             thr = np.mean(trigger)
             flag = 1
         timepoints = trigger > thr
-        num_timepoints_found = len(
-            [is_true for is_true, _ in groupby(timepoints, lambda x: x != 0) if is_true]
-        )
+        num_timepoints_found = np.count_nonzero(np.ediff1d(timepoints.astype(np.int8)) > 0)
         if flag == 1:
             LGR.info(
                 f"The number of timepoints according to the std_thr method "
