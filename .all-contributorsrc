@@ -41,7 +41,8 @@
       "contributions": [
         "code",
         "mentoring",
-        "review"
+        "review",
+        "content"
       ]
     },
     {
@@ -134,7 +135,9 @@
       "avatar_url": "https://avatars0.githubusercontent.com/u/38385719?v=4",
       "profile": "https://github.com/sangfrois",
       "contributions": [
-        "bug"
+        "bug",
+        "code",
+        "content"
       ]
     },
     {
@@ -212,7 +215,8 @@
       "contributions": [
         "bug",
         "code",
-        "doc"
+        "doc",
+        "content"
       ]
     },
     {
