@@ -33,7 +33,7 @@ At the moment, it supports:
 - ``.txt`` and ``.mat`` LabChart format (ADInstruments)
 - ``.smr`` Spike2 format (CED)
 - GE MRI file format (GE).
-We want ot offer as much support as possible! If you have a file format that you want to see added, open an issue about it!
+We want to offer as much support as possible! If you have a file format that you want to see added, open an issue about it!
 
 > If you use ``phys2bids`` in your work, please support it by citing the zenodo DOI of the version you used. You can find the latest version [here](https://doi.org/10.5281/zenodo.3470091)
 
