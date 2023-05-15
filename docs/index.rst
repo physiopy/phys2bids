@@ -45,12 +45,16 @@ phys2bids
 
 
 ``phys2bids`` is a python3 library meant to format physiological files in BIDS.
-It was born for AcqKnowledge files (BIOPAC), and at the moment it supports
-``.acq`` files as well as ``.txt`` and ``.mat`` files obtained by AcqKnowledge or Labchart
-(ADInstruments).
+At the moment, it supports:
 
+   * .acq, .txt, and .mat AcqKnowledge format (BIOPAC)
+   * .txt and .mat LabChart format (ADInstruments)
+   * .smr Spike2 format (CED)
+   * GE MRI file format (GE).
 
-While we aim at supporting all MRI proprietary physiological file formats, at the moment it only supports GE MRI scanners. You can find software that will work with files from other MRI scanner types `here <https://github.com/tarrlab/physio2bids>`_.
+We want to offer as much support as possible! If you have a file format that you want to see added, open an issue about it!
+
+While we aim at supporting all MRI proprietary physiological file formats, at the moment we only supports GE MRI scanners. You can find software that will work with files from other MRI scanner types `here <https://github.com/tarrlab/physio2bids>`_.
 
 **We're looking for code contributors,** and any suggestion/bug report is welcome! Feel free to open issues!
 
