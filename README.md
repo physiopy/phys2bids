@@ -28,9 +28,12 @@ phys2bids
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ``phys2bids`` is a python3 library meant to format physiological files in BIDS.
-It was born for AcqKnowledge files (BIOPAC), and at the moment it supports
-``.acq`` files as well as ``.txt`` files obtained by labchart
-(ADInstruments) and GE MRI files.
+At the moment, it supports:
+- ``.acq``, ``.txt``, and ``.mat`` AcqKnowledge format (BIOPAC)
+- ``.txt`` and ``.mat`` LabChart format (ADInstruments)
+- ``.smr`` Spike2 format (CED)
+- GE MRI file format (GE).
+We want ot offer as much support as possible! If you have a file format that you want to see added, open an issue about it!
 
 > If you use ``phys2bids`` in your work, please support it by citing the zenodo DOI of the version you used. You can find the latest version [here](https://doi.org/10.5281/zenodo.3470091)
 
@@ -52,7 +55,7 @@ Shortcuts:
 ## Tested OSs
 While all version until `2.6.2` were tested on Linux and Windows, starting from version `2.7` onward we had to **drop Windows testing**. The reason is related to the cost of running such tests: for each Windows test, we can run up to 8 tests on Linux instead. Partial Windows testing might be reintroduced in future releases.
 
-Hence, while **we cannot ensure that phys2bids will run on Windows**, however we don't see any reason it shouldn't. Besides, it will run on Linux Subsistems.
+Hence, while **we cannot ensure that phys2bids will run on Windows or MacOS/iOS**, we don't see any reason it shouldn't. Besides, it will run on Linux Subsistems.
 
 We apologise for the discomfort.
 
@@ -61,16 +64,10 @@ We apologise for the discomfort.
 Hacktoberfest participants, welcome!
 We have some issues for you [here](https://github.com/physiopy/phys2bids/issues?q=is%3Aissue+is%3Aopen+label%3Ahacktoberfest)!
 However, feel free to tackle any issue you'd like. Depending on the issue and extent of contribution, Hacktoberfest related PRs might not count toward being listed as contributors and authors (unless there is the specific interest). You can ask about it in the issue itself!
-Feel free to ask help to the contributors over gitter, happy coding and (hopefully) enjoy hour tee (or tree)!
+Feel free to ask help to the contributors through issues or contactign directly Stefano, happy coding and (hopefully) enjoy your tee (or tree)!
 
-## The BrainWeb
-BrainWeb participants, welcome!
-We have a milestone [here](https://github.com/physiopy/phys2bids/milestone/5) as a collection of issues you could work on with our help.
-Check the issues with a `BrainWeb` label. Of course, they are only suggestions, so feel free to tackle any issue you want, even open new ones!
-You can also contact us on Gitter, in the BrainHack Mattermost (<a href="https://mattermost.brainhack.org/brainhack/channels/physiopy">#physiopy</a>), and don't hesitate to contact [Stefano](https://github.com/smoia) in other ways to jump in the development!
--->
 
-**We're looking for code contributors,** but any suggestion/bug report is welcome! Feel free to open issues!
+**We're always looking for code contributors,** but any suggestion/bug report is welcome! Feel free to open issues!
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
