@@ -188,7 +188,7 @@ def get_onsets_run(trig_MRI, sensitivity=20):
     onsets_MRI = np.array([int(x) for x in np.where(trig_MRI > np.mean(trig_MRI))[0]])
 
     # difference of timepoint n and timepoint (n-1)
-    difference = (np.array(onsets_MRI[1:]) - np.array(onsets_MRI[0:-1]))
+    difference = np.array(onsets_MRI[1:]) - np.array(onsets_MRI[0:-1])
     diff_unique = np.unique(difference)[1:]
 
     # get threshold of values in which the gap between two time points signify a new run
@@ -228,20 +228,20 @@ def clean_onsets_run_GUI(onsets_MRI, run_onset_raw, run_offset_raw, sampling_rat
     """
 
     conditions = np.zeros(max(onsets_MRI) + round(1000 * sampling_rate))
-    conditions[onsets_MRI] = 1 # times when MRI triggers are received
+    conditions[onsets_MRI] = 1  # times when MRI triggers are received
 
     conditions[run_onset_raw] = 1.5
     conditions[run_offset_raw] = -0.5
 
     data = peakdet.Physio(conditions, fs=sampling_rate)
 
-    data._metadata['peaks'] = run_onset_raw
-    data._metadata['troughs'] = run_offset_raw
+    data._metadata["peaks"] = run_onset_raw
+    data._metadata["troughs"] = run_offset_raw
     data = peakdet.operations.edit_physio(data)
 
     # return start and end times at (padding) seconds before and after the real on and offsets
-    onsets_start = data.peaks - padding*sampling_rate
-    onsets_end = data.troughs + padding*sampling_rate
+    onsets_start = data.peaks - padding * sampling_rate
+    onsets_end = data.troughs + padding * sampling_rate
 
     return onsets_start, onsets_end
 
@@ -262,8 +262,10 @@ def slice_runs(phys_in, onsets, offsets):
     run_data = {}
 
     for i in range(len(offsets)):
-        signals = [phys_signal[onsets[i]:offsets[i]] for phys_signal in phys_in.timeseries]
-        signals_run = po.BlueprintInput(signals, phys_in.freq, phys_in.ch_name, phys_in.units, phys_in.trigger_idx)
+        signals = [phys_signal[onsets[i] : offsets[i]] for phys_signal in phys_in.timeseries]
+        signals_run = po.BlueprintInput(
+            signals, phys_in.freq, phys_in.ch_name, phys_in.units, phys_in.trigger_idx
+        )
 
         run_data[i] = signals_run
 
@@ -271,7 +273,7 @@ def slice_runs(phys_in, onsets, offsets):
 
 
 def split_signal_to_runs(phys_in, manual_check=True, sensitivity=20, padding=9):
-    """"
+    """ "
     :param phys_in: BlueprintInput
         Object returned by BlueprintInput class
     :param manual_check: bool
@@ -291,8 +293,9 @@ def split_signal_to_runs(phys_in, manual_check=True, sensitivity=20, padding=9):
 
     # manual check of run onsets & offsets
     if manual_check:
-        onsets_start, onsets_end = clean_onsets_run_GUI(onsets_MRI, run_onset_raw, run_offset_raw, sampling_rate,
-                                                        padding)
+        onsets_start, onsets_end = clean_onsets_run_GUI(
+            onsets_MRI, run_onset_raw, run_offset_raw, sampling_rate, padding
+        )
     else:
         onsets_start = run_onset_raw
         onsets_end = run_offset_raw
@@ -300,4 +303,3 @@ def split_signal_to_runs(phys_in, manual_check=True, sensitivity=20, padding=9):
     run_signal = slice_runs(phys_in, onsets_start, onsets_end)
 
     return run_signal, onsets_start, onsets_end
-
