@@ -7,6 +7,7 @@
 
 import os
 import sys
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -104,6 +105,7 @@ html_show_sourcelink = False
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
 
 # https://github.com/rtfd/sphinx_rtd_theme/issues/117
 def setup(app):  # noqa

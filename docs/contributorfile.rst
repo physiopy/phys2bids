@@ -198,7 +198,7 @@ Pull Requests
 -------------
 To improve understanding pull requests "at a glance" and use the power of ``auto``, we use the labels listed above. Multiple labels can be assigned to a PR - in fact, all those that you think are relevant.
 We strongly advise to keep the changes you're introducing with your PR limited to your original goal. Adding to the scope of your PR little style corrections or code refactoring here and there in the code that you're already modifying is a great help, but when they become too much (and they are not relevant to your PR) they risk complicating the nature of the PR and the reviewing process. It is much better to open another PR with the objective of doing such corrections!
-Moreover, if you're tempted to assign more than one label that would trigger a release (e.g. `bug` and `minormod`, or `bug` and `majormod`, etc. etc.), you might want to split your PR instead.
+Moreover, if you're tempted to assign more than one label that would trigger a release (e.g. ``bug`` and ``minormod``, or ``bug`` and ``majormod``, etc. etc.), you might want to split your PR instead.
 When opening a pull request, assign it at least one label.
 
 We encourage you to open a PR as soon as possible - even before you finish working on them. This is useful especially to you - so that you can receive comments and suggestions early on, rather than having to process a lot of comments in the final review step!
@@ -207,8 +207,8 @@ However, if it’s an incomplete PR, please open a **Draft PR**. That helps us p
 Reviewing PRs is a time consuming task and it can be stressful for both the reviewer and the author. Avoiding wasting time and the need of little fixes - such as fixing grammar mistakes and typos, styling code, or adopting conventions - is a good start for a successful (and quick) review. Before graduating a Draft PR to a PR ready for review, please check that:
 
 - You did all you wanted to include in your PR. If at a later stage you realise something is missing and it's not a minor thing, you will need to open a new PR.
-- If your contribution contains code or tests, you ran and passed all of the tests locally with `pytest`.
-- If you're writing documentation, you built it locally with `sphinx` and the format is what you intended.
+- If your contribution contains code or tests, you ran and passed all of the tests locally with ``pytest``.
+- If you're writing documentation, you built it locally with ``sphinx`` and the format is what you intended.
 - Your code is harmonious with the rest of the code - no repetitions of any sort!
 - Your code respects the `adopted Style <#styling>`_, especially:
     - Your code is lintered adequately and respects the `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ convention.
@@ -222,7 +222,7 @@ To be merged, PRs have to:
 
 1. Pass all the CircleCI tests, and possibly all the codecov checks.
 2. Have the necessary amount of approving reviews, even if you’re a long time contributor. You can ask one (or more) contributor to do that review, if you think they align more with the content of your PR. You need **one** review for documentation, tests, and small changes, and **two** reviews for bugs, refactoring and enhancements.
-3. Have at least a release-related label (or a `Skip release` label).
+3. Have at least a release-related label (or a ``Skip release`` label).
 4. Have a short title that clearly explains in one sentence the aim of the PR.
 5. Contain at least a unit test for your contribution, if the PR contains code (it would be better if it contains an integration or function test and all the breaking tests necessary). If you’re not confident about writing tests, it is possible to refer to an issue that asks for the test to be written, or another (Draft) PR that contains the tests required.
 
@@ -245,7 +245,7 @@ There are many best practices to review code online, for instance `this one <htt
 - If the PR graduated from Draft to full PR, check that it follows the sections `Pull requests <#pr>`_ and `Style Guide <#styling>`_ of these guidelines. If not, invite the author to do so before starting a review.
 - **Don't limit your review to the parts that are changed**. Look at the entire file, see if the changes fit well in it, and see if the changes are properly addressed everywhere in the code - in the documentation, in the tests, and in other functions. Sometimes the differences reported don't show the full impact of the PR in the repository!
 - If your want to make Pull Requests an educational process, invite the author of the PR to make changes before actually doing them yourself. Request changes via comments or in the message board or by checking out the PR locally, making changes and then submitting a PR to the author's branch.
-- If you decide to use the suggestion tool in reviews, or to start a PR to the branch under review, please alert the Project Manager. Bots might automatically assign you contribution types that will have to be removed (remember, your contribution in this case is "Reviewer"). Instead of starting a PR to the branch under review, think about opening a new PR with those modifications (unless they are needed to pass tests), and alert the Main Reviewer. In any case **don't commit directly to the branch under review**! 
+- If you decide to use the suggestion tool in reviews, or to start a PR to the branch under review, please alert the Project Manager. Bots might automatically assign you contribution types that will have to be removed (remember, your contribution in this case is "Reviewer"). Instead of starting a PR to the branch under review, think about opening a new PR with those modifications (unless they are needed to pass tests), and alert the Main Reviewer. In any case **don't commit directly to the branch under review**!
 - If you're reviewing documentation, build it locally with ``sphinx``.
 - If you're asking for changes, **don't approve the PR**. Approve it only after everything was sufficiently addressed. Someone else might merge the PR in taking your word for granted.
 - If you are the main reviewer, and the last reviewer required to approve the PR, merge the PR!
@@ -253,7 +253,7 @@ There are many best practices to review code online, for instance `this one <htt
 Before approving and/or merging PRs, be sure that:
 
 - All the tests in CircleCI/Azure pass without errors.
-- Prefereably, codecov checks pass as well. If they don't, discuss what to do.
+- Preferably, codecov checks pass as well. If they don't, discuss what to do.
 - The title describes the content of the PR clearly enough to be meaningful on its own - remember that it will appear in the version changelog!
 - The PR has the appropriate labels to trigger the appropriate version release and update the contributors table.
 
@@ -261,7 +261,7 @@ Before approving and/or merging PRs, be sure that:
 
 Main reviewer
 ~~~~~~~~~~~~~
-At ``physiopy`` we use the "Assignees" section of a PR to mark the **main reviewer** for that PR. The main reviewer is the primary person responsible **for the quality of the repository and its next version release**, as well as **for the behaviour of the other reviewers**. 
+At ``physiopy`` we use the "Assignees" section of a PR to mark the **main reviewer** for that PR. The main reviewer is the primary person responsible **for the quality of the repository and its next version release**, as well as **for the behaviour of the other reviewers**.
 The main reviewer:
 
 - Takes care of the reviewing process of the PR, in particular:

@@ -43,7 +43,7 @@ def is_valid(var, var_type, list_type=None):
         If var is not of var_type
     """
     if not isinstance(var, var_type):
-        raise AttributeError(f'The given variable is not a {var_type}')
+        raise AttributeError(f"The given variable is not a {var_type}")
 
     if var_type is list and list_type is not None:
         for element in var:
@@ -107,7 +107,7 @@ def are_equal(self, other):
     def _deal_with_dict_value_error(self, other):
         # Check if "self" has a 'timeseries' key. If not, return False.
         try:
-            self['timeseries']
+            self["timeseries"]
         except KeyError:
             return False
         except TypeError:
@@ -116,16 +116,17 @@ def are_equal(self, other):
             # Check that the two objects have the same keys.
             # If not, return False, otherwise loop through the timeseries key.
             if self.keys() == other.keys():
-                alltrue_timeseries = [False] * len(self['timeseries'])
+                alltrue_timeseries = [False] * len(self["timeseries"])
                 alltrue_keys = [False] * len(self)
                 for j, key in enumerate(self.keys()):
-                    if key == 'timeseries':
-                        for i in range(len(self['timeseries'])):
-                            alltrue_timeseries[i] = (self['timeseries'][i].all()
-                                                     == other['timeseries'][i].all())
+                    if key == "timeseries":
+                        for i in range(len(self["timeseries"])):
+                            alltrue_timeseries[i] = (
+                                self["timeseries"][i].all() == other["timeseries"][i].all()
+                            )
                         alltrue_keys[j] = all(alltrue_timeseries)
                     else:
-                        alltrue_keys[j] = (self[key] == other[key])
+                        alltrue_keys[j] = self[key] == other[key]
                 return all(alltrue_keys)
             else:
                 return False
@@ -158,7 +159,7 @@ def are_equal(self, other):
                     return _deal_with_dict_value_error(self, other)
 
 
-class BlueprintInput():
+class BlueprintInput:
     """
     Main input object for phys2bids.
 
@@ -230,23 +231,33 @@ class BlueprintInput():
     - Actual number of channels +1 <= ch_amount
     """
 
-    def __init__(self, timeseries, freq, ch_name, units, trigger_idx,
-                 num_timepoints_found=None, thr=None, time_offset=0):
+    def __init__(
+        self,
+        timeseries,
+        freq,
+        ch_name,
+        units,
+        trigger_idx,
+        num_timepoints_found=None,
+        thr=None,
+        time_offset=0,
+    ):
         """Initialise BlueprintInput (see class docstring)."""
         self.timeseries = deepcopy(is_valid(timeseries, list, list_type=np.ndarray))
-        self.freq = deepcopy(has_size(is_valid(freq, list,
-                                      list_type=(int, float)),
-                             self.ch_amount, 0.0))
-        self.ch_name = deepcopy(has_size(ch_name, self.ch_amount, 'unknown'))
-        self.units = deepcopy(has_size(units, self.ch_amount, '[]'))
-
+        self.freq = deepcopy(
+            has_size(is_valid(freq, list, list_type=(int, float)), self.ch_amount, 0.0)
+        )
+        self.ch_name = deepcopy(has_size(ch_name, self.ch_amount, "unknown"))
+        self.units = deepcopy(has_size(units, self.ch_amount, "[]"))
         self.trigger_idx = deepcopy(is_valid(trigger_idx, int))
         if trigger_idx == 0:
             self.auto_trigger_selection()
         else:
             if ch_name[trigger_idx] not in TRIGGER_NAMES:
-                LGR.info('Trigger channel name is not in our trigger channel name alias list. '
-                         'Please make sure you choose the proper channel.')
+                LGR.info(
+                    "Trigger channel name is not in our trigger channel name alias list. "
+                    "Please make sure you choose the proper channel."
+                )
 
         self.num_timepoints_found = deepcopy(num_timepoints_found)
         self.thr = deepcopy(thr)
@@ -320,33 +331,41 @@ class BlueprintInput():
 
         # Check that the indexes are not out of bounds
         if idx.start >= trigger_length or idx.stop > trigger_length:
-            raise IndexError(f'Slice ({idx.start}, {idx.stop}) is out of '
-                             f'bounds for channel {self.trigger_idx} '
-                             f'with size {trigger_length}')
+            raise IndexError(
+                f"Slice ({idx.start}, {idx.stop}) is out of "
+                f"bounds for channel {self.trigger_idx} "
+                f"with size {trigger_length}"
+            )
 
         # Operate on each channel on its own
         for n, channel in enumerate(self.timeseries):
-            idx_dict = {'start': idx.start, 'stop': idx.stop, 'step': idx.step}
-            # Adapt the slicing indexes to the right requency
-            for i in ['start', 'stop', 'step']:
+            idx_dict = {"start": idx.start, "stop": idx.stop, "step": idx.step}
+            # Adapt the slicing indexes to the right frequency
+            for i in ["start", "stop", "step"]:
                 if idx_dict[i]:
-                    idx_dict[i] = int(np.floor(self.freq[n]
-                                               / self.freq[self.trigger_idx]
-                                               * idx_dict[i]))
+                    idx_dict[i] = int(
+                        np.floor(self.freq[n] / self.freq[self.trigger_idx] * idx_dict[i])
+                    )
 
             # Correct the slicing stop if necessary
-            if idx_dict['start'] == idx_dict['stop'] or return_instant:
-                idx_dict['stop'] = idx_dict['start'] + 1
+            if idx_dict["start"] == idx_dict["stop"] or return_instant:
+                idx_dict["stop"] = idx_dict["start"] + 1
             elif trigger_length == idx.stop:
-                idx_dict['stop'] = len(channel)
+                idx_dict["stop"] = len(channel)
 
-            new_idx = slice(idx_dict['start'], idx_dict['stop'], idx_dict['step'])
+            new_idx = slice(idx_dict["start"], idx_dict["stop"], idx_dict["step"])
             sliced_timeseries[n] = channel[new_idx]
 
-        sliced_bp = BlueprintInput(sliced_timeseries, self.freq, self.ch_name,
-                                   self.units, self.trigger_idx,
-                                   self.num_timepoints_found, self.thr,
-                                   self.time_offset)
+        sliced_bp = BlueprintInput(
+            sliced_timeseries,
+            self.freq,
+            self.ch_name,
+            self.units,
+            self.trigger_idx,
+            self.num_timepoints_found,
+            self.thr,
+            self.time_offset,
+        )
 
         sliced_bp._time_resampled_to_trigger = self._time_resampled_to_trigger
         return sliced_bp
@@ -383,13 +402,16 @@ class BlueprintInput():
         self.ch_name: list of str
             Changes content to new_name.
         """
-        if 'time' in new_names:
-            del new_names[new_names.index('time')]
+        if "time" in new_names:
+            del new_names[new_names.index("time")]
 
-        new_names = ['time', ] + new_names
+        new_names = [
+            "time",
+        ] + new_names
 
-        self.ch_name = has_size(is_valid(new_names, list, list_type=str),
-                                self.ch_amount, 'unknown')
+        self.ch_name = has_size(
+            is_valid(new_names, list, list_type=str), self.ch_amount, "unknown"
+        )
 
     def return_index(self, idx):
         """
@@ -406,8 +428,13 @@ class BlueprintInput():
             Tuple containing the proper list entry of all the
             properties of the object with index `idx`
         """
-        return (self.timeseries[idx], self.ch_amount, self.freq[idx],
-                self.ch_name[idx], self.units[idx])
+        return (
+            self.timeseries[idx],
+            self.ch_amount,
+            self.freq[idx],
+            self.ch_name[idx],
+            self.units[idx],
+        )
 
     def delete_at_index(self, idx):
         """
@@ -438,8 +465,7 @@ class BlueprintInput():
         del self.units[idx]
 
         if self.trigger_idx == idx:
-            LGR.warning('Removing trigger channel - are you sure you are doing'
-                        'the right thing?')
+            LGR.warning("Removing trigger channel - are you sure you are doing" "the right thing?")
             self.trigger_idx = 0
 
     def check_trigger_amount(self, thr=None, num_timepoints_expected=0, tr=0):
@@ -470,18 +496,20 @@ class BlueprintInput():
             The property `timeseries` is shifted with the 0 being
             the time of first trigger.
         """
-        LGR.info('Counting trigger points')
+        LGR.info("Counting trigger points")
         # Use the trigger channel to find the TRs,
         # comparing it to a given threshold.
         trigger = self.timeseries[self.trigger_idx]
         time = self.timeseries[0]
-        LGR.info(f'The trigger is in channel {self.trigger_idx}')
+        LGR.info(f"The trigger is in channel {self.trigger_idx}")
         # Check that trigger and time channels have the same length.
         # If not, resample time to the length of the trigger
         if len(time) != len(trigger):
-            LGR.warning('The trigger channel has a different sampling '
-                        'from the registered time. Using a resampled version '
-                        'of time to find the starting time.')
+            LGR.warning(
+                "The trigger channel has a different sampling "
+                "from the registered time. Using a resampled version "
+                "of time to find the starting time."
+            )
             time = np.linspace(time[0], time[-1], len(trigger))
 
             self._time_resampled_to_trigger = time
@@ -496,46 +524,50 @@ class BlueprintInput():
             thr = np.mean(trigger)
             flag = 1
         timepoints = trigger > thr
-        num_timepoints_found = len([is_true for is_true, _ in groupby(timepoints,
-                                    lambda x: x != 0) if is_true])
+        num_timepoints_found = np.count_nonzero(np.ediff1d(timepoints.astype(np.int8)) > 0)
         if flag == 1:
-            LGR.info(f'The number of timepoints according to the std_thr method '
-                     f'is {num_timepoints_found}. The computed threshold is {thr:.4f}')
+            LGR.info(
+                f"The number of timepoints according to the std_thr method "
+                f"is {num_timepoints_found}. The computed threshold is {thr:.4f}"
+            )
         else:
-            LGR.info(f'The number of timepoints found with the manual threshold of {thr:.4f} '
-                     f'is {num_timepoints_found}')
+            LGR.info(
+                f"The number of timepoints found with the manual threshold of {thr:.4f} "
+                f"is {num_timepoints_found}"
+            )
         time_offset = time[timepoints.argmax()]
 
         if num_timepoints_expected:
-            LGR.info('Checking number of timepoints')
+            LGR.info("Checking number of timepoints")
             if num_timepoints_found > num_timepoints_expected:
-                timepoints_extra = (num_timepoints_found
-                                    - num_timepoints_expected)
-                LGR.warning(f'Found {timepoints_extra} timepoints'
-                            ' more than expected!\n'
-                            'Assuming extra timepoints are at the end '
-                            '(try again with a more liberal thr)')
+                timepoints_extra = num_timepoints_found - num_timepoints_expected
+                LGR.warning(
+                    f"Found {timepoints_extra} timepoints"
+                    " more than expected!\n"
+                    "Assuming extra timepoints are at the end "
+                    "(try again with a more liberal thr)"
+                )
 
             elif num_timepoints_found < num_timepoints_expected:
-                timepoints_missing = (num_timepoints_expected
-                                      - num_timepoints_found)
-                LGR.warning(f'Found {timepoints_missing} timepoints'
-                            ' less than expected!')
+                timepoints_missing = num_timepoints_expected - num_timepoints_found
+                LGR.warning(f"Found {timepoints_missing} timepoints" " less than expected!")
                 if tr:
-                    LGR.warning('Correcting time offset, assuming missing '
-                                'timepoints are at the beginning (try again '
-                                'with a more conservative thr)')
-                    time_offset -= (timepoints_missing * tr)
+                    LGR.warning(
+                        "Correcting time offset, assuming missing "
+                        "timepoints are at the beginning (try again "
+                        "with a more conservative thr)"
+                    )
+                    time_offset -= timepoints_missing * tr
                 else:
-                    LGR.warning('Can\'t correct time offset - you should '
-                                'specify the TR')
+                    LGR.warning("Can't correct time offset - you should " "specify the TR")
 
             else:
-                LGR.info('Found just the right amount of timepoints!')
+                LGR.info("Found just the right amount of timepoints!")
 
         else:
-            LGR.warning('The necessary options to find the amount of timepoints '
-                        'were not provided.')
+            LGR.warning(
+                "The necessary options to find the amount of timepoints " "were not provided."
+            )
         self.thr = thr
         self.time_offset = time_offset
         self.timeseries[0] = self.timeseries[0] - time_offset
@@ -557,12 +589,12 @@ class BlueprintInput():
             Returns to stdout (e.g. on screen) channels,
             their names and their sampling rate.
         """
-        info = (f'\n------------------------------------------------'
-                f'\nFile {filename} contains:\n')
+        info = (
+            f"\n------------------------------------------------" f"\nFile {filename} contains:\n"
+        )
         for ch in range(1, self.ch_amount):
-            info = info + (f'{ch:02d}. {self.ch_name[ch]};'
-                           f' sampled at {self.freq[ch]} Hz\n')
-        info = info + '------------------------------------------------\n'
+            info = info + (f"{ch:02d}. {self.ch_name[ch]};" f" sampled at {self.freq[ch]} Hz\n")
+        info = info + "------------------------------------------------\n"
 
         LGR.info(info)
 
@@ -589,25 +621,28 @@ class BlueprintInput():
             trigger_idx : int
                 Automatically retrieved trigger index
         """
-        LGR.info('Running automatic trigger detection.')
-        joint_match = '§'.join(TRIGGER_NAMES)
+        LGR.info("Running automatic trigger detection.")
+        LGR.info("Matching channel names with known trigger names first.")
+        joint_match = "§".join(TRIGGER_NAMES)
         indexes = []
         for n, case in enumerate(self.ch_name):
-            name = re.split(r'(\W+|\d|_|\s)', case)
+            name = re.split(r"(\W+|\d|_|\s)", case)
             name = list(filter(None, name))
 
-            if re.search('|'.join(name), joint_match, re.IGNORECASE):
+            if re.search("|".join(name), joint_match, re.IGNORECASE):
                 indexes = indexes + [n]
 
         if indexes:
             if len(indexes) > 1:
-                raise Exception('More than one possible trigger channel was automatically found. '
-                                'Please run phys2bids specifying the -chtrig argument.')
+                raise Exception(
+                    "More than one possible trigger channel was automatically found. "
+                    "Please run phys2bids specifying the -chtrig argument."
+                )
             else:
-                self.trigger_idx = indexes[0]
+                self.trigger_idx = int(indexes[0])
         else:
             # Time-domain automatic trigger detection
-
+            LGR.info("Find the trigger channel by measuring data distance from its value limits.")
             # Create numpy array with all channels (excluding time)
             channel_ts = np.array(self.timeseries[1:])
 
@@ -621,12 +656,12 @@ class BlueprintInput():
             distance_mean = np.mean(distance, axis=1)
 
             # Set the trigger as the channel with the smallest distance
-            self.trigger_idx = np.nanargmin(distance_mean) + 1
+            self.trigger_idx = int(np.nanargmin(distance_mean) + 1)
 
-        LGR.info(f'{self.ch_name[self.trigger_idx]} selected as trigger channel')
+        LGR.info(f"{self.ch_name[self.trigger_idx]} selected as trigger channel")
 
 
-class BlueprintOutput():
+class BlueprintOutput:
     """
     Main output object for phys2bids.
 
@@ -667,12 +702,12 @@ class BlueprintOutput():
         method to populate from input blueprint instead of init
     """
 
-    def __init__(self, timeseries, freq, ch_name, units, start_time, filename=''):
+    def __init__(self, timeseries, freq, ch_name, units, start_time, filename=""):
         """Initialise BlueprintOutput (see class docstring)."""
         self.timeseries = deepcopy(is_valid(timeseries, np.ndarray))
         self.freq = deepcopy(is_valid(freq, (int, float)))
-        self.ch_name = deepcopy(has_size(ch_name, self.ch_amount, 'unknown'))
-        self.units = deepcopy(has_size(units, self.ch_amount, '[]'))
+        self.ch_name = deepcopy(has_size(ch_name, self.ch_amount, "unknown"))
+        self.units = deepcopy(has_size(units, self.ch_amount, "[]"))
         self.start_time = deepcopy(start_time)
         self.filename = deepcopy(is_valid(filename, str))
 
@@ -718,8 +753,14 @@ class BlueprintOutput():
             Tuple containing the proper list entry of all the
             properties of the object with index `idx`
         """
-        return (self.timeseries[:, idx], self.ch_amount, self.freq,
-                self.ch_name[idx], self.units[idx], self.start_time)
+        return (
+            self.timeseries[:, idx],
+            self.ch_amount,
+            self.freq,
+            self.ch_name[idx],
+            self.units[idx],
+            self.start_time,
+        )
 
     def delete_at_index(self, idx):
         """

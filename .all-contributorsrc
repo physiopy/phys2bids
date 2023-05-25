@@ -41,7 +41,8 @@
       "contributions": [
         "code",
         "mentoring",
-        "review"
+        "review",
+        "content"
       ]
     },
     {
@@ -73,6 +74,19 @@
       "profile": "https://github.com/ineschh",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "nw-duncan",
+      "name": "Niall Duncan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/23524584?v=4",
+      "profile": "https://github.com/nw-duncan",
+      "contributions": [
+        "code",
+        "doc",
+        "data",
+        "test",
+        "ideas"
       ]
     },
     {
@@ -123,6 +137,7 @@
       "contributions": [
         "bug",
         "code",
+        "content",
         "test"
       ]
     },
@@ -143,6 +158,16 @@
       ]
     },
     {
+      "login": "m-miedema",
+      "name": "m-miedema",
+      "avatar_url": "https://avatars.githubusercontent.com/u/39968233?v=4",
+      "profile": "https://github.com/m-miedema",
+      "contributions": [
+        "tutorial",
+        "eventOrganizing"
+      ]
+    },
+    {
       "login": "smoia",
       "name": "Stefano Moia",
       "avatar_url": "https://avatars3.githubusercontent.com/u/35300580?v=4",
@@ -156,7 +181,11 @@
         "projectManagement",
         "review",
         "doc",
-        "mentoring"
+        "mentoring",
+        "talk",
+        "promotion",
+        "maintenance",
+        "tutorial"
       ]
     },
     {
@@ -170,6 +199,16 @@
       ]
     },
     {
+      "login": "bpinsard",
+      "name": "Basile",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1155388?v=4",
+      "profile": "https://github.com/bpinsard",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
       "login": "drombas",
       "name": "David Romero-Bascones",
       "avatar_url": "https://avatars.githubusercontent.com/u/50577357?v=4",
@@ -177,7 +216,8 @@
       "contributions": [
         "bug",
         "code",
-        "doc"
+        "doc",
+        "content"
       ]
     },
     {
@@ -188,7 +228,8 @@
       "contributions": [
         "ideas",
         "code",
-        "review"
+        "review",
+        "infra"
       ]
     },
     {
@@ -221,11 +262,24 @@
     },
     {
       "login": "merelvdthiel",
-      "name": "merelvdthiel",
+      "name": "Merel van der Thiel",
       "avatar_url": "https://avatars1.githubusercontent.com/u/72999546?v=4",
       "profile": "https://github.com/merelvdthiel",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "htwangtw",
+      "name": "Hao-Ting Wang",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13743617?v=4",
+      "profile": "https://wanghaoting.com/",
+      "contributions": [
+        "code",
+        "doc",
+        "data",
+        "test",
+        "ideas"
       ]
     },
     {

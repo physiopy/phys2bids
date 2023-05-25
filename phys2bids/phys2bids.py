@@ -35,13 +35,13 @@ from shutil import copy as cp
 
 import numpy as np
 
-from phys2bids import utils, viz, _version, bids
+from phys2bids import _version, bids, utils, viz
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
 from phys2bids.slice4phys import slice4phys
 
 from . import __version__
-from .due import due, Doi
+from .due import Doi, due
 
 LGR = logging.getLogger(__name__)
 LGR.setLevel(logging.INFO)
@@ -49,7 +49,7 @@ LGR.setLevel(logging.INFO)
 
 def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, outfile):
     """
-    Print a summary onscreen and in file with informations on the files.
+    Print a summary onscreen and in file with information on the files.
 
     Parameters
     ----------
@@ -75,17 +75,19 @@ def print_summary(filename, ntp_expected, ntp_found, samp_freq, time_offset, out
         File containing summary
     """
     start_time = -time_offset
-    summary = (f'\n------------------------------------------------\n'
-               f'Filename:            {filename}\n'
-               f'\n'
-               f'Timepoints expected: {ntp_expected}\n'
-               f'Timepoints found:    {ntp_found}\n'
-               f'Sampling Frequency:  {samp_freq} Hz\n'
-               f'Sampling started at: {start_time:.4f} s\n'
-               f'Tip: Time 0 is the time of first trigger\n'
-               f'------------------------------------------------\n')
+    summary = (
+        f"\n------------------------------------------------\n"
+        f"Filename:            {filename}\n"
+        f"\n"
+        f"Timepoints expected: {ntp_expected}\n"
+        f"Timepoints found:    {ntp_found}\n"
+        f"Sampling Frequency:  {samp_freq} Hz\n"
+        f"Sampling started at: {start_time:.4f} s\n"
+        f"Tip: Time 0 is the time of first trigger\n"
+        f"------------------------------------------------\n"
+    )
     LGR.info(summary)
-    utils.write_file(outfile, '.log', summary)
+    utils.write_file(outfile, ".log", summary)
 
 
 def print_json(outfile, samp_freq, time_offset, ch_name):
@@ -110,26 +112,42 @@ def print_json(outfile, samp_freq, time_offset, ch_name):
         File containing information for BIDS.
     """
     start_time = -time_offset
-    summary = dict(SamplingFrequency=samp_freq,
-                   StartTime=round(start_time, 4),
-                   Columns=ch_name)
+    summary = dict(SamplingFrequency=samp_freq, StartTime=round(start_time, 4), Columns=ch_name)
     utils.write_json(outfile, summary, indent=4, sort_keys=False)
 
 
 @due.dcite(
-     Doi('10.5281/zenodo.3470091'),
-     path='phys2bids',
-     description='Conversion of physiological trace data to BIDS format',
-     version=__version__,
-     cite_module=True)
+    Doi("10.5281/zenodo.3470091"),
+    path="phys2bids",
+    description="Conversion of physiological trace data to BIDS format",
+    version=__version__,
+    cite_module=True,
+)
 @due.dcite(
-    Doi('10.1038/sdata.2016.44'),
-    path='phys2bids',
-    description='The BIDS specification',
-    cite_module=True)
-def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
-              sub=None, ses=None, chtrig=0, chsel=None, num_timepoints_expected=None,
-              tr=None, thr=None, pad=9, ch_name=[], yml='', debug=False, quiet=False):
+    Doi("10.1038/sdata.2016.44"),
+    path="phys2bids",
+    description="The BIDS specification",
+    cite_module=True,
+)
+def phys2bids(
+    filename,
+    info=False,
+    indir=".",
+    outdir=".",
+    heur_file=None,
+    sub=None,
+    ses=None,
+    chtrig=0,
+    chsel=None,
+    num_timepoints_expected=None,
+    tr=None,
+    thr=None,
+    pad=9,
+    ch_name=[],
+    yml="",
+    debug=False,
+    quiet=False,
+):
     """
     Run main workflow of phys2bids.
 
@@ -148,20 +166,20 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     # #!# This can probably be done while parsing?
     outdir = os.path.abspath(outdir)
     os.makedirs(outdir, exist_ok=True)
-    os.makedirs(os.path.join(outdir, 'code'), exist_ok=True)
-    conversion_path = os.path.join(outdir, 'code', 'conversion')
+    os.makedirs(os.path.join(outdir, "code"), exist_ok=True)
+    conversion_path = os.path.join(outdir, "code", "conversion")
     os.makedirs(conversion_path, exist_ok=True)
 
     # Create logfile name
-    basename = 'phys2bids_'
-    extension = 'tsv'
-    isotime = datetime.datetime.now().strftime('%Y-%m-%dT%H%M%S')
-    logname = os.path.join(conversion_path, (basename + isotime + '.' + extension))
+    basename = "phys2bids_"
+    extension = "tsv"
+    isotime = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
+    logname = os.path.join(conversion_path, (basename + isotime + "." + extension))
 
     # Set logging format
     log_formatter = logging.Formatter(
-        '%(asctime)s\t%(name)-12s\t%(levelname)-8s\t%(message)s',
-        datefmt='%Y-%m-%dT%H:%M:%S')
+        "%(asctime)s\t%(name)-12s\t%(levelname)-8s\t%(message)s", datefmt="%Y-%m-%dT%H:%M:%S"
+    )
 
     # Set up logging file and open it for writing
     log_handler = logging.FileHandler(logname)
@@ -169,38 +187,42 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     sh = logging.StreamHandler()
 
     if quiet:
-        logging.basicConfig(level=logging.WARNING,
-                            handlers=[log_handler, sh], format='%(levelname)-10s %(message)s')
+        logging.basicConfig(
+            level=logging.WARNING,
+            handlers=[log_handler, sh],
+            format="%(levelname)-10s %(message)s",
+        )
     elif debug:
-        logging.basicConfig(level=logging.DEBUG,
-                            handlers=[log_handler, sh], format='%(levelname)-10s %(message)s')
+        logging.basicConfig(
+            level=logging.DEBUG, handlers=[log_handler, sh], format="%(levelname)-10s %(message)s"
+        )
     else:
-        logging.basicConfig(level=logging.INFO,
-                            handlers=[log_handler, sh], format='%(levelname)-10s %(message)s')
+        logging.basicConfig(
+            level=logging.INFO, handlers=[log_handler, sh], format="%(levelname)-10s %(message)s"
+        )
 
-    version_number = _version.get_versions()['version']
-    LGR.info(f'Currently running phys2bids version {version_number}')
-    LGR.info(f'Input file is {filename}')
+    version_number = _version.get_versions()["version"]
+    LGR.info(f"Currently running phys2bids version {version_number}")
+    LGR.info(f"Input file is {filename}")
 
     # Save call.sh
-    arg_str = ' '.join(sys.argv[1:])
-    call_str = f'phys2bids {arg_str}'
-    f = open(os.path.join(conversion_path, 'call.sh'), "a")
-    f.write(f'#!bin/bash \n{call_str}')
+    arg_str = " ".join(sys.argv[1:])
+    call_str = f"phys2bids {arg_str}"
+    f = open(os.path.join(conversion_path, "call.sh"), "a")
+    f.write(f"#!bin/bash \n{call_str}")
     f.close()
 
     # Check options to make them internally coherent pt. II
     # #!# This can probably be done while parsing?
     indir = os.path.abspath(indir)
     if chtrig and chtrig < 0:
-        raise RuntimeError('Wrong trigger channel. Channel indexing starts with 0!')
+        raise RuntimeError("Wrong trigger channel. Channel indexing starts with 0!")
 
     utils.check_ge(filename, indir)
-    filename, ftype = utils.check_input_type(filename,
-                                             indir)
+    filename, ftype = utils.check_input_type(filename, indir)
 
     if heur_file:
-        heur_file = utils.check_input_ext(heur_file, '.py')
+        heur_file = utils.check_input_ext(heur_file, ".py")
         utils.check_file_exists(heur_file)
 
     infile = os.path.join(indir, filename)
@@ -214,53 +236,70 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     if tr is not None and num_timepoints_expected is not None:
         # If tr and ntp were specified, check that tr is either length one or ntp.
         if len(num_timepoints_expected) != len(tr) and len(tr) != 1:
-            raise RuntimeError('Number of sequence types listed with TR '
-                               'doesn\'t match expected number of runs in '
-                               'the session')
+            raise RuntimeError(
+                "Number of sequence types listed with TR "
+                "doesn't match expected number of runs in "
+                "the session"
+            )
 
     # Read file!
-    LGR.info(f'Reading the file {infile}')
-    if ftype == 'acq':
+    LGR.info(f"Reading the file {infile}")
+    if ftype == "acq":
         from phys2bids.io import load_acq
+
         phys_in = load_acq(infile, chtrig)
-    elif ftype == 'txt':
+    elif ftype == "txt":
         from phys2bids.io import load_txt
+
         phys_in = load_txt(infile, chtrig)
-    elif ftype == 'mat':
+    elif ftype == "mat":
         from phys2bids.io import load_mat
+
         phys_in = load_mat(infile, chtrig)
-    elif ftype == 'gep':
+    elif ftype == "gep":
         from phys2bids.io import load_gep
+
         phys_in = load_gep(infile)
 
-    LGR.info('Checking that units of measure are BIDS compatible')
+    LGR.info("Checking that units of measure are BIDS compatible")
     for index, unit in enumerate(phys_in.units):
         phys_in.units[index] = bids.bidsify_units(unit)
 
-    LGR.info('Reading infos')
+    LGR.info("Reading infos")
     phys_in.print_info(filename)
     # #!# Here the function viz.plot_channel should be called
-    viz.plot_all(phys_in.ch_name, phys_in.timeseries, phys_in.units,
-                 phys_in.freq, infile, conversion_path)
+    viz.plot_all(
+        phys_in.ch_name, phys_in.timeseries, phys_in.units, phys_in.freq, infile, conversion_path
+    )
     # If only info were asked, end here.
     if info:
         return
 
     # The next few lines remove the undesired channels from phys_in.
     if chsel:
-        LGR.info('Dropping unselected channels')
-        for i in reversed(range(0, phys_in.ch_amount)):
+        LGR.info("Dropping unselected channels")
+        chsel.insert(0, 0)
+        if phys_in.trigger_idx not in chsel:
+            LGR.warning(
+                f"The selected channels {tuple(chsel)} do not "
+                f"contain the trigger channel ({phys_in.trigger_idx}). "
+                f"Adding channel {phys_in.trigger_idx} to the selection."
+            )
+            chsel.extend(phys_in.trigger_idx)
+        chsel.sort()
+        for i in range(phys_in.ch_amount - 1, 0, -1):
             if i not in chsel:
                 phys_in.delete_at_index(i)
+        # Update trigger index
+        phys_in.trigger_idx = chsel.index(phys_in.trigger_idx)
 
     # If requested, change channel names.
     if ch_name:
-        LGR.info('Renaming channels with given names')
+        LGR.info("Renaming channels with given names")
         phys_in.rename_channels(ch_name)
 
     # Checking acquisition type via user's input
     if tr is not None and num_timepoints_expected is not None:
-
         #  Multi-run acquisition type section
         #  Check list length, more than 1 means multi-run
         if len(num_timepoints_expected) > 1:
@@ -270,31 +309,40 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                 tr = np.ones(len(num_timepoints_expected)) * tr[0]
 
             # Sum of values in ntp_list should be equivalent to num_timepoints_found
-            phys_in.check_trigger_amount(thr=thr,
-                                         num_timepoints_expected=sum(num_timepoints_expected),
-                                         tr=1)
+            phys_in.check_trigger_amount(
+                thr=thr, num_timepoints_expected=sum(num_timepoints_expected), tr=1
+            )
 
             # Check that sum of tp expected is equivalent to num_timepoints_found,
             # if it passes call slice4phys
             if phys_in.num_timepoints_found != sum(num_timepoints_expected):
-                raise RuntimeError('The number of triggers found is different '
-                                   'than expected. Better stop now than break '
-                                   'something.')
+                raise RuntimeError(
+                    "The number of triggers found is different "
+                    "than expected. Better stop now than break "
+                    "something."
+                )
 
             # slice the recording based on user's entries
             # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY
-            phys_in = slice4phys(phys_in, num_timepoints_expected, tr,
-                                 phys_in.thr, pad)
+            phys_in = slice4phys(phys_in, num_timepoints_expected, tr, phys_in.thr, pad)
             # returns a dictionary in the form {take_idx: phys_in[startpoint, endpoint]}
 
             # save a figure for each take | give the right acquisition parameters for takes
-            fileprefix = os.path.join(conversion_path,
-                                      os.path.splitext(os.path.basename(filename))[0])
+            fileprefix = os.path.join(
+                conversion_path, os.path.splitext(os.path.basename(filename))[0]
+            )
             for i, take in enumerate(phys_in.keys()):
-                plot_fileprefix = f'{fileprefix}_{take:02d}'
-                viz.export_trigger_plot(phys_in[take], chtrig, plot_fileprefix, tr[i],
-                                        num_timepoints_expected[i], filename,
-                                        sub, ses)
+                plot_fileprefix = f"{fileprefix}_{take:02d}"
+                viz.export_trigger_plot(
+                    phys_in[take],
+                    phys_in[take].trigger_idx,
+                    plot_fileprefix,
+                    tr[i],
+                    num_timepoints_expected[i],
+                    filename,
+                    sub,
+                    ses,
+                )
 
         # Single take acquisition type, or : nothing to split workflow
         else:
@@ -302,19 +350,29 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             # and the time offset.
             phys_in.check_trigger_amount(thr, num_timepoints_expected[0], tr[0])
             # save a figure of the trigger
-            fileprefix = os.path.join(conversion_path,
-                                      os.path.splitext(os.path.basename(filename))[0])
-            viz.export_trigger_plot(phys_in, chtrig, fileprefix, tr[0],
-                                    num_timepoints_expected[0], filename,
-                                    sub, ses)
+            fileprefix = os.path.join(
+                conversion_path, os.path.splitext(os.path.basename(filename))[0]
+            )
+            viz.export_trigger_plot(
+                phys_in,
+                phys_in.trigger_idx,
+                fileprefix,
+                tr[0],
+                num_timepoints_expected[0],
+                filename,
+                sub,
+                ses,
+            )
 
             # Reassign phys_in as dictionary
             # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY
             phys_in = {1: phys_in}
 
     else:
-        LGR.warning('Skipping trigger pulse count. If you want to run it, '
-                    'call phys2bids using both "-ntp" and "-tr" arguments')
+        LGR.warning(
+            "Skipping trigger pulse count. If you want to run it, "
+            'call phys2bids using both "-ntp" and "-tr" arguments'
+        )
         # !!! ATTENTION: PHYS_IN GETS OVERWRITTEN AS DICTIONARY
         phys_in = {1: phys_in}
 
@@ -325,21 +383,27 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
     uniq_freq_list = set(phys_in[1].freq)
     freq_amount = len(uniq_freq_list)
     if freq_amount > 1:
-        LGR.info(f'Found {freq_amount} different frequencies in input!')
+        LGR.info(f"Found {freq_amount} different frequencies in input!")
 
     if take_amount > 1:
-        LGR.info(f'Found {take_amount} different takes in input!')
+        LGR.info(f"Found {take_amount} different takes in input!")
 
-    LGR.info(f'Preparing {freq_amount*take_amount} output files.')
+    LGR.info(f"Preparing {freq_amount*take_amount} output files.")
     # Create phys_out dict that will have a blueprint object for each different frequency
     phys_out = {}
 
     if heur_file is not None and sub is not None:
-        LGR.info(f'Preparing BIDS output using {heur_file}')
+        LGR.info(f"Preparing BIDS output using {heur_file}")
         # If heuristics are used, init a dict of arguments to pass to use_heuristic
-        heur_args = {'heur_file': heur_file, 'sub': sub, 'ses': ses,
-                     'filename': filename, 'outdir': outdir, 'take': '',
-                     'record_label': ''}
+        heur_args = {
+            "heur_file": heur_file,
+            "sub": sub,
+            "ses": ses,
+            "filename": filename,
+            "outdir": outdir,
+            "take": "",
+            "record_label": "",
+        }
         # Generate participants.tsv file if it doesn't exist already.
         # Update the file if the subject is not in the file.
         # Do not update if the subject is already in the file.
@@ -348,18 +412,23 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
         bids.dataset_description_file(outdir)
         # Generate README file if it doesn't exist already.
         bids.readme_file(outdir)
-        cp(heur_file, os.path.join(conversion_path,
-           os.path.splitext(os.path.basename(heur_file))[0] + '.py'))
+        cp(
+            heur_file,
+            os.path.join(
+                conversion_path, os.path.splitext(os.path.basename(heur_file))[0] + ".py"
+            ),
+        )
     elif heur_file is not None and sub is None:
-        LGR.warning('While "-heur" was specified, option "-sub" was not.\n'
-                    'Skipping BIDS formatting.')
+        LGR.warning(
+            'While "-heur" was specified, option "-sub" was not.\n' "Skipping BIDS formatting."
+        )
 
     # Export a (set of) phys_out for each element in phys_in
     # run keys start from 1 (human friendly)
     for take in phys_in.keys():
         for uniq_freq in uniq_freq_list:
             # Initialise the key for the (possibly huge amount of) dictionary entries
-            key = f'{take}_{uniq_freq}'
+            key = f"{take}_{uniq_freq}"
             # copy the phys_in object to the new dict entry
             phys_out[key] = deepcopy(phys_in[take])
             # this counter will take into account how many channels are eliminated
@@ -372,7 +441,7 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                     # eliminate that channel from the dict since we only want channels
                     # with the same frequency
                     phys_out[key].delete_at_index(idx - count)
-                    # take into acount the elimination so in the next eliminated channel we
+                    # take into account the elimination so in the next eliminated channel we
                     # eliminate correctly
                     count += 1
             # Also create a BlueprintOutput object for each unique frequency found.
@@ -382,30 +451,40 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
             if uniq_freq != phys_in[take].freq[0]:
                 phys_out[key].ch_name.insert(0, phys_in[take].ch_name[0])
                 phys_out[key].units.insert(0, phys_in[take].units[0])
-                phys_out[key].timeseries.insert(0, np.linspace(phys_in[take].timeseries[0][0],
-                                                phys_in[take].timeseries[0][-1],
-                                                num=phys_out[key].timeseries[0].shape[0]))
+                phys_out[key].timeseries.insert(
+                    0,
+                    np.linspace(
+                        phys_in[take].timeseries[0][0],
+                        phys_in[take].timeseries[0][-1],
+                        num=phys_out[key].timeseries[0].shape[0],
+                    ),
+                )
             # Add trigger channel in the proper frequency.
-            if uniq_freq != phys_in[take].freq[chtrig]:
-                phys_out[key].ch_name.insert(1, phys_in[take].ch_name[chtrig])
-                phys_out[key].units.insert(1, phys_in[take].units[chtrig])
-                phys_out[key].timeseries.insert(1, np.interp(phys_out[key].timeseries[0],
-                                                             phys_in[take].timeseries[0],
-                                                             phys_in[take].timeseries[chtrig]))
+            if uniq_freq != phys_in[take].freq[phys_in[take].trigger_idx]:
+                phys_out[key].ch_name.insert(1, phys_in[take].ch_name[phys_in[take].trigger_idx])
+                phys_out[key].units.insert(1, phys_in[take].units[phys_in[take].trigger_idx])
+                phys_out[key].timeseries.insert(
+                    1,
+                    np.interp(
+                        phys_out[key].timeseries[0],
+                        phys_in[take].timeseries[0],
+                        phys_in[take].timeseries[phys_in[take].trigger_idx],
+                    ),
+                )
             phys_out[key] = BlueprintOutput.init_from_blueprint(phys_out[key])
 
         # Preparing output parameters: name and folder.
         for uniq_freq in uniq_freq_list:
-            key = f'{take}_{uniq_freq}'
+            key = f"{take}_{uniq_freq}"
             # If possible, prepare bids renaming.
             if heur_file is not None and sub is not None:
                 # Add take info to heur_args if more than one take is present
                 if take_amount > 1:
-                    heur_args['take'] = f'{take:02d}'
+                    heur_args["take"] = f"{take:02d}"
 
                 # Append "recording-freq" to filename if more than one freq
                 if freq_amount > 1:
-                    heur_args['record_label'] = f'{uniq_freq:.0f}Hz'
+                    heur_args["record_label"] = f"{uniq_freq:.0f}Hz"
 
                 phys_out[key].filename = bids.use_heuristic(**heur_args)
 
@@ -414,35 +493,50 @@ def phys2bids(filename, info=False, indir='.', outdir='.', heur_file=None,
                 if take_amount > 1:
                     for n, k in enumerate(phys_out.keys()):
                         if k != key and phys_out[key].filename == phys_out[k].filename:
-                            phys_out[key].filename = (f'{phys_out[key].filename}'
-                                                      f'_take-{take:02d}')
-                            LGR.warning('Identified multiple outputs with the same name.\n'
-                                        'Appending fake label to avoid overwriting.\n'
-                                        '!!! ATTENTION !!! the output is not BIDS compliant.\n'
-                                        'Please check heuristics to solve the problem.')
+                            phys_out[key].filename = (
+                                f"{phys_out[key].filename}" f"_take-{take:02d}"
+                            )
+                            LGR.warning(
+                                "Identified multiple outputs with the same name.\n"
+                                "Appending fake label to avoid overwriting.\n"
+                                "!!! ATTENTION !!! the output is not BIDS compliant.\n"
+                                "Please check heuristics to solve the problem."
+                            )
 
             else:
-                phys_out[key].filename = os.path.join(outdir,
-                                                      os.path.splitext(os.path.basename(filename)
-                                                                       )[0])
+                phys_out[key].filename = os.path.join(
+                    outdir, os.path.splitext(os.path.basename(filename))[0]
+                )
                 # Append "take" to filename if more than one take
                 if take_amount > 1:
-                    phys_out[key].filename = f'{phys_out[key].filename}_{take:02d}'
+                    phys_out[key].filename = f"{phys_out[key].filename}_{take:02d}"
                 # Append "freq" to filename if more than one freq
                 if freq_amount > 1:
-                    phys_out[key].filename = f'{phys_out[key].filename}_{uniq_freq:.0f}Hz'
+                    phys_out[key].filename = f"{phys_out[key].filename}_{uniq_freq:.0f}Hz"
 
-            LGR.info(f'Exporting files for take {take} freq {uniq_freq}')
-            np.savetxt(phys_out[key].filename + '.tsv.gz',
-                       phys_out[key].timeseries, fmt='%.8e', delimiter='\t')
-            print_json(phys_out[key].filename, phys_out[key].freq,
-                       phys_out[key].start_time, phys_out[key].ch_name)
-            print_summary(filename, num_timepoints_expected,
-                          phys_in[take].num_timepoints_found, uniq_freq,
-                          phys_out[key].start_time,
-                          os.path.join(conversion_path,
-                                       os.path.splitext(os.path.basename(phys_out[key].filename)
-                                                        )[0]))
+            LGR.info(f"Exporting files for take {take} freq {uniq_freq}")
+            np.savetxt(
+                phys_out[key].filename + ".tsv.gz",
+                phys_out[key].timeseries,
+                fmt="%.8e",
+                delimiter="\t",
+            )
+            print_json(
+                phys_out[key].filename,
+                phys_out[key].freq,
+                phys_out[key].start_time,
+                phys_out[key].ch_name,
+            )
+            print_summary(
+                filename,
+                num_timepoints_expected,
+                phys_in[take].num_timepoints_found,
+                uniq_freq,
+                phys_out[key].start_time,
+                os.path.join(
+                    conversion_path, os.path.splitext(os.path.basename(phys_out[key].filename))[0]
+                ),
+            )
 
 
 def _main(argv=None):
@@ -450,7 +544,7 @@ def _main(argv=None):
     phys2bids(**vars(options))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     _main(sys.argv[1:])
 
 """

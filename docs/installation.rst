@@ -10,7 +10,7 @@ Requirements
 ``phys2bids`` requires python 3.6 or above, as well as the modules:
 
 .. literalinclude:: ../setup.cfg
-   :lines: 25-27
+   :lines: 28-30
    :dedent: 4
 
 If you are planning to use file formats other than plain ``txt``, you will need to install additional **extra modules** to have the right interface.
@@ -44,7 +44,7 @@ Install ``phys2bids`` alone
 To install ``phys2bids`` along with the basic required modules just run::
 
     pip3 install phys2bids
-    
+
 You can now proceed to check your installation and start using ``phys2bids``!
 
 Install ``phys2bids`` with extra modules
@@ -67,7 +67,7 @@ You can now proceed to check your installation and start using ``phys2bids``!
 
 .. note::
     If you "missed" or skipped this trick when you installed ``phys2bids`` the first time, don't worry!
-    You can do it any time - this will update ``phys2bids`` and install all extra modules you want. 
+    You can do it any time - this will update ``phys2bids`` and install all extra modules you want.
 
 
 Install without ``pip``
@@ -82,7 +82,7 @@ Open a terminal in the ``phys2bids`` folder and execute the command::
 
     python3 setup.py install
 
-This should have installed ``phys2bids`` along with the basic required modules. If you need any of the extra modules listed at the beginning of the page you might need to install them manually. Otherwise, you can proceed to check your installation and start using ``phys2bids``. 
+This should have installed ``phys2bids`` along with the basic required modules. If you need any of the extra modules listed at the beginning of the page you might need to install them manually. Otherwise, you can proceed to check your installation and start using ``phys2bids``.
 
 .. note::
     If python 3 is already your default, you might use ``python`` rather than ``python3``

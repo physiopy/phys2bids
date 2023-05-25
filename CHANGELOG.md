@@ -1,3 +1,118 @@
+# 2.10.0 (Thu May 04 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Basile ([@bpinsard](https://github.com/bpinsard)), for all your work!
+
+#### 🚀 Enhancement
+
+- Improve performance by using numpy for trigger detection and closing matplotlib figures to avoid memleaks. [#448](https://github.com/physiopy/phys2bids/pull/448) ([@bpinsard](https://github.com/bpinsard))
+
+#### 🏠 Internal
+
+- [pre-commit.ci] pre-commit autoupdate [#446](https://github.com/physiopy/phys2bids/pull/446) ([@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]))
+
+#### Authors: 2
+
+- [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot])
+- Basile ([@bpinsard](https://github.com/bpinsard))
+
+---
+
+# 2.9.0 (Thu Apr 27 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Hao-Ting Wang ([@htwangtw](https://github.com/htwangtw)), for all your work!
+
+#### 🚀 Enhancement
+
+- Add support for Spike2 files [#410](https://github.com/physiopy/phys2bids/pull/410) ([@htwangtw](https://github.com/htwangtw) [@smoia](https://github.com/smoia))
+
+#### 🏠 Internal
+
+- Adopt Black and isort [#327](https://github.com/physiopy/phys2bids/pull/327) ([@tsalo](https://github.com/tsalo) [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]) [@smoia](https://github.com/smoia))
+
+#### Authors: 4
+
+- [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot])
+- Hao-Ting Wang ([@htwangtw](https://github.com/htwangtw))
+- Stefano Moia ([@smoia](https://github.com/smoia))
+- Taylor Salo ([@tsalo](https://github.com/tsalo))
+
+---
+
+# 2.8.4 (Wed Apr 26 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Yaroslav Halchenko ([@yarikoptic](https://github.com/yarikoptic)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Remove wrong version of exclusion strings [#444](https://github.com/physiopy/phys2bids/pull/444) ([@smoia](https://github.com/smoia))
+
+#### ⚠️ Pushed to `master`
+
+- int: Add pre-commit configuration ([@smoia](https://github.com/smoia))
+- int: Fix codespell use and transfer its functionalities in `setup.cfg` ([@smoia](https://github.com/smoia))
+- int: Update CI environment ([@smoia](https://github.com/smoia))
+- docs: Update install requirement lines in documentation ([@smoia](https://github.com/smoia))
+
+#### 📝 Documentation
+
+- Update documentation to include GE file functionality [#443](https://github.com/physiopy/phys2bids/pull/443) ([@nw-duncan](https://github.com/nw-duncan) [@smoia](https://github.com/smoia))
+
+#### 🏠 Internal
+
+- Fix pre-commit configuration [#445](https://github.com/physiopy/phys2bids/pull/445) ([@smoia](https://github.com/smoia) [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]))
+- Codespell the code, add configuration and workflow for it so no typo sneaks in [#436](https://github.com/physiopy/phys2bids/pull/436) ([@yarikoptic](https://github.com/yarikoptic))
+
+#### Authors: 4
+
+- [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot])
+- Niall Duncan ([@nw-duncan](https://github.com/nw-duncan))
+- Stefano Moia ([@smoia](https://github.com/smoia))
+- Yaroslav Halchenko ([@yarikoptic](https://github.com/yarikoptic))
+
+---
+
+# 2.8.3 (Tue Mar 14 2023)
+
+#### 🐛 Bug Fix
+
+- Fix trigger index update on channel subset selection (`-chsel`) [#433](https://github.com/physiopy/phys2bids/pull/433) (s.moia@bcbl.eu)
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
+# 2.8.2 (Tue Mar 14 2023)
+
+#### 🐛 Bug Fix
+
+- Fix channel trigger variable type when the trigger is automatically detected [#440](https://github.com/physiopy/phys2bids/pull/440) ([@smoia](https://github.com/smoia))
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
+# 2.8.1 (Wed Feb 15 2023)
+
+#### 🐛 Bug Fix
+
+- Fix channel selection to not remove "time channel" [#439](https://github.com/physiopy/phys2bids/pull/439) ([@smoia](https://github.com/smoia))
+
+#### Authors: 1
+
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
 # 2.8.0 (Fri Dec 23 2022)
 
 #### 🚀 Enhancement
@@ -101,7 +216,7 @@ Thank you, Stefano Moia ([@smoia](https://github.com/smoia)), for all your work!
 
 #### ⚠️ Tests
 
-- Fix testing enviroment by using `apt-get install build-essential` rather than `apt-get install make` [#413](https://github.com/physiopy/phys2bids/pull/413) ([@vinferrer](https://github.com/vinferrer))
+- Fix testing environment by using `apt-get install build-essential` rather than `apt-get install make` [#413](https://github.com/physiopy/phys2bids/pull/413) ([@vinferrer](https://github.com/vinferrer))
 
 #### 🏠 Internal
 
@@ -228,13 +343,13 @@ Thank you, Yaroslav Halchenko ([@yarikoptic](https://github.com/yarikoptic)), fo
 - add coverage [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - don't use makeenv [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - cache name [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
-- cache enviroment folder [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- cache environment folder [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - use full path in source [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - remove name option [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
-- save enviroment in working dir [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- save environment in working dir [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - add source command [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
-- create conda enviroment [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
-- add sudo comand [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- create conda environment [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- add sudo command [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - add python 3.7 tests [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - use default WD [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - use 3.7 from miniconda [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
@@ -245,15 +360,15 @@ Thank you, Yaroslav Halchenko ([@yarikoptic](https://github.com/yarikoptic)), fo
 - check working dir [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - get default phys2bids install path [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - clone done automatically [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
-- try witout folder command [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- try without folder command [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - add ident [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - put folder in the end so it's created [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - set up working dir and save phys2bids folder for cache [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
-- delete some identation [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- delete some indentation [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - rename /tmp/src/phys2bids folder to phys2bids [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - eliminate env_script line [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - use name field [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
-- adding cirrus CI with basic enviroment [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
+- adding cirrus CI with basic environment [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - Merge branch 'master' of https://github.com/physiopy/phys2bids [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - delete test [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
 - add windows docker trial tests [#375](https://github.com/physiopy/phys2bids/pull/375) ([@vinferrer](https://github.com/vinferrer))
@@ -545,7 +660,7 @@ Thank you, Molly Bright ([@BrightMG](https://github.com/BrightMG)), for all your
 - Add card and mattermost channel for BrainWeb ([@smoia](https://github.com/smoia))
 - Add card for BrainWeb ([@smoia](https://github.com/smoia))
 - Updates for the BrainWeb ([@smoia](https://github.com/smoia))
-- Triggger Travis CI ([@smoia](https://github.com/smoia))
+- Trigger Travis CI ([@smoia](https://github.com/smoia))
 
 #### 📝 Documentation
 

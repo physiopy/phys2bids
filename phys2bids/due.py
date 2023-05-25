@@ -17,9 +17,9 @@ License:    BSD-2
 # ## ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### #
 """
 
-from builtins import str
-from builtins import object
-__version__ = '0.0.5'
+from builtins import object, str
+
+__version__ = "0.0.5"
 
 
 class InactiveDueCreditCollector(object):
@@ -31,15 +31,17 @@ class InactiveDueCreditCollector(object):
 
     def dcite(self, *args, **kwargs):
         """If I could cite I would."""
+
         def nondecorating_decorator(func):
             return func
+
         return nondecorating_decorator
 
     cite = load = add = _donothing
 
     def __repr__(self):
         """Return class function."""
-        return self.__class__.__name__ + '()'
+        return self.__class__.__name__ + "()"
 
 
 def _donothing_func(*args, **kwargs):
@@ -48,16 +50,19 @@ def _donothing_func(*args, **kwargs):
 
 
 try:
-    from duecredit import due, BibTeX, Doi, Url
-    if 'due' in locals() and not hasattr(due, 'cite'):
-        raise RuntimeError(
-            "Imported due lacks .cite. DueCredit is now disabled")
+    from duecredit import BibTeX, Doi, Url, due
+
+    if "due" in locals() and not hasattr(due, "cite"):
+        raise RuntimeError("Imported due lacks .cite. DueCredit is now disabled")
 except Exception as e:
-    if type(e).__name__ != 'ImportError':
+    if type(e).__name__ != "ImportError":
         import logging
+
         logging.getLogger("duecredit").error(
             'Module `duecredit` not successfully imported due to "%s". '
-            'Package functionality unaffected.', str(e))
+            "Package functionality unaffected.",
+            str(e),
+        )
 
     # Initiate due stub
     due = InactiveDueCreditCollector()
