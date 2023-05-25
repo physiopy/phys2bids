@@ -130,7 +130,9 @@ def retrieve_triggers(trig_MRI):
 
     """
     len_trig = len(trig_MRI)
-    onsets_MRI = [int(x) for x in np.where(trig_MRI > np.mean(trig_MRI))[0]]  # np.where(trig_8 != 0)[0]
+    onsets_MRI = [
+        int(x) for x in np.where(trig_MRI > np.mean(trig_MRI))[0]
+    ]  # np.where(trig_8 != 0)[0]
 
     return onsets_MRI, len_trig
 
@@ -143,14 +145,14 @@ def get_onsets_run(onsets_MRI, sensitivity):
         percentile of values to be considered as a 'regular' interval of two consecutive MRI triggers
     """
     # get trial
-    values_offsets = (np.array(onsets_MRI[1:]) - np.array(onsets_MRI[0:-1]))
+    values_offsets = np.array(onsets_MRI[1:]) - np.array(onsets_MRI[0:-1])
     values_offsets = np.unique(values_offsets)[1:]
     check_val = np.percentile(values_offsets, sensitivity)
 
     idx_offset = np.where([x > check_val for x in values_offsets])[0]
     idx_onset = idx_offset + 1
 
-    idx_offset = np.append(idx_offset, len(onsets_MRI)-1)
+    idx_offset = np.append(idx_offset, len(onsets_MRI) - 1)
     idx_onset = np.insert(idx_onset, 0, 0)  # get all on/ offsets
 
     run_onset_raw = np.array([onsets_MRI[x] for x in idx_onset])
@@ -177,16 +179,16 @@ def clean_onsets_run_GUI(onsets_MRI, run_onset_raw, run_offset_raw, sampling_rat
     """
     import peakdet
 
-    conditions = np.zeros(max(onsets_MRI) + round(padding*sampling_rate))
-    conditions[onsets_MRI] = 1 # times when MRI triggers are received
+    conditions = np.zeros(max(onsets_MRI) + round(padding * sampling_rate))
+    conditions[onsets_MRI] = 1  # times when MRI triggers are received
 
     conditions[run_onset_raw] = 1.5
     conditions[run_offset_raw] = -0.5
 
     data = peakdet.Physio(conditions, fs=sampling_rate)
 
-    data._metadata['peaks'] = run_onset_raw
-    data._metadata['troughs'] = run_offset_raw
+    data._metadata["peaks"] = run_onset_raw
+    data._metadata["troughs"] = run_offset_raw
     data = peakdet.operations.edit_run(data)
     onsets_start = data.peaks
     onsets_end = data.troughs
@@ -200,19 +202,20 @@ def clean_onsets_run_GUI(onsets_MRI, run_onset_raw, run_offset_raw, sampling_rat
 
 
 def split_signal_to_runs(phys_in, sensitivity, manual_check, padding=9):
-
     trig_MRI = phys_in.timeseries[phys_in.trigger_idx]
     sampling_rate = phys_in.freq[phys_in.trigger_idx]
 
     # get index of MRI triggers and length of data
     onsets_MRI, len_trig = retrieve_triggers(trig_MRI)
 
-    #calculate run onsets & offsets
+    # calculate run onsets & offsets
     run_onset_raw, run_offset_raw = get_onsets_run(onsets_MRI, sensitivity)
 
     # manual check of run onsets & offsets
     if manual_check:
-        onsets_start, onsets_end = clean_onsets_run_GUI(onsets_MRI, run_onset_raw, run_offset_raw, sampling_rate, padding)
+        onsets_start, onsets_end = clean_onsets_run_GUI(
+            onsets_MRI, run_onset_raw, run_offset_raw, sampling_rate, padding
+        )
     else:
         onsets_start = run_onset_raw
         onsets_end = run_offset_raw
