@@ -17,7 +17,6 @@ def test_slice_signal_to_runs(path_data):
     test_chn_name = ["trigger", "chocolate"]
     test_units = ["s", "sweetness"]
     test_chtrig = 0
-    num_channnels = len(test_timeseries)
 
     phys_in = po.BlueprintInput(test_timeseries, test_freq, test_chn_name, test_units, test_chtrig)
 
