@@ -29,7 +29,6 @@ def test_split_signal_to_runs(path_data, data_exp):
     test_chn_name = ["channel_1", "trigger"]
     test_units = ["s", "s"]
     test_chtrig = 1
-    num_channnels = len(test_timeseries)
 
     blueprint_in = po.BlueprintInput(
         test_timeseries, test_freq, test_chn_name, test_units, test_chtrig
