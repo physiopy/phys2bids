@@ -5,6 +5,8 @@ from copy import deepcopy
 
 import numpy as np
 
+from .physio_obj import BlueprintInput
+
 LGR = logging.getLogger(__name__)
 
 
@@ -381,7 +383,7 @@ def slice_runs(phys_in, onsets, offsets):
 
     for i in range(len(offsets)):
         signals = [phys_signal[onsets[i] : offsets[i]] for phys_signal in phys_in.timeseries]
-        signals_run = po.BlueprintInput(
+        signals_run = BlueprintInput(
             signals, phys_in.freq, phys_in.ch_name, phys_in.units, phys_in.trigger_idx
         )
 
