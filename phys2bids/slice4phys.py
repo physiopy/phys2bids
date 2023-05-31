@@ -124,10 +124,15 @@ def find_takes(phys_in, ntp_list, tr_list, thr=None, padding=9):
 def retrieve_triggers(trig_MRI):
     """
     Convert trigger onsets to a list of indices & retrieve length of data
-    :param trig_MRI:
-    :return: onsets_MRI
-    :return: len_trig
 
+    Parameters
+    ---------
+    trig_MRI
+
+    Returns
+    --------
+    onsets_MRI
+    len_trig
     """
     len_trig = len(trig_MRI)
     onsets_MRI = [
@@ -177,7 +182,11 @@ def clean_onsets_run_GUI(onsets_MRI, run_onset_raw, run_offset_raw, sampling_rat
     :return: onsets_end: numpy array
         array of run offsets
     """
-    import peakdet
+    try:
+        import peakdet
+    except ImportError:
+        raise ImportError("peakdet is required for creating the data per run."
+                         "Please see install instructions.")
 
     conditions = np.zeros(max(onsets_MRI) + round(padding * sampling_rate))
     conditions[onsets_MRI] = 1  # times when MRI triggers are received
@@ -328,6 +337,12 @@ def clean_onsets_run_GUI(onsets_MRI, run_onset_raw, run_offset_raw, sampling_rat
     :return: onsets_end: numpy array
         array of run offsets
     """
+    try:
+        import peakdet
+    except ImportError:
+        raise ImportError("peakdet is required for creating the data per run."
+                         "Please see install instructions.")
+        
 
     conditions = np.zeros(max(onsets_MRI) + round(1000 * sampling_rate))
     conditions[onsets_MRI] = 1  # times when MRI triggers are received

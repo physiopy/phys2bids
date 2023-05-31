@@ -69,6 +69,7 @@ def test_raise_exception(samefreq_full_acq_file):
     assert "doesn't match" in str(errorinfo.value)
 
     with raises(Exception) as errorinfo:
+<<<<<<< Updated upstream
         phys2bids.phys2bids(
             filename=test_filename,
             num_timepoints_expected=[20, 300],
@@ -78,3 +79,8 @@ def test_raise_exception(samefreq_full_acq_file):
             outdir=test_path,
         )
     assert "stop now" in str(errorinfo.value)
+=======
+        phys2bids.phys2bids(filename=test_filename, num_timepoints_expected=[20, 300], chtrig=3,
+                            tr=1.5, indir=test_path, outdir=test_path)
+    assert 'stop now' in str(errorinfo.value)
+>>>>>>> Stashed changes
