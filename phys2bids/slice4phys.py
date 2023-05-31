@@ -185,8 +185,9 @@ def clean_onsets_run_GUI(onsets_MRI, run_onset_raw, run_offset_raw, sampling_rat
     try:
         import peakdet
     except ImportError:
-        raise ImportError("peakdet is required for creating the data per run."
-                         "Please see install instructions.")
+        raise ImportError(
+            "peakdet is required for creating the data per run." "Please see install instructions."
+        )
 
     conditions = np.zeros(max(onsets_MRI) + round(padding * sampling_rate))
     conditions[onsets_MRI] = 1  # times when MRI triggers are received
@@ -340,9 +341,9 @@ def clean_onsets_run_GUI(onsets_MRI, run_onset_raw, run_offset_raw, sampling_rat
     try:
         import peakdet
     except ImportError:
-        raise ImportError("peakdet is required for creating the data per run."
-                         "Please see install instructions.")
-        
+        raise ImportError(
+            "peakdet is required for creating the data per run." "Please see install instructions."
+        )
 
     conditions = np.zeros(max(onsets_MRI) + round(1000 * sampling_rate))
     conditions[onsets_MRI] = 1  # times when MRI triggers are received
