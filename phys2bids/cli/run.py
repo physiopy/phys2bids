@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Parser for phys2bids."""
 
-
 import argparse
 
 from phys2bids import __version__
@@ -134,6 +133,27 @@ def _get_parser():
         "or just one TR if it is consistent throughout the session.",
         default=None,
     )
+    optional.add_argument(
+        "-freq",
+        "--frequency",
+        dest="freq",
+        type=float,
+        help="Frequency of input data. Now specifically for GE gep files. "
+        "Units are Hertz, Hz or samples/sec "
+        "GE defaults to PPG of 100Hz, Resp at 25Hz and ECG at 1000Hz ",
+        default=None,
+    )
+
+    optional.add_argument(
+        "-pt",
+        "--pre_time",
+        dest="pretime",
+        type=float,
+        help="Pre-run time offset of input data. Now specifically for GE gep files. "
+        "Time offset in seconds. Default for GE is 30 seconds. ",
+        default=30.0,
+    )
+    
     optional.add_argument(
         "-thr",
         "--threshold",

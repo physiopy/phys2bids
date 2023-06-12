@@ -518,13 +518,16 @@ class BlueprintInput:
         if thr is None:
             # If trigger channels are binary
             # (i.e., "on" is a higher value and "off" is a lower value)
-            # and each "on" and "off" are each always approzimately the same value
+            # and each "on" and "off" are each always approximately the same value
             # then any value above the mean is "on" and every value below the mean
             # is "off".
             thr = np.mean(trigger)
             flag = 1
-        timepoints = trigger > thr
-        num_timepoints_found = np.count_nonzero(np.ediff1d(timepoints.astype(np.int8)) > 0)
+        # drg - modified to >= rather than >    
+        timepoints = trigger >= thr
+        # drg - also removed threshold difference that looks at consecutive diffs
+        # num_timepoints_found = np.count_nonzero(np.ediff1d(timepoints.astype(np.int8)) > 0)
+        num_timepoints_found = np.count_nonzero(timepoints.astype(np.int8) > 0)
         if flag == 1:
             LGR.info(
                 f"The number of timepoints according to the std_thr method "

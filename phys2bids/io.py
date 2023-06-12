@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """phys2bids interfaces for loading extension files."""
 
+import pdb
 import logging
 import warnings
 from copy import deepcopy
@@ -200,19 +201,23 @@ def read_header_and_channels(filename):
     """
     header = []
     # Read in the header until it's numbers
+
     with open(filename, "r") as f:
         for n, line in enumerate(f):
             line = line.rstrip("\n").split("\t")
             if line[-1] == "":
                 line.remove("")
             try:
-                float(line[0])
+                list(map(float, line[0].split(" ")))
+                # float(line[0])
                 break
             except ValueError:
                 header.append(line)
                 continue
+
+            
     # Read in the rest paying attention to possible differences
-    if "Interval=" in header[0]:
+    if "Interval=" in str(header[0]):
         # Not specifying delimiters will ignore comments
         channel_list = np.genfromtxt(filename, skip_header=n)
     elif "acq" in header[0][0]:
@@ -261,29 +266,31 @@ def extract_header_items(header):
         If Labchart headers cannot be processed
         If files are not in acq or txt format
     """
+
     # check header is not empty and detect if it is in labchart or Acqknoledge format
     if len(header) == 0:
         raise NotImplementedError("Files without header are not supported yet")
-    elif "Interval=" in header[0]:
+    elif "Interval=" in header[0][0]:
         LGR.info("phys2bids detected that your file is in Labchart format")
 
         interval = None
         orig_names = None
         range_list = None
         for line in header:
-            if "Interval=" in line:
-                interval = line[1].split(" ")
-            if "ChannelTitle=" in line:
-                orig_names = line[1:]
-            if "Range=" in line:
-                range_list = line[1:]
+            ll = line[0]
+            if "Interval=" in ll:
+                interval = ll.split()[1:]
+            if "ChannelTitle=" in ll:
+                orig_names = ll.split()[1:]
+            if "Range=" in ll:
+                range_list = ll.split()[1:]
 
         if None in [interval, orig_names, range_list]:
             raise NotImplementedError(OPEN_ISSUE)
 
         orig_units = []
         for item in range_list:
-            orig_units.append(item.split(" ")[1])
+            orig_units.append(item.split()[0])
 
     elif "acq" in header[0][0]:
         LGR.info("phys2bids detected that your file is in AcqKnowledge format")
@@ -450,7 +457,7 @@ def load_mat(filename, chtrig=0):
         return BlueprintInput(timeseries, freq, names, units, chtrig)
 
 
-def load_gep(filename):
+def load_gep(filename, inifreq=None, pretime=30.0):
     """
     Populate object phys_input from GE physiological files.
 
@@ -491,11 +498,15 @@ def load_gep(filename):
 
     # Initiate lists of column names and units with time and trigger
     names = ["time", "trigger"]
-    units = ["s", "mV"]  # Assuming recording units are mV...
+    units = ["s", "mV", "au"]  # Assuming recording units are mV...
+
+    # start debugging here
+    # pdb.set_trace()
 
     # Add column for file given by user
     if "PPGData" in filename:
         freq = [100, 100, 100]
+    #    freq = [50, 50, 50]
         names.append("cardiac")
     elif "RESPData" in filename:
         freq = [25, 25, 25]
@@ -503,14 +514,19 @@ def load_gep(filename):
     elif "ECGData" in filename:
         freq = [1000, 1000, 1000]
         names.append("cardiac")
-
+        
+    # if frequency specified in call, use that instead
+    if inifreq :
+        freq = [inifreq, inifreq, inifreq]
+        
     # Load in user file data
     data = [np.loadtxt(filename)]
 
     # Calculate time in seconds for first input (starts from -30s)
     interval = 1 / freq[0]
     duration = data[0].shape[0] * interval
-    t_ch = np.ogrid[-30 : duration - 30 : interval]
+    #t_ch = np.ogrid[-30 : duration - 30 : interval]
+    t_ch = np.ogrid[0 : duration : interval]
 
     # Find and add additional data files
     filename = Path(filename)
@@ -519,20 +535,31 @@ def load_gep(filename):
     if not len(fnames) == 0:
         for fname in fnames:
             if "PPGData" in fname:
-                freq.append(100)
+                if inifreq :
+                   freq.append(inifreq)
+                else : 
+                   freq.append(100)
                 names.append("cardiac")
                 data.append(np.loadtxt(fname))
             elif "RESPData" in fname:
-                freq.append(25)
+                if inifreq :
+                   freq.append(inifreq)
+                else : 
+                   freq.append(25)
                 names.append("respiratory")
                 data.append(np.loadtxt(fname))
             elif "ECGData" in fname:
-                freq.append(1000)
+                if inifreq :
+                   freq.append(inifreq)
+                else : 
+                   freq.append(1000)
                 names.append("cardiac")
                 data.append(np.loadtxt(fname))
 
     # Create trigger channel
-    trigger = np.hstack((np.zeros(int(30 / interval)), np.ones(int((duration - 30) / interval))))
+    trigger = np.hstack((np.zeros(int(pretime / interval)), np.ones(int((duration - pretime) / interval))))
+    #trigger = np.hstack((np.zeros(int(30 / interval)), np.ones(int((duration - 30) / interval))))
+    #trigger = np.hstack( np.ones(int((duration) / interval)))
 
     # Create final list of timeseries
     timeseries = [t_ch, trigger]
