@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """phys2bids interfaces for loading extension files."""
 
-import pdb
 import logging
+import pdb
 import warnings
 from copy import deepcopy
 from itertools import groupby
@@ -215,7 +215,6 @@ def read_header_and_channels(filename):
                 header.append(line)
                 continue
 
-            
     # Read in the rest paying attention to possible differences
     if "Interval=" in str(header[0]):
         # Not specifying delimiters will ignore comments
@@ -506,7 +505,7 @@ def load_gep(filename, inifreq=None, pretime=30.0):
     # Add column for file given by user
     if "PPGData" in filename:
         freq = [100, 100, 100]
-    #    freq = [50, 50, 50]
+        #    freq = [50, 50, 50]
         names.append("cardiac")
     elif "RESPData" in filename:
         freq = [25, 25, 25]
@@ -514,19 +513,19 @@ def load_gep(filename, inifreq=None, pretime=30.0):
     elif "ECGData" in filename:
         freq = [1000, 1000, 1000]
         names.append("cardiac")
-        
+
     # if frequency specified in call, use that instead
-    if inifreq :
+    if inifreq:
         freq = [inifreq, inifreq, inifreq]
-        
+
     # Load in user file data
     data = [np.loadtxt(filename)]
 
     # Calculate time in seconds for first input (starts from -30s)
     interval = 1 / freq[0]
     duration = data[0].shape[0] * interval
-    #t_ch = np.ogrid[-30 : duration - 30 : interval]
-    t_ch = np.ogrid[0 : duration : interval]
+    # t_ch = np.ogrid[-30 : duration - 30 : interval]
+    t_ch = np.ogrid[0:duration:interval]
 
     # Find and add additional data files
     filename = Path(filename)
@@ -535,31 +534,33 @@ def load_gep(filename, inifreq=None, pretime=30.0):
     if not len(fnames) == 0:
         for fname in fnames:
             if "PPGData" in fname:
-                if inifreq :
-                   freq.append(inifreq)
-                else : 
-                   freq.append(100)
+                if inifreq:
+                    freq.append(inifreq)
+                else:
+                    freq.append(100)
                 names.append("cardiac")
                 data.append(np.loadtxt(fname))
             elif "RESPData" in fname:
-                if inifreq :
-                   freq.append(inifreq)
-                else : 
-                   freq.append(25)
+                if inifreq:
+                    freq.append(inifreq)
+                else:
+                    freq.append(25)
                 names.append("respiratory")
                 data.append(np.loadtxt(fname))
             elif "ECGData" in fname:
-                if inifreq :
-                   freq.append(inifreq)
-                else : 
-                   freq.append(1000)
+                if inifreq:
+                    freq.append(inifreq)
+                else:
+                    freq.append(1000)
                 names.append("cardiac")
                 data.append(np.loadtxt(fname))
 
     # Create trigger channel
-    trigger = np.hstack((np.zeros(int(pretime / interval)), np.ones(int((duration - pretime) / interval))))
-    #trigger = np.hstack((np.zeros(int(30 / interval)), np.ones(int((duration - 30) / interval))))
-    #trigger = np.hstack( np.ones(int((duration) / interval)))
+    trigger = np.hstack(
+        (np.zeros(int(pretime / interval)), np.ones(int((duration - pretime) / interval)))
+    )
+    # trigger = np.hstack((np.zeros(int(30 / interval)), np.ones(int((duration - 30) / interval))))
+    # trigger = np.hstack( np.ones(int((duration) / interval)))
 
     # Create final list of timeseries
     timeseries = [t_ch, trigger]

@@ -153,7 +153,7 @@ def _get_parser():
         "Time offset in seconds. Default for GE is 30 seconds. ",
         default=30.0,
     )
-    
+
     optional.add_argument(
         "-thr",
         "--threshold",

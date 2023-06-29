@@ -523,7 +523,7 @@ class BlueprintInput:
             # is "off".
             thr = np.mean(trigger)
             flag = 1
-        # drg - modified to >= rather than >    
+        # drg - modified to >= rather than >
         timepoints = trigger >= thr
         # drg - also removed threshold difference that looks at consecutive diffs
         # num_timepoints_found = np.count_nonzero(np.ediff1d(timepoints.astype(np.int8)) > 0)

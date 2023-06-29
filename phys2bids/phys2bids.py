@@ -148,7 +148,7 @@ def phys2bids(
     debug=False,
     quiet=False,
     freq=None,
-    pretime=None
+    pretime=None,
 ):
     """
     Run main workflow of phys2bids.
@@ -261,7 +261,7 @@ def phys2bids(
     elif ftype == "gep":
         from phys2bids.io import load_gep
 
-        phys_in = load_gep(infile, inifreq=freq, pretime=pretime )
+        phys_in = load_gep(infile, inifreq=freq, pretime=pretime)
 
     LGR.info("Checking that units of measure are BIDS compatible")
     for index, unit in enumerate(phys_in.units):
