@@ -313,7 +313,9 @@ def get_onsets_run(trig_MRI, sensitivity=20):
 
     # find position in onsets_MRI where the difference is in list_diff_keep
     keep = [d in list_diff_keep for d in difference]
+    run_offset_raw = onsets_MRI[:-1]
     run_offset_raw = [run_offset_raw[i] for i, flag in enumerate(keep) if flag]
+    run_onset_raw = onsets_MRI[1:]
     run_onset_raw = [run_onset_raw[i] for i, flag in enumerate(keep) if flag]
 
     run_offset_raw = np.append(run_offset_raw, onsets_MRI[-1])
