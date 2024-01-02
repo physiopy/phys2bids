@@ -54,11 +54,11 @@ Shortcuts:
 - [Developer calls calendar](https://calendar.google.com/calendar/u/0?cid=amoycDQ1MTdhMWdpaHNuNzlnOW1ucHJkMjRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 
 ## Tested OSs
-While all version until `2.6.2` were tested on Linux and Windows, starting from version `2.7` onward we had to **drop Windows testing**. The reason is related to the cost of running such tests: for each Windows test, we can run up to 8 tests on Linux instead. Partial Windows testing might be reintroduced in future releases.
+All versions until `2.6.2` were tested on Linux and Windows. However, starting from version `2.7` onwards we had to **drop Windows testing**. The reason for this is related to the cost of running such tests: for each Windows test, we can run up to 8 tests on Linux instead. Partial Windows testing might be reintroduced in future releases.
 
 Hence, while **we cannot ensure that phys2bids will run on Windows or MacOS/iOS**, we don't see any reason it shouldn't. Besides, it will run on Linux Subsystems.
 
-We apologise for the discomfort.
+We apologise for any discomfort.
 
 
 <!-- ## Hacktoberfest
