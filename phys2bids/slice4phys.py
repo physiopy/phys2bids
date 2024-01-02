@@ -5,6 +5,8 @@ from copy import deepcopy
 
 import numpy as np
 
+from .physio_obj import BlueprintInput
+
 LGR = logging.getLogger(__name__)
 
 
@@ -121,6 +123,118 @@ def find_takes(phys_in, ntp_list, tr_list, thr=None, padding=9):
     return take_timestamps
 
 
+def retrieve_triggers(trig_MRI):
+    """
+    Convert trigger onsets to a list of indices & retrieve length of data
+
+    Parameters
+    ---------
+    trig_MRI
+
+    Returns
+    --------
+    onsets_MRI
+    len_trig
+    """
+    len_trig = len(trig_MRI)
+    onsets_MRI = [
+        int(x) for x in np.where(trig_MRI > np.mean(trig_MRI))[0]
+    ]  # np.where(trig_8 != 0)[0]
+
+    return onsets_MRI, len_trig
+
+
+def get_onsets_run(onsets_MRI, sensitivity):
+    """
+    onsets_MRI: list
+        list of timepoints when MRI trigger is received
+    sensitivity: int
+        percentile of values to be considered as a 'regular' interval of two consecutive MRI triggers
+    """
+    # get trial
+    values_offsets = np.array(onsets_MRI[1:]) - np.array(onsets_MRI[0:-1])
+    values_offsets = np.unique(values_offsets)[1:]
+    check_val = np.percentile(values_offsets, sensitivity)
+
+    idx_offset = np.where([x > check_val for x in values_offsets])[0]
+    idx_onset = idx_offset + 1
+
+    idx_offset = np.append(idx_offset, len(onsets_MRI) - 1)
+    idx_onset = np.insert(idx_onset, 0, 0)  # get all on/ offsets
+
+    run_onset_raw = np.array([onsets_MRI[x] for x in idx_onset])
+    run_offset_raw = np.array([onsets_MRI[x] for x in idx_offset])
+
+    return run_onset_raw, run_offset_raw
+
+
+def clean_onsets_run_GUI(onsets_MRI, run_onset_raw, run_offset_raw, sampling_rate, padding):
+    """
+    Visual check of run onsets/ offsets
+    :param onsets_MRI: list
+        list of indices where the MRI triggers are received
+    :param run_onset_raw: numpy array
+        array of run onsets
+    :param run_offset_raw: numpy array
+        array of the run offsets
+    :param sampling_rate: int
+        sampling frequency of MRI trigger
+    :return: onsets_start: numpy array
+        array of run onsets
+    :return: onsets_end: numpy array
+        array of run offsets
+    """
+    try:
+        import peakdet
+    except ImportError:
+        raise ImportError(
+            "peakdet is required for creating the data per run." "Please see install instructions."
+        )
+
+    conditions = np.zeros(max(onsets_MRI) + round(padding * sampling_rate))
+    conditions[onsets_MRI] = 1  # times when MRI triggers are received
+
+    conditions[run_onset_raw] = 1.5
+    conditions[run_offset_raw] = -0.5
+
+    data = peakdet.Physio(conditions, fs=sampling_rate)
+
+    data._metadata["peaks"] = run_onset_raw
+    data._metadata["troughs"] = run_offset_raw
+    data = peakdet.operations.edit_run(data)
+    onsets_start = data.peaks
+    onsets_end = data.troughs
+
+    # data._metadata['peaks'] = np.sort(np.concatenate((run_onset_raw, run_offset_raw)))
+    # data._metadata['troughs'] = np.array([1])
+    # onsets_start = data.peaks[::2]  # odd numbered elements
+    # onsets_end = data.peaks[1::2]  # even numbered elements
+
+    return onsets_start, onsets_end
+
+
+def split_signal_to_runs(phys_in, sensitivity, manual_check, padding=9):
+    trig_MRI = phys_in.timeseries[phys_in.trigger_idx]
+    sampling_rate = phys_in.freq[phys_in.trigger_idx]
+
+    # get index of MRI triggers and length of data
+    onsets_MRI, len_trig = retrieve_triggers(trig_MRI)
+
+    # calculate run onsets & offsets
+    run_onset_raw, run_offset_raw = get_onsets_run(onsets_MRI, sensitivity)
+
+    # manual check of run onsets & offsets
+    if manual_check:
+        onsets_start, onsets_end = clean_onsets_run_GUI(
+            onsets_MRI, run_onset_raw, run_offset_raw, sampling_rate, padding
+        )
+    else:
+        onsets_start = run_onset_raw
+        onsets_end = run_offset_raw
+
+    return onsets_start, onsets_end
+
+
 def slice4phys(phys_in, ntp_list, tr_list, thr, padding=9):
     """
     Slice takes for phys2bids.
@@ -168,3 +282,147 @@ def slice4phys(phys_in, ntp_list, tr_list, thr, padding=9):
         )
 
     return phys_in_slices
+
+
+def get_onsets_run(trig_MRI, sensitivity=20):
+    """
+    :param: trig_MRI: numpy array
+        MRI trigger time course
+    :param: sensitivity: int
+        percentile of values to be considered as a 'regular' interval of two consecutive MRI triggers
+    :return: onsets_MRI: list
+        time points corresponding to when the MRI trigger was received
+    :return: run_onset_raw: numpy array
+        array of run onsets before visual inspection
+    :return: run_offset_raw: numpy array
+        array of run offsets before visual inspection
+    """
+
+    # convert list to np.array
+    onsets_MRI = np.array([int(x) for x in np.where(trig_MRI > np.mean(trig_MRI))[0]])
+
+    # difference of timepoint n and timepoint (n-1)
+    difference = np.array(onsets_MRI[1:]) - np.array(onsets_MRI[0:-1])
+    diff_unique = np.unique(difference)[1:]
+
+    # get threshold of values in which the gap between two time points signify a new run
+    check_val = np.percentile(diff_unique, sensitivity)
+
+    # list of gap between two time points to be kept to separate runs
+    list_diff_keep = diff_unique[[x > check_val for x in diff_unique]]
+
+    # find position in onsets_MRI where the difference is in list_diff_keep
+    keep = [d in list_diff_keep for d in difference]
+    run_offset_raw = onsets_MRI[:-1]
+    run_offset_raw = [run_offset_raw[i] for i, flag in enumerate(keep) if flag]
+    run_onset_raw = onsets_MRI[1:]
+    run_onset_raw = [run_onset_raw[i] for i, flag in enumerate(keep) if flag]
+
+    run_offset_raw = np.append(run_offset_raw, onsets_MRI[-1])
+    run_onset_raw = np.insert(run_onset_raw, 0, onsets_MRI[0])
+
+    return onsets_MRI, run_onset_raw, run_offset_raw
+
+
+def clean_onsets_run_GUI(onsets_MRI, run_onset_raw, run_offset_raw, sampling_rate, padding):
+    """
+    Visual check of run onsets/ offsets
+
+    :param onsets_MRI: list
+        list of indices where the MRI triggers are received
+    :param run_onset_raw: numpy array
+        array of run onsets
+    :param run_offset_raw: numpy array
+        array of the run offsets
+    :param sampling_rate: int
+        sampling frequency of MRI trigger
+    :param padding: int
+        number of seconds to pad the signal with
+    :return: onsets_start: numpy array
+        array of run onsets
+    :return: onsets_end: numpy array
+        array of run offsets
+    """
+    try:
+        import peakdet
+    except ImportError:
+        raise ImportError(
+            "peakdet is required for creating the data per run." "Please see install instructions."
+        )
+
+    conditions = np.zeros(max(onsets_MRI) + round(1000 * sampling_rate))
+    conditions[onsets_MRI] = 1  # times when MRI triggers are received
+
+    conditions[run_onset_raw] = 1.5
+    conditions[run_offset_raw] = -0.5
+
+    data = peakdet.Physio(conditions, fs=sampling_rate)
+
+    data._metadata["peaks"] = run_onset_raw
+    data._metadata["troughs"] = run_offset_raw
+    data = peakdet.operations.edit_physio(data)
+
+    # return start and end times at (padding) seconds before and after the real on and offsets
+    onsets_start = data.peaks - padding * sampling_rate
+    onsets_end = data.troughs + padding * sampling_rate
+
+    return onsets_start, onsets_end
+
+
+def slice_runs(phys_in, onsets, offsets):
+    """
+    Slice runs according on list of onsets and offsets
+
+    :param phys_in: BlueprintInput
+        Object returned by BlueprintInput class
+    :param onsets: numpy array
+        array of run onsets
+    :param offsets: numpy array
+        array of run offsets
+    :return run_data: dict
+        dictionary containing (number of runs) keys and BlueprintInput as values
+    """
+    run_data = {}
+
+    for i in range(len(offsets)):
+        signals = [phys_signal[onsets[i] : offsets[i]] for phys_signal in phys_in.timeseries]
+        signals_run = BlueprintInput(
+            signals, phys_in.freq, phys_in.ch_name, phys_in.units, phys_in.trigger_idx
+        )
+
+        run_data[i] = signals_run
+
+    return run_data
+
+
+def split_signal_to_runs(phys_in, manual_check=True, sensitivity=20, padding=9):
+    """ "
+    :param phys_in: BlueprintInput
+        Object returned by BlueprintInput class
+    :param manual_check: bool
+        whether there should be a manual check of the automated on/offsets detection
+    :param sensitivity: int
+        percentile of values to be considered as a 'regular' interval of two consecutive MRI triggers
+    :param padding: int
+        number of seconds to pad before and after each run
+    :return run_data: dict
+        dictionary containing (number of runs) keys and BlueprintInput as values
+    """
+    trig_MRI = phys_in.timeseries[phys_in.trigger_idx]
+    sampling_rate = phys_in.freq[phys_in.trigger_idx]
+
+    # calculate run onsets & offsets
+    onsets_MRI, run_onset_raw, run_offset_raw = get_onsets_run(trig_MRI, sensitivity)
+
+    # manual check of run onsets & offsets
+    if manual_check:
+        onsets_start, onsets_end = clean_onsets_run_GUI(
+            onsets_MRI, run_onset_raw, run_offset_raw, sampling_rate, padding
+        )
+    else:
+        onsets_start = run_onset_raw
+        onsets_end = run_offset_raw
+
+    run_signal = slice_runs(phys_in, onsets_start, onsets_end)
+
+    return run_signal, onsets_start, onsets_end
