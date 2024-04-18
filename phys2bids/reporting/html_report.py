@@ -168,8 +168,7 @@ def _generate_bokeh_plots(phys_in, figsize=(250, 500)):
         q = figure(plot_height=figsize[0], plot_width=figsize[1],
                    tools=tools,
                    title=f' Channel {i}: {phys_in.ch_name[i]}',
-                   sizing_mode='stretch_both',
-                   x_range=(0, 100))
+                   sizing_mode='stretch_both')
         q.line('x', 'y', color=colors[i - 1], alpha=0.9, source=source)
         q.xaxis.axis_label = 'Time (s)'
         # hovertool commented for posterity because I (KB) will be triumphant
