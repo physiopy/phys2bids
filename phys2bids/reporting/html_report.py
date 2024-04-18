@@ -4,9 +4,10 @@ from distutils.dir_util import copy_tree
 from os.path import join
 from pathlib import Path
 from string import Template
-from bokeh.plotting import figure, ColumnDataSource
+
 from bokeh.embed import components
 from bokeh.layouts import gridplot
+from bokeh.plotting import ColumnDataSource, figure
 
 from phys2bids import _version
 
@@ -33,14 +34,17 @@ def _save_as_html(log_html_path, log_content, qc_html_path):
     Saves the html file
     """
     resource_path = Path(__file__).resolve().parent
-    head_template_name = 'report_log_template.html'
+    head_template_name = "report_log_template.html"
     head_template_path = resource_path.joinpath(head_template_name)
-    with open(str(head_template_path), 'r') as head_file:
+    with open(str(head_template_path), "r") as head_file:
         head_tpl = Template(head_file.read())
 
-    html = head_tpl.substitute(version=_version.get_versions()['version'],
-                               log_html_path=log_html_path, log_content=log_content,
-                               qc_html_path=qc_html_path)
+    html = head_tpl.substitute(
+        version=_version.get_versions()["version"],
+        log_html_path=log_html_path,
+        log_content=log_content,
+        qc_html_path=qc_html_path,
+    )
     return html
 
 
@@ -67,16 +71,18 @@ def _update_fpage_template(tree_string, bokeh_id, bokeh_js, log_html_path, qc_ht
     """
     resource_path = Path(__file__).resolve().parent
 
-    body_template_name = 'report_plots_template.html'
+    body_template_name = "report_plots_template.html"
     body_template_path = resource_path.joinpath(body_template_name)
-    with open(str(body_template_path), 'r') as body_file:
+    with open(str(body_template_path), "r") as body_file:
         body_tpl = Template(body_file.read())
-    body = body_tpl.substitute(tree=tree_string,
-                               content=bokeh_id,
-                               javascript=bokeh_js,
-                               version=_version.get_versions()['version'],
-                               log_html_path=log_html_path,
-                               qc_html_path=qc_html_path)
+    body = body_tpl.substitute(
+        tree=tree_string,
+        content=bokeh_id,
+        javascript=bokeh_js,
+        version=_version.get_versions()["version"],
+        log_html_path=log_html_path,
+        qc_html_path=qc_html_path,
+    )
     return body
 
 
@@ -94,13 +100,13 @@ def _generate_file_tree(out_dir):
     tree_string: String with the tree of files in directory
     """
     # prefix components:
-    space = '&emsp;'
-    branch = '│   '
+    space = "&emsp;"
+    branch = "│   "
     # pointers:
-    tee = '├── '
-    last = '└── '
+    tee = "├── "
+    last = "└── "
 
-    def tree(dir_path: Path, prefix: str = ''):
+    def tree(dir_path: Path, prefix: str = ""):
         """Generate tree structure.
 
         Given a directory Path object
@@ -119,9 +125,9 @@ def _generate_file_tree(out_dir):
                 # i.e. space because last, └── , above so no more |
                 yield from tree(path, prefix=prefix + extension)
 
-    tree_string = ''
+    tree_string = ""
     for line in tree(Path(out_dir)):
-        tree_string += line + '<br>'
+        tree_string += line + "<br>"
     return tree_string
 
 
@@ -145,7 +151,7 @@ def _generate_bokeh_plots(phys_in, figsize=(250, 500)):
     --------
     https://phys2bids.readthedocs.io/en/latest/howto.html
     """
-    colors = ['#ff7a3c', '#008eba', '#ff96d3', '#3c376b', '#ffd439']
+    colors = ["#ff7a3c", "#008eba", "#ff96d3", "#3c376b", "#ffd439"]
 
     time = phys_in.timeseries.T[0]  # assumes first phys_in.timeseries is time
     ch_num = len(phys_in.ch_name)
@@ -158,19 +164,20 @@ def _generate_bokeh_plots(phys_in, figsize=(250, 500)):
         # build a data source for each plot, with only the data + index (time)
         # for the purpose of reporting, data is downsampled 10x
         # doesn't make much of a difference to the naked eye, fine for reports
-        source = ColumnDataSource(data=dict(
-            x=time[::downsample],
-            y=timeser[::downsample]))
+        source = ColumnDataSource(data=dict(x=time[::downsample], y=timeser[::downsample]))
 
         i = row + 1
 
-        tools = ['wheel_zoom,pan,reset']
-        q = figure(plot_height=figsize[0], plot_width=figsize[1],
-                   tools=tools,
-                   title=f' Channel {i}: {phys_in.ch_name[i]}',
-                   sizing_mode='stretch_both')
-        q.line('x', 'y', color=colors[i - 1], alpha=0.9, source=source)
-        q.xaxis.axis_label = 'Time (s)'
+        tools = ["wheel_zoom,pan,reset"]
+        q = figure(
+            plot_height=figsize[0],
+            plot_width=figsize[1],
+            tools=tools,
+            title=f" Channel {i}: {phys_in.ch_name[i]}",
+            sizing_mode="stretch_both",
+        )
+        q.line("x", "y", color=colors[i - 1], alpha=0.9, source=source)
+        q.xaxis.axis_label = "Time (s)"
         # hovertool commented for posterity because I (KB) will be triumphant
         # eventually
         # q.add_tools(HoverTool(tooltips=[
@@ -178,9 +185,9 @@ def _generate_bokeh_plots(phys_in, figsize=(250, 500)):
         #    ('HELP', '100 :D')
         # ], mode='vline'))
         plot_list.append([q])
-    p = gridplot(plot_list, toolbar_location='right',
-                 plot_height=250, plot_width=750,
-                 merge_tools=True)
+    p = gridplot(
+        plot_list, toolbar_location="right", plot_height=250, plot_width=750, merge_tools=True
+    )
     script, div = components(p)
     return script, div
 
@@ -207,27 +214,27 @@ def generate_report(out_dir, log_path, phys_in):
     https://phys2bids.readthedocs.io/en/latest/howto.html
     """
     # Copy assets into output folder
-    pkgdir = sys.modules['phys2bids'].__path__[0]
-    assets_path = join(pkgdir, 'reporting', 'assets')
-    copy_tree(assets_path, join(out_dir, 'assets'))
+    pkgdir = sys.modules["phys2bids"].__path__[0]
+    assets_path = join(pkgdir, "reporting", "assets")
+    copy_tree(assets_path, join(out_dir, "assets"))
 
     # Read log
-    with open(log_path, 'r') as f:
+    with open(log_path, "r") as f:
         log_content = f.read()
 
-    log_content = log_content.replace('\n', '<br>')
-    log_html_path = join(out_dir, 'phys2bids_report_log.html')
-    qc_html_path = join(out_dir, 'phys2bids_report.html')
+    log_content = log_content.replace("\n", "<br>")
+    log_html_path = join(out_dir, "phys2bids_report_log.html")
+    qc_html_path = join(out_dir, "phys2bids_report.html")
 
     html = _save_as_html(log_html_path, log_content, qc_html_path)
 
-    with open(log_html_path, 'wb') as f:
-        f.write(html.encode('utf-8'))
+    with open(log_html_path, "wb") as f:
+        f.write(html.encode("utf-8"))
 
     # Read in output directory structure & create tree
     tree_string = _generate_file_tree(out_dir)
     bokeh_js, bokeh_div = _generate_bokeh_plots(phys_in, figsize=(250, 750))
     html = _update_fpage_template(tree_string, bokeh_div, bokeh_js, log_html_path, qc_html_path)
 
-    with open(qc_html_path, 'wb') as f:
-        f.write(html.encode('utf-8'))
+    with open(qc_html_path, "wb") as f:
+        f.write(html.encode("utf-8"))

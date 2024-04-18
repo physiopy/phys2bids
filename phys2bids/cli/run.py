@@ -190,7 +190,8 @@ def _get_parser():
         default=False,
     )
     optional.add_argument(
-        "-report", "--report",
+        "-report",
+        "--report",
         dest="make_report",
         action="store_true",
         help="Generate a report with the data and generated folder structure. "
@@ -198,7 +199,7 @@ def _get_parser():
         default=False,
     )
     optional.add_argument("-v", "--version", action="version", version=("%(prog)s " + __version__))
-   
+
     parser._action_groups.append(optional)
 
     return parser
