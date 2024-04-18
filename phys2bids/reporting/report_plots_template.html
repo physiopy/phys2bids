@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>phys2bids report</title>
+        <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.3.min.js"
+        crossorigin="anonymous"></script>
+        <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.3.min.js"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.4.3.min.js"
+                crossorigin="anonymous"></script>
+        <link rel="icon" type="image/png" href="./assets/apple-icon-180x180.png"/>
+        <link rel="stylesheet" href="./assets/main.css">
+        <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+        <div class="header">
+            <div class="header_logo">
+                <a href="https://phys2bids.readthedocs.io/en/latest/" target="_blank">
+                    <img src="./assets/phys2bids_negativeReadTheDocs_500x150.png">
+                </a>
+            </div>
+            <div class="header_links">
+                <a href="https://pypi.org/project/phys2bids/" target="_blank">phys2bids $version</a>
+            </div>
+            <div class="header_links">
+                <a href="$qc_html_path">Quality Check</a>
+            </div>
+            <div class="header_links">
+                <a href="$log_html_path">Log</a>
+            </div>
+            <div class="header_links">
+                <a href="https://github.com/physiopy/phys2bids" target="_blank">GitHub</a>
+            </div>
+        </div>
+        <div class="content">
+            <div class="bokeh_plots">
+                <h2>Channel Plots</h2>
+                <p>Hold on... It might take a few seconds to load the plots depending on how big your data is.</p>
+                $content
+            </div>
+            <div class="tree">
+                <h2>phys2BIDS Output Directory</h2>
+                <p class="tree_text">$tree</p>
+            </div>
+        </div>
+    </body>
+</html>
+
+$javascript
