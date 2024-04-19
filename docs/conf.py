@@ -21,7 +21,7 @@ author = "the {} developers".format(project)
 copyright = "2019-{}, {}".format(datetime.now().year, author)
 
 # Import project to get version info
-sys.path.insert(0, os.path.abspath("../"))
+sys.path.insert(0, os.path.abspath(os.path.pardir))
 import phys2bids  # noqa
 
 # The short X.Y version
