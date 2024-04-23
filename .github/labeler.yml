@@ -1,0 +1,16 @@
+Documentation:
+  - changed-files:
+      - any-glob-to-any-file: ['docs/*', '.readthedocs.yml', 'README.md']
+# removed from nigsp copy as didn't find match with phys2bids: 'logos/*'
+
+
+Internal:
+  - changed-files:
+      - any-glob-to-any-file: ['.*', 'codecov.yml', 'setup.cfg', 'setup.py', 'versioneer.py', '.github/*', 'phys2bids/_version.py']
+# removed from nigsp copy as didn't find match with phys2bids: '.circleci/*'
+
+
+ Testing:
+ - changed-files:
+    any-glob-to-any-file: ['phys2bids/tests/*']
+# removed from nigsp copy as didn't find match with phys2bids: '.circleci/*'
