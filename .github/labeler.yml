@@ -1,8 +1,6 @@
 Documentation:
   - changed-files:
-      - any-glob-to-any-file: ['docs/*', '.readthedocs.yml', 'README.md']
-# removed from nigsp copy as didn't find match with phys2bids: 'logos/*'
-
+      - any-glob-to-any-file: ['docs/*', '.readthedocs.yml', 'README.md', 'LICENSE', 'MANIFEST.in']
 
 Internal:
   - changed-files:
