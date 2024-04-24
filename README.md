@@ -27,7 +27,7 @@ phys2bids
 [![All Contributors](https://img.shields.io/badge/all_contributors-26-orange.svg?style=flat)](#contributors)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-``phys2bids`` is a python3 library meant to format physiological files in BIDS.
+``phys2bids`` is a python3 library meant to format physiological files in BIDS!
 At the moment, it supports:
 - ``.acq``, ``.txt``, and ``.mat`` AcqKnowledge format (BIOPAC)
 - ``.txt`` and ``.mat`` LabChart format (ADInstruments)
