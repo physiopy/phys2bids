@@ -1,0 +1,11 @@
+Documentation:
+  - changed-files:
+      - any-glob-to-any-file: ['docs/*', '.readthedocs.yml', 'README.md', 'LICENSE', 'MANIFEST.in']
+
+Internal:
+  - changed-files:
+      - any-glob-to-any-file: ['.*', 'codecov.yml', 'setup.cfg', 'setup.py', 'versioneer.py', '.github/*', '.circleci/*', 'phys2bids/_version.py', 'requirements.txt', 'pyproject.toml']
+
+Testing:
+  - changed-files:
+      - any-glob-to-any-file: ['phys2bids/tests/*', '.circleci/*']
