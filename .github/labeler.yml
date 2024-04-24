@@ -4,9 +4,7 @@ Documentation:
 
 Internal:
   - changed-files:
-      - any-glob-to-any-file: ['.*', 'codecov.yml', 'setup.cfg', 'setup.py', 'versioneer.py', '.github/*', 'phys2bids/_version.py']
-# removed from nigsp copy as didn't find match with phys2bids: '.circleci/*'
-
+      - any-glob-to-any-file: ['.*', 'codecov.yml', 'setup.cfg', 'setup.py', 'versioneer.py', '.github/*', '.circleci/*', 'phys2bids/_version.py', 'requirements.txt', 'pyproject.toml']
 
  Testing:
  - changed-files:
