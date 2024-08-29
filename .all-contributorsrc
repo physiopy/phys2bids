@@ -243,7 +243,8 @@
         "data",
         "doc",
         "userTesting",
-        "review"
+        "review",
+        "tool"
       ]
     },
     {
@@ -311,5 +312,6 @@
         "doc"
       ]
     }
-  ]
+  ],
+  "commitType": "docs"
 }
