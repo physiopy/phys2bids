@@ -1,4 +1,5 @@
 """BIDS functions for phys2bids package."""
+
 import logging
 import os
 from csv import reader
