@@ -1,4 +1,5 @@
 """Visualization functions for phys2bids package."""
+
 import logging
 import os
 
