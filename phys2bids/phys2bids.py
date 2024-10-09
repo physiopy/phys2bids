@@ -38,6 +38,7 @@ import numpy as np
 from phys2bids import _version, bids, utils, viz
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
+from phys2bids.reporting.html_report import generate_report
 from phys2bids.slice4phys import slice4phys
 
 from . import __version__
@@ -145,6 +146,7 @@ def phys2bids(
     pad=9,
     ch_name=[],
     yml="",
+    make_report=False,
     debug=False,
     quiet=False,
 ):
@@ -537,6 +539,10 @@ def phys2bids(
                     conversion_path, os.path.splitext(os.path.basename(phys_out[key].filename))[0]
                 ),
             )
+
+        # Only generate report if specified by the user
+        if make_report:
+            generate_report(conversion_path, logname, phys_out[key])
 
 
 def _main(argv=None):
