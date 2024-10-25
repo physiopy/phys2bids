@@ -1,4 +1,5 @@
 """Reporting functionality for phys2bids."""
+
 import sys
 from distutils.dir_util import copy_tree
 from os.path import join
