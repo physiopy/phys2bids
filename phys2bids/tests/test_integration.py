@@ -128,7 +128,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     assert isfile(join(conversion_path, "call.sh"))
 
     # Read logger file
-    logger_file = glob.glob(join(conversion_path, "*phys2bids*"))[0]
+    logger_file = glob.glob(join(conversion_path, "*phys2bids*.tsv"))[0]
     with open(logger_file) as logger_info:
         logger_info = logger_info.readlines()
 
