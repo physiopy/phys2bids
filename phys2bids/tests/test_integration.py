@@ -119,7 +119,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
         f"phys2bids -in {test_full_path} ",
         f"-chtrig {test_chtrig} -outdir {test_outdir} ",
         f"-tr {test_tr} -ntp {test_ntp} -thr {test_thr} ",
-        f"-sub 006 -ses 01 -heur {test_heur}",
+        f"-sub 006 -ses 01 -heur {test_heur} -report",
     )
     command_str = "".join(command_str)
     subprocess.run(command_str, shell=True, check=True)
@@ -128,7 +128,7 @@ def test_integration_heuristic(skip_integration, multifreq_lab_file):
     assert isfile(join(conversion_path, "call.sh"))
 
     # Read logger file
-    logger_file = glob.glob(join(conversion_path, "*phys2bids*"))[0]
+    logger_file = glob.glob(join(conversion_path, "*phys2bids*.tsv"))[0]
     with open(logger_file) as logger_info:
         logger_info = logger_info.readlines()
 
