@@ -544,6 +544,7 @@ def phys2bids(
         if make_report:
             generate_report(outdir, conversion_path, logname, phys_out[key])
 
+
 def _main(argv=None):
     options = _get_parser().parse_args(argv)
     phys2bids(**vars(options))
