@@ -465,7 +465,7 @@ class BlueprintInput:
         del self.units[idx]
 
         if self.trigger_idx == idx:
-            LGR.warning("Removing trigger channel - are you sure you are doing" "the right thing?")
+            LGR.warning("Removing trigger channel - are you sure you are doing the right thing?")
             self.trigger_idx = 0
 
     def check_trigger_amount(self, thr=None, num_timepoints_expected=0, tr=0):
@@ -527,7 +527,7 @@ class BlueprintInput:
         num_timepoints_found = np.count_nonzero(np.ediff1d(timepoints.astype(np.int8)) > 0)
         if flag == 1:
             LGR.info(
-                f"The number of timepoints according to the std_thr method "
+                f"The number of timepoints according to the average threshold method "
                 f"is {num_timepoints_found}. The computed threshold is {thr:.4f}"
             )
         else:
@@ -550,7 +550,8 @@ class BlueprintInput:
 
             elif num_timepoints_found < num_timepoints_expected:
                 timepoints_missing = num_timepoints_expected - num_timepoints_found
-                LGR.warning(f"Found {timepoints_missing} timepoints" " less than expected!")
+                LGR.warning(f"Found {timepoints_missing} timepoints less than expected!")
+                # if tr checks for any truthy value, including not 0 nor empty things.
                 if tr:
                     LGR.warning(
                         "Correcting time offset, assuming missing "
@@ -559,14 +560,14 @@ class BlueprintInput:
                     )
                     time_offset -= timepoints_missing * tr
                 else:
-                    LGR.warning("Can't correct time offset - you should " "specify the TR")
+                    LGR.warning("Can't correct time offset - you should specify the TR")
 
             else:
                 LGR.info("Found just the right amount of timepoints!")
 
         else:
             LGR.warning(
-                "The necessary options to find the amount of timepoints " "were not provided."
+                "The necessary options to find the amount of timepoints were not provided."
             )
         self.thr = thr
         self.time_offset = time_offset
