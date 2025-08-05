@@ -8,6 +8,97 @@ import numpy as np
 LGR = logging.getLogger(__name__)
 
 
+def estimate_ntp_and_tr(phys_in, thr=None, ci=1):
+    """
+    Find groups of trigger in a spiky signal like the trigger channel signal.
+    """
+    LGR.info('Running automatic clustering of triggers to find timepoints and tr of each "take"')
+    trigger = phys_in.timeseries[phys_in.trigger_idx]
+
+    thr = np.mean(trigger) if thr is None else thr
+    timepoints = trigger > thr
+    spikes = np.flatnonzero(np.ediff1d(timepoints.astype(np.int8)) > 0)
+    interspike_interval = np.diff(spikes)
+    unique_isi, counts = np.unique(interspike_interval, return_counts=True)
+
+    # The following line is for python < 3.12. From 3.12, ci.is_integer() is enough.
+    if isinstance(ci, int) or isinstance(ci, float) and ci.is_integer():
+        upper_ci_isi = unique_isi + ci
+    elif isinstance(ci, float) and ci < 1:
+        upper_ci_isi = unique_isi * (1 + ci)
+    elif isinstance(ci, float) and ci > 1:
+        raise ValueError("Confidence intervals above 1 are not supported.")
+    else:
+        raise ValueError("Confidence intervals must be either integers or floats.")
+
+    # Loop through the uniques ISI and group them within the specified CI.
+    # Also compute the average TR of the group.
+    isi_groups = {}
+    average_tr = {}
+    k = 0
+    current_group = [unique_isi[0]]
+
+    for n, i in enumerate(range(1, len(unique_isi))):
+        if unique_isi[i] <= upper_ci_isi[n]:
+            current_group.append(unique_isi[i])
+        else:
+            isi_groups[k] = current_group
+            average_tr[k] = np.mean(current_group) / phys_in.freq[0]
+            k += 1
+            current_group = [unique_isi[i]]
+
+    isi_groups[k] = current_group
+    average_tr[k] = np.mean(current_group) / phys_in.freq[0]
+
+    # Invert the isi_group into value per group
+    group_by_isi = {isi: group for group, isis in isi_groups.items() for isi in isis}
+
+    # Use the found groups to find the number of timepoints and assign the right TR
+    estimated_ntp = []
+    estimated_tr = []
+
+    i = 0
+    while i < interspike_interval.size - 1:
+        current_group = group_by_isi.get(interspike_interval[i])
+        for n in range(i + 1, interspike_interval.size):
+            if current_group != group_by_isi.get(interspike_interval[n]):
+                break
+        # Repeat one last time outside of for loop
+        estimated_ntp += [n - i]
+        estimated_tr += [average_tr[current_group]]
+        i = n
+
+    if len(estimated_ntp) < 1:
+        raise Exception("This should not happen. Something went very wrong.")
+    # The algorithm found n groups, the last of which has two timepoints less due to
+    # diff computations. Each real group of n>1 triggers counts one trigger less but is
+    # followed by a "fake" group of 1 trigger that is actually the interval to the next
+    # group. That does not hold if there is a real group of 1 trigger.
+    # Loop through the estiamtions to fix all that.
+    ntp = []
+    tr = []
+    i = 0
+
+    while i < len(estimated_ntp):
+        if estimated_ntp[i] == 1:
+            ntp.append(estimated_ntp[i])
+            tr.append(estimated_tr[i])
+            i += 1
+        elif i + 1 < len(estimated_ntp):
+            ntp.append(estimated_ntp[i] + estimated_ntp[i + 1])
+            tr.append(estimated_tr[i])
+            i += 2
+        else:
+            ntp.append(estimated_ntp[i] + 2)
+            tr.append(estimated_tr[i])
+            i += 1
+
+    LGR.info(
+        f"The automatic clustering found {len(ntp)} groups of triggers long: {ntp} with respective TR: {tr}"
+    )
+    return ntp, tr
+
+
 def find_takes(phys_in, ntp_list, tr_list, thr=None, padding=9):
     """
     Find takes slicing index.

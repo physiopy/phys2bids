@@ -134,6 +134,31 @@ def _get_parser():
         default=None,
     )
     optional.add_argument(
+        "-esttakes",
+        "--estimate_takes",
+        dest="estimate_takes",
+        action="store_true",
+        help="Run automatic algorithm to estimate clusters of triggers, i.e. the "
+        "'takes' or 'runs' of fMRI. Useful when sequences were stopped and restarted, "
+        "or when you don't know how many triggers or trs you have in each take. "
+        "This might work 95% of the time. Default is False.",
+        default=False,
+    )
+    optional.add_argument(
+        "-ci",
+        "--confidence-interval",
+        dest="ci",
+        # Here always as float, later it will check if the float is an integer instead.
+        type=float,
+        help="The Confidence Interval (CI) to use in the estimation of the trigger clusters. "
+        "The cluster algorithm considers triggers with duration (in samples) within this "
+        "CI as part of the same group. If CI is an integer, it will consider that amount "
+        "of triggers. If CI is a float and < 1, it will consider that percentage of the "
+        "trigger duration. CI cannot be a float > 1. Default is 1. Change to .25 if "
+        "there is a CMRR DWI sequence or if you are recording sub-triggers.",
+        default=1,
+    )
+    optional.add_argument(
         "-thr",
         "--threshold",
         dest="thr",
