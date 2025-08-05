@@ -11,6 +11,35 @@ LGR = logging.getLogger(__name__)
 def estimate_ntp_and_tr(phys_in, thr=None, ci=1):
     """
     Find groups of trigger in a spiky signal like the trigger channel signal.
+
+    Parameters
+    ----------
+    phys_in : BlueprintInput object
+        A BlueprintInput object containing a physiological acquisition
+    thr : None, optional
+        The threshold for automatic spike detection. Default is to use the average of
+        the signal.
+    ci : int or float, optional
+        Confidence Interval (CI) to use in the estimation of the trigger clusters. The
+        cluster algorithm considers triggers with duration (in samples) within this CI
+        as part of the same group, thus the same. If CI is an integer, it will consider
+        that amount of triggers. If CI is a float and < 1, it will consider that
+        percentage of the trigger duration. CI cannot be a float > 1. Default is 1.
+        Change to .25 if there is a CMRR DWI sequence or when recording sub-triggers.
+
+    Returns
+    -------
+    ntp
+        The list of number of timepoints found for each take.
+    tr
+        The list of corresponding TR, computed as average samples per group / frequency.
+
+    Raises
+    ------
+    Exception
+        If it doesn't find at least a group.
+    ValueError
+        If CI is a float above 1 or if it is not an int or a float.
     """
     LGR.info('Running automatic clustering of triggers to find timepoints and tr of each "take"')
     trigger = phys_in.timeseries[phys_in.trigger_idx]
@@ -27,7 +56,7 @@ def estimate_ntp_and_tr(phys_in, thr=None, ci=1):
     elif isinstance(ci, float) and ci < 1:
         upper_ci_isi = unique_isi * (1 + ci)
     elif isinstance(ci, float) and ci > 1:
-        raise ValueError("Confidence intervals above 1 are not supported.")
+        raise ValueError("Confidence intervals percentages above 1 are not supported.")
     else:
         raise ValueError("Confidence intervals must be either integers or floats.")
 
