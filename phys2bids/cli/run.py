@@ -141,7 +141,7 @@ def _get_parser():
         help="Run automatic algorithm to estimate clusters of triggers, i.e. the "
         "'takes' or 'runs' of fMRI. Useful when sequences were stopped and restarted, "
         "or when you don't know how many triggers or trs you have in each take. "
-        "This might work 95% of the time. Default is False.",
+        "This might work 95%% of the time. Default is False.",
         default=False,
     )
     optional.add_argument(
