@@ -23,7 +23,7 @@ def estimate_ntp_and_tr(phys_in, thr=None, ci=1):
         Confidence Interval (CI) to use in the estimation of the trigger clusters. The
         cluster algorithm considers triggers with duration (in samples) within this CI
         as part of the same group, thus the same. If CI is an integer, it will consider
-        that amount of triggers. If CI is a float and < 1, it will consider that
+        that amount of samples. If CI is a float and < 1, it will consider that
         percentage of the trigger duration. CI cannot be a float > 1. Default is 1.
         Change to .25 if there is a CMRR DWI sequence or when recording sub-triggers.
 
@@ -67,6 +67,7 @@ def estimate_ntp_and_tr(phys_in, thr=None, ci=1):
     k = 0
     current_group = [unique_isi[0]]
 
+    # np.unique returns sorted elements → unique_isi[0] == min(unique_isi), so THIS WORKS.
     for n, i in enumerate(range(1, len(unique_isi))):
         if unique_isi[i] <= upper_ci_isi[n]:
             current_group.append(unique_isi[i])

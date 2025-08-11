@@ -153,9 +153,10 @@ def _get_parser():
         help="The Confidence Interval (CI) to use in the estimation of the trigger clusters. "
         "The cluster algorithm considers triggers with duration (in samples) within this "
         "CI as part of the same group, thus the same. If CI is an integer, it will consider "
-        "that amount of triggers. If CI is a float and < 1, it will consider that "
-        "percentage of the trigger duration. CI cannot be a float > 1. Default is 1. "
-        "Change to .25 if there is a CMRR DWI sequence or when recording sub-triggers.",
+        "that amount of samples around the distance. If CI is a float and < 1, it will "
+        "consider that percentage of the trigger duration. CI cannot be a float > 1. "
+        "Default is 1. Change to .25 if there is a CMRR DWI sequence or when recording "
+        "sub-triggers.",
         default=1,
     )
     optional.add_argument(
