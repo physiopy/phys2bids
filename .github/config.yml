@@ -1,0 +1,26 @@
+# Configuration for welcome - https://github.com/behaviorbot/welcome
+
+# Configuration for new-issue-welcome - https://github.com/behaviorbot/new-issue-welcome
+
+# Comment to be posted to on first time issues
+newIssueWelcomeComment: >
+  ![Thank You Banner](https://raw.githubusercontent.com/physiopy/physiopy-test-workflows/master/welcome_banner.png)
+
+  🎉 Thank you for opening your first issue in this Physiopy repo! Please check our [contributor guide](https://physiopy.github.io/contributors-guide/) and follow the issue template.
+
+# Configuration for new-pr-welcome - https://github.com/behaviorbot/new-pr-welcome
+
+# Comment to be posted to on PRs from first time contributors in your repository
+newPRWelcomeComment: >
+  ![Thank You Banner](https://raw.githubusercontent.com/physiopy/physiopy-test-workflows/master/welcome_banner.png)
+
+  🎉 Thanks for opening your first pull request in this Physiopy repo! Please check our [contributor guide](https://physiopy.github.io/contributors-guide/) and follow the PR template.
+
+# Configuration for first-pr-merge - https://github.com/behaviorbot/first-pr-merge
+
+# Comment to be posted to on pull requests merged by a first time user
+firstPRMergeComment: >
+  ![Thank You Banner](https://raw.githubusercontent.com/physiopy/physiopy-test-workflows/master/welcome_banner.png)
+
+  🎉 Congrats on merging your first pull request in this repo! We appreciate your contribution to the Physiopy community!
+  :eyes: Please check that your contribution is correctly reported in the README of this repo and on [Physiopy's website](https://physiopy.github.io/community/team/)!
