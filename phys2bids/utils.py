@@ -1,4 +1,5 @@
 """Utilities for phys2bids package."""
+
 import json
 import logging
 import os

@@ -1,8 +1,8 @@
 import os
 import ssl
-from urllib.request import urlretrieve
 
 import pytest
+import requests
 
 
 def pytest_addoption(parser):
@@ -50,7 +50,11 @@ def fetch_file(osf_id, path, filename):
     url = "https://osf.io/{}/download".format(osf_id)
     full_path = os.path.join(path, filename)
     if not os.path.isfile(full_path):
-        urlretrieve(url, full_path)
+        req = requests.get(url, allow_redirects=True)
+        req.raise_for_status()
+        with open(full_path, "wb") as f:
+            f.write(req.content)
+            f.close()
     return full_path
 
 
