@@ -2,7 +2,7 @@
 
 import sys
 from distutils.dir_util import copy_tree
-from os.path import join, basename
+from os.path import basename, join
 from pathlib import Path
 from string import Template
 
@@ -229,7 +229,9 @@ def generate_report(out_dir, conversion_path, log_path, phys_in):
 
     log_content = log_content.replace("\n", "<br>")
     log_html_path = join(conversion_path, basename(phys_in.filename) + ".html")
-    qc_html_filename = "_".join(basename(phys_in.filename).split("_")[:-1])+"_desc-log_physio.html"
+    qc_html_filename = (
+        "_".join(basename(phys_in.filename).split("_")[:-1]) + "_desc-log_physio.html"
+    )
     qc_html_path = join(conversion_path, qc_html_filename)
     html = _save_as_html(log_html_path, log_content, qc_html_path)
 
