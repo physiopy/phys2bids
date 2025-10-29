@@ -2,7 +2,7 @@
 
 import sys
 from distutils.dir_util import copy_tree
-from os.path import join
+from os.path import join, basename
 from pathlib import Path
 from string import Template
 
@@ -159,7 +159,11 @@ def _generate_bokeh_plots(phys_in, figsize=(250, 500)):
     if ch_num > len(colors):
         colors *= 2
 
-    downsample = int(phys_in.freq / 100)
+    if phys_in.freq > 100:
+        downsample = int(phys_in.freq / 100)
+    else:
+        downsample = None
+
     plot_list = []
     for row, timeser in enumerate(phys_in.timeseries.T[1:]):
         # build a data source for each plot, with only the data + index (time)
@@ -224,9 +228,9 @@ def generate_report(out_dir, conversion_path, log_path, phys_in):
         log_content = f.read()
 
     log_content = log_content.replace("\n", "<br>")
-    log_html_path = join(conversion_path, "phys2bids_report_log.html")
-    qc_html_path = join(conversion_path, "phys2bids_report.html")
-
+    log_html_path = join(conversion_path, basename(phys_in.filename) + ".html")
+    qc_html_filename = "_".join(basename(phys_in.filename).split("_")[:-1])+"_desc-log_physio.html"
+    qc_html_path = join(conversion_path, qc_html_filename)
     html = _save_as_html(log_html_path, log_content, qc_html_path)
 
     with open(log_html_path, "wb") as f:

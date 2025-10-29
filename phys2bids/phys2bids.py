@@ -540,9 +540,9 @@ def phys2bids(
                 ),
             )
 
-        # Only generate report if specified by the user
-        if make_report:
-            generate_report(outdir, conversion_path, logname, phys_out[key])
+            # Only generate report if specified by the user
+            if make_report:
+                generate_report(outdir, conversion_path, logname, phys_out[key])
 
 
 def _main(argv=None):
