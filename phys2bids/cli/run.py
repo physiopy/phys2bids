@@ -138,10 +138,12 @@ def _get_parser():
         "--estimate_takes",
         dest="estimate_takes",
         action="store_true",
-        help="Run automatic algorithm to estimate clusters of triggers, i.e. the "
+        help="Run automatic algorithm to estimate clusters of triggers, e.g. the "
         "'takes' or 'runs' of fMRI. Useful when sequences were stopped and restarted, "
         "or when you don't know how many triggers or trs you have in each take. "
-        "This might work 95%% of the time. Default is False.",
+        "This should work 95%% of the time, but might fail if the padding "
+        "between takes is too similar to the takes TRs or if the trigger are heavily "
+        "unevenly registered. Default is False.",
         default=False,
     )
     optional.add_argument(
