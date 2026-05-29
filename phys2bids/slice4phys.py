@@ -37,7 +37,7 @@ def estimate_ntp_and_tr(phys_in, thr=None, ci=1):
     Raises
     ------
     Exception
-        If it doesn't find at least a group.
+        If it doesn't find at least one group.
     ValueError
         If CI is a float above 1 or if it is not an int or a float.
     """
