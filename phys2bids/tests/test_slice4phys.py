@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+"""Tests for slice4phys."""
+
 import os
 
-import matplotlib
+from pytest import raises
 
 from phys2bids import io, slice4phys
 
