@@ -144,6 +144,7 @@ def phys2bids(
     thr=None,
     pad=9,
     ch_name=[],
+    dicomdir=None,
     yml="",
     debug=False,
     quiet=False,
@@ -260,6 +261,12 @@ def phys2bids(
         from phys2bids.io import load_gep
 
         phys_in = load_gep(infile)
+    elif ftype in [
+        "puls",
+    ]:
+        from phys2bids.io import load_siemens
+
+        phys_in = load_siemens(infile, dicomdir)
 
     LGR.info("Checking that units of measure are BIDS compatible")
     for index, unit in enumerate(phys_in.units):
