@@ -165,6 +165,14 @@ def _get_parser():
         default=[],
     )
     optional.add_argument(
+        "-ddir",
+        "--dicomdir",
+        dest="dicomdir",
+        type=str,
+        help="full path to MRI dicom folder corresponding to physiological data. Use this in conjunction with SIEMENS log files ONLY",
+        default="",
+    )
+    optional.add_argument(
         "-yml",
         "--participant-yml",
         dest="yml",
