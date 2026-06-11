@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """phys2bids interfaces for loading extension files."""
-
 import logging
+import os
 import warnings
 from copy import deepcopy
+from glob import glob
 from itertools import groupby
+from pathlib import Path
 
 import numpy as np
 
@@ -485,10 +487,6 @@ def load_gep(filename):
     --------
     physio_obj.BlueprintInput
     """
-    import os
-    from glob import glob
-    from pathlib import Path
-
     # Initiate lists of column names and units with time and trigger
     names = ["time", "trigger"]
     units = ["s", "mV"]  # Assuming recording units are mV...
@@ -510,7 +508,7 @@ def load_gep(filename):
     # Calculate time in seconds for first input (starts from -30s)
     interval = 1 / freq[0]
     duration = data[0].shape[0] * interval
-    t_ch = np.ogrid[-30 : duration - 30 : interval]
+    time_ch = np.ogrid[-30 : duration - 30 : interval]
 
     # Find and add additional data files
     filename = Path(filename)
@@ -535,8 +533,161 @@ def load_gep(filename):
     trigger = np.hstack((np.zeros(int(30 / interval)), np.ones(int((duration - 30) / interval))))
 
     # Create final list of timeseries
-    timeseries = [t_ch, trigger]
+    timeseries = [time_ch, trigger]
     timeseries.extend(data)
+    return BlueprintInput(timeseries, freq, names, units, 1)
+
+# SELMA
+def acqtime_to_seconds(acq_time_str):
+    """
+    """
+    hh = int(acq_time_str[0:2])
+    mm = int(acq_time_str[2:4])
+    ss = int(acq_time_str[4:6])
+    frac = float("0." + acq_time_str.split(".")[1]) if "." in acq_time_str else 0
+    return hh*3600 + mm*60 + ss + frac
+
+
+def load_siemens(filename, dicomfolder=None):
+    """
+    Populate object phys_input from SIEMENS physiological files.
+
+    Uses the filename that the user provides to find any matching inputs
+    from other recording types (.puls, .resp, or .ecg).
+
+    **Note that the filename must not be altered from how it is output from
+    the scanner.**
+
+    Populates physio_obj with all identified recording types (note that one
+    or more of these may not be true recordings as the scanner outputs all
+    possible types in all cases). The modality corresponding to the filename
+    entered by the user is put first (after time and trigger).
+
+    Parameters
+    ----------
+    filename: str
+        path to the SIEMENS scanner physiological file
+
+    Returns
+    -------
+    BlueprintInput
+
+    Note
+    ----
+
+    SIEMENS physiological files do not record a trigger so a column is added at
+    position 1. This has a value of zero up to the scan start time and then
+    a value of one for the duration of the scan.
+
+    See Also
+    --------
+    physio_obj.BlueprintInput
+    """
+    import fmri_physio_log as fpl
+    import pydicom
+
+    # initialise lists of metadata and data
+    names = []
+    units = []
+    freq = []
+    timeseries = []
+    starttime = []
+    stoptime = []
+
+    # Find and add additional data files
+    filename = Path(filename)
+    fnames = glob(os.path.join(filename.parent, f"*{filename.name}.*"))
+    if not len(fnames) == 0:
+        for fname in fnames:
+            if fname.endswith(".puls"): 
+                names.append("PPG")
+                units.append("")
+                data = fpl.PhysioLog.from_filename(filename)
+                timeseries.append(data.ts)
+                freq.append(data.rate)
+                starttime.append(data.mdh.start_time)
+                stoptime.append(data.mdh.stop_time)
+            elif fname.endswith(".resp"):
+                names.append("respiratory")
+                units.append("")
+                data = fpl.PhysioLog.from_filename(filename)
+                timeseries.append(data.ts)
+                freq.append(data.rate)
+                starttime.append(data.mdh.start_time)
+                stoptime.append(data.mdh.stop_time)
+            elif fname.endswith(".ecg"):
+                names.append("ECG")
+                units.append("")
+                data = fpl.PhysioLog.from_filename(filename)
+                timeseries.append(data.ts)
+                freq.append(data.rate)
+                starttime.append(data.mdh.start_time)
+                stoptime.append(data.mdh.stop_time)
+            elif fname.endswith(".ext"):
+                names.append("EXT")
+                units.append("")
+                data = fpl.PhysioLog.from_filename(filename)
+                timeseries.append(data.ts)
+                freq.append(data.rate)
+                starttime.append(data.mdh.start_time)
+                stoptime.append(data.mdh.stop_time)
+            elif fname.endswith(".ext2"):
+                names.append("EXT2")
+                units.append("")
+                data = fpl.PhysioLog.from_filename(filename)
+                timeseries.append(data.ts)
+                freq.append(data.rate)
+                starttime.append(data.mdh.start_time)
+                stoptime.append(data.mdh.stop_time)
+
+    checkstartlen = np.unique(starttime)
+    checkstoplen = np.unique(stoptime)
+    checkfreqlen = np.unique(freq)
+
+    time_ch = np.ogrid[checkstartlen[0]: checkstoplen[-1]: 1/checkfreqlen[-1]*1000]
+    if checkstartlen.size > 1 or checkstoplen.size > 1:
+        for n, t in enumerate(timeseries):
+            time = np.ogrid[checkstartlen[0]: checkstoplen[-1]: 1/freq[n]*1000]
+            timeseries[n] = np.zeros(time)
+            phys_start = int(np.argmax(np.isclose(time, starttime[n])))
+            phys_stop = phys_start + len(t)
+            timeseries[n][phys_start:phys_stop] = t
+
+    # Calculate time in seconds
+    time_ch = time_ch / 1000
+
+    # Read the dicom to find start time, if it's given, otherwise assume it's 
+    trigger = np.zeros_like(time_ch)
+
+    try:
+        trigger_samples = np.asarray(data.trigger_times, dtype=int)
+        valid = trigger_samples[(trigger_samples >= 0) & (trigger_samples < trigger.size)]
+        trigger[valid] = 1.0
+        LGR.info(f"Found {len(valid)} trigger events in log file.")
+    except AttributeError:
+        LGR.warning("Log file trigger events not found — attempting opening DICOM instead.")
+
+        if dicomfolder is not None:
+            files = sorted([os.path.join(dicomfolder, f) for f in os.listdir(dicomfolder) if os.path.isfile(os.path.join(dicomfolder, f))])
+            first_dcm = pydicom.dcmread(files[0], stop_before_pixels=True)
+            last_dcm = pydicom.dcmread(files[-1], stop_before_pixels=True)
+
+            epi_start = acqtime_to_seconds(first_dcm.AcquisitionTime) - data.mdh.start_time / 1000
+            epi_stop = acqtime_to_seconds(last_dcm.AcquisitionTime) - data.mdh.start_time / 1000
+
+            take_start = int(np.argmax(np.isclose(time_ch, epi_start)))
+            take_end = int(np.argmax(np.isclose(time_ch, epi_stop)))
+
+            trigger[take_start:take_end] = 1
+        else:
+            LGR.warning("DICOM folder not provided. Setting start_time to 0 (although "
+                        "it might be wrong).")
+
+    # Initiate lists of column names and units with time and trigger
+    names = ["time", "trigger"] + names
+    units = ["s", ""] + units
+    freq = [checkfreqlen[-1], checkfreqlen[-1]] + freq
+
     return BlueprintInput(timeseries, freq, names, units, 1)
 
 
