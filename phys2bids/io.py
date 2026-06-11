@@ -555,18 +555,17 @@ def load_siemens(filename, dicomfolder=None):
     Uses the filename that the user provides to find any matching inputs
     from other recording types (.puls, .resp, or .ecg).
 
-    **Note that the filename must not be altered from how it is output from
-    the scanner.**
-
-    Populates physio_obj with all identified recording types (note that one
-    or more of these may not be true recordings as the scanner outputs all
-    possible types in all cases). The modality corresponding to the filename
-    entered by the user is put first (after time and trigger).
+    Populates physio_obj with all identified recording types. 
+    Takes into account possible differences in start and stop times across channels.
+    Uses DICOM metadata to find scan start and stop times and create trigger channel. 
+    The modalities are in the order of 'names' entered by the user (after time and trigger).
 
     Parameters
     ----------
     filename: str
         path to the SIEMENS scanner physiological file
+    dicomfolder: str or None
+        path to the folder containing the DICOM files
 
     Returns
     -------
