@@ -555,9 +555,9 @@ def load_siemens(filename, dicomfolder=None):
     Uses the filename that the user provides to find any matching inputs
     from other recording types (.puls, .resp, or .ecg).
 
-    Populates physio_obj with all identified recording types. 
+    Populates physio_obj with all identified recording types.
     Takes into account possible differences in start and stop times across channels.
-    Uses DICOM metadata to find scan start and stop times and create trigger channel. 
+    Uses DICOM metadata to find scan start and stop times and create trigger channel.
     The modalities are in the order of 'names' entered by the user (after time and trigger).
 
     Parameters
