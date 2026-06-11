@@ -261,9 +261,7 @@ def phys2bids(
         from phys2bids.io import load_gep
 
         phys_in = load_gep(infile)
-    elif ftype in [
-        "puls",
-    ]:
+    elif ftype in ["puls", "resp", "ecg", "ext", "ext2"]:
         from phys2bids.io import load_siemens
 
         phys_in = load_siemens(infile, dicomdir)
