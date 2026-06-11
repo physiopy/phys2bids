@@ -537,15 +537,15 @@ def load_gep(filename):
     timeseries.extend(data)
     return BlueprintInput(timeseries, freq, names, units, 1)
 
+
 # SELMA
 def acqtime_to_seconds(acq_time_str):
-    """
-    """
+    """ """
     hh = int(acq_time_str[0:2])
     mm = int(acq_time_str[2:4])
     ss = int(acq_time_str[4:6])
     frac = float("0." + acq_time_str.split(".")[1]) if "." in acq_time_str else 0
-    return hh*3600 + mm*60 + ss + frac
+    return hh * 3600 + mm * 60 + ss + frac
 
 
 def load_siemens(filename, dicomfolder=None):
@@ -599,7 +599,7 @@ def load_siemens(filename, dicomfolder=None):
     fnames = glob(os.path.join(filename.parent, f"*{filename.name}.*"))
     if not len(fnames) == 0:
         for fname in fnames:
-            if fname.endswith(".puls"): 
+            if fname.endswith(".puls"):
                 names.append("PPG")
                 units.append("")
                 data = fpl.PhysioLog.from_filename(filename)
@@ -644,10 +644,10 @@ def load_siemens(filename, dicomfolder=None):
     checkstoplen = np.unique(stoptime)
     checkfreqlen = np.unique(freq)
 
-    time_ch = np.ogrid[checkstartlen[0]: checkstoplen[-1]: 1/checkfreqlen[-1]*1000]
+    time_ch = np.ogrid[checkstartlen[0] : checkstoplen[-1] : 1 / checkfreqlen[-1] * 1000]
     if checkstartlen.size > 1 or checkstoplen.size > 1:
         for n, t in enumerate(timeseries):
-            time = np.ogrid[checkstartlen[0]: checkstoplen[-1]: 1/freq[n]*1000]
+            time = np.ogrid[checkstartlen[0] : checkstoplen[-1] : 1 / freq[n] * 1000]
             timeseries[n] = np.zeros(time)
             phys_start = int(np.argmax(np.isclose(time, starttime[n])))
             phys_stop = phys_start + len(t)
@@ -656,7 +656,7 @@ def load_siemens(filename, dicomfolder=None):
     # Calculate time in seconds
     time_ch = time_ch / 1000
 
-    # Read the dicom to find start time, if it's given, otherwise assume it's 
+    # Read the dicom to find start time, if it's given, otherwise assume it's
     trigger = np.zeros_like(time_ch)
 
     try:
@@ -668,7 +668,13 @@ def load_siemens(filename, dicomfolder=None):
         LGR.warning("Log file trigger events not found — attempting opening DICOM instead.")
 
         if dicomfolder is not None:
-            files = sorted([os.path.join(dicomfolder, f) for f in os.listdir(dicomfolder) if os.path.isfile(os.path.join(dicomfolder, f))])
+            files = sorted(
+                [
+                    os.path.join(dicomfolder, f)
+                    for f in os.listdir(dicomfolder)
+                    if os.path.isfile(os.path.join(dicomfolder, f))
+                ]
+            )
             first_dcm = pydicom.dcmread(files[0], stop_before_pixels=True)
             last_dcm = pydicom.dcmread(files[-1], stop_before_pixels=True)
 
@@ -680,8 +686,10 @@ def load_siemens(filename, dicomfolder=None):
 
             trigger[take_start:take_end] = 1
         else:
-            LGR.warning("DICOM folder not provided. Setting start_time to 0 (although "
-                        "it might be wrong).")
+            LGR.warning(
+                "DICOM folder not provided. Setting start_time to 0 (although "
+                "it might be wrong)."
+            )
 
     # Initiate lists of column names and units with time and trigger
     names = ["time", "trigger"] + names
