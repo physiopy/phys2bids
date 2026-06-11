@@ -538,7 +538,6 @@ def load_gep(filename):
     return BlueprintInput(timeseries, freq, names, units, 1)
 
 
-# SELMA
 def acqtime_to_seconds(acq_time_str):
     """ """
     hh = int(acq_time_str[0:2])
