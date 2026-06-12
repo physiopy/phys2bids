@@ -2,6 +2,7 @@ import math
 import os
 import sys
 
+import fmri_physio_log as fpl
 import numpy as np
 import pytest
 from pytest import raises
@@ -215,6 +216,24 @@ def test_load_gep_two_files_resp(ge_two_gep_files_resp, testpath):
     gep_data2 = np.loadtxt(os.path.join(testpath, "PPGData_epiRT_0000000000_00_00_000.gep"))
     assert np.array_equal(gep_data1, phys_obj.timeseries[2])
     assert np.array_equal(gep_data2, phys_obj.timeseries[3])
+
+
+def test_load_SIEMENS_two_files_ppg(SIEMENS_files, testpath):
+    # Load data
+    phys_obj = io.load_siemens(SIEMENS_files)
+
+    assert phys_obj.ch_name == ["time", "trigger", "ECG", "PPG", "respiratory"]
+
+    # Check the channel data is as expected
+    siemens_ecg = fpl.PhysioLog.from_filename(os.path.join(testpath, "275_pulse_part_1.ecg"))
+    siemens_resp = fpl.PhysioLog.from_filename(SIEMENS_files)
+    siemens_pulse = fpl.PhysioLog.from_filename(os.path.join(testpath, "275_pulse_part_1.puls"))
+    assert np.array_equal(siemens_ecg, phys_obj.timeseries[2])
+    assert np.array_equal(siemens_pulse, phys_obj.timeseries[3])
+    assert np.array_equal(siemens_resp, phys_obj.timeseries[4])
+
+
+# check if data in phys_obj timeseries are padded, padding needs to be undone for the test to succeed
 
 
 @pytest.mark.skipif(
