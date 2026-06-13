@@ -520,6 +520,10 @@ def phys2bids(
                     phys_out[key].filename = f"{phys_out[key].filename}_{uniq_freq:.0f}Hz"
 
             LGR.info(f"Exporting files for take {take} freq {uniq_freq}")
+            # Check if timeseries has NaNs and save them as n/a
+            phys_out[key].timeseries = phys_out[key].timeseries.astype(object)
+            phys_out[key].timeseries[np.isnan(phys_out[key].timeseries)] = "n/a"
+
             np.savetxt(
                 phys_out[key].filename + ".tsv.gz",
                 phys_out[key].timeseries,

@@ -547,6 +547,81 @@ def acqtime_to_seconds(acq_time_str):
     return hh * 3600 + mm * 60 + ss + frac
 
 
+def physiologtime_to_seconds(pulse_time):
+    """ """
+    hh = pulse_time.hour
+    mm = pulse_time.minute
+    ss = pulse_time.second
+    frac = pulse_time.microsecond / 1000000
+    return hh * 3600 + mm * 60 + ss + frac
+
+
+def read_siemens_channel(
+    filename, channel_type, names, units, timeseries, freq, starttime, stoptime
+):
+    """ """
+    import fmri_physio_log as fpl
+
+    data = fpl.PhysioLog.from_filename(filename)
+
+    if np.all(data.ts != 0):
+
+        if channel_type == "ECG":
+            freq_mod = round(
+                len(data.ts[::4])
+                / (
+                    (
+                        physiologtime_to_seconds(data.mdh.stop_time)
+                        - physiologtime_to_seconds(data.mdh.start_time)
+                    )
+                    * data.rate
+                )
+            )
+            if freq_mod != 1:
+                LGR.warning(
+                    f"Incoherency found between logged time and frequency by a factor of {freq_mod}. Please check frequency time."
+                )
+
+            frequency = data.freq * freq_mod
+            start = physiologtime_to_seconds(data.mdh.start_time)
+            stop = start + len(data.ts - 1) * frequency
+            for i in range(4):
+                names.append(f"{channel_type}{i+1}")
+                units.append("")
+                timeseries.append(data.ts[i::4])
+                freq.append(data.rate * freq_mod)
+                starttime.append(physiologtime_to_seconds(data.mdh.start_time))
+                stoptime.append(stop)
+
+        else:
+            freq_mod = round(
+                len(data.ts[::4])
+                / (
+                    (
+                        physiologtime_to_seconds(data.mdh.stop_time)
+                        - physiologtime_to_seconds(data.mdh.start_time)
+                    )
+                    * data.rate
+                )
+            )
+            if freq_mod != 1:
+                LGR.warning(
+                    f"Incoherency found between logged time and frequency by a factor of {freq_mod}. Please check frequency time."
+                )
+
+            frequency = data.freq * freq_mod
+            start = physiologtime_to_seconds(data.mdh.start_time)
+            stop = start + len(data.ts - 1) * frequency
+            names.append(channel_type)
+            units.append("")
+            timeseries.append(data.ts)
+            freq.append(data.rate * freq_mod)
+            starttime.append(physiologtime_to_seconds(data.mdh.start_time))
+            stoptime.append(stop)
+
+        return names, units, timeseries, freq, starttime, stoptime, data
+
+
 def load_siemens(filename, dicomfolder=None):
     """
     Populate object phys_input from SIEMENS physiological files.
@@ -581,7 +656,6 @@ def load_siemens(filename, dicomfolder=None):
     --------
     physio_obj.BlueprintInput
     """
-    import fmri_physio_log as fpl
     import pydicom
 
     # initialise lists of metadata and data
@@ -594,49 +668,33 @@ def load_siemens(filename, dicomfolder=None):
 
     # Find and add additional data files
     filename = Path(filename)
-    fnames = glob(os.path.join(filename.parent, f"*{filename.name}.*"))
+    fnames = sorted(glob(os.path.join(filename.parent, f"*{filename.name}.*")))
     if not len(fnames) == 0:
         for fname in fnames:
-            if fname.endswith(".puls"):
-                names.append("PPG")
-                units.append("")
-                data = fpl.PhysioLog.from_filename(filename)
-                timeseries.append(data.ts)
-                freq.append(data.rate)
-                starttime.append(data.mdh.start_time)
-                stoptime.append(data.mdh.stop_time)
-            elif fname.endswith(".resp"):
-                names.append("respiratory")
-                units.append("")
-                data = fpl.PhysioLog.from_filename(filename)
-                timeseries.append(data.ts)
-                freq.append(data.rate)
-                starttime.append(data.mdh.start_time)
-                stoptime.append(data.mdh.stop_time)
-            elif fname.endswith(".ecg"):
-                names.append("ECG")
-                units.append("")
-                data = fpl.PhysioLog.from_filename(filename)
-                timeseries.append(data.ts)
-                freq.append(data.rate)
-                starttime.append(data.mdh.start_time)
-                stoptime.append(data.mdh.stop_time)
+            if fname.endswith(".ecg"):
+                names, units, timeseries, freq, starttime, stoptime, data = read_siemens_channel(
+                    fname, "ECG", names, units, timeseries, freq, starttime, stoptime
+                )
+
             elif fname.endswith(".ext"):
-                names.append("EXT")
-                units.append("")
-                data = fpl.PhysioLog.from_filename(filename)
-                timeseries.append(data.ts)
-                freq.append(data.rate)
-                starttime.append(data.mdh.start_time)
-                stoptime.append(data.mdh.stop_time)
+                names, units, timeseries, freq, starttime, stoptime, data = read_siemens_channel(
+                    fname, "EXT", names, units, timeseries, freq, starttime, stoptime
+                )
+
             elif fname.endswith(".ext2"):
-                names.append("EXT2")
-                units.append("")
-                data = fpl.PhysioLog.from_filename(filename)
-                timeseries.append(data.ts)
-                freq.append(data.rate)
-                starttime.append(data.mdh.start_time)
-                stoptime.append(data.mdh.stop_time)
+                names, units, timeseries, freq, starttime, stoptime, data = read_siemens_channel(
+                    fname, "EXT2", names, units, timeseries, freq, starttime, stoptime
+                )
+
+            elif fname.endswith(".puls"):
+                names, units, timeseries, freq, starttime, stoptime, data = read_siemens_channel(
+                    fname, "PPG", names, units, timeseries, freq, starttime, stoptime
+                )
+
+            elif fname.endswith(".resp"):
+                names, units, timeseries, freq, starttime, stoptime, data = read_siemens_channel(
+                    fname, "respiratory", names, units, timeseries, freq, starttime, stoptime
+                )
 
     checkstartlen = np.unique(starttime)
     checkstoplen = np.unique(stoptime)
@@ -646,7 +704,7 @@ def load_siemens(filename, dicomfolder=None):
     if checkstartlen.size > 1 or checkstoplen.size > 1:
         for n, t in enumerate(timeseries):
             time = np.ogrid[checkstartlen[0] : checkstoplen[-1] : 1 / freq[n] * 1000]
-            timeseries[n] = np.zeros(time)
+            timeseries[n] = np.ones_like(time) * np.nan
             phys_start = int(np.argmax(np.isclose(time, starttime[n])))
             phys_stop = phys_start + len(t)
             timeseries[n][phys_start:phys_stop] = t
@@ -677,7 +735,13 @@ def load_siemens(filename, dicomfolder=None):
             last_dcm = pydicom.dcmread(files[-1], stop_before_pixels=True)
 
             epi_start = acqtime_to_seconds(first_dcm.AcquisitionTime) - data.mdh.start_time / 1000
-            epi_stop = acqtime_to_seconds(last_dcm.AcquisitionTime) - data.mdh.start_time / 1000
+            epi_stop = (
+                acqtime_to_seconds(last_dcm.AcquisitionTime)
+                - data.mdh.start_time / 1000
+                + float(last_dcm.get("RepetitionTime", 0)) / 1000
+            )
+
+            # epi_stop needs to be incremented by TR in seconds
 
             take_start = int(np.argmax(np.isclose(time_ch, epi_start)))
             take_end = int(np.argmax(np.isclose(time_ch, epi_stop)))
