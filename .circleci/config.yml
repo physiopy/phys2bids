@@ -10,19 +10,19 @@ orbs:
   # so you dont have to copy and paste it everywhere.
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/python
   python: circleci/python@2.0.3
-  codecov: codecov/codecov@3.2.2
+  codecov: codecov/codecov@6.1.0
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  test37: # This is the name of the job, feel free to change it to better match what you're trying to do!
+  test310: # This is the name of the job, feel free to change it to better match what you're trying to do!
     # These next lines defines a Docker executors: https://circleci.com/docs/2.0/executor-types/
     # You can specify an image from Dockerhub or use one of the convenience images from CircleCI's Developer Hub
     # A list of available CircleCI Docker convenience images are available here: https://circleci.com/developer/images/image/cimg/python
     # The executor is the environment in which the steps below will be executed - below will use a python 3.6.14 container
     # Change the version below to your required version of python
     docker:
-      - image: cimg/python:3.7
+      - image: cimg/python:3.10
     working_directory: /tmp/src/phys2bids
     resource_class: medium
     # Checkout the code as the first step. This is a dedicated CircleCI step.
@@ -47,7 +47,7 @@ jobs:
           command: |
             pytest --junitxml=test-results/junit.xml -o junit_family=legacy --cov=./phys2bids
             mkdir /tmp/src/coverage
-            mv ./.coverage /tmp/src/coverage/.coverage.py37
+            mv ./.coverage /tmp/src/coverage/.coverage.py310
       - store_test_results:
           path: test-results
       - store_artifacts:
@@ -59,39 +59,11 @@ jobs:
           root: /tmp
           # Must be relative path from root
           paths:
-            - src/coverage/.coverage.py37
-
-  test310:
-    docker:
-      - image: cimg/python:3.10
-    working_directory: /tmp/src/phys2bids
-    resource_class: medium
-    steps:
-      - checkout
-      - python/install-packages:
-          path-args: .[test]
-          pypi-cache: false
-          venv-cache: false
-          pkg-manager: pip-dist
-      - run: mkdir -p test-results
-      - run:
-          name: Run tests
-          command: |
-            pytest --junitxml=test-results/junit.xml -o junit_family=legacy --cov=./phys2bids
-            mkdir /tmp/src/coverage
-            mv ./.coverage /tmp/src/coverage/.coverage.py310
-      - store_test_results:
-          path: test-results
-      - store_artifacts:
-          path: /tmp/src/coverage
-      - persist_to_workspace:
-          root: /tmp
-          paths:
             - src/coverage/.coverage.py310
 
-  test313:
+  test314:
     docker:
-      - image: cimg/python:3.13
+      - image: cimg/python:3.14
     working_directory: /tmp/src/phys2bids
     resource_class: medium
     steps:
@@ -107,7 +79,7 @@ jobs:
           command: |
             pytest --junitxml=test-results/junit.xml -o junit_family=legacy --cov=./phys2bids
             mkdir /tmp/src/coverage
-            mv ./.coverage /tmp/src/coverage/.coverage.py313
+            mv ./.coverage /tmp/src/coverage/.coverage.py314
       - store_test_results:
           path: test-results
       - store_artifacts:
@@ -115,11 +87,11 @@ jobs:
       - persist_to_workspace:
           root: /tmp
           paths:
-            - src/coverage/.coverage.py313
+            - src/coverage/.coverage.py314
 
   style_check:
     docker:
-      - image: cimg/python:3.7
+      - image: cimg/python:3.11
     working_directory: /tmp/src/phys2bids
     resource_class: small
     steps:
@@ -139,7 +111,7 @@ jobs:
   merge_coverage:
     working_directory: /tmp/src/phys2bids
     docker:
-      - image: cimg/python:3.10
+      - image: cimg/python:3.11
     resource_class: small
     steps:
       - attach_workspace:
@@ -167,17 +139,13 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - style_check
-      - test37:
-          requires:
-            - style_check
       - test310:
           requires:
             - style_check
-      - test313:
+      - test314:
           requires:
             - style_check
       - merge_coverage:
           requires:
-            - test37
             - test310
-            - test313
+            - test314
