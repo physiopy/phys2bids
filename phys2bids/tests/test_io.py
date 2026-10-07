@@ -2,6 +2,7 @@ import math
 import os
 import sys
 
+import fmri_physio_log as fpl
 import numpy as np
 import pytest
 from pytest import raises
@@ -215,6 +216,38 @@ def test_load_gep_two_files_resp(ge_two_gep_files_resp, testpath):
     gep_data2 = np.loadtxt(os.path.join(testpath, "PPGData_epiRT_0000000000_00_00_000.gep"))
     assert np.array_equal(gep_data1, phys_obj.timeseries[2])
     assert np.array_equal(gep_data2, phys_obj.timeseries[3])
+
+
+def test_SIEMENS(SIEMENS_files, testpath):
+    # Load data
+    phys_obj = io.load_siemens(SIEMENS_files)
+
+    assert phys_obj.ch_name == [
+        "time",
+        "trigger",
+        "ECG1",
+        "ECG2",
+        "ECG3",
+        "ECG4",
+        "PPG",
+        "respiratory",
+    ]
+
+    # Check the channel data is as expected
+    siemens_ecg = fpl.PhysioLog.from_filename(os.path.join(testpath, "275_pulse_part_1.ecg"))
+    data_ecg1 = np.array(siemens_ecg.ts[::4])
+    data_ecg3 = np.array(siemens_ecg.ts[2::4])
+    siemens_resp = fpl.PhysioLog.from_filename(SIEMENS_files)
+    data_resp = np.array(siemens_resp.ts)
+    siemens_pulse = fpl.PhysioLog.from_filename(os.path.join(testpath, "275_pulse_part_1.puls"))
+    data_pulse = np.array(siemens_pulse.ts)
+    assert np.array_equal(data_ecg1, phys_obj.timeseries[2][~np.isnan(phys_obj.timeseries[2])])
+    assert np.array_equal(data_ecg3, phys_obj.timeseries[4][~np.isnan(phys_obj.timeseries[4])])
+    assert np.array_equal(data_pulse, phys_obj.timeseries[6][~np.isnan(phys_obj.timeseries[6])])
+    assert np.array_equal(data_resp, phys_obj.timeseries[7][~np.isnan(phys_obj.timeseries[7])])
+
+
+# check if data in phys_obj timeseries are padded, padding needs to be undone for the test to succeed
 
 
 @pytest.mark.skipif(
