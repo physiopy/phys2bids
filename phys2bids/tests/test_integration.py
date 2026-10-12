@@ -280,6 +280,26 @@ def test_integration_multirun(skip_integration, multi_run_file):
     #     assert isfile(join(conversion_path, f'Test2_samefreq_TWOscans_{run}_trigger_time.png'))
     assert isfile(join(conversion_path, "Test2_samefreq_TWOscans.png"))
 
+    test_outpath = join(test_path, "out")
+    # Run for estimation
+    phys2bids(
+        filename=test_filename,
+        indir=test_path,
+        outdir=test_outpath,
+        chtrig=test_chtrig,
+        ch_name=["An", "Advantage"],
+    )
+
+    # Check that files are generated in outdir
+    base_filename = "Test2_samefreq_TWOscans_"
+    for suffix in [".json", ".tsv.gz"]:
+        for run in ["01", "02"]:
+            assert isfile(join(test_path, f"{base_filename}{run}{suffix}"))
+
+    # Check that files are generated in conversion_path
+    for run in ["01", "02"]:
+        assert isfile(join(conversion_path, f"Test2_samefreq_TWOscans_{run}.log"))
+
 
 def test_integration_gep_onefile(skip_integration, ge_one_gep_file):
     """
