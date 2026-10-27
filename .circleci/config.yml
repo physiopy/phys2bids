@@ -32,7 +32,8 @@ jobs:
     # CircleCI will report the results back to your VCS provider.
     steps:
       - checkout
-      # Install Pillow first to avoid jpsg and zlib issues
+      # Install hdf5
+      - run: sudo apt-get update && sudo apt-get install libhdf5-dev
       - python/install-packages:
           path-args: .[test]
           pypi-cache: false
@@ -68,6 +69,8 @@ jobs:
     resource_class: medium
     steps:
       - checkout
+      # Install hdf5
+      - run: sudo apt-get update && sudo apt-get install libhdf5-dev
       - python/install-packages:
           path-args: .[test]
           pypi-cache: false
