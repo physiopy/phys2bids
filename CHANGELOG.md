@@ -1,3 +1,74 @@
+# 2.11.0 (Tue Oct 27 2026)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Guttula Charan Sai ([@BitForge95](https://github.com/BitForge95))
+
+:heart: Marie-Eve Picard ([@me-pic](https://github.com/me-pic))
+
+:heart: George Kikas ([@maestroque](https://github.com/maestroque))
+
+:heart: CircleCI Config Suggestions Bot ([@CircleCI-config-suggestions-bot](https://github.com/CircleCI-config-suggestions-bot))
+
+#### 🚀 Enhancement
+
+- Drop support for python <3.11 and add support for 3.15 (although 3.10 may still work) [#497](https://github.com/physiopy/phys2bids/pull/497) ([@smoia](https://github.com/smoia))
+- Upgrade deprecated codes to support python > 3.11 [#487](https://github.com/physiopy/phys2bids/pull/487) ([@smoia](https://github.com/smoia))
+
+#### 🐛 Bug Fix
+
+- Fix variable type change in slice4phys for python 3.13 and an XFAIL test condition [#491](https://github.com/physiopy/phys2bids/pull/491) ([@smoia](https://github.com/smoia))
+- Merge remote-tracking branch 'upstream/pre-commit-ci-update-config' into int/config [#455](https://github.com/physiopy/phys2bids/pull/455) ([@smoia](https://github.com/smoia))
+- int: update github actions [#455](https://github.com/physiopy/phys2bids/pull/455) ([@smoia](https://github.com/smoia))
+
+#### 📝 Documentation
+
+- add slugtmeijer as a contributor for bug [#492](https://github.com/physiopy/phys2bids/pull/492) ([@allcontributors[bot]](https://github.com/allcontributors[bot]))
+- add BitForge95 as a contributor for doc [#489](https://github.com/physiopy/phys2bids/pull/489) ([@allcontributors[bot]](https://github.com/allcontributors[bot]) [@smoia](https://github.com/smoia))
+- Improve explanation of pad option in CLI help [#488](https://github.com/physiopy/phys2bids/pull/488) ([@BitForge95](https://github.com/BitForge95) [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]) [@smoia](https://github.com/smoia))
+- Update welcome bot text [#481](https://github.com/physiopy/phys2bids/pull/481) ([@RayStick](https://github.com/RayStick))
+- add me-pic as a contributor for review [#480](https://github.com/physiopy/phys2bids/pull/480) ([@allcontributors[bot]](https://github.com/allcontributors[bot]))
+- Fix bug in README.md titles and links [#479](https://github.com/physiopy/phys2bids/pull/479) ([@RayStick](https://github.com/RayStick))
+- add RayStick as a contributor for infra [#471](https://github.com/physiopy/phys2bids/pull/471) ([@allcontributors[bot]](https://github.com/allcontributors[bot]))
+- [pre-commit.ci] pre-commit autoupdate [#462](https://github.com/physiopy/phys2bids/pull/462) ([@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]))
+- Correct typos and formatting in README [#463](https://github.com/physiopy/phys2bids/pull/463) ([@RayStick](https://github.com/RayStick))
+- Update supported file list [#454](https://github.com/physiopy/phys2bids/pull/454) ([@smoia](https://github.com/smoia))
+- Update @sangfrois as a contributor [#453](https://github.com/physiopy/phys2bids/pull/453) ([@smoia](https://github.com/smoia))
+- Update contributions [#452](https://github.com/physiopy/phys2bids/pull/452) ([@smoia](https://github.com/smoia))
+- Update contributions [#450](https://github.com/physiopy/phys2bids/pull/450) ([@smoia](https://github.com/smoia))
+
+#### ⚠️ Tests
+
+- [pre-commit.ci] pre-commit autoupdate [#478](https://github.com/physiopy/phys2bids/pull/478) ([@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]) [@smoia](https://github.com/smoia))
+- doc: Bump Ubuntu and python version [#478](https://github.com/physiopy/phys2bids/pull/478) ([@smoia](https://github.com/smoia))
+- Fix files fetching from osf [#486](https://github.com/physiopy/phys2bids/pull/486) ([@me-pic](https://github.com/me-pic) [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]))
+- [pre-commit.ci] pre-commit autoupdate [#477](https://github.com/physiopy/phys2bids/pull/477) ([@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]))
+
+#### 🏠 Internal
+
+- [pre-commit.ci] pre-commit autoupdate [#496](https://github.com/physiopy/phys2bids/pull/496) ([@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]))
+- Auto-generate welcome messages for new contributors and link to guides [#476](https://github.com/physiopy/phys2bids/pull/476) ([@RayStick](https://github.com/RayStick) [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]))
+- Fix pydocstyle usage in setup.cfg [#469](https://github.com/physiopy/phys2bids/pull/469) ([@maestroque](https://github.com/maestroque))
+- Add auto-author and auto-label to github workflow [#466](https://github.com/physiopy/phys2bids/pull/466) ([@RayStick](https://github.com/RayStick) [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]))
+- [pre-commit.ci] pre-commit autoupdate [#460](https://github.com/physiopy/phys2bids/pull/460) ([@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]))
+- Fix readthedocs and update configuration [#459](https://github.com/physiopy/phys2bids/pull/459) ([@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]) [@smoia](https://github.com/smoia))
+- Update .circleci/config.yml to use store_test_results [#451](https://github.com/physiopy/phys2bids/pull/451) ([@CircleCI-config-suggestions-bot](https://github.com/CircleCI-config-suggestions-bot))
+
+#### Authors: 8
+
+- [@allcontributors[bot]](https://github.com/allcontributors[bot])
+- [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot])
+- CircleCI Config Suggestions Bot ([@CircleCI-config-suggestions-bot](https://github.com/CircleCI-config-suggestions-bot))
+- George Kikas ([@maestroque](https://github.com/maestroque))
+- Guttula Charan Sai ([@BitForge95](https://github.com/BitForge95))
+- Marie-Eve Picard ([@me-pic](https://github.com/me-pic))
+- Rachael Stickland ([@RayStick](https://github.com/RayStick))
+- Stefano Moia ([@smoia](https://github.com/smoia))
+
+---
+
 # 2.10.0 (Thu May 04 2023)
 
 :tada: This release contains work from a new contributor! :tada:
