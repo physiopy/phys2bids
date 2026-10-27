@@ -139,10 +139,10 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - style_check
-      - test310:
+      - test311:
           requires:
             - style_check
-      - test314:
+      - test315:
           requires:
             - style_check
       - merge_coverage:
