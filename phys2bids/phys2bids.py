@@ -38,7 +38,7 @@ import numpy as np
 from phys2bids import _version, bids, utils, viz
 from phys2bids.cli.run import _get_parser
 from phys2bids.physio_obj import BlueprintOutput
-from phys2bids.slice4phys import slice4phys
+from phys2bids.slice4phys import estimate_ntp_and_tr, slice4phys
 
 from . import __version__
 from .due import Doi, due
@@ -141,6 +141,8 @@ def phys2bids(
     chsel=None,
     num_timepoints_expected=None,
     tr=None,
+    estimate_takes=False,
+    ci=1,
     thr=None,
     pad=9,
     ch_name=[],
@@ -260,6 +262,13 @@ def phys2bids(
         from phys2bids.io import load_gep
 
         phys_in = load_gep(infile)
+    # We can't check smr due to specific version required
+    elif ftype == "smr":  # pragma: no cover
+        from phys2bids.io import load_smr
+
+        phys_in = load_smr(infile, chtrig)
+    else:
+        raise RuntimeError(f'Unsupported extension "{ftype}"')  # pragma: no cover
 
     LGR.info("Checking that units of measure are BIDS compatible")
     for index, unit in enumerate(phys_in.units):
@@ -297,6 +306,11 @@ def phys2bids(
     if ch_name:
         LGR.info("Renaming channels with given names")
         phys_in.rename_channels(ch_name)
+
+    # If requested, run the automatic detection of timepoints and groups
+
+    if estimate_takes:
+        num_timepoints_expected, tr = estimate_ntp_and_tr(phys_in, thr=None, ci=1)
 
     # Checking acquisition type via user's input
     if tr is not None and num_timepoints_expected is not None:

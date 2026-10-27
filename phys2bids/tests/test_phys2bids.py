@@ -4,6 +4,7 @@ Tests phys2bids.py
 
 import json
 import os
+from shutil import copyfile
 
 from pytest import raises
 
@@ -78,3 +79,6 @@ def test_raise_exception(samefreq_full_acq_file):
             outdir=test_path,
         )
     assert "stop now" in str(errorinfo.value)
+
+    test_newfilename = test_filename + ".owowow"
+    copyfile(samefreq_full_acq_file, test_newfilename)
