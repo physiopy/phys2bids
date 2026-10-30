@@ -151,6 +151,15 @@
       ]
     },
     {
+      "login": "slugtmeijer",
+      "name": "Selma Lugtmeijer",
+      "avatar_url": "https://avatars.githubusercontent.com/u/134110542?v=4",
+      "profile": "https://github.com/slugtmeijer",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
       "login": "rmarkello",
       "name": "Ross Markello",
       "avatar_url": "https://avatars0.githubusercontent.com/u/14265705?v=4",
@@ -328,15 +337,6 @@
       "profile": "https://github.com/victox5",
       "contributions": [
         "doc"
-      ]
-    },
-    {
-      "login": "slugtmeijer",
-      "name": "Selma Lugtmeijer",
-      "avatar_url": "https://avatars.githubusercontent.com/u/134110542?v=4",
-      "profile": "https://github.com/slugtmeijer",
-      "contributions": [
-        "bug"
       ]
     }
   ],
