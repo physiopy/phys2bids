@@ -116,13 +116,13 @@ def ge_one_gep_file(testpath):
 
 @pytest.fixture
 def ge_two_gep_files_ppg(testpath):
-    tmp = fetch_file("qawjv", testpath, "RESPData_epiRT_0000000000_00_00_000.gep")
+    _ = fetch_file("qawjv", testpath, "RESPData_epiRT_0000000000_00_00_000.gep")
     return fetch_file("wb84d", testpath, "PPGData_epiRT_0000000000_00_00_000.gep")
 
 
 @pytest.fixture
 def ge_two_gep_files_resp(testpath):
-    tmp = fetch_file("wb84d", testpath, "PPGData_epiRT_0000000000_00_00_000.gep")
+    _ = fetch_file("wb84d", testpath, "PPGData_epiRT_0000000000_00_00_000.gep")
     return fetch_file("qawjv", testpath, "RESPData_epiRT_0000000000_00_00_000.gep")
 
 
@@ -133,15 +133,24 @@ def ge_one_raw_file(testpath):
 
 @pytest.fixture
 def ge_two_raw_files(testpath):
-    tmp = fetch_file("49xpw", testpath, "RESPData_epiRT_0000000000_00_00_000")
+    _ = fetch_file("49xpw", testpath, "RESPData_epiRT_0000000000_00_00_000")
     return fetch_file("u9wsr", testpath, "PPGData_epiRT_0000000000_00_00_000")
 
 
 @pytest.fixture
 def ge_badfiles(testpath):
-    tmp = fetch_file("tdmyn", testpath, "PPGData_epiRT_columnscsv_00_00_000")
-    tmp = fetch_file("b6skq", testpath, "PPGData_epiRT_columnstsv_00_00_000")
+    _ = fetch_file("tdmyn", testpath, "PPGData_epiRT_columnscsv_00_00_000")
+    _ = fetch_file("b6skq", testpath, "PPGData_epiRT_columnstsv_00_00_000")
     return fetch_file("8235b", testpath, "PPGData_epiRT_string0000_00_00_000")
+
+
+@pytest.fixture
+def SIEMENS_files(testpath):
+    _ = fetch_file(" ", testpath, "275_pulse_part_1.puls")
+    _ = fetch_file(" ", testpath, "275_pulse_part_1.ecg")
+    _ = fetch_file(" ", testpath, "275_pulse_part_1.ext")
+    _ = fetch_file(" ", testpath, "275_pulse_part_1.ext2")
+    return fetch_file(" ", testpath, "275_resp_part_1.resp")
 
 
 @pytest.fixture
