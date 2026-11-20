@@ -118,11 +118,14 @@ def test_BlueprintInput():
     assert blueprint_in.ch_amount == num_channnels - 1
 
     # Tests check_trigger_amount
-    blueprint_in.check_trigger_amount(thr=0.9, num_timepoints_expected=1)
+    blueprint_in.check_trigger_amount(thr=0.9, num_timepoints_expected=1, tr=1)
     assert blueprint_in.num_timepoints_found == 1
     assert blueprint_in.time_offset == 1
     test_offset_time = test_time - 1
     assert np.array_equal(blueprint_in.timeseries[0], test_offset_time)
+
+    blueprint_in.check_trigger_amount(thr=0.9, num_timepoints_expected=1)
+    blueprint_in.check_trigger_amount(thr=0.9)
 
     # Tests delete_at_index with trigger channel
     blueprint_in.delete_at_index(test_chtrig)
