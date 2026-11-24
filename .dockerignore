@@ -1,0 +1,22 @@
+# Keep .git in the context: versioneer needs it to compute the package version.
+# It is not copied into the final image (see the multi-stage Dockerfile).
+.claude
+.circleci
+.github
+.pytest_cache
+.coverage*
+.venv
+venv
+build
+dist
+docs
+htmlcov
+**/__pycache__
+**/*.pyc
+**/*.egg-info
+Dockerfile
+.dockerignore
+.*rc
+.zenodo.json
+.pre-commit-config.yaml
+.readthedhocs.yml
