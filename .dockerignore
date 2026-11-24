@@ -16,3 +16,7 @@ htmlcov
 **/*.egg-info
 Dockerfile
 .dockerignore
+.*rc
+.zenodo.json
+.pre-commit-config.yaml
+.readthedhocs.yml
