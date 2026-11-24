@@ -6,9 +6,9 @@
 name: Docker
 
 on:
-  push:
-    branches: [master]
-    tags: ["*"]
+  release:
+    types: [created]
+
   pull_request:
     branches: [master]
   workflow_dispatch:
