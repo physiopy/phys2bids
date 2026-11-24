@@ -51,6 +51,7 @@ Shortcuts:
 - [Developer installation](https://phys2bids.readthedocs.io/en/latest/contributing.html#linux-and-mac-developer-installation)
 - [**Contributor guide**](https://phys2bids.readthedocs.io/en/latest/contributorfile.html)
 - [**Code of Conduct**](https://phys2bids.readthedocs.io/en/latest/conduct.html)
+- [Docker image](#docker)
 - [Developer calls calendar](https://calendar.google.com/calendar/u/0?cid=amoycDQ1MTdhMWdpaHNuNzlnOW1ucHJkMjRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 
 ## Tested OSs
@@ -59,6 +60,17 @@ All versions until `2.6.2` were tested on Linux and Windows. However, starting f
 Hence, while **we cannot ensure that phys2bids will run on Windows or MacOS/iOS**, we don't see any reason it shouldn't. Besides, it will run on Linux Subsystems.
 
 We apologise for any discomfort.
+
+## Docker
+A container image with `phys2bids` installed is published to the GitHub Container Registry: [`ghcr.io/physiopy/phys2bids`](https://github.com/physiopy/phys2bids/pkgs/container/phys2bids). The image is built from the [`Dockerfile`](https://github.com/physiopy/phys2bids/blob/master/Dockerfile) at the root of the repository.
+
+```bash
+docker pull ghcr.io/physiopy/phys2bids:latest
+docker run --rm -v "$PWD":/data ghcr.io/physiopy/phys2bids:latest -h
+```
+
+The container runs as a non-root user with `/data` as its working directory, so mount the folder holding your physiological files there.
+That image do not support spike2.
 
 
 <!-- ## Hacktoberfest
