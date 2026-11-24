@@ -1,3 +1,20 @@
+# 2.12.0 (Tue Nov 24 2026)
+
+#### 🚀 Enhancement
+
+- Add Dockerfile and workflow to publish image to GHCR [#499](https://github.com/physiopy/phys2bids/pull/499) ([@bpinsard](https://github.com/bpinsard))
+
+#### 📝 Documentation
+
+- add bpinsard as a contributor for infra, and platform [#500](https://github.com/physiopy/phys2bids/pull/500) ([@allcontributors[bot]](https://github.com/allcontributors[bot]))
+
+#### Authors: 2
+
+- [@allcontributors[bot]](https://github.com/allcontributors[bot])
+- Basile ([@bpinsard](https://github.com/bpinsard))
+
+---
+
 # 2.11.0 (Tue Oct 27 2026)
 
 :tada: This release contains work from new contributors! :tada:
