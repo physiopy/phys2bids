@@ -223,7 +223,9 @@
       "profile": "https://github.com/bpinsard",
       "contributions": [
         "code",
-        "test"
+        "test",
+        "infra",
+        "platform"
       ]
     },
     {
