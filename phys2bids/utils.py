@@ -9,7 +9,7 @@ from pathlib import Path
 
 LGR = logging.getLogger(__name__)
 
-SUPPORTED_FTYPES = ("acq", "txt", "mat", "gep")
+SUPPORTED_FTYPES = ("acq", "txt", "mat", "gep", "puls", "resp", "ecg", "ext", "ext2")
 
 
 def check_input_ext(filename, ext):
